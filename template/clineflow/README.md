@@ -1,6 +1,6 @@
 # Reference System
 
-Link external repositories for Cline exploration via symlinks. This allows Cline to access and explore code from other projects without copying files.
+Link external repositories for Cline exploration via symlinks. This built-in feature allows Cline to access and explore code from other projects without copying files.
 
 ## Quick Start
 
@@ -10,17 +10,19 @@ cd ~/projects  # or your preferred location
 git clone https://github.com/your-org/backend-api
 git clone https://github.com/your-org/frontend-app
 
-# 2. Create configuration file in your project
+# 2. Configure paths (back in your project)
 cd ~/your-project
 cp .clineflow.example .clineflow.local
 
-# 3. Edit .clineflow.local with your paths
-# Example:
+# 3. Edit .clineflow.local with your repository paths
+nano .clineflow.local
+
+# Add your paths:
 #   BACKEND_API_PATH="/Users/yourname/projects/backend-api"
 #   FRONTEND_APP_PATH="/Users/yourname/projects/frontend-app"
 
-# 4. Create symlinks using your setup script
-./setup-refs.sh  # or integrate into your build process
+# 4. Run the built-in setup script
+./setup-refs.sh
 ```
 
 ## Usage
@@ -32,24 +34,21 @@ Once set up, reference files are accessible at `clineflow/` via symlinks:
 - **Terminal Commands**: All commands work normally with symlinks
 - **Live Updates**: Changes in reference repos appear immediately (real symlinks)
 
-## Setup Script Example
+## How It Works
 
-Create a `setup-refs.sh` script in your project:
+The `setup-refs.sh` script (installed with ClineFlow):
 
-```bash
-#!/bin/bash
-# Load configuration
-source .clineflow.local
+1. Reads `.clineflow.local` configuration
+2. Finds all variables ending with `_PATH`
+3. Creates symlinks in `clineflow/` directory
+4. Validates paths and reports status
 
-# Create symlinks
-mkdir -p clineflow
-ln -sf "$BACKEND_API_PATH" clineflow/backend-api
-ln -sf "$FRONTEND_APP_PATH" clineflow/frontend-app
+**Variable naming:** Variable names ending with `_PATH` automatically create symlinks. The symlink name is derived from the variable name:
+- `BACKEND_API_PATH` → `clineflow/backend-api`
+- `FRONTEND_APP_PATH` → `clineflow/frontend-app`
+- `MY_TOOL_PATH` → `clineflow/my-tool`
 
-echo "✓ Reference symlinks created"
-```
-
-## Integration Examples
+## Integration with Build Tools
 
 Integrate into your existing workflow:
 
@@ -57,31 +56,37 @@ Integrate into your existing workflow:
 # Node.js projects (package.json)
 {
   "scripts": {
-    "setup:refs": "./setup-refs.sh",
-    "predev": "npm run setup:refs",
+    "predev": "./setup-refs.sh",
     "postinstall": "./setup-refs.sh"
   }
 }
 
 # Python projects (Makefile)
-setup-refs:
+.PHONY: dev
+dev:
 	./setup-refs.sh
-
-dev: setup-refs
 	python manage.py runserver
 
-# Go projects
-build: setup-refs
-	./setup-refs.sh && go build
+# Go projects (Makefile)
+.PHONY: build
+build:
+	./setup-refs.sh
+	go build
+
+# Or use git hooks
+echo "./setup-refs.sh" > .git/hooks/post-checkout
+chmod +x .git/hooks/post-checkout
 ```
 
 ## Adding New References
 
 1. Clone the new repository to your preferred location
-2. Add variable to `.clineflow.example` (for team reference)
-3. Add path to your `.clineflow.local` (your local config)
-4. Update your setup script to create the symlink
-5. Run your setup script to create the symlink
+2. Add variable to `.clineflow.example` (optional, for team reference)
+3. Add path variable to `.clineflow.local`:
+   ```bash
+   NEW_REPO_PATH="/path/to/new-repo"
+   ```
+4. Run `./setup-refs.sh` again - it will automatically create the new symlink
 
 ## Troubleshooting
 

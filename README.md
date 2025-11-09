@@ -167,7 +167,7 @@ Edit `.clinerules` to customize for your project:
 - Cline can explore those repos using @ mentions: `@clineflow/backend-api/README.md`
 - No file duplication - changes sync instantly via symlinks
 
-**Quick setup:**
+**Quick setup (3 steps):**
 
 1. **Clone external repos** wherever you prefer:
    ```bash
@@ -175,27 +175,29 @@ Edit `.clinerules` to customize for your project:
    git clone https://github.com/your-org/backend-api
    ```
 
-2. **Create config file** (`.clineflow.local` in your project):
+2. **Configure paths** in your project:
+   ```bash
+   # Copy example config
+   cp .clineflow.example .clineflow.local
+   
+   # Edit with your paths
+   nano .clineflow.local
+   ```
+   
+   Add your repository paths:
    ```bash
    BACKEND_API_PATH="/Users/yourname/projects/backend-api"
+   FRONTEND_APP_PATH="/Users/yourname/projects/frontend-app"
    ```
 
-3. **Create setup script** (`setup-refs.sh`):
-   ```bash
-   #!/bin/bash
-   source .clineflow.local
-   mkdir -p clineflow
-   ln -sf "$BACKEND_API_PATH" clineflow/backend-api
-   ```
-
-4. **Run it** (or integrate into your build process):
+3. **Run the setup script** (included with ClineFlow):
    ```bash
    ./setup-refs.sh
    ```
 
-**Result:** Cline can now explore `backend-api` files as if they were in your project.
+**Result:** Cline can now explore linked repos as if they were part of your project!
 
-**Full details:** See [clineflow/README.md](template/clineflow/README.md) for complete documentation and examples.
+**Full details:** See [clineflow/README.md](template/clineflow/README.md) for advanced configuration.
 
 ## 📚 Documentation
 

@@ -1,0 +1,16 @@
+# ClineFlow Reference System Configuration
+# Copy this file to .clineflow.local and edit with your repository paths
+
+# Example: Backend API repository
+# BACKEND_API_PATH="/Users/yourname/projects/backend-api"
+
+# Example: Frontend application repository
+# FRONTEND_APP_PATH="/Users/yourname/projects/frontend-app"
+
+# Example: Shared library repository
+# SHARED_LIB_PATH="/Users/yourname/projects/shared-library"
+
+# Add more repositories as needed
+# Variable names must end with _PATH
+# The symlink name will be derived from the variable name
+# Example: BACKEND_API_PATH → clineflow/backend-api

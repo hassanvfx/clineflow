@@ -121,6 +121,59 @@ Documentation now works for any project type:
 
 ---
 
+### 2025-11-08 18:29 - Built-in Reference System Implementation
+
+**Achievement:**
+Successfully implemented the reference system as a built-in ClineFlow feature instead of requiring users to create their own scripts.
+
+**Changes Made:**
+
+1. **Created `template/setup-refs.sh`** - Automated reference system setup:
+   - Auto-discovers `*_PATH` variables from config
+   - Creates symlinks with smart naming (e.g., `BACKEND_API_PATH` → `clineflow/backend-api`)
+   - Validates paths and provides helpful feedback
+   - Added `--clean` and `--help` options
+   - Colorized output for better UX
+
+2. **Created `template/.clineflow.example`** - Configuration template:
+   - Clear examples for users to follow
+   - Comments explaining variable naming convention
+   - Shows how symlink names are derived
+
+3. **Updated `template/.gitignore`**:
+   - Added `.clineflow.local` to prevent committing local paths
+
+4. **Updated `install.sh`**:
+   - Downloads `setup-refs.sh` and makes it executable
+   - Downloads `.clineflow.example`
+   - Added to dry-run output
+   - Updated next steps to mention optional reference system
+
+5. **Updated Documentation**:
+   - Main `README.md`: Simplified to 3-step setup, emphasizes built-in nature
+   - `template/clineflow/README.md`: Updated to reflect built-in script, added integration examples
+
+**Technical Decisions:**
+- Variable naming convention: `*_PATH` suffix required for auto-discovery
+- Symlink naming: Automatic conversion (uppercase→lowercase, underscore→dash)
+- Smart defaults: Creates config from example if missing
+- Clean mode: Easy way to remove all symlinks for fresh start
+
+**User Experience Improvements:**
+- **Before**: Users had to create their own script, figure out bash syntax
+- **After**: Edit config file, run one command, done!
+
+**Integration Options:**
+Users can now integrate into their workflow:
+- Node.js: Add to `predev` or `postinstall` scripts
+- Python: Add to Makefile targets
+- Go: Add to Makefile or build scripts
+- Git hooks: Auto-run on checkout
+
+**Status:** Complete
+
+---
+
 ## 🐛 Known Issues
 
 None at this time.

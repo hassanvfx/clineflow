@@ -23,6 +23,9 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# ClineFlow reference system
+.clineflow.local
+
 # Logs
 *.log
 logs/

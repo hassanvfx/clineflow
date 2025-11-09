@@ -98,6 +98,22 @@ install_workflow() {
     touch docs/journals/.gitkeep
     print_success "docs/journals/.gitkeep"
     
+    # Reference system files
+    if [ ! -f setup-refs.sh ] || [ "$FORCE" = true ]; then
+        download_file "${BASE_URL}/setup-refs.sh" "setup-refs.sh"
+        chmod +x setup-refs.sh
+        print_success "setup-refs.sh"
+    else
+        print_warning "setup-refs.sh already exists (skipping)"
+    fi
+    
+    if [ ! -f .clineflow.example ] || [ "$FORCE" = true ]; then
+        download_file "${BASE_URL}/.clineflow.example" ".clineflow.example"
+        print_success ".clineflow.example"
+    else
+        print_warning ".clineflow.example already exists (skipping)"
+    fi
+    
     echo
     print_success "Installation complete!"
     echo
@@ -111,10 +127,12 @@ show_next_steps() {
     echo "  1. Review and customize .clinerules for your project"
     echo "  2. Read clineflow/WORKING_WITH_CLINE.md for complete guide"
     echo "  3. Create your first journal: docs/journals/your-feature.md"
-    echo "  4. Start working with Cline in your IDE"
-    echo "  5. Try the intelligent commit: just say 'commit changes'"
+    echo "  4. (Optional) Set up reference system: ./setup-refs.sh --help"
+    echo "  5. Start working with Cline in your IDE"
+    echo "  6. Try the intelligent commit: just say 'commit changes'"
     echo
     echo "📖 Documentation: clineflow/WORKING_WITH_CLINE.md"
+    echo "🔗 Reference System: clineflow/README.md"
     echo "🐛 Issues: https://github.com/hassanvfx/clineflow/issues"
     echo
 }
@@ -207,6 +225,8 @@ if [ "$DRY_RUN" = true ]; then
     echo "  clineflow/WORKING_WITH_CLINE.md"
     echo "  clineflow/README.md"
     echo "  docs/journals/.gitkeep"
+    echo "  setup-refs.sh"
+    echo "  .clineflow.example"
     echo
     exit 0
 fi
