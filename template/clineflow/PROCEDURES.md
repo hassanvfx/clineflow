@@ -1,9 +1,9 @@
 # System Procedures for Working with Cline
 
-This document contains detailed system rules and standard operating procedures for Cline AI Assistant working on the Jabaliweb project.
+This document contains detailed system rules and standard operating procedures for Cline AI Assistant using the ClineFlow workflow system.
 
 ## Table of Contents
-- [Component Development Standards](#component-development-standards)
+- [Code Organization Standards](#code-organization-standards)
 - [Journal System Procedures](#journal-system-procedures)
 - [Documentation Requirements](#documentation-requirements)
 - [Code Quality Guidelines](#code-quality-guidelines)
@@ -12,28 +12,28 @@ This document contains detailed system rules and standard operating procedures f
 
 ---
 
-## Component Development Standards
+## Code Organization Standards
 
-### Size Requirements
+### File Size Requirements
 
 **Absolute Rules:**
-- Components MUST be less than 500 lines of code (LOC) ideally
-- Components over 2,000 LOC are **completely unacceptable**
-- When reviewing/creating components, always check line count
-- If a component exceeds limits, it MUST be broken down
+- Files SHOULD be 300-500 lines of code (LOC) ideally
+- Files over 1,000 LOC are **unacceptable** and must be refactored
+- When reviewing/creating files, always check line count
+- If a file exceeds limits, it MUST be broken down
 
 ### Modularization Strategy
 
-**When to Break Down Components:**
-1. Component exceeds 500 LOC
-2. Component has multiple distinct responsibilities
+**When to Break Down Code:**
+1. File exceeds 500 LOC
+2. File has multiple distinct responsibilities
 3. Logic can be reused elsewhere
 4. Testing becomes difficult
 
 **How to Modularize:**
 
 ```typescript
-// Pattern 1: Extract Sub-Components
+// Pattern 1: Extract Sub-Components (React/Vue/etc)
 function LargeComponent() {
   return (
     <Container>
@@ -44,32 +44,35 @@ function LargeComponent() {
   );
 }
 
-// Pattern 2: Extract Custom Hooks
+// Pattern 2: Extract Custom Hooks (React)
 function useComponentLogic() {
   const [state, setState] = useState();
   // Complex logic here
   return { state, actions };
 }
 
-function Component() {
-  const { state, actions } = useComponentLogic();
-  return <div>...</div>;
+// Pattern 3: Extract Service Layer (Any Language)
+// services/userService.ts
+export class UserService {
+  async createUser(data: UserData): Promise<User> {
+    // Business logic
+  }
 }
 
-// Pattern 3: Extract Utility Functions
-// Move to utils/ directory
-export function complexCalculation(data: Data): Result {
-  // Extract complex logic
+// Pattern 4: Extract Utilities
+// utils/validation.ts
+export function validateEmail(email: string): boolean {
+  // Validation logic
 }
 ```
 
-### Component Structure
+### Code Structure
 
 ```typescript
 // 1. Imports (grouped logically)
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Box } from '@mui/material';
+import { externalLibrary } from 'external-lib';
+import { internalUtil } from './utils';
 
 // 2. Type Definitions
 interface ComponentProps {
@@ -77,14 +80,10 @@ interface ComponentProps {
   onAction: (id: string) => void;
 }
 
-// 3. Component Implementation
+// 3. Implementation
 export function Component({ id, onAction }: ComponentProps) {
   // State
   const [local, setLocal] = useState();
-  
-  // Redux/Context
-  const data = useSelector(selectData);
-  const dispatch = useDispatch();
   
   // Effects
   useEffect(() => {
@@ -97,11 +96,7 @@ export function Component({ id, onAction }: ComponentProps) {
   };
   
   // Render
-  return (
-    <Box>
-      <Button onClick={handleClick}>Action</Button>
-    </Box>
-  );
+  return <div onClick={handleClick}>Content</div>;
 }
 ```
 
@@ -114,13 +109,13 @@ export function Component({ id, onAction }: ComponentProps) {
 **Required for:**
 - Features spanning multiple development sessions
 - Complex features with 3+ phases
-- Features requiring coordination with backend changes
-- Features that may need context transfer to new tasks
+- Features requiring significant architectural decisions
+- Work that may need context transfer to new tasks
 
 **Not Required for:**
 - Simple bug fixes
 - Single-file updates
-- Minor UI tweaks
+- Minor tweaks
 
 ### Journal Creation Process
 
@@ -128,7 +123,7 @@ export function Component({ id, onAction }: ComponentProps) {
 ```bash
 # Location: docs/journals/[feature-name].md
 # Use lowercase with hyphens
-# Example: docs/journals/invite-flow.md
+# Example: docs/journals/user-authentication.md
 ```
 
 **Step 2: Use Template**
@@ -215,10 +210,10 @@ When approaching context window limits:
 - Location: `docs/[FEATURE].md`
 - Purpose: Complete feature design and requirements
 - Audience: Developers, product managers, Cline
-- Contents: Overview, requirements, implementation plan, API contracts, UX flows
+- Contents: Overview, requirements, implementation plan, API contracts, workflows
 
-**Level 2: Implementation Status/Journals**
-- Location: `docs/[FEATURE]_STATUS.md` or `docs/journals/[feature].md`
+**Level 2: Implementation Journals**
+- Location: `docs/journals/[feature].md`
 - Purpose: Track implementation progress and decisions
 - Audience: Developers, Cline (for task continuation)
 - Contents: Phase tracking, journal entries, known issues, quick reference
@@ -246,7 +241,7 @@ When approaching context window limits:
 // Include file paths in comments
 // Keep snippets focused and relevant
 
-// Example from src/app/components/Example.tsx
+// Example from src/components/Example.tsx
 function Example() {
   return <div>Clear, focused example</div>;
 }
@@ -264,7 +259,7 @@ function Example() {
 
 ### No Unnecessary Code
 
-**Rule:** Every line must serve a purpose for THIS component.
+**Rule:** Every line must serve a purpose for THIS file/component.
 
 **Check Before Committing:**
 - Remove unused imports
@@ -285,7 +280,7 @@ import { neededUtil } from './utils'; // Actually used
 const result = neededUtil(data); // Used below
 ```
 
-### Component-Specific Implementation
+### Implement Only What's Needed
 
 **Rule:** Implement only what's needed NOW, not what MIGHT be needed.
 
@@ -315,15 +310,15 @@ interface UserCardProps {
 ### Type Safety
 
 **Requirements:**
-- Use TypeScript properly
-- Define interfaces for all props
-- Avoid `any` type
-- Use proper type imports
+- Use proper typing (TypeScript, type hints, etc.)
+- Define interfaces/types for all public APIs
+- Avoid `any` type or equivalent
+- Use type imports where appropriate
 
 **Example:**
 ```typescript
 // ✅ GOOD
-interface MessageBubbleProps {
+interface MessageProps {
   message: Message;
   isCurrentUser: boolean;
   onDelete?: (id: string) => void;
@@ -333,7 +328,7 @@ export function MessageBubble({
   message, 
   isCurrentUser,
   onDelete 
-}: MessageBubbleProps) {
+}: MessageProps) {
   // Implementation
 }
 ```
@@ -342,46 +337,44 @@ export function MessageBubble({
 
 ## File Access Procedures
 
-### Accessing clineflow/ Files
+### Accessing ClineFlow Files
 
-**Problem:** Files in `clineflow/` are gitignored and invisible to Cline's @ mention system.
+**ClineFlow documentation files** in `clineflow/` are accessible:
 
-**Solution:** Use direct file path references.
+**Using @ Mentions:**
+```markdown
+✅ @clineflow/PROCEDURES.md
+✅ @clineflow/WORKING_WITH_CLINE.md
+✅ @clineflow/JOURNAL_TEMPLATE.md
+```
 
-**Procedure:**
+**Using Direct Paths:**
+```markdown
+✅ Can you read clineflow/PROCEDURES.md?
+✅ Can you read clineflow/WORKING_WITH_CLINE.md?
+```
 
-1. **User wants to reference backend code:**
-   ```markdown
-   User: "Check how participants are added in the backend"
-   
-   Cline: "I'll read clineflow/companions-api/src/jabali/routers/participants.py"
-   ```
+Both methods work - use whichever is natural!
 
-2. **Reading clineflow files:**
-   ```xml
-   <read_file>
-   <path>clineflow/companions-api/README.md</path>
-   </read_file>
-   ```
+### Accessing Reference System Files
 
-3. **Never use @ mentions:**
-   ```markdown
-   ❌ @clineflow/companions-api/README.md
-   ✅ clineflow/companions-api/README.md
-   ```
+**If using the optional reference system**, linked repositories are accessible:
+
+**Using @ Mentions:**
+```markdown
+✅ @clineflow/backend-api/README.md
+✅ @clineflow/backend-api/src/api/routes/users.py
+```
+
+**Using Direct Paths:**
+```markdown
+✅ Can you read clineflow/backend-api/docs/API.md?
+✅ Can you read clineflow/frontend-app/src/components/App.tsx?
+```
 
 ### Finding Available Reference Files
 
-**Always check `clineflow/index.json` first:**
-- Contains list of all cloned repositories
-- Shows available file paths
-- Provides descriptions of what each repo contains
-
-**Example workflow:**
-1. User asks about backend implementation
-2. Check clineflow/index.json for relevant repo
-3. Read specific files from that repo using direct paths
-4. Provide answer with code examples
+If reference system is set up, explore the linked repositories just like project files.
 
 ---
 
@@ -390,10 +383,10 @@ export function MessageBubble({
 ### Before Starting Any Task
 
 **Checklist:**
-1. **Read essential context files:**
-   - clineflow/index.json (if working with CharismLite features)
-   - docs/ARCHITECTURE.md (for system architecture)
-   - Related feature docs in docs/
+1. **Read essential context:**
+   - Review any existing documentation in `docs/`
+   - Check for related feature implementations
+   - Review project architecture if documented
 
 2. **Assess task size:**
    - Small (< 2 hours): Proceed directly
@@ -401,9 +394,9 @@ export function MessageBubble({
    - Large (> 8 hours): Create journal before starting
 
 3. **Check for existing documentation:**
-   - Look for related docs in docs/
+   - Look for related docs in `docs/`
    - Check for similar implemented features
-   - Review existing journals
+   - Review existing journals if applicable
 
 ### During Task Execution
 
@@ -414,9 +407,9 @@ export function MessageBubble({
 4. Note any blockers or issues
 
 **Code Quality:**
-1. Keep components under 500 LOC
+1. Keep files under 500 LOC ideally
 2. Remove unnecessary code
-3. Follow TypeScript best practices
+3. Follow language/framework best practices
 4. Write clear comments for complex logic
 
 **Communication:**
@@ -447,24 +440,19 @@ export function MessageBubble({
 ```xml
 <attempt_completion>
 <result>
-Successfully consolidated llm-refs documentation:
+Successfully implemented user authentication system:
 
 Files Created:
-- .clinerules - Brief rules pointing to llm-refs/
-- llm-refs/WORKING_WITH_CLINE.md - Complete guide
-- llm-refs/PROCEDURES.md - Detailed system procedures
-- llm-refs/JOURNAL_TEMPLATE.md - Template for task journals
+- src/auth/AuthService.ts - Authentication business logic
+- src/auth/AuthProvider.tsx - React context provider
+- src/api/authEndpoints.ts - API integration layer
 
-Files Updated:
-- llm-refs/index.json - Consolidated with extensive comments
-- llm-refs/README.md - Added Cline limitations section
-- llm-refs/clone-refs.sh - Added force flag for fresh clones
+Files Modified:
+- src/App.tsx - Added auth routing logic
+- src/types/User.ts - Extended User interface
 
-Files Deleted:
-- llm-refs-index.json - Removed duplicate
-
-All files follow established patterns from INVITE_FLOW documentation.
-Ready for use in future development sessions.
+All functionality tested and working as expected.
+Ready for integration testing.
 </result>
 </attempt_completion>
 ```
@@ -475,16 +463,15 @@ Ready for use in future development sessions.
 
 ### SOP-001: Starting a New Feature
 
-1. Read docs/ARCHITECTURE.md for context
-2. Check if similar features exist
-3. Create feature spec doc: `docs/[FEATURE].md`
-4. Create implementation journal: `docs/journals/[feature].md`
-5. Outline phases in journal
-6. Begin implementation, updating journal regularly
+1. Check for existing documentation
+2. Create feature spec doc if needed: `docs/[FEATURE].md`
+3. Create implementation journal: `docs/journals/[feature].md`
+4. Outline phases in journal
+5. Begin implementation, updating journal regularly
 
-### SOP-002: Modifying Existing Components
+### SOP-002: Modifying Existing Code
 
-1. Read current component file
+1. Read current file
 2. Check line count
 3. If > 500 LOC, plan modularization
 4. Make changes using replace_in_file for targeted edits
@@ -493,10 +480,10 @@ Ready for use in future development sessions.
 
 ### SOP-003: Debugging Issues
 
-1. Check if issue is documented in docs/[FEATURE]_ISSUE.md
+1. Check if issue is documented
 2. Review journal entries for similar problems
 3. Check git history for related changes
-4. If using backend API, check clineflow/companions-api/ reference
+4. Check reference repos if using reference system
 5. Document investigation in journal or issue doc
 6. Implement fix
 7. Document solution
@@ -521,11 +508,9 @@ Ready for use in future development sessions.
 **Procedure:**
 
 1. **Identify Active Journal**
-   ```
    - Check docs/journals/ for most recently modified .md file
    - OR use journal mentioned in current task context
    - IF no journal exists: Inform user and request journal creation first
-   ```
 
 2. **Generate Journal Entry**
    Using full conversation context, create entry:
@@ -533,7 +518,7 @@ Ready for use in future development sessions.
    ### YYYY-MM-DD HH:MM - [Entry Title from Context]
    
    **Achievement:**
-   [Clear description of what was accomplished, derived from conversation]
+   [Clear description of what was accomplished]
    
    **Implementation Details:**
    - Created/Modified `file.ts` - Purpose and significance
@@ -557,11 +542,9 @@ Ready for use in future development sessions.
    ```
 
 3. **Append to Journal**
-   ```bash
-   # Read current journal content
-   # Append new entry at end of Journal Entries section
-   # Save file
-   ```
+   - Read current journal content
+   - Append new entry at end of Journal Entries section
+   - Save file
 
 4. **Stage Everything**
    ```bash
@@ -580,15 +563,6 @@ Ready for use in future development sessions.
    ```
    
    Types: feat, fix, refactor, docs, style, test, chore
-   
-   Example:
-   ```
-   refactor(clineflow): implement symlink system for references
-   
-   - Convert cloned repos to symlinks saving 758MB
-   - Remove .gitignore rule blocking VSCode indexing
-   - Enable autocomplete for reference files
-   ```
 
 6. **Execute Commit**
    ```bash
@@ -597,10 +571,10 @@ Ready for use in future development sessions.
 
 7. **Confirm to User**
    ```
-   ✅ Committed changes with journal entry to docs/journals/[name].md
+   ✅ Committed changes with journal entry
    
    Commit: [first 7 chars of hash]
-   Files: [count] changed, [insertions] insertions(+), [deletions] deletions(-)
+   Files: [count] changed, [insertions](+), [deletions](-)
    ```
 
 **Important Notes:**
@@ -614,89 +588,47 @@ Ready for use in future development sessions.
 **Purpose:** Ensure every task has proper documentation through journals
 
 **When to Create Journal:**
+- MANDATORY for all significant tasks
+- Not required for trivial fixes
 
-**MANDATORY for ALL tasks** - No exceptions
+**Multi-Task Journal Pattern:**
+When continuing work from previous task:
 
-**Procedure:**
+```markdown
+# [Feature Name] - Implementation Journal Index
 
-1. **Assess Task Type**
-   ```
-   - New Task: Create new journal
-   - Continuation: Update existing journal with new task section
-   ```
+## Task History
+- **Task 1** (2025-11-08): Initial implementation - [Details](#task-1)
+- **Task 2** (2025-11-08): Bug fixes - [Details](#task-2)
+- **Task 3** (2025-11-09): Polish - [Details](#task-3)
 
-2. **New Journal Creation**
-   ```bash
-   # Location: docs/journals/[task-name].md
-   # Use lowercase-with-hyphens naming
-   # Examples:
-   - intelligent-commit-system.md
-   - user-authentication-flow.md
-   - api-endpoint-refactor.md
-   ```
+## Current Status
+[Summary from most recent task]
 
-3. **Use Template**
-   ```
-   - Copy structure from clineflow/JOURNAL_TEMPLATE.md
-   - Fill in task-specific details
-   - Create phase breakdown with checkboxes
-   - Add initial journal entry
-   ```
+---
 
-4. **Multi-Task Journal Pattern**
-   When continuing work from previous task:
-   
-   ```markdown
-   # [Feature Name] - Implementation Journal Index
-   
-   ## Task History
-   - **Task 1** (2025-11-08): Initial implementation - [Details](#task-1)
-   - **Task 2** (2025-11-08): Bug fixes - [Details](#task-2)
-   - **Task 3** (2025-11-09): Polish - [Details](#task-3)
-   
-   ## Current Status
-   [Summary from most recent task]
-   
-   ---
-   
-   ## Task 1 - Initial Implementation
-   [Complete task 1 journal entries]
-   
-   ---
-   
-   ## Task 2 - Bug Fixes  
-   [Complete task 2 journal entries]
-   
-   ---
-   
-   ## Task 3 - Polish
-   [Complete task 3 journal entries]
-   ```
+## Task 1 - Initial Implementation
+[Complete task 1 journal entries]
 
-5. **Update Journal Regularly**
-   ```
-   - After significant progress
-   - Before/after each commit (via SOP-005)
-   - When encountering issues
-   - When making technical decisions
-   - At task completion
-   ```
+---
 
-6. **Journal Entry Best Practices**
-   ```
-   - Be specific and technical
-   - Explain WHY, not just WHAT
-   - Include code snippets for clarity
-   - Document alternatives considered
-   - Track blockers and their resolutions
-   - Update checkboxes as work progresses
-   ```
+## Task 2 - Bug Fixes  
+[Complete task 2 journal entries]
+```
+
+**Journal Entry Best Practices:**
+- Be specific and technical
+- Explain WHY, not just WHAT
+- Include code snippets for clarity
+- Document alternatives considered
+- Track blockers and their resolutions
+- Update checkboxes as work progresses
 
 **Benefits:**
 - Preserves context for task continuation
 - Documents technical decisions
 - Enables knowledge transfer
-- Supports debugging and troubleshooting
+- Supports debugging
 - Creates project history
 
 ---

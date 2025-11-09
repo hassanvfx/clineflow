@@ -1,60 +1,115 @@
 # Working with Cline AI Assistant
 
-This guide explains how to work effectively with Cline AI Assistant on the Jabaliweb project.
+💡 **Pro Tip**: Ask Cline *"how can i work with you?"* anytime - Cline will explain the workflow and answer questions!
+
+This guide explains how to work effectively with Cline AI Assistant using the ClineFlow workflow system.
 
 ## Table of Contents
-- [File Visibility Issues](#file-visibility-issues)
-- [Component Size Guidelines](#component-size-guidelines)
+- [Getting Started](#getting-started)
+- [Reference System](#reference-system)
+- [Code Organization Guidelines](#code-organization-guidelines)
 - [Journal System](#journal-system)
 - [Intelligent Commit Workflow](#intelligent-commit-workflow)
-- [Documentation Patterns](#documentation-patterns)
+- [Documentation Best Practices](#documentation-best-practices)
 - [Code Quality Standards](#code-quality-standards)
-- [Reference Repository Access](#reference-repository-access)
 
 ---
 
-## File Visibility Issues
+## Getting Started
 
-### The Problem
-Files in `clineflow/` are gitignored to prevent nested git repositories. This means Cline **cannot see these files** through:
-- @ mentions in chat
-- File explorer
-- Automatic file discovery
+### Understanding File Access
 
-### The Solution
-**Use direct file paths** when asking Cline to read these files:
+Cline can access files in your project using:
 
+**@ Mentions** - For any committed file:
 ```markdown
-# ❌ This won't work:
-@clineflow/companions-api/README.md
-
-# ✅ This works:
-Can you read clineflow/companions-api/README.md?
+✅ @src/components/App.tsx
+✅ @clineflow/PROCEDURES.md
+✅ @clineflow/backend-api/README.md  (if using reference system)
 ```
 
-### Quick Reference Index
-Use `clineflow/index.json` to see all available backend reference files and their paths.
+**Direct Paths** - Alternative way:
+```markdown
+✅ Can you read src/components/App.tsx?
+✅ Can you read clineflow/PROCEDURES.md?
+```
+
+Both methods work - use whichever feels natural!
 
 ---
 
-## Component Size Guidelines
+## Reference System
 
-### The Rule
-- **Ideal:** Components should be less than 500 lines of code (LOC)
-- **Maximum:** 2,000 LOC is completely unacceptable
-- **Action:** Break down components that exceed limits
+### What Is It?
+
+The optional reference system lets Cline explore other repositories without copying files. When set up, Cline can access external codebases just like your project files.
+
+### Setting Up References
+
+```bash
+# 1. Clone repos you want to reference
+cd ~/projects
+git clone https://github.com/your-org/backend-api
+
+# 2. Configure paths
+cp .clineflow.example .clineflow.local
+nano .clineflow.local
+
+# Add your paths:
+BACKEND_API_PATH="/Users/yourname/projects/backend-api"
+
+# 3. Create symlinks
+./setup-refs.sh
+```
+
+### Using Referenced Files
+
+Once set up, reference files are accessible:
+```markdown
+✅ @clineflow/backend-api/README.md
+✅ @clineflow/backend-api/src/api/routes/users.py
+✅ Can you read clineflow/backend-api/docs/API.md?
+```
+
+### Benefits
+
+- **No Duplication**: Repos stay in their original location
+- **Always Current**: Changes sync instantly via symlinks
+- **Full Access**: Cline can explore the entire codebase
+- **Team Flexible**: Each developer can place repos anywhere
+
+See `clineflow/README.md` for complete reference system documentation.
+
+---
+
+## Code Organization Guidelines
+
+### File Size Rule
+
+- **Ideal:** Files should be 300-500 lines of code (LOC)
+- **Maximum:** 1,000+ LOC is unacceptable
+- **Action:** Break down files that exceed limits
 
 ### Why This Matters
-1. **Maintainability:** Smaller components are easier to understand and modify
-2. **Reusability:** Well-factored components can be reused across the app
-3. **Testing:** Smaller components are easier to test
-4. **Performance:** Easier to optimize and debug
+
+1. **Maintainability:** Smaller files are easier to understand and modify
+2. **Reusability:** Well-factored code can be reused
+3. **Testing:** Smaller units are easier to test
+4. **Collaboration:** Easier for teams to work in parallel
 
 ### How to Modularize
+
+**Example: Breaking Down a Large Component**
+
 ```typescript
-// ❌ BAD: 2,000 line monolithic component
+// ❌ BAD: 1,500 line monolithic component
 function MassiveComponent() {
   // Everything in one place
+  // Data fetching
+  // Business logic  
+  // UI rendering
+  // Event handlers
+  // Styling
 }
 
 // ✅ GOOD: Broken into focused pieces
@@ -62,23 +117,49 @@ function ParentComponent() {
   return (
     <>
       <HeaderSection />
-      <ContentSection />
+      <DataDisplay />
+      <ActionButtons />
       <FooterSection />
     </>
   );
 }
 ```
 
-### Examples
-See these well-modularized components:
-- `src/app/charsimlite/components/ParticipantCountBadge.tsx` (~100 LOC)
-- `src/app/charsimlite/components/SystemMessageBubble.tsx` (~80 LOC)
+**Example: Breaking Down a Large Module**
+
+```python
+# ❌ BAD: 2,000 line module with everything
+# api.py
+class UserAPI:
+    def create_user(self): ...
+    def update_user(self): ...
+    def delete_user(self): ...
+    def authenticate(self): ...
+    def send_email(self): ...
+    def validate_data(self): ...
+    # ... 50 more methods
+
+# ✅ GOOD: Focused modules
+# api/users.py - User CRUD operations
+# api/auth.py - Authentication logic
+# api/email.py - Email functionality  
+# api/validation.py - Data validation
+```
+
+### Single Responsibility Principle
+
+Each file should have one clear purpose:
+- ✅ `UserProfile.tsx` - Displays user profile
+- ✅ `authService.ts` - Handles authentication
+- ✅ `database.py` - Database connection logic
+- ❌ `utils.ts` - Everything miscellaneous (too vague)
 
 ---
 
 ## Journal System
 
 ### When to Create Journals
+
 Create a task journal in `docs/journals/[task-name].md` for:
 - Features that will take multiple sessions
 - Complex implementations with many moving parts
@@ -86,9 +167,10 @@ Create a task journal in `docs/journals/[task-name].md` for:
 - Work that requires tracking decisions and progress
 
 ### Journal Template
+
 Use `clineflow/JOURNAL_TEMPLATE.md` as your starting point.
 
-### Structure (Based on INVITE_FLOW_STATUS.md)
+### Structure
 
 ```markdown
 # [Feature Name] Implementation Journal
@@ -101,7 +183,6 @@ Brief description of the feature and its goals.
 ### Phase 1: [Name] - [Status: ✅/🔧/❌]
 - [x] Completed task
 - [ ] Pending task
-- [ ] Another pending task
 
 ### Phase 2: [Name] - [Status]
 ...
@@ -110,66 +191,36 @@ Brief description of the feature and its goals.
 
 ### YYYY-MM-DD HH:MM - Entry Title
 **What Changed:**
-- Detail 1
-- Detail 2
+- Specific changes made
 
 **Why:**
-Explanation of decisions made.
+Explanation of decisions
 
 **Next Steps:**
-- Action item 1
-- Action item 2
+- Action items
 
 ---
-
-### YYYY-MM-DD HH:MM - Another Entry
-...
 
 ## Known Issues
 
 ### Issue Name
-**Problem:** Description of the problem
-**Root Cause:** What's causing it
-**Status:** Being investigated / Blocked / Fixed
-**Workaround:** Temporary solution if any
+**Problem:** Description
+**Status:** Investigation/Blocked/Fixed
+**Workaround:** Temporary solution
 
 ## Quick Reference
 
 ### Key Files
-- `path/to/file.ts` - Purpose
-- `path/to/another.ts` - Purpose
-
-### Important Commands
-```bash
-npm run dev
-```
-
-### Backend API
-- Endpoint details
-- Data schemas
+- `path/to/file` - Purpose
 ```
 
 ### Best Practices
 
 1. **Update Frequently:** Add entries as you make progress
-2. **Be Specific:** Include file names, line numbers, and code snippets
+2. **Be Specific:** Include file names and code snippets
 3. **Document Decisions:** Explain WHY you chose an approach
 4. **Track Blockers:** Note what's blocking progress
-5. **Use for Context:** When creating a new task, reference the journal
-
-### Using Journals with New Tasks
-
-When a task gets too large, create a new task with context from the journal:
-
-```markdown
-# Current Work
-As documented in docs/journals/invite-flow.md, we completed Phase 1
-(invite link generation and join flow) and Phase 2 (UI enhancements).
-
-# Next Task
-We're now starting Phase 3: Guest Discovery & Login Conversion.
-See journal for complete history.
-```
+5. **Use for Context:** Reference the journal in new tasks
 
 ---
 
@@ -177,169 +228,114 @@ See journal for complete history.
 
 ### The Magic Command
 
-When you're ready to commit your changes, simply say:
+When ready to commit, simply say:
 - `"commit changes"`
 - `"commit"`
 - `"please commit"`
 
-**That's it!** I'll handle everything automatically.
+**That's it!** Cline handles everything automatically.
 
 ### What Happens Automatically
 
 1. **📝 Generate Journal Entry**
-   - I use our full conversation context
-   - Create a meaningful entry explaining what was done and why
-   - Include technical decisions and file changes
+   - Uses conversation context
+   - Creates meaningful entry with decisions and changes
 
 2. **📁 Update Journal**
-   - Append the entry to your active journal in `docs/journals/`
-   - Maintain proper formatting and structure
+   - Appends entry to your active journal
+   - Maintains proper formatting
 
 3. **🎯 Stage Everything**
-   - Stage all your code changes
-   - Stage the updated journal file
+   - Stages all code changes
+   - Stages the updated journal
 
 4. **💬 Create Commit Message**
-   - Generate descriptive commit message with proper format
-   - Include clear bullet points of key changes
+   - Generates descriptive message
+   - Includes clear bullet points
 
 5. **✅ Execute Commit**
-   - Run `git commit` with the generated message
-   - Confirm completion with commit details
+   - Runs `git commit`
+   - Confirms completion
 
 ### Example Workflow
 
 ```markdown
-You: "I've finished implementing the user auth flow"
+You: "I've finished implementing the user service"
 [... work on code ...]
 You: "commit changes"
 
-Me: ✅ Committed changes with journal entry to docs/journals/user-auth.md
+Cline: ✅ Committed changes with journal entry
 
-### 2025-11-08 15:30 - Implemented User Authentication Flow
+### 2025-11-08 15:30 - Implemented User Service
 
 **Achievement:**
-Successfully implemented complete user authentication system with login,
-registration, and session management.
+Successfully implemented complete user service with CRUD operations.
 
 **Implementation Details:**
-- Created `src/app/auth/LoginForm.tsx` - Login component with validation
-- Created `src/app/auth/AuthProvider.tsx` - Context provider for auth state
-- Modified `src/app/App.tsx` - Added auth routing logic
-- Created `src/app/services/authAPI.ts` - API integration layer
+- Created `src/services/userService.ts` - User business logic
+- Created `src/api/userRoutes.ts` - REST API endpoints
+- Modified `src/database/models.ts` - Added User model
+- Created `src/tests/userService.test.ts` - Unit tests
 
 **Technical Decisions:**
-Chose JWT tokens over session cookies for better scalability with mobile app.
-Implemented refresh token rotation for enhanced security.
-
-**Files Changed:**
-- `src/app/auth/LoginForm.tsx` - [+150 lines]
-- `src/app/auth/AuthProvider.tsx` - [+80 lines]
-- `src/app/App.tsx` - [+30 -10 lines]
-- `src/app/services/authAPI.ts` - [+120 lines]
+Chose async/await pattern for database operations for better readability.
+Implemented input validation at the service layer.
 
 **Next Steps:**
-- [ ] Add password reset functionality
-- [ ] Implement email verification
-- [ ] Add social login options
+- [ ] Add authentication middleware
+- [ ] Implement rate limiting
+- [ ] Add caching layer
 
 **Status:** Complete
 
----
-
 Commit: abc1234
-feat(auth): implement user authentication flow
-
-- Create login/registration forms with validation
-- Add JWT token management with refresh rotation
-- Integrate auth context provider
-- Connect to backend auth API endpoints
+feat(users): implement user service with CRUD operations
 ```
 
 ### Benefits
 
-🎯 **Context-Aware**: Journal entries are meaningful, not just file lists
-
-🎯 **Time-Saving**: No manual journal updates or commit message writing
-
-🎯 **Consistent**: All commits have proper documentation automatically
-
-🎯 **Historical Record**: Every commit has a corresponding journal entry
-
-### Multi-Task Journal Pattern
-
-When continuing work across multiple tasks, I automatically maintain the journal structure:
-
-```markdown
-# Feature - Implementation Journal Index
-
-## Task History
-- **Task 1** (2025-11-08): Initial implementation - [Details](#task-1)
-- **Task 2** (2025-11-08): Bug fixes - [Details](#task-2) ← Added automatically
-
-## Current Status
-[Updated from latest task]
-
----
-
-## Task 1 - Initial Implementation
-[Original journal entries]
-
----
-
-## Task 2 - Bug Fixes ← New section added automatically
-### 2025-11-08 16:00 - Fixed Authentication Bugs
-[Detailed entry...]
-```
+- **Context-Aware**: Meaningful journal entries
+- **Time-Saving**: No manual updates needed
+- **Consistent**: Proper documentation every time
+- **Historical Record**: Every commit documented
 
 ### Requirements
 
-**You MUST have an active journal** before using intelligent commit:
+**You MUST have an active journal** before committing:
 - For new tasks: Create `docs/journals/[task-name].md` first
 - For continuations: Use existing journal
 
-If no journal exists, I'll prompt you to create one.
-
-### Technical Details
-
-See `clineflow/PROCEDURES.md` SOP-005 for complete implementation details.
+See `clineflow/PROCEDURES.md` SOP-005 for implementation details.
 
 ---
 
-## Documentation Patterns
-
-### Follow Existing Examples
-
-Study these well-documented features:
-- `docs/INVITE_FLOW.md` - Detailed feature specification
-- `docs/INVITE_FLOW_STATUS.md` - Implementation journal
-- `docs/INVITE_FLOW_USERNAME_ISSUE.md` - Issue tracking
+## Documentation Best Practices
 
 ### Documentation Structure
 
 **For New Features:**
-1. **Specification Document** (`docs/[FEATURE].md`)
-   - Overview
-   - Requirements
+
+1. **Specification** (`docs/[FEATURE].md`)
+   - Overview and requirements
    - Implementation plan
    - API contracts
    - UX flows
 
-2. **Status Document** (`docs/[FEATURE]_STATUS.md`)
+2. **Journal** (`docs/journals/[FEATURE].md`)
    - Implementation progress
    - Journal entries
    - Known issues
    - Quick reference
 
-3. **Issue Documents** (`docs/[FEATURE]_[ISSUE].md`)
+3. **Issue Docs** (`docs/[FEATURE]_[ISSUE].md`)
    - For specific problems requiring investigation
 
 ### Documentation Style
 
 - Use emojis for visual scanning (✅ ❌ 🔧 ⚠️ 📝)
 - Include code snippets with syntax highlighting
-- Add visual diagrams for complex flows
-- Keep "Quick Reference" sections for common tasks
+- Add diagrams for complex flows
+- Keep "Quick Reference" sections
 - Update status regularly
 
 ---
@@ -347,7 +343,8 @@ Study these well-documented features:
 ## Code Quality Standards
 
 ### No Unnecessary Code
-Every line of code should serve a specific purpose related to the component's function.
+
+Every line should serve a specific purpose:
 
 ```typescript
 // ❌ BAD: Unused imports and dead code
@@ -357,9 +354,8 @@ import { someUnusedUtil } from './utils';
 function MyComponent() {
   const [unusedState, setUnusedState] = useState(false);
   
-  // Dead code that never executes
   if (false) {
-    console.log('This never runs');
+    console.log('Dead code');
   }
   
   return <div>Hello</div>;
@@ -382,73 +378,44 @@ function MyComponent() {
 }
 ```
 
-### Component-Specific Code Only
-Don't add features "just in case" - only implement what's needed now.
+### Implement Only What's Needed
+
+Don't add features "just in case":
 
 ```typescript
 // ❌ BAD: Over-engineered with unused features
 interface UserCardProps {
   user: User;
-  onEdit?: () => void;        // Not used
-  onDelete?: () => void;      // Not used
-  showActions?: boolean;      // Not used
+  onEdit?: () => void;      // Not used anywhere
+  onDelete?: () => void;    // Not used anywhere
+  showActions?: boolean;    // Not needed
   variant?: 'compact' | 'full'; // Not needed
 }
 
-// ✅ GOOD: Implements only what's needed
+// ✅ GOOD: Implements only what's needed now
 interface UserCardProps {
   user: User;
 }
 ```
 
-### TypeScript Best Practices
-- Use proper types, avoid `any`
-- Define interfaces for component props
-- Use type inference where appropriate
+### Type Safety
 
----
+```typescript
+// ❌ BAD: Using any defeats type safety
+function processData(data: any) {
+  return data.value.toUpperCase();
+}
 
-## Reference Repository Access
+// ✅ GOOD: Proper types
+interface DataItem {
+  value: string;
+  id: number;
+}
 
-### Available References
-See `clineflow/index.json` for the complete list of cloned reference repositories.
-
-### Companions API (Backend Reference)
-The main backend reference is cloned at `clineflow/companions-api/`.
-
-**Key Files:**
+function processData(data: DataItem): string {
+  return data.value.toUpperCase();
+}
 ```
-clineflow/companions-api/
-├── README.md                  # API overview
-├── src/jabali/
-│   ├── routers/
-│   │   ├── threads.py        # Thread endpoints
-│   │   └── participants.py   # Participant endpoints
-│   └── schemas/
-│       ├── threads.py        # Thread data models
-│       └── participants.py   # Participant data models
-```
-
-### How to Ask Cline to Read Backend Files
-
-```markdown
-# Example request:
-Can you read clineflow/companions-api/src/jabali/routers/participants.py
-to see how the participant endpoints are implemented?
-```
-
-### Cloning Fresh References
-
-```bash
-cd clineflow
-./clone-refs.sh
-```
-
-This script:
-- Clones all repositories listed in `index.json`
-- Uses shallow clones (`--depth 1`) to save space
-- Skips already-cloned repos
-- Always removes and re-clones for fresh copy
 
 ---
 
@@ -456,71 +423,79 @@ This script:
 
 ### Task Size Management
 
-When a task becomes too large (Context window approaching limits):
+When a task becomes too large (context window approaching limits):
 
-1. **Create a Journal:** Document progress in `docs/journals/[task].md`
-2. **Summarize State:** Write a comprehensive summary of:
+1. **Create a Journal:** Document progress
+2. **Summarize State:** Write comprehensive summary of:
    - What's been completed
    - What's remaining
    - Key technical decisions
    - Important file locations
-3. **Create New Task:** Use the journal as context for continuation
-4. **Include Verbatim Quotes:** Copy exact text from conversations to preserve context
+3. **Create New Task:** Use journal as context
+4. **Include Verbatim Quotes:** Preserve exact context
 
-### Example Workflow
+### Multi-Task Pattern
 
 ```markdown
 # Task 1: Initial Implementation
-1. Created docs/journals/invite-flow.md
-2. Implemented Phase 1 (core functionality)
-3. Documented progress in journal
-4. Context window at 80%
+1. Created docs/journals/feature.md
+2. Implemented Phase 1
+3. Context window at 80%
 
-# Task 2: Continuation
-1. Loaded context from docs/journals/invite-flow.md
-2. Implemented Phase 2 (UI enhancements)
-3. Updated journal with new progress
-4. Ready for Phase 3
+# Task 2: Continuation  
+1. Loaded context from docs/journals/feature.md
+2. Implemented Phase 2
+3. Updated journal
 ```
+
+---
+
+## Getting Help
+
+### Understanding Cline
+
+💡 **Ask Cline directly**: *"how can i work with you?"* - Get explanations anytime!
+
+### For Feature Questions
+
+1. Check existing documentation in `docs/`
+2. Review similar implemented features
+3. Check reference repos (if using reference system)
+
+### For Technical Issues
+
+1. Check if documented in `docs/[FEATURE]_ISSUE.md` files
+2. Review journal entries for similar problems
+3. Check git history for related changes
+
+### For Cline Behavior
+
+- This document explains Cline's capabilities
+- Use `.clinerules` for quick reference
+- See `clineflow/PROCEDURES.md` for detailed procedures
 
 ---
 
 ## Cline-Specific Tips
 
 ### Plan Mode vs Act Mode
-- **Plan Mode:** Used for discussion, planning, and gathering requirements
-- **Act Mode:** Used for actual code changes and file operations
+
+- **Plan Mode:** Discussion, planning, gathering requirements
+- **Act Mode:** Actual code changes and file operations
 
 ### Tool Usage
-- Read files before modifying them
-- Use `replace_in_file` for targeted edits
-- Use `write_to_file` for new files or complete rewrites
-- Wait for confirmation after each tool use
+
+- Cline reads files before modifying them
+- Uses `replace_in_file` for targeted edits
+- Uses `write_to_file` for new files or complete rewrites
+- Waits for confirmation after each tool use
 
 ### Communication Style
-- Be direct and technical
-- Don't start with "Great" or "Certainly"
-- Provide clear explanations with code examples
-- Focus on accomplishing the task efficiently
 
----
-
-## Getting Help
-
-### For Feature Questions
-1. Check existing documentation in `docs/`
-2. Review similar implemented features
-3. Check backend API reference in `clineflow/companions-api/`
-
-### For Technical Issues
-1. Check if issue is documented in `docs/[FEATURE]_ISSUE.md` files
-2. Review journal entries for similar problems
-3. Check git history for related changes
-
-### For Cline Behavior
-- This document explains Cline's limitations
-- Use `.clinerules` for quick reference
-- See `clineflow/PROCEDURES.md` for detailed procedures
+- Cline is direct and technical
+- Doesn't start with "Great" or "Certainly"
+- Provides clear explanations with examples
+- Focuses on accomplishing tasks efficiently
 
 ---
 
