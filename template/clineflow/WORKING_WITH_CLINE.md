@@ -229,11 +229,12 @@ Explanation of decisions
 ### The Magic Command
 
 When ready to commit, simply say:
-- `"commit changes"`
-- `"commit"`
-- `"please commit"`
 
-**That's it!** Cline handles everything automatically.
+**`"please commit"`**
+
+That's it! Cline handles everything automatically.
+
+*Note: "commit changes" or just "commit" also work, but "please commit" is the recommended command.*
 
 ### What Happens Automatically
 
@@ -262,7 +263,7 @@ When ready to commit, simply say:
 ```markdown
 You: "I've finished implementing the user service"
 [... work on code ...]
-You: "commit changes"
+You: "please commit"
 
 Cline: ✅ Committed changes with journal entry
 

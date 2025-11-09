@@ -8,7 +8,7 @@ Intelligent commit workflow + unified journaling system for organized, documente
 
 ## ✨ Features
 
-- **🚀 Intelligent Commits**: Say "commit changes" and Cline automatically stages, documents, and commits
+- **🚀 Intelligent Commits**: Just say "please commit" and Cline automatically stages, documents, and commits
 - **📝 Unified Journaling**: Every task documented in structured journals with automatic context capture
 - **🎯 Universal**: Works with Python, JavaScript, Go, Rust, Java - any language with git
 - **📏 Code Organization**: Built-in guidelines for maintainable, composable code
@@ -65,7 +65,7 @@ Tell Cline what you want to build. The workflow guides Cline to:
 When ready to commit, just say:
 
 ```
-"commit changes"
+"please commit"
 ```
 
 Cline will automatically:
@@ -95,7 +95,7 @@ git commit -m "feat: implement feature"
 With Cline Workflow:
 ```bash
 # Just say to Cline:
-"commit changes"
+"please commit"
 
 # ✓ Journal auto-updated
 # ✓ Changes staged
@@ -234,7 +234,7 @@ Commits automatically include:
 ## 🎯 Best Practices
 
 1. **One Journal Per Feature/Bug**: Create focused journals
-2. **Commit Frequently**: Use "commit changes" often
+2. **Commit Frequently**: Just say "please commit" often
 3. **Multi-Task Same Journal**: Keep related work together
 4. **Read Your Journals**: Before starting related work, review the journal
 5. **Customize .clinerules**: Adapt to your project's needs
@@ -269,7 +269,7 @@ After installation:
 1. **Read the Guide**: `clineflow/WORKING_WITH_CLINE.md`
 2. **Create Your First Journal**: `docs/journals/your-feature.md`
 3. **Start Building**: Tell Cline what you want
-4. **Commit Intelligently**: Say "commit changes"
+4. **Commit Intelligently**: Just say "please commit"
 
 **Happy Building! 🎉**
 

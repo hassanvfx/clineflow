@@ -501,7 +501,7 @@ Ready for integration testing.
 
 ### SOP-005: Intelligent Commit Workflow
 
-**Trigger:** User says "commit changes", "commit", or "please commit"
+**Trigger:** User says **"please commit"** (recommended) or "commit changes" or "commit"
 
 **Purpose:** Automatically create git commit with context-aware journal entry
 
