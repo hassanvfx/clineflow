@@ -129,7 +129,7 @@ show_next_steps() {
     echo "  3. Create your first journal: docs/journals/your-feature.md"
     echo "  4. (Optional) Set up reference system: ./setup-refs.sh --help"
     echo "  5. Start working with Cline in your IDE"
-    echo "  6. Try the intelligent commit: just say 'commit changes'"
+    echo "  6. Try the intelligent commit: just say 'please commit'"
     echo
     echo "📖 Documentation: clineflow/WORKING_WITH_CLINE.md"
     echo "🔗 Reference System: clineflow/README.md"
