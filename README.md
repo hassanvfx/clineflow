@@ -158,9 +158,44 @@ Edit `.clinerules` to customize for your project:
 - Add project-specific rules
 - Configure documentation patterns
 
-### Reference Linking (Advanced)
+### Reference System (Optional)
 
-For projects that reference other codebases, see `clineflow/README.md` for setting up symlinks to external repositories.
+**Link other codebases for Cline exploration** - useful when you want Cline to have context from external projects.
+
+**What it does:**
+- Creates symlinks in `clineflow/` pointing to other repositories
+- Cline can explore those repos using @ mentions: `@clineflow/backend-api/README.md`
+- No file duplication - changes sync instantly via symlinks
+
+**Quick setup:**
+
+1. **Clone external repos** wherever you prefer:
+   ```bash
+   cd ~/projects
+   git clone https://github.com/your-org/backend-api
+   ```
+
+2. **Create config file** (`.clineflow.local` in your project):
+   ```bash
+   BACKEND_API_PATH="/Users/yourname/projects/backend-api"
+   ```
+
+3. **Create setup script** (`setup-refs.sh`):
+   ```bash
+   #!/bin/bash
+   source .clineflow.local
+   mkdir -p clineflow
+   ln -sf "$BACKEND_API_PATH" clineflow/backend-api
+   ```
+
+4. **Run it** (or integrate into your build process):
+   ```bash
+   ./setup-refs.sh
+   ```
+
+**Result:** Cline can now explore `backend-api` files as if they were in your project.
+
+**Full details:** See [clineflow/README.md](template/clineflow/README.md) for complete documentation and examples.
 
 ## 📚 Documentation
 

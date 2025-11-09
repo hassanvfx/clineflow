@@ -1,103 +1,128 @@
-# LLM References
+# Reference System
 
-Link reference repositories for Cline exploration via symlinks.
+Link external repositories for Cline exploration via symlinks. This allows Cline to access and explore code from other projects without copying files.
 
 ## Quick Start
 
 ```bash
 # 1. Clone reference repos wherever you prefer
 cd ~/projects  # or your preferred location
-git clone https://github.com/Jaabaali/companions-api
-git clone https://github.com/Jaabaali/studio-web-client
+git clone https://github.com/your-org/backend-api
+git clone https://github.com/your-org/frontend-app
 
-# 2. Configure jabaliweb
-cd ~/jabaliweb
+# 2. Create configuration file in your project
+cd ~/your-project
 cp .clineflow.example .clineflow.local
 
 # 3. Edit .clineflow.local with your paths
 # Example:
-#   COMPANIONS_API_PATH="/Users/yourname/projects/companions-api"
-#   STUDIO_WEB_CLIENT_PATH="/Users/yourname/projects/studio-web-client"
+#   BACKEND_API_PATH="/Users/yourname/projects/backend-api"
+#   FRONTEND_APP_PATH="/Users/yourname/projects/frontend-app"
 
-# 4. Create symlinks (or just run npm run dev - it auto-runs)
-npm run setup:refs
+# 4. Create symlinks using your setup script
+./setup-refs.sh  # or integrate into your build process
 ```
 
 ## Usage
 
 Once set up, reference files are accessible at `clineflow/` via symlinks:
 
-- Use with @ mentions: `@clineflow/companions-api/README.md`
-- VSCode search works across symlinked files
-- Terminal commands work normally
-- Changes in reference repos appear immediately (live symlinks)
+- **@ Mentions**: Use `@clineflow/backend-api/README.md` in Cline conversations
+- **VSCode Search**: Search works across symlinked files
+- **Terminal Commands**: All commands work normally with symlinks
+- **Live Updates**: Changes in reference repos appear immediately (real symlinks)
 
-## Commands
+## Setup Script Example
+
+Create a `setup-refs.sh` script in your project:
 
 ```bash
-# Setup
-npm run setup:refs        # Create/update symlinks
-npm run setup:refs:check  # Verify configuration
-npm run setup:hooks       # Install git hooks (optional)
-npm run setup:all         # Complete setup
+#!/bin/bash
+# Load configuration
+source .clineflow.local
 
-# Manual operations
-cd clineflow
-./link-refs.sh           # Create symlinks
-./link-refs.sh check     # Verify config
-./link-refs.sh clean     # Remove symlinks
+# Create symlinks
+mkdir -p clineflow
+ln -sf "$BACKEND_API_PATH" clineflow/backend-api
+ln -sf "$FRONTEND_APP_PATH" clineflow/frontend-app
+
+echo "✓ Reference symlinks created"
 ```
 
-## Auto-Integration
+## Integration Examples
 
-Symlinks are automatically checked/created when you run:
+Integrate into your existing workflow:
 
 ```bash
-npm run dev    # Runs predev → setup:refs automatically
-npm install    # Runs postinstall → checks config
+# Node.js projects (package.json)
+{
+  "scripts": {
+    "setup:refs": "./setup-refs.sh",
+    "predev": "npm run setup:refs",
+    "postinstall": "./setup-refs.sh"
+  }
+}
+
+# Python projects (Makefile)
+setup-refs:
+	./setup-refs.sh
+
+dev: setup-refs
+	python manage.py runserver
+
+# Go projects
+build: setup-refs
+	./setup-refs.sh && go build
 ```
 
 ## Adding New References
 
-1. Clone the new repository
-2. Add entry to `clineflow/index.json`
-3. Add variable to `.clineflow.example`
-4. Add path to your `.clineflow.local`
-5. Run `npm run setup:refs`
+1. Clone the new repository to your preferred location
+2. Add variable to `.clineflow.example` (for team reference)
+3. Add path to your `.clineflow.local` (your local config)
+4. Update your setup script to create the symlink
+5. Run your setup script to create the symlink
 
 ## Troubleshooting
 
 **Symlinks not appearing?**
-```bash
-npm run setup:refs:check  # Verify configuration
-```
+- Check paths in `.clineflow.local` are correct
+- Verify referenced repos exist at specified paths
+- Ensure you have permission to create symlinks
 
 **Need to re-link?**
 ```bash
-cd clineflow && ./link-refs.sh clean
-npm run setup:refs
+# Remove old symlinks
+rm clineflow/backend-api clineflow/frontend-app
+
+# Re-run setup
+./setup-refs.sh
 ```
 
-**jq not installed?**
+**Permission issues?**
 ```bash
-# macOS
-brew install jq
-
-# Linux
-sudo apt-get install jq
+# On Windows, symlinks may require admin privileges
+# Consider using WSL or Git Bash with admin rights
 ```
 
 ## Structure
 
 ```
-jabaliweb/
+your-project/
 ├── .clineflow.example       # Template (versioned)
 ├── .clineflow.local         # Your paths (gitignored)
+├── setup-refs.sh            # Your setup script
 │
 └── clineflow/
     ├── README.md            # This file
-    ├── index.json          # Registry
-    ├── link-refs.sh        # Setup script
-    │
-    ├── companions-api/     # → Symlink to your clone
-    └── studio-web-client/  # → Symlink to your clone
+    ├── backend-api/         # → Symlink to your clone
+    └── frontend-app/        # → Symlink to your clone
+```
+
+## Benefits
+
+- **No File Duplication**: Reference repos stay in their original location
+- **Always Current**: Changes sync instantly via symlinks
+- **Cline Context**: Cline can explore referenced codebases with @ mentions
+- **VSCode Integration**: Search and navigation work seamlessly
+- **Team Flexibility**: Each developer can place repos anywhere via `.clineflow.local`
