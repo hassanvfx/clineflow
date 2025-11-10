@@ -41,10 +41,12 @@ show_removal_list() {
     [ -f setup-refs.sh ] && echo "  • setup-refs.sh"
     [ -f .clineflow.example ] && echo "  • .clineflow.example"
     [ -f .clineflow.local ] && echo "  • .clineflow.local"
+    [ -f .github/workflows/test.yml ] && echo "  • .github/workflows/test.yml (CI/CD workflow)"
     
     echo ""
     echo -e "${GREEN}The following will be PRESERVED:${NC}"
     echo "  • docs/journals/ (your task journals are safe)"
+    [ -d .github/workflows ] && [ "$(ls -A .github/workflows 2>/dev/null | grep -v test.yml | wc -l)" -gt 0 ] && echo "  • .github/workflows/ (your other workflows)"
     echo ""
 }
 
@@ -100,6 +102,25 @@ remove_files() {
         rm -f .clineflow.local
         print_success "Removed .clineflow.local"
         removed_count=$((removed_count + 1))
+    fi
+    
+    # Remove GitHub Actions workflow (only our specific file)
+    if [ -f .github/workflows/test.yml ]; then
+        rm -f .github/workflows/test.yml
+        print_success "Removed .github/workflows/test.yml"
+        removed_count=$((removed_count + 1))
+        
+        # Remove .github/workflows directory if now empty
+        if [ -d .github/workflows ] && [ -z "$(ls -A .github/workflows 2>/dev/null)" ]; then
+            rmdir .github/workflows
+            print_success "Removed empty .github/workflows/"
+            
+            # Remove .github directory if now empty
+            if [ -d .github ] && [ -z "$(ls -A .github 2>/dev/null)" ]; then
+                rmdir .github
+                print_success "Removed empty .github/"
+            fi
+        fi
     fi
     
     echo ""
