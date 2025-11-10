@@ -151,6 +151,39 @@ Built-in guidelines ensure maintainable code:
 ./install.sh --help
 ```
 
+### Returns Accepted Anytime 🔄
+
+Changed your mind? No hard feelings!
+
+Download and run the uninstall script in your project directory:
+
+```bash
+# Using curl
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.sh | bash
+
+# Using wget
+wget -qO- https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.sh | bash
+
+# Or if you have the repo
+./uninstall.sh
+```
+
+**What gets removed:**
+- `.clinerules`
+- `clineflow/` directory
+- `setup-refs.sh` and `.clineflow.example`
+- `.clineflow.local` (if exists)
+- Reference symlinks (if configured)
+
+**⚠️ Note:** Your `docs/journals/` are safe and require manual removal if desired.
+
+**Options:**
+```bash
+./uninstall.sh --dry-run    # Preview what would be removed
+./uninstall.sh --yes        # Skip confirmation prompt
+./uninstall.sh --help       # Show all options
+```
+
 ### Customization
 
 Edit `.clinerules` to customize for your project:

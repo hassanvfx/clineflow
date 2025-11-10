@@ -262,4 +262,59 @@ clineflow/ (repo root)
 
 ---
 
+### 2025-11-09 20:18 - Comprehensive Uninstall Script Implementation
+
+**Achievement:**
+Successfully created a safe, user-friendly uninstall system for ClineFlow with proper documentation.
+
+**Changes Made:**
+
+1. **Created `uninstall.sh`** - Comprehensive uninstall script:
+   - Shows clear list of what will be removed before confirmation
+   - Automatically runs `setup-refs.sh --clean` to remove reference symlinks
+   - **Never touches `docs/journals/`** - journals are always safe
+   - Removes: `.clinerules`, `clineflow/`, `setup-refs.sh`, `.clineflow.example`, `.clineflow.local`
+   - Color-coded output for clarity
+   - Multiple safety options:
+     - `--dry-run` - Preview without removing anything
+     - `--yes` - Skip confirmation (for automation)
+     - `--help` - Show usage information
+   - Final reminder that journals require manual removal if desired
+
+2. **Updated `README.md`** - Added "Returns Accepted Anytime 🔄" section:
+   - Positioned right after "Installation Options" for easy discovery
+   - Friendly, no-pressure messaging
+   - One-line uninstall commands via curl/wget
+   - Clear list of what gets removed
+   - Explicit note that `docs/journals/` are protected
+   - All available options documented
+
+**Technical Decisions:**
+- **Journal Safety First**: Uninstall script never touches docs/journals/ directory
+  - Prevents accidental data loss
+  - Users must explicitly remove journals themselves
+  - Clear messaging in both script output and documentation
+- **Clean Reference Symlinks**: Automatically runs `setup-refs.sh --clean` before removal
+  - Ensures proper cleanup of symlinked references
+  - Handles edge cases where setup-refs.sh might not exist
+- **Dry-run Support**: Users can preview what would be removed without actually removing
+- **Skip Confirmation**: Added `--yes` flag for scripted/automated scenarios
+- **Friendly Messaging**: "Returns Accepted Anytime" creates no-pressure uninstall experience
+
+**User Experience:**
+- Installation and uninstall have consistent patterns
+- Both support one-line download + execute
+- Clear documentation in README next to installation section
+- Safe defaults prevent data loss
+
+**Testing Notes:**
+- Script is executable (chmod +x applied)
+- All paths are properly handled
+- Error handling for missing files/directories
+- Works whether run locally or downloaded via curl/wget
+
+**Status:** Complete
+
+---
+
 *This journal tracks the development of ClineFlow itself using ClineFlow's own workflow.*
