@@ -20,6 +20,9 @@ BASE_URL="https://raw.githubusercontent.com/hassanvfx/clineflow/main/template"
 # Cache-busting timestamp to ensure latest version
 CACHE_BUST="?t=$(date +%s)"
 
+# Template URL for agent configs
+TEMPLATE_URL="${BASE_URL}/configs/rules.template.md"
+
 # Function to print colored output
 print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
@@ -68,6 +71,56 @@ download_file() {
     fi
 }
 
+# Function to generate agent config files from template
+generate_agent_configs() {
+    local template_content
+    
+    # Download template
+    print_info "Generating agent configuration files..."
+    
+    # Download template to temporary location
+    local temp_template=$(mktemp)
+    download_file "${TEMPLATE_URL}" "$temp_template"
+    template_content=$(cat "$temp_template")
+    rm "$temp_template"
+    
+    # Generate .clinerules (Cline)
+    if [ ! -f .clinerules ] || [ "$FORCE" = true ]; then
+        echo "$template_content" > .clinerules
+        print_success ".clinerules (Cline)"
+    else
+        print_warning ".clinerules already exists (skipping)"
+    fi
+    
+    # Generate AGENTS.md (Cursor, Copilot, universal)
+    if [ ! -f AGENTS.md ] || [ "$FORCE" = true ]; then
+        echo "$template_content" > AGENTS.md
+        print_success "AGENTS.md (Cursor, Copilot, others)"
+    else
+        print_warning "AGENTS.md already exists (skipping)"
+    fi
+    
+    # Generate .github/copilot-instructions.md (GitHub Copilot)
+    if [ ! -f .github/copilot-instructions.md ] || [ "$FORCE" = true ]; then
+        mkdir -p .github
+        echo "$template_content" > .github/copilot-instructions.md
+        print_success ".github/copilot-instructions.md (GitHub Copilot)"
+    else
+        print_warning ".github/copilot-instructions.md already exists (skipping)"
+    fi
+    
+    # Generate .windsurf/rules/clineflow.md (Windsurf)
+    if [ ! -f .windsurf/rules/clineflow.md ] || [ "$FORCE" = true ]; then
+        mkdir -p .windsurf/rules
+        echo "$template_content" > .windsurf/rules/clineflow.md
+        print_success ".windsurf/rules/clineflow.md (Windsurf)"
+    else
+        print_warning ".windsurf/rules/clineflow.md already exists (skipping)"
+    fi
+    
+    echo
+}
+
 # Function to install workflow files
 install_workflow() {
     print_info "Installing ClineFlow..."
@@ -77,17 +130,13 @@ install_workflow() {
     print_info "Creating directory structure..."
     mkdir -p clineflow docs/journals
     print_success "Directories created"
+    echo
     
-    # Download template files
+    # Generate agent config files from template
+    generate_agent_configs
+    
+    # Download workflow documentation files
     print_info "Downloading workflow files..."
-    
-    # .clinerules
-    if [ ! -f .clinerules ] || [ "$FORCE" = true ]; then
-        download_file "${BASE_URL}/.clinerules" ".clinerules"
-        print_success ".clinerules"
-    else
-        print_warning ".clinerules already exists (skipping, use --force to overwrite)"
-    fi
     
     # clineflow files
     local clineflow_files=("JOURNAL_TEMPLATE.md" "PROCEDURES.md" "WORKING_WITH_CLINE.md" "README.md")
@@ -129,13 +178,20 @@ install_workflow() {
 show_next_steps() {
     echo -e "${GREEN}🎉 Success!${NC} ClineFlow is installed."
     echo
+    echo "🤖 ${BLUE}Agent-Agnostic Configuration${NC}"
+    echo "   ClineFlow works with any AI coding assistant!"
+    echo
+    echo "   ✓ Cline (.clinerules)"
+    echo "   ✓ Cursor (AGENTS.md)"
+    echo "   ✓ GitHub Copilot (.github/copilot-instructions.md)"
+    echo "   ✓ Windsurf (.windsurf/rules/)"
+    echo
     echo "📚 Next Steps:"
-    echo "  1. Review and customize .clinerules for your project"
+    echo "  1. Start working with your AI assistant in your IDE"
     echo "  2. Read clineflow/WORKING_WITH_CLINE.md for complete guide"
     echo "  3. Create your first journal: docs/journals/your-feature.md"
-    echo "  4. (Optional) Set up reference system: ./setup-refs.sh --help"
-    echo "  5. Start working with Cline in your IDE"
-    echo "  6. Try the intelligent commit: just say 'please commit'"
+    echo "  4. Try the intelligent commit: just say 'please commit'"
+    echo "  5. (Optional) Set up reference system: ./setup-refs.sh --help"
     echo
     echo "📖 Documentation: clineflow/WORKING_WITH_CLINE.md"
     echo "🔗 Reference System: clineflow/README.md"
@@ -155,11 +211,30 @@ uninstall_workflow() {
         exit 0
     fi
     
+    # Remove all agent config files
     rm -f .clinerules
-    rm -rf clineflow
-    rm -rf docs/journals
+    rm -f AGENTS.md
+    rm -f .github/copilot-instructions.md
+    rm -rf .windsurf/rules
     
-    print_success "Workflow files removed"
+    # Remove empty .github directory if it exists and is empty
+    if [ -d .github ] && [ -z "$(ls -A .github)" ]; then
+        rmdir .github
+    fi
+    
+    # Remove empty .windsurf directory if it exists and is empty
+    if [ -d .windsurf ] && [ -z "$(ls -A .windsurf)" ]; then
+        rmdir .windsurf
+    fi
+    
+    # Remove workflow files
+    rm -rf clineflow
+    rm -f setup-refs.sh .clineflow.example
+    
+    # Keep journals but inform user
+    print_warning "docs/journals/ preserved (remove manually if needed)"
+    
+    print_success "ClineFlow files removed"
 }
 
 # Parse command line arguments
@@ -224,8 +299,13 @@ fi
 if [ "$DRY_RUN" = true ]; then
     print_info "DRY RUN MODE - No files will be created"
     echo
-    print_info "Would create:"
-    echo "  .clinerules"
+    print_info "Would create agent configuration files:"
+    echo "  .clinerules (Cline)"
+    echo "  AGENTS.md (Cursor, Copilot, universal)"
+    echo "  .github/copilot-instructions.md (GitHub Copilot)"
+    echo "  .windsurf/rules/clineflow.md (Windsurf)"
+    echo
+    print_info "Would create workflow files:"
     echo "  clineflow/JOURNAL_TEMPLATE.md"
     echo "  clineflow/PROCEDURES.md"
     echo "  clineflow/WORKING_WITH_CLINE.md"

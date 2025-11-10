@@ -36,17 +36,26 @@ show_removal_list() {
     echo -e "${YELLOW}The following will be removed:${NC}"
     echo ""
     
-    [ -f .clinerules ] && echo "  • .clinerules"
-    [ -d clineflow ] && echo "  • clineflow/ (including any reference symlinks)"
-    [ -f setup-refs.sh ] && echo "  • setup-refs.sh"
-    [ -f .clineflow.example ] && echo "  • .clineflow.example"
-    [ -f .clineflow.local ] && echo "  • .clineflow.local"
-    [ -f .github/workflows/test.yml ] && echo "  • .github/workflows/test.yml (CI/CD workflow)"
+    echo "  ${BLUE}Agent Configuration Files:${NC}"
+    [ -f .clinerules ] && echo "    • .clinerules (Cline)"
+    [ -f AGENTS.md ] && echo "    • AGENTS.md (Cursor, Copilot)"
+    [ -f .github/copilot-instructions.md ] && echo "    • .github/copilot-instructions.md (GitHub Copilot)"
+    [ -f .windsurf/rules/clineflow.md ] && echo "    • .windsurf/rules/clineflow.md (Windsurf)"
+    
+    echo ""
+    echo "  ${BLUE}Workflow Files:${NC}"
+    [ -d clineflow ] && echo "    • clineflow/ (including any reference symlinks)"
+    [ -f setup-refs.sh ] && echo "    • setup-refs.sh"
+    [ -f .clineflow.example ] && echo "    • .clineflow.example"
+    [ -f .clineflow.local ] && echo "    • .clineflow.local"
+    [ -f .github/workflows/test.yml ] && echo "    • .github/workflows/test.yml (CI/CD workflow)"
     
     echo ""
     echo -e "${GREEN}The following will be PRESERVED:${NC}"
     echo "  • docs/journals/ (your task journals are safe)"
     [ -d .github/workflows ] && [ "$(ls -A .github/workflows 2>/dev/null | grep -v test.yml | wc -l)" -gt 0 ] && echo "  • .github/workflows/ (your other workflows)"
+    [ -d .github ] && [ -f .github/copilot-instructions.md ] && [ "$(ls -A .github 2>/dev/null | grep -v copilot-instructions.md | wc -l)" -gt 0 ] && echo "  • .github/ (your other GitHub files)"
+    [ -d .windsurf ] && [ -f .windsurf/rules/clineflow.md ] && [ "$(find .windsurf -type f ! -path '.windsurf/rules/clineflow.md' | wc -l)" -gt 0 ] && echo "  • .windsurf/ (your other Windsurf configurations)"
     echo ""
 }
 
@@ -69,12 +78,51 @@ remove_files() {
     print_info "Removing ClineFlow files..."
     echo ""
     
-    # Remove .clinerules
+    # Remove agent configuration files
+    print_info "Removing agent configuration files..."
+    
+    # Remove .clinerules (Cline)
     if [ -f .clinerules ]; then
         rm -f .clinerules
-        print_success "Removed .clinerules"
+        print_success "Removed .clinerules (Cline)"
         removed_count=$((removed_count + 1))
     fi
+    
+    # Remove AGENTS.md (Cursor, Copilot, universal)
+    if [ -f AGENTS.md ]; then
+        rm -f AGENTS.md
+        print_success "Removed AGENTS.md (Cursor, Copilot)"
+        removed_count=$((removed_count + 1))
+    fi
+    
+    # Remove .github/copilot-instructions.md (GitHub Copilot)
+    if [ -f .github/copilot-instructions.md ]; then
+        rm -f .github/copilot-instructions.md
+        print_success "Removed .github/copilot-instructions.md (GitHub Copilot)"
+        removed_count=$((removed_count + 1))
+    fi
+    
+    # Remove .windsurf/rules/clineflow.md (Windsurf)
+    if [ -f .windsurf/rules/clineflow.md ]; then
+        rm -f .windsurf/rules/clineflow.md
+        print_success "Removed .windsurf/rules/clineflow.md (Windsurf)"
+        removed_count=$((removed_count + 1))
+        
+        # Remove .windsurf/rules directory if now empty
+        if [ -d .windsurf/rules ] && [ -z "$(ls -A .windsurf/rules 2>/dev/null)" ]; then
+            rmdir .windsurf/rules
+            print_success "Removed empty .windsurf/rules/"
+        fi
+        
+        # Remove .windsurf directory if now empty
+        if [ -d .windsurf ] && [ -z "$(ls -A .windsurf 2>/dev/null)" ]; then
+            rmdir .windsurf
+            print_success "Removed empty .windsurf/"
+        fi
+    fi
+    
+    echo ""
+    print_info "Removing workflow files..."
     
     # Remove clineflow directory
     if [ -d clineflow ]; then
@@ -189,7 +237,7 @@ if [ "$DRY_RUN" = true ]; then
 fi
 
 # Check if anything to remove
-if [ ! -f .clinerules ] && [ ! -d clineflow ] && [ ! -f setup-refs.sh ] && [ ! -f .clineflow.example ] && [ ! -f .clineflow.local ]; then
+if [ ! -f .clinerules ] && [ ! -f AGENTS.md ] && [ ! -f .github/copilot-instructions.md ] && [ ! -f .windsurf/rules/clineflow.md ] && [ ! -d clineflow ] && [ ! -f setup-refs.sh ] && [ ! -f .clineflow.example ] && [ ! -f .clineflow.local ]; then
     print_warning "No ClineFlow files found to remove"
     exit 0
 fi

@@ -7,13 +7,16 @@
   ╚═════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ 
 ```
 
-> **CLINEFLOW: Senior VibeCoding**
+> **Universal Memory System for AI Coding Assistants**
 >
-> Give Cline a memory. Get a teammate who never forgets.
+> Give your AI assistant persistent memory. Get a teammate who never forgets.
+
+🤖 **Works with any AI assistant** • Cline • Cursor • GitHub Copilot • Windsurf  
+✅ **Fully tested with Cline** by core development team
 
 [![Test Status](https://github.com/hassanvfx/clineflow/workflows/Test%20ClineFlow/badge.svg)](https://github.com/hassanvfx/clineflow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Made for Cline](https://img.shields.io/badge/Made%20for-Cline-blue)](https://github.com/cline/cline)
+[![Agent Agnostic](https://img.shields.io/badge/Agent-Agnostic-green)](https://github.com/hassanvfx/clineflow)
 
 ---
 
@@ -32,13 +35,17 @@ graph TD
 
 ---
 
-> 💡 **New to Cline?**
+> 💡 **New to AI Coding Assistants?**
 > 
-> Cline is an AI coding assistant for VS Code that writes code, edits files, and executes commands through natural conversation.
+> AI coding assistants like Cline, Cursor, and GitHub Copilot write code, edit files, and execute commands through natural conversation.
 > 
-> **[Install Cline from VS Code Marketplace →](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)**
+> **Popular Options:**
+> - **[Cline](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)** - VS Code extension (our primary platform)
+> - **[Cursor](https://cursor.com)** - AI-first IDE
+> - **[GitHub Copilot](https://github.com/features/copilot)** - GitHub's AI assistant
+> - **[Windsurf](https://windsurf.com)** - Codeium's agentic IDE
 > 
-> **ClineFlow gives Cline persistent memory** - so it remembers your entire project history across sessions.
+> **ClineFlow gives them all persistent memory** - so they remember your entire project history across sessions.
 
 ---
 
@@ -51,16 +58,95 @@ graph TD
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh | bash
 ```
 
-### 2️⃣ Ask Cline "How can we work?"
-Cline reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **Cline remembers what you built, why you built it, and what's next.**
+### 2️⃣ Ask your AI assistant "How can we work?"
+Your AI assistant reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **it remembers what you built, why you built it, and what's next.**
 
 ### 3️⃣ Say "please commit"
-Cline automatically:
+Your AI assistant automatically:
 - 📝 Documents your decisions in the active journal
 - 💾 Commits code + updated journal together
 - 🔄 Creates context for your next session
 
 **Result:** Every new task starts with full context. No more "what did we do last time?" 🎉
+
+---
+
+## 🌍 Agent-Agnostic Architecture
+
+**ClineFlow automatically configures itself for multiple AI assistants.** During installation, it creates configuration files for:
+
+- ✅ **Cline** (`.clinerules`) - *Fully tested by core team*
+- ✅ **Cursor** (`AGENTS.md`)
+- ✅ **GitHub Copilot** (`.github/copilot-instructions.md`)
+- ✅ **Windsurf** (`.windsurf/rules/`)
+- ✅ **Future agents** - Ready for any tool that emerges
+
+**Why multiple config files?** Different AI assistants use different configuration formats. ClineFlow generates all of them from a single template, so it "just works" regardless of which tool you use.
+
+**Current Status:** Core team actively develops and tests with Cline. Community members are welcome to test and contribute support for other agents!
+
+> 💡 **Using a different agent?** The installation works the same - ClineFlow will create the appropriate config files automatically.
+
+---
+
+## 🔍 How ClineFlow Compares
+
+Choosing the right tool for AI-assisted development? Here's how ClineFlow stacks up against other popular solutions:
+
+### Comparison Table
+
+| Aspect | **ClineFlow** | Kiro | spec-kit |
+|--------|---------------|------|----------|
+| **Type** | Memory & Documentation Layer | Standalone AI IDE | Agent-Agnostic Framework |
+| **Primary Focus** | Persistent context via journals | Spec-driven development | Methodology + Commands |
+| **Installation** | One-line bash script | Full IDE install | Python CLI + Git |
+| **Agent Support** | Works with any (Cline, Cursor, Copilot, Windsurf) | Kiro-only | Multiple agents (Cline, Claude Code, Copilot, Cursor, etc.) |
+| **Learning Curve** | Minimal - natural conversations | Medium - structured workflow | Medium - multiple phases |
+| **Ceremony Level** | Low (automatic journaling) | High (formal specs required) | Medium (guided steps) |
+| **Best For** | Memory persistence, ongoing projects | Greenfield projects, formal specs | Structured development, enterprise |
+| **Setup Time** | < 1 minute | Full IDE switch | Several minutes |
+| **Dependencies** | bash + git only | Standalone IDE | Python 3.11+, uv, git |
+
+### When to Choose ClineFlow
+
+✅ **Choose ClineFlow if you:**
+- Want memory without changing workflow
+- Already have a preferred AI assistant (Cline, Cursor, etc.)
+- Value documentation that emerges naturally from work
+- Need cross-repo code exploration (symlinks)
+- Want minimal setup (1 bash script)
+- Prefer iterative, conversation-driven development
+- Working solo or small team
+
+### When to Choose Alternatives
+
+**Choose Kiro if you:**
+- Want a purpose-built AI IDE
+- Need autonomous agents with background hooks
+- Building greenfield projects from scratch
+- Want guided spec-driven workflow with formal specs
+- Need multimodal input (images, diagrams)
+- Willing to switch entire IDE
+- Working on complex enterprise projects
+
+**Choose spec-kit if you:**
+- Want spec-driven without IDE lock-in
+- Using multiple AI tools across team
+- Need agent-agnostic workflow with formal methodology
+- Working across different AI platforms
+- Need formal spec documents for compliance
+- Contributing to open source standard
+
+### ClineFlow's Unique Value
+
+**The Memory Layer That Works Everywhere:**
+- Works alongside existing tools (not replacing them)
+- Zero commitment (one bash script to try)
+- Natural documentation (journals emerge from work)
+- Cross-repo exploration (symlink system)
+- Intelligent commits (automatic context preservation)
+
+**Core Differentiator:** ClineFlow is the ONLY tool focused purely on giving AI assistants persistent memory through journals, working with any agent, with zero ceremony.
 
 ---
 
@@ -471,15 +557,23 @@ wget -qO- https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh 
 
 ```
 your-project/
-├── .clinerules                    # Cline assistant rules
+├── .clinerules                    # Cline
+├── AGENTS.md                      # Cursor, Copilot, universal
+├── .github/
+│   └── copilot-instructions.md    # GitHub Copilot
+├── .windsurf/
+│   └── rules/
+│       └── clineflow.md           # Windsurf
 ├── clineflow/                     # Reference documentation
 │   ├── JOURNAL_TEMPLATE.md        # Template for task journals
 │   ├── PROCEDURES.md              # Standard operating procedures
 │   ├── WORKING_WITH_CLINE.md      # Complete user guide
 │   └── README.md                  # ClineFlow overview
-└── docs/
-    └── journals/                  # Your task journals go here
-        └── .gitkeep
+├── docs/
+│   └── journals/                  # Your task journals go here
+│       └── .gitkeep
+├── setup-refs.sh                  # Reference system setup (optional)
+└── .clineflow.example             # Reference system config example (optional)
 ```
 
 ---
