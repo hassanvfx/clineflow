@@ -23,7 +23,7 @@ graph LR
     B --> D[👥 Team Ready]
     B --> E[📖 Self-Documenting]
     style A fill:#ff6b6b
-    style B fill:#51cf66
+    style B fill:#238636
 ```
 
 ---
@@ -95,8 +95,8 @@ graph TD
     E --> F[📦 Auto-commits code + journal]
     F --> G[🔄 Next session loads context]
     G --> A
-    style E fill:#51cf66
-    style F fill:#51cf66
+    style E fill:#238636
+    style F fill:#238636
 ```
 
 **1. Just Ask Cline**
@@ -205,8 +205,8 @@ graph LR
     D --> E[📝 Context Saved]
     E --> F[🔄 Next Idea<br/>with History]
     F --> B
-    style D fill:#51cf66
-    style E fill:#51cf66
+    style D fill:#238636
+    style E fill:#238636
 ```
 
 **Your workflow:**
@@ -225,8 +225,8 @@ graph TD
     D --> E[🧠 Full Context Instantly]
     E --> F[🔄 Continues Work]
     F --> G[📋 PR with Complete History]
-    style B fill:#51cf66
-    style E fill:#51cf66
+    style B fill:#238636
+    style E fill:#238636
 ```
 
 **Team workflow:**
@@ -249,8 +249,8 @@ graph LR
     B --> C[📦 Stage Changes]
     C --> D[✍️ Create Message]
     D --> E[✅ Commit Done]
-    style A fill:#339af0
-    style E fill:#51cf66
+    style A fill:#1f6feb
+    style E fill:#238636
 ```
 
 Traditional workflow requires 5+ manual steps. ClineFlow: **One phrase.**
@@ -263,8 +263,8 @@ graph LR
     C --> D[Session 2<br/>Loads Journal]
     D --> E[🧠 Complete Context]
     E --> F[Session 3<br/>Enhanced AI]
-    style B fill:#51cf66
-    style E fill:#51cf66
+    style B fill:#238636
+    style E fill:#238636
 ```
 
 **Never repeat yourself again.** Each session builds on the last.
@@ -288,7 +288,7 @@ graph TD
     C --> B
     B --> D[Task 3: Enhancement]
     D --> B
-    style B fill:#51cf66
+    style B fill:#238636
 ```
 
 Keep related work in one place. Complete context for entire feature lifecycle.
