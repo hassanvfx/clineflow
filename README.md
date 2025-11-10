@@ -49,10 +49,10 @@ Cline automatically:
 Changed your mind? No hard feelings!
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.sh | bash
+./uninstall.sh
 ```
 
-Your `docs/journals/` are safe and require manual removal if desired. [See all options →](#returns-accepted-anytime-1)
+Your `docs/journals/` are safe and require manual removal if desired. [See all options →](#installation-options)
 
 ---
 

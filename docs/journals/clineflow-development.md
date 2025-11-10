@@ -374,4 +374,34 @@ This restructure transforms ClineFlow's positioning from "workflow system" to "A
 
 ---
 
+### 2025-11-09 22:15 - README Top Section Fixes
+
+**Achievement:**
+Fixed two UX issues in the top "Returns Accepted Anytime" section of the README.
+
+**Changes Made:**
+
+1. **Changed Command from curl to ./uninstall.sh**:
+   - OLD: `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.sh | bash`
+   - NEW: `./uninstall.sh`
+   - **Rationale**: At this point in the README, users have already installed ClineFlow, so they already have `uninstall.sh` locally. Using the local script is simpler and more appropriate.
+
+2. **Fixed Broken Link**:
+   - OLD: `[See all options →](#returns-accepted-anytime-1)`
+   - NEW: `[See all options →](#installation-options)`
+   - **Rationale**: The original link target didn't exist (GitHub anchor generation issue). Now links correctly to the Installation Options section where full uninstall details are provided.
+
+**Technical Details:**
+- The curl/wget one-liners remain in the detailed "Advanced Usage" section for users who want to download the script separately
+- Link now properly navigates to the section with all uninstall options (--dry-run, --yes, --help)
+
+**User Experience:**
+- Simpler command for users who have already installed
+- Working link that takes users to complete uninstall documentation
+- Better progressive disclosure pattern
+
+**Status:** Complete
+
+---
+
 *This journal tracks the development of ClineFlow itself using ClineFlow's own workflow.*
