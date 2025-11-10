@@ -17,6 +17,9 @@ VERSION="1.0.0"
 # Base URL for raw files (GitHub)
 BASE_URL="https://raw.githubusercontent.com/hassanvfx/clineflow/main/template"
 
+# Cache-busting timestamp to ensure latest version
+CACHE_BUST="?t=$(date +%s)"
+
 # Function to print colored output
 print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
@@ -47,15 +50,18 @@ is_git_repo() {
     git rev-parse --is-inside-work-tree >/dev/null 2>&1
 }
 
-# Function to download file
+# Function to download file with cache-busting
 download_file() {
     local url=$1
     local dest=$2
     
+    # Add cache-busting parameter to ensure latest version
+    local download_url="${url}${CACHE_BUST}"
+    
     if command -v curl >/dev/null 2>&1; then
-        curl -fsSL "$url" -o "$dest"
+        curl -fsSL "$download_url" -o "$dest"
     elif command -v wget >/dev/null 2>&1; then
-        wget -q "$url" -O "$dest"
+        wget -q "$download_url" -O "$dest"
     else
         print_error "Neither curl nor wget found. Please install one of them."
         exit 1
