@@ -71,6 +71,28 @@ download_file() {
     fi
 }
 
+# Function to configure .gitignore
+configure_gitignore() {
+    local gitignore_file=".gitignore"
+    
+    if [ -f "$gitignore_file" ]; then
+        # Check if already configured
+        if ! grep -q "^\.clineflow\.local$" "$gitignore_file"; then
+            echo "" >> "$gitignore_file"
+            echo "# ClineFlow - per-developer config" >> "$gitignore_file"
+            echo ".clineflow.local" >> "$gitignore_file"
+            print_success "Added .clineflow.local to .gitignore"
+        else
+            print_info ".clineflow.local already in .gitignore"
+        fi
+    else
+        # Create .gitignore if it doesn't exist
+        echo "# ClineFlow - per-developer config" > "$gitignore_file"
+        echo ".clineflow.local" >> "$gitignore_file"
+        print_success "Created .gitignore with .clineflow.local"
+    fi
+}
+
 # Function to generate agent config files from template
 generate_agent_configs() {
     local template_content
@@ -169,6 +191,11 @@ install_workflow() {
         print_warning ".clineflow.example already exists (skipping)"
     fi
     
+    # Configure .gitignore
+    echo
+    print_info "Configuring .gitignore..."
+    configure_gitignore
+    
     echo
     print_success "Installation complete!"
     echo
@@ -233,6 +260,7 @@ uninstall_workflow() {
     
     # Keep journals but inform user
     print_warning "docs/journals/ preserved (remove manually if needed)"
+    print_warning ".gitignore entry for .clineflow.local preserved (remove manually if needed)"
     
     print_success "ClineFlow files removed"
 }

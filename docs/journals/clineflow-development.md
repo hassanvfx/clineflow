@@ -553,4 +553,71 @@ README now optimized for virality while maintaining authenticity:
 
 ---
 
+### 2025-11-10 13:36 - Auto-configure .gitignore for .clineflow.local
+
+**Achievement:**
+Added automatic .gitignore configuration to prevent users from accidentally committing their personal `.clineflow.local` file containing local repository paths.
+
+**Problem Solved:**
+Previously, the installer created `.clineflow.local` for per-developer configuration but didn't automatically add it to `.gitignore`. This created risk where users might accidentally commit their local filesystem paths, exposing personal directory structures and causing merge conflicts between developers.
+
+**Implementation Details:**
+
+1. **Created `configure_gitignore()` function** in `install.sh`:
+   - Checks if `.gitignore` exists, creates it if missing
+   - Uses exact line matching (`^\.clineflow\.local$`) to avoid false positives
+   - Appends entry with descriptive comment: `# ClineFlow - per-developer config`
+   - Idempotent: safe to run multiple times
+   - Clear user feedback about what was done
+
+2. **Integrated into `install_workflow()`**:
+   - Runs after reference system files are set up
+   - Added section header: "Configuring .gitignore..."
+   - Consistent with installer's messaging pattern
+
+3. **Updated `uninstall_workflow()`**:
+   - Added warning: ".gitignore entry for .clineflow.local preserved (remove manually if needed)"
+   - Safer approach: never automatically removes from .gitignore
+   - Prevents potential issues with user-modified gitignore files
+
+**Technical Decisions:**
+- **Append vs Download**: Chose to append entry rather than download template .gitignore
+  - Preserves existing .gitignore rules
+  - Respects language/framework-specific configurations
+  - Minimal, surgical change
+- **Exact Match Regex**: Uses `^\.clineflow\.local$` for precise matching
+  - Avoids false positives (e.g., comments containing the text)
+  - Only matches the exact entry on its own line
+- **Never Remove**: Uninstaller doesn't touch .gitignore
+  - Users may have manually edited it
+  - Better to leave benign entry than risk corrupting file
+
+**Safety Features:**
+- ✅ Creates .gitignore if it doesn't exist
+- ✅ Idempotent (safe to run multiple times)
+- ✅ Preserves existing .gitignore content
+- ✅ Clear user feedback
+- ✅ Standard gitignore comment format
+- ✅ Protected during uninstall
+
+**User Experience:**
+- **Before**: Users had to manually add to .gitignore or risk committing personal paths
+- **After**: Zero-conf git safety - works out of the box
+- Prevents accidents without requiring user action
+- Consistent with "per-developer config" design philosophy
+
+**Files Modified:**
+- `install.sh` - Added configure_gitignore() function and integration
+- Lines added: ~25 (function + call + uninstall warning)
+
+**Testing Notes:**
+- Function handles both existing and missing .gitignore files
+- Properly escapes dots in regex pattern
+- Works on fresh installs and re-runs
+- Uninstall preserves .gitignore entries safely
+
+**Status:** Complete
+
+---
+
 *This journal tracks the development of ClineFlow itself using ClineFlow's own workflow.*
