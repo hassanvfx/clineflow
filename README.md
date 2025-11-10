@@ -21,7 +21,7 @@ graph LR
     A[❌ Lost Context<br/>Every Session] -->|Install ClineFlow| B[✅ Persistent Memory<br/>Complete Context]
     B --> C[🚀 Ship Faster]
     B --> D[👥 Team Ready]
-    B --> E[📖 Self-Documenting]
+    B --> E[📖 Self-<br/>Documenting]
     style A fill:#ff6b6b
     style B fill:#238636
 ```
