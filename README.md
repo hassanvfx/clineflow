@@ -92,41 +92,69 @@ your-project/
         └── .gitkeep
 ```
 
-## 🚀 How It Works
+## 🚀 Document Driven Development (DDD)
 
-### 1. Start a Task
+> **From vibecoding to professional software engineering** - ClineFlow transforms informal AI chats into expert-supervised, fully documented development.
 
-Create a journal for your work:
+### The Natural Workflow
 
-```bash
-# Create journal from template
-cp clineflow/JOURNAL_TEMPLATE.md docs/journals/my-feature.md
+**1. Just Ask Cline**
 ```
-
-### 2. Work with Cline
-
-Tell Cline what you want to build. The workflow guides Cline to:
-- Keep code modular and focused (300-500 LOC per file)
-- Document decisions as you go
-- Maintain clear context
-
-### 3. Intelligent Commit
-
-When ready to commit, just say:
-
+"Build a user authentication system"
 ```
-"please commit"
-```
+Cline reads `.clinerules`, understands your project standards, and gets to work. **No manual setup needed.**
 
-Cline will automatically:
-1. ✅ Detect your active journal
-2. ✅ Generate a context-aware journal entry
-3. ✅ Append entry to your journal
-4. ✅ Stage all changes including updated journal
-5. ✅ Create a descriptive commit message
-6. ✅ Execute `git commit`
+**2. Cline Works Like a Senior Developer**
+- 📋 **Automatically creates and updates journal** for the task
+- 💬 **Documents every decision** as you discuss
+- 🏗️ **Follows code organization rules** (300-500 LOC modules)
+- 🧠 **Maintains context** throughout the conversation
+- ✅ **Asks clarifying questions** when needed
 
-**One command. Complete documentation. Every time.**
+**3. Say "please commit"**
+Cline automatically:
+- Updates journal with session summary
+- Stages code + journal together
+- Creates descriptive commit message
+- Commits everything
+
+**Result:** Professional development workflow with complete documentation - automatically.
+
+---
+
+### From Vibecoding to Document Driven Development
+
+| Vibecoding (Before) | Document Driven Development (After) |
+|---------------------|-------------------------------------|
+| 💭 Informal chats | 📋 Structured journals |
+| 🤷 Lost context between sessions | 🧠 Persistent memory across weeks |
+| ❓ "What did we do last time?" | 📖 Complete decision history |
+| 🎲 Hope for consistency | ✅ Expert-supervised process |
+| 👤 Solo knowledge | 👥 Team-ready documentation |
+
+### Why Document Driven Development Matters
+
+**🎯 Professional Standards**
+- Not just coding - engineering with documentation
+- Every decision recorded and justified
+- Code and context together in every commit
+
+**👥 Team-Ready From Day One**
+- New developers read journals to understand the "why"
+- Onboarding becomes reading, not guessing
+- Institutional knowledge preserved
+
+**🔍 Expert-Supervised AI**
+- AI follows your documented rules and standards
+- Maintains code quality guidelines automatically
+- Consistent patterns across the entire project
+
+**📊 Complete Audit Trail**
+- Every decision, every conversation, fully documented
+- Understand why code exists, not just what it does
+- Debug with context, not archaeology
+
+**This isn't just AI pair programming - it's professional software engineering with AI assistance.**
 
 ## 📖 Core Concepts
 

@@ -404,4 +404,65 @@ Fixed two UX issues in the top "Returns Accepted Anytime" section of the README.
 
 ---
 
+### 2025-11-09 22:18 - "How It Works" Rewritten as Document Driven Development (DDD)
+
+**Achievement:**
+Completely redesigned the "How It Works" section to position ClineFlow as Document Driven Development - transforming from boring manual steps to an aspirational professional practice.
+
+**Changes Made:**
+
+1. **New Section Title & Hook**:
+   - Title: "Document Driven Development (DDD)"
+   - Hook: "From vibecoding to professional software engineering"
+   - Positions journaling as a methodical, expert-supervised practice
+
+2. **Natural Workflow Emphasis**:
+   - **Step 1**: "Just Ask Cline" - no manual template copying
+   - **Step 2**: "Cline Works Like a Senior Developer" - automatic journal creation
+   - **Step 3**: "Say 'please commit'" - automatic documentation
+   - Shows Cline does all the magic automatically
+
+3. **Vibecoding vs DDD Comparison Table**:
+   - Before: Informal chats, lost context, solo knowledge
+   - After: Structured journals, persistent memory, team-ready documentation
+   - Clear contrast between casual and professional
+
+4. **"Why DDD Matters" Section** - Four key benefits:
+   - 🎯 **Professional Standards**: Engineering with documentation
+   - 👥 **Team-Ready**: Onboarding becomes reading
+   - 🔍 **Expert-Supervised AI**: Follows documented rules
+   - 📊 **Complete Audit Trail**: Debug with context, not archaeology
+
+5. **Removed Manual Steps**:
+   - OLD: "cp clineflow/JOURNAL_TEMPLATE.md docs/journals/my-feature.md"
+   - NEW: Emphasizes Cline creates journals automatically
+   - Makes it clear users just talk to Cline normally
+
+**Technical Decisions:**
+- **"Document Driven Development"** - Positions as a recognized methodology (like TDD, BDD)
+- **"Vibecoding"** - Acknowledges current informal AI usage pattern
+- **"Expert-Supervised"** - Emphasizes professional standards over casual use
+- **Table Format** - Clear before/after comparison for quick understanding
+- **Benefits-Focused** - Shows value for teams, not just individuals
+
+**Messaging Strategy:**
+- **Aspirational**: From casual to professional
+- **Automatic**: No manual work, Cline handles it
+- **Team-Oriented**: Not just solo dev, but team-ready practices
+- **Audit Trail**: Compliance and accountability built-in
+- **Professional**: Engineering, not just coding
+
+**User Experience:**
+- Users see they don't need to manually manage journals
+- Natural workflow: just ask Cline, get documentation automatically
+- Appeals to professional developers who want quality practices
+- Positions ClineFlow as an upgrade to development methodology
+
+**Impact:**
+This reframe transforms ClineFlow from "a tool you use" to "a methodology you adopt" - much more powerful positioning that appeals to serious developers and teams.
+
+**Status:** Complete
+
+---
+
 *This journal tracks the development of ClineFlow itself using ClineFlow's own workflow.*
