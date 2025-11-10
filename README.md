@@ -352,13 +352,41 @@ Cline: Finds all usages across every linked repository
 ✅ **Zero overhead** - Native file access  
 ✅ **Works offline** - No network required
 
+### Git Safety Built-In
+
+**The reference system automatically handles git exclusion:**
+
+```mermaid
+graph LR
+    A[setup-refs.sh] --> B[Create Symlinks]
+    B --> C[Configure<br/>.git/info/exclude]
+    C --> D[✅ Visible in VSCode]
+    C --> E[✅ Ignored by Git]
+    style C fill:#238636
+    style D fill:#238636
+    style E fill:#238636
+```
+
+**Why this matters:**
+- Symlinks contain absolute paths specific to each developer
+- Committing them would break for other developers
+- `.git/info/exclude` keeps them local-only but visible
+- No `.gitignore` complexity needed
+
+**Example:**
+```
+Developer A: clineflow/backend-api → /Users/alice/repos/backend-api
+Developer B: clineflow/backend-api → /home/bob/projects/backend-api
+```
+Both work perfectly. No conflicts. Ever.
+
 ### Advanced Configuration
 
 **Full details:** See [clineflow/README.md](template/clineflow/README.md) for advanced features:
 - Automatic symlink management
+- Git exclusion handling
 - Clean mode for fresh starts
 - Integration with build tools
-- Git hooks support
 
 ---
 
@@ -596,6 +624,25 @@ Edit `.clinerules` to customize for your project:
    ```
 
 **Result:** Cline can now explore linked repos as if they were part of your project!
+
+#### Git Safety 🔒
+
+**Symlinks are local-only and developer-specific:**
+- ✅ **Visible in VSCode** - Full file explorer access
+- ✅ **Never committed** - Automatically excluded via `.git/info/exclude`
+- ✅ **No conflicts** - Each developer has their own paths
+- ✅ **Team-ready** - Share config, not symlinks
+
+**How it works:**
+- `setup-refs.sh` automatically configures `.git/info/exclude`
+- This is like `.gitignore` but local-only (never committed)
+- Symlinks stay visible but git ignores them completely
+- Each developer can have different repository locations
+
+**Safety checks:**
+- ⚠️ Warns if symlinks are accidentally staged for commit
+- ✅ Provides clear remediation instructions
+- ✅ Works in both git and non-git projects
 
 **Full details:** See [clineflow/README.md](template/clineflow/README.md) for advanced configuration.
 

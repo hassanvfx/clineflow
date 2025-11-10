@@ -123,6 +123,77 @@ fi
 SUCCESS_COUNT=0
 TOTAL_COUNT=0
 
+# Function to configure git exclusion for symlinks
+configure_git_exclude() {
+    local exclude_file=".git/info/exclude"
+    
+    echo ""
+    echo -e "${BLUE}ℹ Configuring git to ignore symlinks...${NC}"
+    
+    # Ensure git directory exists
+    if [ ! -d ".git" ]; then
+        echo -e "${YELLOW}⚠ Not a git repository - symlinks won't be auto-ignored${NC}"
+        echo -e "${BLUE}  This is OK for testing, but in real projects run 'git init' first${NC}"
+        return 1
+    fi
+    
+    # Create exclude file if missing
+    if [ ! -f "$exclude_file" ]; then
+        mkdir -p "$(dirname "$exclude_file")"
+        touch "$exclude_file"
+    fi
+    
+    # Check if already configured
+    if grep -q "# ClineFlow reference symlinks" "$exclude_file" 2>/dev/null; then
+        echo -e "${GREEN}✓ Git exclusion already configured${NC}"
+        return 0
+    fi
+    
+    # Add exclusion rules
+    cat >> "$exclude_file" << 'EOF'
+
+# ClineFlow reference symlinks (local-only, not committed)
+# These are developer-specific paths and should not be in version control
+clineflow/*
+!clineflow/*.md
+!clineflow/.gitattributes
+EOF
+    
+    echo -e "${GREEN}✓ Configured .git/info/exclude to ignore symlinks${NC}"
+    echo -e "${BLUE}  (This is local-only and won't affect other developers)${NC}"
+    return 0
+}
+
+# Function to check for staged symlinks
+check_staged_symlinks() {
+    # Only check if we're in a git repo
+    if [ ! -d ".git" ]; then
+        return 0
+    fi
+    
+    # Check for staged symlinks (exclude .md and .gitattributes files)
+    local staged_symlinks=$(git diff --cached --name-only 2>/dev/null | grep -E "^clineflow/[^/]+$" | grep -v "\.md$" | grep -v "\.gitattributes$")
+    
+    if [ -n "$staged_symlinks" ]; then
+        echo ""
+        echo -e "${RED}════════════════════════════════════════════════════════${NC}"
+        echo -e "${RED}⚠  WARNING: Symlinks detected in staged files!${NC}"
+        echo -e "${RED}════════════════════════════════════════════════════════${NC}"
+        echo ""
+        echo -e "${YELLOW}The following symlinks are staged for commit:${NC}"
+        echo "$staged_symlinks" | sed 's/^/  - /'
+        echo ""
+        echo -e "${YELLOW}Symlinks should NOT be committed as they contain${NC}"
+        echo -e "${YELLOW}developer-specific paths that won't work for others.${NC}"
+        echo ""
+        echo -e "${BLUE}To unstage: ${NC}git reset HEAD clineflow/*"
+        echo ""
+        return 1
+    fi
+    
+    return 0
+}
+
 # Function to create symlink
 create_symlink() {
     local var_name="$1"
@@ -182,14 +253,36 @@ while IFS='=' read -r var_name var_value; do
     fi
 done < "$CONFIG_FILE"
 
+# Configure git exclusion
+configure_git_exclude
+
+# Check for accidentally staged symlinks
+check_staged_symlinks
+
 # Summary
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
 if [ $SUCCESS_COUNT -gt 0 ]; then
-    echo -e "${GREEN}✓ Setup complete! Created $SUCCESS_COUNT symlink(s)${NC}"
+    echo -e "${GREEN}✓ Setup Complete!${NC}"
+    echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
     echo ""
-    echo -e "${BLUE}📚 You can now reference these repos in Cline:${NC}"
-    echo -e "${BLUE}   Example: @clineflow/backend-api/README.md${NC}"
+    echo -e "${GREEN}Created Symlinks:${NC}"
+    echo -e "  $SUCCESS_COUNT symlink(s) in $REFS_DIR/"
+    echo ""
+    echo -e "${GREEN}Git Configuration:${NC}"
+    echo -e "  ✓ Symlinks configured as local-only (not committed)"
+    echo -e "  ✓ Located in .git/info/exclude"
+    echo ""
+    echo -e "${BLUE}📚 Access in VSCode/Cline:${NC}"
+    echo -e "  • Files are visible in VSCode file explorer"
+    echo -e "  • Use @clineflow/[name]/path/to/file"
+    echo -e "  • Example: @clineflow/backend-api/README.md"
+    echo ""
+    echo -e "${BLUE}🔒 Git Safety:${NC}"
+    echo -e "  • Symlinks won't be committed (local-only)"
+    echo -e "  • No conflicts with other developers"
+    echo -e "  • Each dev has their own repository paths"
+    echo ""
 else
     echo -e "${YELLOW}⚠ No symlinks created${NC}"
     echo -e "${BLUE}ℹ Make sure $CONFIG_FILE has valid repository paths${NC}"
