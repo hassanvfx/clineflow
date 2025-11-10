@@ -17,11 +17,14 @@
 ---
 
 ```mermaid
-graph LR
-    A[❌ Lost Context<br/>Every Session] -->|Install ClineFlow| B[✅ Persistent Memory<br/>Complete Context]
+graph TD
+    A[💭 Vibecoding<br/>Lost Context] --> B[🎯 ClineFlow<br/>Persistent Memory]
     B --> C[🚀 Ship Faster]
     B --> D[👥 Team Ready]
     B --> E[📖 Self-<br/>Documenting]
+    C --> B
+    D --> B
+    E --> B
     style A fill:#ff6b6b
     style B fill:#238636
 ```
@@ -236,6 +239,116 @@ graph TD
 - Audit-ready documentation
 
 **Same tool. Any scale.**
+
+---
+
+## 🔗 Cross-Team Code Access
+
+> **Simple alternative to MCP fileserver** - Give Cline instant access to your entire organization's codebase
+
+### The Problem
+
+Your team works across multiple repositories. Cline needs context from:
+- Backend APIs
+- Frontend applications  
+- Shared libraries
+- Documentation repos
+- Legacy systems
+
+**Traditional solution:** Complex MCP fileserver setup with running processes and network overhead.
+
+**ClineFlow solution:** 3-line config file. Done.
+
+### MCP Fileserver vs ClineFlow References
+
+| MCP Fileserver | ClineFlow References |
+|----------------|---------------------|
+| ❌ Complex server configuration | ✅ Simple config file |
+| ❌ Requires running process | ✅ Native filesystem symlinks |
+| ❌ Per-developer setup | ✅ Team shares one config |
+| ❌ Network latency | ✅ Instant local access |
+| ❌ Additional dependencies | ✅ Zero dependencies |
+
+### How It Works
+
+```mermaid
+graph LR
+    A[Your Project] --> B[.clineflow.local<br/>Config File]
+    B --> C[Backend API]
+    B --> D[Frontend App]
+    B --> E[Shared Libs]
+    C --> F[🤖 Cline Explores<br/>All Repos]
+    D --> F
+    E --> F
+    style B fill:#238636
+    style F fill:#1f6feb
+```
+
+**Result:** Cline can explore and reference any linked repository as if it's part of your current project.
+
+### 30-Second Setup
+
+1. **Edit one config file:**
+   ```bash
+   cp .clineflow.example .clineflow.local
+   nano .clineflow.local
+   ```
+
+2. **Add your repo paths:**
+   ```bash
+   BACKEND_API_PATH="/path/to/backend-api"
+   FRONTEND_APP_PATH="/path/to/frontend-app"
+   SHARED_LIBS_PATH="/path/to/shared-libraries"
+   ```
+
+3. **Run setup:**
+   ```bash
+   ./setup-refs.sh
+   ```
+
+**That's it.** Cline now has access to all repos.
+
+### Cross-Team Use Cases
+
+**Full-Stack Development:**
+```
+You: "How does the frontend call the user authentication API?"
+Cline: Reads backend API, frontend code, shows complete flow
+```
+
+**Microservices:**
+```
+You: "Which services depend on the payment service?"
+Cline: Scans all linked repos, finds dependencies
+```
+
+**Onboarding:**
+```
+New Dev: "Explain the architecture"
+Cline: Navigates across all repos, provides complete overview
+```
+
+**Refactoring:**
+```
+You: "I'm changing this shared library function"
+Cline: Finds all usages across every linked repository
+```
+
+### Team Benefits
+
+✅ **Share config in git** - Everyone gets same setup  
+✅ **No server maintenance** - Just filesystem symlinks  
+✅ **Instant updates** - Changes sync automatically  
+✅ **Zero overhead** - Native file access  
+✅ **Works offline** - No network required
+
+### Advanced Configuration
+
+**Full details:** See [clineflow/README.md](template/clineflow/README.md) for advanced features:
+- Automatic symlink management
+- Clean mode for fresh starts
+- Integration with build tools
+- Git hooks support
 
 ---
 
