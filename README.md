@@ -31,6 +31,16 @@ graph TD
 
 ---
 
+> 💡 **New to Cline?**
+> 
+> Cline is an AI coding assistant for VS Code that writes code, edits files, and executes commands through natural conversation.
+> 
+> **[Install Cline from VS Code Marketplace →](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)**
+> 
+> **ClineFlow gives Cline persistent memory** - so it remembers your entire project history across sessions.
+
+---
+
 ## 🎯 Easy as 1-2-3
 
 **Turn Cline into a teammate who remembers everything**
