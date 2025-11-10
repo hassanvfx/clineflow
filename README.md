@@ -11,6 +11,7 @@
 >
 > Give Cline a memory. Get a teammate who never forgets.
 
+[![Test Status](https://github.com/hassanvfx/clineflow/workflows/Test%20ClineFlow/badge.svg)](https://github.com/hassanvfx/clineflow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Made for Cline](https://img.shields.io/badge/Made%20for-Cline-blue)](https://github.com/cline/cline)
 
