@@ -1,10 +1,60 @@
 # ClineFlow
 
-> 🤖 A universal AI-assisted development workflow system for Cline that works with any programming language
-
-Intelligent commit workflow + unified journaling system for organized, documented development with Cline AI assistant.
+> 🤖 Transform Cline into your AI development partner with persistent memory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## 🎯 Easy as 1-2-3
+
+**Turn Cline into a teammate who remembers everything**
+
+### 1️⃣ Install ClineFlow
+```bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh | bash
+```
+
+### 2️⃣ Ask Cline "How can we work?"
+Cline reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **Cline remembers what you built, why you built it, and what's next.**
+
+### 3️⃣ Say "please commit"
+Cline automatically:
+- 📝 Documents your decisions in the active journal
+- 💾 Commits code + updated journal together
+- 🔄 Creates context for your next session
+
+**Result:** Every new task starts with full context. No more "what did we do last time?" 🎉
+
+---
+
+## 💡 Why This Changes Everything
+
+**Without ClineFlow:**
+- ❌ Each Cline session starts from scratch
+- ❌ You repeat context manually every time
+- ❌ No history of why decisions were made
+- ❌ Can't resume work seamlessly
+
+**With ClineFlow:**
+- ✅ **Persistent Memory**: Journals capture every decision, every conversation
+- ✅ **Seamless Continuation**: New tasks load previous context automatically
+- ✅ **True Collaboration**: Cline becomes a partner who remembers your project
+- ✅ **Zero Context Loss**: Work today, continue tomorrow without explanation
+
+**This isn't just documentation - it's turning Cline into a teammate with memory.**
+
+---
+
+## 🔄 Returns Accepted Anytime
+
+Changed your mind? No hard feelings!
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.sh | bash
+```
+
+Your `docs/journals/` are safe and require manual removal if desired. [See all options →](#returns-accepted-anytime-1)
+
+---
 
 ## ✨ Features
 
