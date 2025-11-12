@@ -669,4 +669,89 @@ This change better showcases ClineFlow's vision of seamless AI-assisted developm
 
 ---
 
+### 2025-11-12 15:42 - Feature Branch Management & Update System
+
+**Achievement:**
+Successfully implemented comprehensive branch management procedure (SOP-008) and complete update system for existing ClineFlow installations.
+
+**Implementation Details:**
+
+1. **SOP-008: Feature Branch Management** - Created in both locations:
+   - `clineflow/PROCEDURES.md` - Development version
+   - `template/clineflow/PROCEDURES.md` - Distribution version
+   - Standard Git Flow conventions (feature/, fix/, docs/, refactor/)
+   - Workflows for solo developers and teams with PRs
+   - Integration with all existing SOPs
+   - Protects main branch from direct commits
+
+2. **Update System** - Complete mechanism for existing users:
+   - `update.sh` - Smart update script with multiple options
+   - Preserves user customizations (.clinerules, .clineflow.local, journals)
+   - Updates only template files (clineflow/*, setup-refs.sh, etc.)
+   - Smart file comparison using `cmp` to detect changes
+   - Options: `--dry-run`, `--yes`, `--help`
+   - Color-coded, user-friendly output
+
+3. **Version Tracking** - Date-based semantic versioning:
+   - Created `VERSION` file with format YYYY.MM.DD.patch
+   - Current version: 2025.11.12.0
+   - Displayed during updates for clear tracking
+   - Allows checking current vs latest version
+
+4. **CHANGELOG.md** - Complete release history:
+   - Documents all features added in this release
+   - Provides update instructions for existing users
+   - Explains versioning scheme (date-based + semantic)
+   - Details breaking changes policy
+   - Links to support channels
+
+5. **README Updates** - Added "Updating ClineFlow" section:
+   - Positioned after installation section
+   - Quick update commands (curl one-liner or ./update.sh)
+   - Clear explanation of what gets updated vs protected
+   - Preview option with --dry-run
+   - Version check commands
+   - Links to CHANGELOG.md
+
+**Technical Decisions:**
+- **Date-based versioning**: Clear chronological tracking, easy to understand
+- **Preserve user files**: Never touch .clinerules, .clineflow.local, or journals
+- **Smart comparison**: Only update files that actually changed
+- **Safe defaults**: Confirmation required, --dry-run available
+- **Feature branch first**: Practiced what we preached - created feature/branch-management-and-updates
+
+**Why This Approach:**
+- Update system addresses the "how do users get new features" problem
+- Branch management ensures quality and enables proper PR workflows
+- Version tracking provides clear state for support and debugging
+- Date-based versioning is more intuitive than semantic for this use case
+
+**Testing/Verification:**
+```bash
+# Tested update system with dry-run
+./update.sh --dry-run
+# Result: ✓ Correctly identifies 4 files needing updates
+# ✓ Shows files already up to date
+# ✓ Preserves user customizations
+```
+
+**Files Changed:**
+- `clineflow/PROCEDURES.md` - Added SOP-008 (+120 lines)
+- `template/clineflow/PROCEDURES.md` - Added SOP-008 (+120 lines)
+- `README.md` - Added updating section (+60 lines)
+- `update.sh` - Created complete update script (200 lines)
+- `VERSION` - Created version file (1 line)
+- `CHANGELOG.md` - Created comprehensive changelog (200 lines)
+
+**Next Steps:**
+- [x] Test update system (dry-run successful)
+- [x] Document in journal
+- [ ] Commit and push to GitHub
+- [ ] Existing users can update with one command
+- [ ] Monitor for feedback and issues
+
+**Status:** Complete
+
+---
+
 *This journal tracks the development of ClineFlow itself using ClineFlow's own workflow.*
