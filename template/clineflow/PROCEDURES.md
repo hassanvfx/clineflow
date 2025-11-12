@@ -633,4 +633,186 @@ When continuing work from previous task:
 
 ---
 
-**Last Updated:** November 8, 2025
+### SOP-007: Multi-line Git Commits
+
+**Purpose:** Ensure multi-line commit messages never cause command hangs or failures
+
+**The Problem:**
+Using `-m` with newlines in bash can cause git commands to hang waiting for input:
+```bash
+# ❌ NEVER DO THIS - Can hang!
+git commit -m "title
+bullet 1
+bullet 2"
+```
+
+**The Solution: Heredoc with EOF**
+
+**Always use this pattern for multi-line commits:**
+```bash
+git commit -F - << 'EOF'
+type(scope): short descriptive title
+
+- Detailed bullet point 1 with context
+- Detailed bullet point 2 with reasoning  
+- Detailed bullet point 3 with impact
+
+Result: Clear summary of the overall change
+EOF
+```
+
+**Why This Works:**
+- `-F -` tells git to read message from stdin
+- `<< 'EOF'` starts a heredoc (quotes prevent variable expansion)
+- Content goes between the markers
+- `EOF` ends the heredoc
+- **Never hangs** - deterministic input, no waiting
+
+**Pattern Breakdown:**
+1. **Title line:** `type(scope): description`
+   - Types: feat, fix, refactor, docs, style, test, chore
+   - Keep under 72 characters
+   
+2. **Blank line:** Required separator
+
+3. **Bullet points:** Explain the changes
+   - Start with `-` for consistency
+   - Be specific and technical
+   - Explain WHY, not just WHAT
+   
+4. **Result line:** Summary statement (optional but recommended)
+
+**Example:**
+```bash
+git add src/auth/ && git commit -F - << 'EOF'
+feat(auth): implement JWT authentication system
+
+- Add AuthService with token generation and validation
+- Create AuthContext for React state management
+- Implement secure token storage using httpOnly cookies
+- Add refresh token rotation for enhanced security
+
+Result: Complete authentication system ready for production
+EOF
+```
+
+**Benefits:**
+- ✅ Never hangs or waits for input
+- ✅ Handles all special characters correctly
+- ✅ Standard Unix pattern
+- ✅ Works consistently across all shells
+- ✅ Supports detailed, meaningful commit messages
+
+**When to Use:**
+- **Always** when commit message has multiple lines
+- When commit message includes special characters
+- When you want detailed commit history
+- For any commit requiring explanation beyond the title
+
+**Integration with SOP-005 (Intelligent Commits):**
+When implementing automatic commits, use heredoc pattern to ensure reliability.
+
+---
+
+### SOP-008: Feature Branch Management
+
+**Purpose:** Ensure all development work happens on feature branches, never directly on main/master
+
+**Trigger:** Before starting ANY task that will modify code or files
+
+**Procedure:**
+
+1. **Check Current Branch**
+   ```bash
+   git branch --show-current
+   ```
+
+2. **If on main/master/develop:**
+   - Create feature branch immediately
+   - Branch naming convention (standard Git Flow):
+     ```bash
+     # For new features
+     git checkout -b feature/short-description
+     
+     # For bug fixes
+     git checkout -b fix/short-description
+     
+     # For documentation
+     git checkout -b docs/short-description
+     
+     # For refactoring
+     git checkout -b refactor/short-description
+     ```
+   
+   - Examples:
+     - `feature/user-authentication`
+     - `fix/login-timeout`
+     - `docs/api-endpoints`
+     - `refactor/payment-service`
+
+3. **If already on feature branch:**
+   - Verify branch name matches current task
+   - If working on different task, create new branch:
+     ```bash
+     git checkout main
+     git pull
+     git checkout -b feature/new-task
+     ```
+
+4. **Proceed with task**
+   - All commits go to feature branch
+   - When complete, merge to main via PR/MR
+
+**Integration with Other SOPs:**
+
+- **SOP-001 (Starting New Feature):** Add branch check as first step
+- **SOP-002 (Modifying Code):** Verify on correct branch before changes
+- **SOP-005 (Intelligent Commits):** Commit message should reference branch
+- **SOP-006 (Task Journals):** Journal should note which branch work is on
+
+**Benefits:**
+- ✅ Protects main branch from direct commits
+- ✅ Enables code review via pull requests
+- ✅ Clear separation of features
+- ✅ Easy to abandon or rollback work
+- ✅ Supports parallel development
+
+**Common Patterns:**
+
+**Solo Developer:**
+```bash
+# Start task
+git checkout -b feature/task-name
+# Work and commit
+git commit -m "..."
+# When done
+git checkout main
+git merge feature/task-name
+git push
+git branch -d feature/task-name
+```
+
+**Team with PRs:**
+```bash
+# Start task
+git checkout -b feature/task-name
+# Work and commit
+git commit -m "..."
+# Push feature branch
+git push -u origin feature/task-name
+# Create PR on GitHub/GitLab
+# After PR merge, delete branch
+git checkout main
+git pull
+git branch -d feature/task-name
+```
+
+**Important Notes:**
+- Never commit directly to main/master/develop
+- Feature branches should be short-lived (days, not weeks)
+- Regularly sync with main: `git checkout main && git pull && git checkout feature/branch && git rebase main`
+- Delete branches after merging to keep repo clean
+
+---
+
+**Last Updated:** November 12, 2025

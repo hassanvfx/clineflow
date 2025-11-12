@@ -596,8 +596,68 @@ your-project/
 │   └── journals/                  # Your task journals go here
 │       └── .gitkeep
 ├── setup-refs.sh                  # Reference system setup (optional)
-└── .clineflow.example             # Reference system config example (optional)
+├── .clineflow.example             # Reference system config example (optional)
+├── update.sh                      # Update script (get latest features)
+└── VERSION                        # Tracks your installation version
 ```
+
+---
+
+## 🔄 Updating ClineFlow
+
+Already have ClineFlow installed? Get the latest features and improvements!
+
+### Quick Update
+
+```bash
+# Download and run update script
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash
+```
+
+Or if you already have the script:
+
+```bash
+./update.sh
+```
+
+### What Gets Updated
+
+✅ **Template files** - Latest procedures, documentation, and features  
+✅ **Setup scripts** - Reference system improvements  
+✅ **Configuration examples** - New options and best practices
+
+### What Stays Protected
+
+🔒 **Your customizations** - `.clinerules` remains untouched  
+🔒 **Your local config** - `.clineflow.local` preserved  
+🔒 **Your work** - All journals in `docs/journals/` safe
+
+### Preview Changes First
+
+```bash
+# See what would be updated without changing anything
+./update.sh --dry-run
+```
+
+### Check Version
+
+```bash
+# Your current version
+cat VERSION
+
+# Latest available version
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/VERSION
+```
+
+### Update Options
+
+```bash
+./update.sh --help      # Show all options
+./update.sh --dry-run   # Preview updates
+./update.sh --yes       # Skip confirmation
+```
+
+**📋 Full update history:** See [CHANGELOG.md](CHANGELOG.md) for complete release notes.
 
 ---
 
