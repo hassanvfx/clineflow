@@ -545,6 +545,18 @@ Just bash + git. Works everywhere:
 
 ### One-Line Install
 
+**Method 1: Just Ask Your AI Assistant (Easiest)**
+
+Using Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and say:
+
+```
+Please install and setup clineflow here, from: https://github.com/hassanvfx/clineflow
+```
+
+Your AI assistant will read the repository, understand the installation process, and set everything up for you.
+
+**Method 2: Direct Installation (Traditional)**
+
 ```bash
 # Using curl
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh | bash
