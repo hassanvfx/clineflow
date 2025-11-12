@@ -54,6 +54,17 @@ graph TD
 **Turn Cline into a teammate who remembers everything**
 
 ### 1️⃣ Install ClineFlow
+
+**Option 1: From VS Code (in your AI assistant)**
+
+Using Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and type:
+
+```
+Please install and setup clineflow here, from: https://github.com/hassanvfx/clineflow
+```
+
+**Option 2: From Terminal**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh | bash
 ```

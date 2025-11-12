@@ -637,25 +637,33 @@ Updated README to position AI-assisted installation as the primary (easiest) ins
    - Reinforces that users can use their preferred AI tool
    - Aligns with ClineFlow's universal compatibility messaging
 
+3. **Moved to "Easy as 1-2-3" Section** (Second iteration):
+   - Repositioned AI-assisted method as **Option 1** in the prominent "Easy as 1-2-3" section
+   - Now labeled "From VS Code (in your AI assistant)" for clarity
+   - Terminal method remains as **Option 2**
+   - Makes AI-assisted installation the first thing users see in installation step
+
 **Technical Decisions:**
 - **Positioned AI-assisted as "Easiest"**: Natural for users already using AI assistants
 - **No terminal needed**: More accessible for less technical users
 - **Self-explanatory**: AI assistant reads repo, understands installation
 - **Maintained traditional option**: Users can still use bash if preferred
+- **Prominent placement**: Top of README in the main "1-2-3" flow
 
 **Messaging Strategy:**
 - Leads with the most user-friendly method
 - Demonstrates ClineFlow's philosophy: using AI to work with AI
 - Makes installation even more frictionless
 - Emphasizes agent-agnostic design
+- "From VS Code" language connects directly with developer workflow
 
 **User Experience:**
-- **Before**: Only showed bash script installation
-- **After**: Two clear methods, AI-assisted highlighted as easiest
-- **Result**: Lower barrier to entry, clearer value proposition
+- **Before**: Only showed bash script installation in main flow
+- **After**: AI-assisted installation as Option 1 in prominent 1-2-3 section
+- **Result**: Maximum visibility, lowest barrier to entry, clearest value proposition
 
 **Impact:**
-This change better showcases ClineFlow's vision of seamless AI-assisted development from the very first step. The installation itself demonstrates the product's philosophy.
+This change better showcases ClineFlow's vision of seamless AI-assisted development from the very first step. The installation itself demonstrates the product's philosophy. By placing it in the "Easy as 1-2-3" section, it becomes the primary recommended method.
 
 **Status:** Complete
 
