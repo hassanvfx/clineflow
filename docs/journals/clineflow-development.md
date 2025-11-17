@@ -754,4 +754,62 @@ Successfully implemented comprehensive branch management procedure (SOP-008) and
 
 ---
 
+### 2025-11-17 10:44 - "Just Ask Cline!" Reference System Setup Suggestions
+
+**Achievement:**
+Added prominent suggestions throughout documentation to help users understand they can simply ask Cline in natural language to set up the reference system, rather than following manual steps.
+
+**Changes Made:**
+
+1. **README.md - Reference System (Optional) Section**:
+   - Added eye-catching callout box at the very top
+   - Example language: *"In this project I need to setup cline refs to project-a and project-b which live in the parent folder (repos) to this. Can you help me?"*
+   - Included complete example conversation showing:
+     - User's natural language request
+     - Cline's understanding and response
+     - Cline's automated actions (creates config, runs setup script)
+     - Final result with usage examples (`@clineflow/project/path/to/file`)
+
+2. **template/clineflow/WORKING_WITH_CLINE.md - Reference System Section**:
+   - Added "Pro Tip - Let Cline Do It!" callout at the top
+   - Shows example with relative paths (../ pattern)
+   - Emphasizes Cline handles config file creation and script execution automatically
+
+3. **template/.clineflow.example - Config File**:
+   - Added PRO TIP comment block at the top of the file
+   - Shows users can ask Cline instead of manual editing
+   - Provides specific example language to use
+   - Appears even when developers look at the config file
+
+**Technical Decisions:**
+- **Prominent Placement**: Callouts appear before manual instructions in all locations
+- **Natural Language Examples**: Shows real conversational patterns users would actually use
+- **Complete Example**: README includes full conversation flow for clarity
+- **Multiple Touch Points**: Users see suggestion in README, docs, and config file
+- **Emphasis on Automation**: Clearly states "Cline will handle everything automatically"
+
+**Why This Matters:**
+- Makes the reference system feel more accessible and less intimidating
+- Demonstrates ClineFlow's philosophy of "just ask" from the start
+- Reduces perceived complexity of the feature
+- Aligns with the overall "ask your AI assistant" installation approach
+- Shows users they can leverage Cline's understanding of the documentation
+
+**User Experience:**
+- **Before**: Users saw only manual 3-step setup instructions
+- **After**: Users immediately see they can just ask Cline to do it
+- **Result**: Lower barrier to entry, feels like a conversation not a task
+
+**Strategic Impact:**
+This enhancement makes the reference system more discoverable and approachable, especially for users who might be intimidated by manual configuration. It reinforces that ClineFlow enables conversational workflows from installation through daily use.
+
+**Files Modified:**
+- `README.md` - Added callout box + example conversation
+- `template/clineflow/WORKING_WITH_CLINE.md` - Added Pro Tip callout
+- `template/.clineflow.example` - Added PRO TIP comments
+
+**Status:** Complete
+
+---
+
 *This journal tracks the development of ClineFlow itself using ClineFlow's own workflow.*

@@ -40,6 +40,14 @@ Both methods work - use whichever feels natural!
 
 ## Reference System
 
+> 💡 **Pro Tip - Let Cline Do It!**
+> 
+> You can ask Cline to set this up for you:
+> 
+> *"I need to setup cline refs to [project-a] and [project-b] which are in ../project-a and ../project-b. Can you help me configure this?"*
+> 
+> Cline will handle the config file and run the setup script automatically!
+
 ### What Is It?
 
 The optional reference system lets Cline explore other repositories without copying files. When set up, Cline can access external codebases just like your project files.

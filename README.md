@@ -766,6 +766,32 @@ Edit `.clinerules` to customize for your project:
 
 ### Reference System (Optional)
 
+> 💡 **Super Easy Setup - Just Ask Cline!**
+> 
+> Instead of following manual steps, you can simply ask Cline:
+> 
+> *"In this project I need to setup cline refs to project-a and project-b which live in the parent folder (repos) to this. Can you help me?"*
+> 
+> Cline will read the documentation and set everything up for you automatically! ✨
+
+**Example conversation:**
+```
+You: "I need to setup cline refs to my-backend-api and my-frontend-app 
+      which are sibling directories in the parent repos folder."
+
+Cline: "I'll help you set up the reference system. I can see you need:
+        - my-backend-api (at ../my-backend-api)
+        - my-frontend-app (at ../my-frontend-app)
+        
+        I'll create the config file and run the setup script."
+        
+[Cline creates .clineflow.local, adds paths, runs ./setup-refs.sh]
+
+Cline: "✅ Reference system configured! You can now use:
+        @clineflow/my-backend-api/path/to/file
+        @clineflow/my-frontend-app/path/to/file"
+```
+
 **Link other codebases for Cline exploration** - useful when you want Cline to have context from external projects.
 
 **What it does:**
