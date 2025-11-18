@@ -25,6 +25,7 @@ Thumbs.db
 
 # ClineFlow reference system
 .clineflow.local
+*.code-workspace
 
 # Logs
 *.log

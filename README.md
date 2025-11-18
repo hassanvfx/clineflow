@@ -850,6 +850,34 @@ Cline: "✅ Reference system configured! You can now use:
 
 **Full details:** See [clineflow/README.md](template/clineflow/README.md) for advanced configuration.
 
+#### Troubleshooting: @ Mentions Not Working?
+
+**Problem:** When typing `@` in Cline, symlinked files don't appear in autocomplete.
+
+**Solution:** Use the generated workspace file for full @ mention completion:
+
+```bash
+# Re-run setup to generate/update workspace file
+./setup-refs.sh
+
+# Open project with workspace file (enables @ completion)
+code my-project.code-workspace
+```
+
+**Why this works:**
+- Symlinks alone provide filesystem access but not VS Code indexing
+- Multi-root workspace makes all repos fully indexed by VS Code
+- Cline's @ mention feature depends on VS Code's file index
+- Workspace file = complete autocomplete for all linked repositories
+
+**What you get with workspace file:**
+- ✅ Full @ mention autocomplete in Cline chat
+- ✅ Search works across all repositories
+- ✅ IntelliSense recognizes linked code
+- ✅ Keeps symlinks for backward compatibility
+
+**Idempotent upgrade:** Safe to re-run `./setup-refs.sh` anytime - it updates the workspace file without breaking existing setups.
+
 ---
 
 ## 📚 Documentation

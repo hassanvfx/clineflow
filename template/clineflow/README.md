@@ -27,12 +27,36 @@ nano .clineflow.local
 
 ## Usage
 
-Once set up, reference files are accessible at `clineflow/` via symlinks:
+Once set up, reference files are accessible in multiple ways:
 
-- **@ Mentions**: Use `@clineflow/backend-api/README.md` in Cline conversations
-- **VSCode Search**: Search works across symlinked files
+### Via Multi-Root Workspace (Recommended for @ Mentions)
+
+For full @ mention autocomplete in Cline:
+
+```bash
+# Open the generated workspace file
+code my-project.code-workspace
+```
+
+**Benefits:**
+- ✅ **Full @ mention autocomplete** - All repos indexed by VS Code
+- ✅ **IntelliSense works** - Code completion across all repositories
+- ✅ **Search everywhere** - Find content across all linked repos
+- ✅ **Side-by-side editing** - Work on multiple repos simultaneously
+
+**@ Mention examples:**
+- `@my-project/src/main.py`
+- `@backend-api/api/routes/users.py`
+- `@frontend-app/components/Button.tsx`
+
+### Via Symlinks (File Browser Access)
+
+Reference files are also accessible via symlinks at `clineflow/`:
+
+- **File Browser**: Navigate via `clineflow/backend-api/...`
 - **Terminal Commands**: All commands work normally with symlinks
 - **Live Updates**: Changes in reference repos appear immediately (real symlinks)
+- **Quick Access**: No need to switch workspaces for simple file viewing
 
 ## How It Works
 
@@ -41,7 +65,10 @@ The `setup-refs.sh` script (installed with ClineFlow):
 1. Reads `.clineflow.local` configuration
 2. Finds all variables ending with `_PATH`
 3. Creates symlinks in `clineflow/` directory
-4. Validates paths and reports status
+4. **Generates `.code-workspace` file** with all repositories
+5. Validates paths and reports status
+
+**Dual Access:** You get both symlinks (for filesystem access) and a workspace file (for VS Code indexing and @ mention completion).
 
 **Variable naming:** Variable names ending with `_PATH` automatically create symlinks. The symlink name is derived from the variable name:
 - `BACKEND_API_PATH` → `clineflow/backend-api`
@@ -90,44 +117,124 @@ chmod +x .git/hooks/post-checkout
 
 ## Troubleshooting
 
-**Symlinks not appearing?**
+### @ Mentions Not Working?
+
+**Problem:** When typing `@` in Cline, symlinked files don't appear in autocomplete.
+
+**Solution:** Open the workspace file instead of the folder:
+
+```bash
+# Close current VS Code window, then:
+code my-project.code-workspace
+```
+
+**Why:** Symlinks provide filesystem access but VS Code doesn't automatically index them for @ mention completion. The multi-root workspace file tells VS Code to fully index all repositories.
+
+**To regenerate workspace file:**
+```bash
+./setup-refs.sh  # Safe to run anytime, updates workspace file
+```
+
+### Symlinks Not Appearing?
+
 - Check paths in `.clineflow.local` are correct
 - Verify referenced repos exist at specified paths
 - Ensure you have permission to create symlinks
 
-**Need to re-link?**
+### Need to Re-link?
+
 ```bash
 # Remove old symlinks
 rm clineflow/backend-api clineflow/frontend-app
 
-# Re-run setup
+# Re-run setup (also updates workspace file)
 ./setup-refs.sh
 ```
 
-**Permission issues?**
+### Permission Issues?
+
 ```bash
 # On Windows, symlinks may require admin privileges
 # Consider using WSL or Git Bash with admin rights
 ```
 
+### Workspace File vs Folder
+
+**Opening folder directly:** `code .`
+- ✅ Quick access
+- ✅ Simple workflow
+- ❌ Limited @ mention completion (symlinks not indexed)
+
+**Opening workspace file:** `code project.code-workspace`
+- ✅ Full @ mention autocomplete
+- ✅ All repos indexed
+- ✅ Better search and IntelliSense
+- ℹ️ Requires closing and reopening VS Code
+
 ## Structure
 
 ```
 your-project/
-├── .clineflow.example       # Template (versioned)
-├── .clineflow.local         # Your paths (gitignored)
-├── setup-refs.sh            # Your setup script
+├── .clineflow.example           # Template (versioned)
+├── .clineflow.local             # Your paths (gitignored)
+├── setup-refs.sh                # Setup script
+├── my-project.code-workspace    # Generated workspace (gitignored)
 │
 └── clineflow/
-    ├── README.md            # This file
-    ├── backend-api/         # → Symlink to your clone
-    └── frontend-app/        # → Symlink to your clone
+    ├── README.md                # This file
+    ├── backend-api/             # → Symlink to your clone
+    └── frontend-app/            # → Symlink to your clone
 ```
+
+**Files automatically gitignored:**
+- `.clineflow.local` - Contains developer-specific paths
+- `*.code-workspace` - Contains absolute paths specific to each developer
+- Symlinks in `clineflow/` - Via `.git/info/exclude` (local-only)
 
 ## Benefits
 
+- **Full @ Mention Completion**: Workspace file enables autocomplete for all linked repos
 - **No File Duplication**: Reference repos stay in their original location
 - **Always Current**: Changes sync instantly via symlinks
-- **Cline Context**: Cline can explore referenced codebases with @ mentions
-- **VSCode Integration**: Search and navigation work seamlessly
+- **Dual Access**: File browser via symlinks + full indexing via workspace
+- **VSCode Integration**: Search, IntelliSense, and navigation work seamlessly
 - **Team Flexibility**: Each developer can place repos anywhere via `.clineflow.local`
+- **Idempotent Setup**: Safe to re-run `./setup-refs.sh` anytime
+
+## Advanced Usage
+
+### Workspace-Only Mode
+
+Update workspace file without touching symlinks:
+
+```bash
+./setup-refs.sh --workspace-only
+```
+
+### Clean Mode
+
+Remove all symlinks (workspace file unaffected):
+
+```bash
+./setup-refs.sh --clean
+```
+
+### Custom Workspace Settings
+
+The generated workspace file includes VS Code settings optimized for symlink access. You can customize by editing `project-name.code-workspace`:
+
+```json
+{
+  "folders": [
+    { "name": "my-project", "path": "." },
+    { "name": "backend-api", "path": "/path/to/backend-api" }
+  ],
+  "settings": {
+    "search.followSymlinks": true,
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/node_modules/**": true
+    }
+  }
+}
+```

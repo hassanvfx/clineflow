@@ -812,4 +812,135 @@ This enhancement makes the reference system more discoverable and approachable, 
 
 ---
 
+### 2025-11-17 20:50 - Fix: Multi-Root Workspace for @ Mention Completion
+
+**Achievement:**
+Successfully resolved user-reported issue where symlinked reference files weren't appearing in Cline's @ mention autocomplete. Implemented hybrid solution combining symlinks with VS Code multi-root workspace files.
+
+**Problem Identified:**
+Users reported that when typing `@` in Cline's chat interface to mention files, symlinked repositories in `clineflow/` directory didn't appear in autocomplete suggestions. Root cause: VS Code doesn't automatically index symlinked directories for its file search system, which Cline's @ mention feature depends on.
+
+**Solution Implemented:**
+
+1. **Enhanced `template/setup-refs.sh`** - Added workspace file generation:
+   - New `generate_workspace_file()` function creates `.code-workspace` files
+   - Automatically detects project name from git or directory name
+   - Parses `.clineflow.local` and adds all `*_PATH` repos as workspace folders
+   - Includes optimized VS Code settings (`search.followSymlinks: true`)
+   - Added `--workspace-only` flag for regenerating just the workspace file
+   - **Result**: Idempotent - safe to re-run anytime to update workspace
+
+2. **Updated `template/.gitignore`**:
+   - Added `*.code-workspace` to gitignore
+   - Workspace files contain absolute paths specific to each developer
+   - Must stay local like `.clineflow.local`
+
+3. **Updated Documentation** - Triple coverage approach:
+   - **README.md**: Added "Troubleshooting: @ Mentions Not Working?" section
+     - Clear problem statement
+     - Simple solution: `code my-project.code-workspace`
+     - Explanation of why it works
+     - Benefits list
+   - **template/clineflow/README.md**: Complete rewrite of usage section
+     - Dual access model documented
+     - "Via Multi-Root Workspace (Recommended for @ Mentions)"
+     - "Via Symlinks (File Browser Access)"
+     - Extensive troubleshooting section
+     - Workspace vs Folder comparison
+     - Advanced usage (workspace-only mode, clean mode)
+   - **clineflow/README.md**: Copied updated documentation to development version
+
+**Technical Decisions:**
+- **Hybrid Approach**: Keep symlinks + add workspace (not replace)
+  - Symlinks: Backward compatible, filesystem access, quick browsing
+  - Workspace: Full VS Code indexing, @ mention completion, IntelliSense
+  - Best of both worlds
+- **Multi-Root Workspace**: VS Code's native solution for multiple repos
+  - Each repo becomes a first-class workspace folder
+  - Full indexing by VS Code
+  - No special configuration needed
+- **Idempotent Design**: Running `./setup-refs.sh` multiple times is safe
+  - Updates workspace file with current config
+  - Doesn't break existing symlinks
+  - Perfect upgrade path for existing users
+
+**User Experience:**
+- **Before**: @ mentions only showed main project files, symlinks invisible
+- **After**: Open workspace file → all repos appear in @ mention autocomplete
+- **Upgrade Path**: Existing users just re-run `./setup-refs.sh`
+
+**Implementation Details:**
+
+**Workspace File Structure:**
+```json
+{
+  "folders": [
+    {"name": "my-project", "path": "."},
+    {"name": "backend-api", "path": "/path/to/backend-api"},
+    {"name": "frontend-app", "path": "/path/to/frontend-app"}
+  ],
+  "settings": {
+    "search.followSymlinks": true,
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/node_modules/**": true
+    }
+  }
+}
+```
+
+**Script Output Example:**
+```
+═══════════════════════════════════════════════════════════
+Generating VS Code Workspace File...
+═══════════════════════════════════════════════════════════
+
+  ✓ Adding: backend-api → /Users/you/repos/backend-api
+  ✓ Adding: frontend-app → /Users/you/repos/frontend-app
+
+✓ Generated workspace file: my-project.code-workspace
+  Project: my-project
+  References: 2 repositories
+
+📚 For @ Mention Completion in Cline:
+  code my-project.code-workspace
+
+  This enables autocomplete for @ mentions:
+  • @my-project/your/file.md
+  • @backend-api/src/main.py
+  • @frontend-app/components/Button.tsx
+```
+
+**Testing Notes:**
+- Script properly detects project name from git
+- Workspace file generation is idempotent
+- All existing symlink functionality preserved
+- Git safety maintained (.gitignore, .git/info/exclude)
+- Help and options display correctly
+
+**Files Modified:**
+- `template/setup-refs.sh` - Added workspace generation (~80 lines)
+- `template/.gitignore` - Added `*.code-workspace` entry
+- `README.md` - Added troubleshooting section (~30 lines)
+- `template/clineflow/README.md` - Major rewrite (~120 lines changed)
+- `clineflow/README.md` - Synced with template version
+
+**Benefits:**
+- ✅ Solves @ mention completion issue completely
+- ✅ Maintains backward compatibility (symlinks still work)
+- ✅ Easy upgrade path (just re-run script)
+- ✅ No breaking changes
+- ✅ Enhances existing functionality (search, IntelliSense)
+- ✅ Clear documentation at multiple touchpoints
+
+**User Feedback Addressed:**
+- Original issue: "@ mentions not working for symlinked refs"
+- Solution validates problem and provides clear fix
+- Upgrade is one command: `./setup-refs.sh`
+- Documentation explains why workspace file is needed
+
+**Status:** Complete
+
+---
+
 *This journal tracks the development of ClineFlow itself using ClineFlow's own workflow.*

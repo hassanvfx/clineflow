@@ -18,6 +18,7 @@ REFS_DIR="clineflow"
 
 # Parse command line arguments
 CLEAN_MODE=false
+WORKSPACE_ONLY=false
 
 show_help() {
     echo "ClineFlow Reference System Setup"
@@ -25,12 +26,14 @@ show_help() {
     echo "Usage: $0 [options]"
     echo ""
     echo "Options:"
-    echo "  --clean    Remove all reference symlinks"
-    echo "  --help     Show this help message"
+    echo "  --clean           Remove all reference symlinks"
+    echo "  --workspace-only  Generate/update workspace file only"
+    echo "  --help            Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0              # Create symlinks from .clineflow.local"
-    echo "  $0 --clean      # Remove all symlinks"
+    echo "  $0                    # Create symlinks + workspace file"
+    echo "  $0 --clean            # Remove all symlinks"
+    echo "  $0 --workspace-only   # Update workspace file only"
     echo ""
     exit 0
 }
@@ -71,6 +74,10 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --clean)
             CLEAN_MODE=true
+            shift
+            ;;
+        --workspace-only)
+            WORKSPACE_ONLY=true
             shift
             ;;
         --help|-h)
@@ -194,6 +201,90 @@ check_staged_symlinks() {
     return 0
 }
 
+# Function to generate VS Code workspace file
+generate_workspace_file() {
+    echo ""
+    echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}Generating VS Code Workspace File...${NC}"
+    echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
+    echo ""
+    
+    # Detect project name from git or directory
+    local project_name
+    if [ -d ".git" ]; then
+        project_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")
+    else
+        project_name=$(basename "$(pwd)")
+    fi
+    
+    local workspace_file="${project_name}.code-workspace"
+    
+    # Check if config file exists
+    if [ ! -f "$CONFIG_FILE" ]; then
+        echo -e "${YELLOW}⚠ Configuration file not found: $CONFIG_FILE${NC}"
+        echo -e "${BLUE}  Workspace file requires repository paths${NC}"
+        return 1
+    fi
+    
+    # Start building workspace JSON
+    local folders_json="    {\n      \"name\": \"${project_name}\",\n      \"path\": \".\"\n    }"
+    local ref_count=0
+    
+    # Parse config file for *_PATH variables
+    while IFS='=' read -r var_name var_value; do
+        # Skip comments and empty lines
+        [[ "$var_name" =~ ^#.*$ ]] && continue
+        [[ -z "$var_name" ]] && continue
+        
+        # Check if variable ends with _PATH
+        if [[ "$var_name" =~ _PATH$ ]]; then
+            # Get the actual path value by sourcing the config
+            source "$CONFIG_FILE"
+            local target_path="${!var_name}"
+            
+            if [ -n "$target_path" ] && [ -d "$target_path" ]; then
+                # Remove _PATH suffix and convert to readable name
+                local folder_name=$(echo "${var_name%_PATH}" | tr '[:upper:]' '[:lower:]' | tr '_' '-')
+                
+                # Add to folders JSON
+                folders_json="${folders_json},\n    {\n      \"name\": \"${folder_name}\",\n      \"path\": \"${target_path}\"\n    }"
+                ref_count=$((ref_count + 1))
+                
+                echo -e "${GREEN}  ✓ Adding: ${folder_name} → ${target_path}${NC}"
+            fi
+        fi
+    done < "$CONFIG_FILE"
+    
+    if [ $ref_count -eq 0 ]; then
+        echo -e "${YELLOW}⚠ No valid repository paths found in $CONFIG_FILE${NC}"
+        echo -e "${BLUE}  Workspace file will only include current project${NC}"
+    fi
+    
+    # Generate complete workspace file
+    cat > "$workspace_file" << EOF
+{
+  "folders": [
+$(echo -e "$folders_json")
+  ],
+  "settings": {
+    "search.followSymlinks": true,
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/**": true
+    }
+  }
+}
+EOF
+    
+    echo ""
+    echo -e "${GREEN}✓ Generated workspace file: ${workspace_file}${NC}"
+    echo -e "${BLUE}  Project: ${project_name}${NC}"
+    echo -e "${BLUE}  References: ${ref_count} repositor$([ $ref_count -eq 1 ] && echo "y" || echo "ies")${NC}"
+    
+    return 0
+}
+
 # Function to create symlink
 create_symlink() {
     local var_name="$1"
@@ -233,6 +324,12 @@ create_symlink() {
     SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
 }
 
+# Handle workspace-only mode
+if [ "$WORKSPACE_ONLY" = true ]; then
+    generate_workspace_file
+    exit $?
+fi
+
 # Parse config file for *_PATH variables and create symlinks
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
@@ -259,6 +356,9 @@ configure_git_exclude
 # Check for accidentally staged symlinks
 check_staged_symlinks
 
+# Generate workspace file
+generate_workspace_file
+
 # Summary
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
@@ -273,10 +373,30 @@ if [ $SUCCESS_COUNT -gt 0 ]; then
     echo -e "  ✓ Symlinks configured as local-only (not committed)"
     echo -e "  ✓ Located in .git/info/exclude"
     echo ""
-    echo -e "${BLUE}📚 Access in VSCode/Cline:${NC}"
-    echo -e "  • Files are visible in VSCode file explorer"
-    echo -e "  • Use @clineflow/[name]/path/to/file"
-    echo -e "  • Example: @clineflow/backend-api/README.md"
+    
+    # Detect workspace file name
+    local project_name
+    if [ -d ".git" ]; then
+        project_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")
+    else
+        project_name=$(basename "$(pwd)")
+    fi
+    local workspace_file="${project_name}.code-workspace"
+    
+    echo -e "${GREEN}VS Code Workspace:${NC}"
+    echo -e "  ✓ Generated ${workspace_file}"
+    echo ""
+    echo -e "${BLUE}📚 For @ Mention Completion in Cline:${NC}"
+    echo -e "  ${GREEN}code ${workspace_file}${NC}"
+    echo ""
+    echo -e "  This enables autocomplete for @ mentions:"
+    echo -e "  • @${project_name}/your/file.md"
+    echo -e "  • @backend-api/src/main.py"
+    echo -e "  • @frontend-app/components/Button.tsx"
+    echo ""
+    echo -e "${BLUE}📂 File Browser Access:${NC}"
+    echo -e "  • Symlinks visible in VS Code explorer"
+    echo -e "  • Direct path: clineflow/[name]/path/to/file"
     echo ""
     echo -e "${BLUE}🔒 Git Safety:${NC}"
     echo -e "  • Symlinks won't be committed (local-only)"
