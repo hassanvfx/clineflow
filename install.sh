@@ -191,6 +191,14 @@ install_workflow() {
         print_warning ".clineflow.example already exists (skipping)"
     fi
     
+    # VERSION file
+    if [ ! -f VERSION ] || [ "$FORCE" = true ]; then
+        download_file "${BASE_URL}/VERSION" "VERSION"
+        print_success "VERSION"
+    else
+        print_warning "VERSION already exists (skipping)"
+    fi
+    
     # Configure .gitignore
     echo
     print_info "Configuring .gitignore..."

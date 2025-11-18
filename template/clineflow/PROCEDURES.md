@@ -815,4 +815,66 @@ git branch -d feature/task-name
 
 ---
 
-**Last Updated:** November 12, 2025
+### SOP-009: VERSION and CHANGELOG Management
+
+**Purpose:** Maintain accurate version tracking and comprehensive change documentation for all releases.
+
+**Critical Rules:**
+1. **VERSION file MUST be in `template/` directory**
+   - Ensures distribution with new installations
+   - Enables update scripts to check/update version
+   - Users see correct current version
+
+2. **Update VERSION on every release**
+   - Format: `YYYY.MM.DD.patch`
+   - Example: `2025.11.17.0`
+   - Increment patch for same-day releases
+
+3. **Update CHANGELOG.md with every release**
+   - Add new section at top with version and date
+   - Document: Added, Fixed, Changed, Documentation
+   - Keep Previous Releases section
+
+4. **VERSION must exist in both locations:**
+   - Root `VERSION` - For repository tracking
+   - `template/VERSION` - For user distribution
+
+**Implementation Checklist:**
+
+✅ **Before Creating Release:**
+- [ ] Update root `VERSION` file
+- [ ] Copy `VERSION` to `template/VERSION`
+- [ ] Update `CHANGELOG.md` with release notes
+- [ ] Commit: `chore: bump version to YYYY.MM.DD.patch and update CHANGELOG`
+- [ ] Push to main
+
+✅ **Verification:**
+```bash
+# Ensure VERSION exists in both locations
+ls VERSION template/VERSION
+
+# Verify they match
+diff VERSION template/VERSION
+
+# Check CHANGELOG has new version section
+head -n 20 CHANGELOG.md
+```
+
+**Common Mistake to Avoid:**
+- ❌ DON'T update only root VERSION - users won't get it
+- ✅ DO copy VERSION to template/ directory
+- ✅ DO include VERSION in TEMPLATE_FILES array in update.sh
+
+**Why This Matters:**
+- Users running `update.sh` check their local VERSION
+- If VERSION isn't in template/, it never gets distributed
+- Users see old version even after updates
+- Breaks the update feedback loop
+
+**Integration with Other SOPs:**
+- Works with SOP-008 (Feature Branches) for release workflow
+- Complements installation and update system
+
+---
+
+**Last Updated:** November 17, 2025

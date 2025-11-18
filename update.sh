@@ -23,6 +23,7 @@ TEMPLATE_FILES=(
     "clineflow/README.md"
     "setup-refs.sh"
     ".clineflow.example"
+    "VERSION"
 )
 
 # Files that are NEVER updated (user files)
@@ -178,14 +179,6 @@ for file in "${UPDATES_AVAILABLE[@]}"; do
         FAILED_COUNT=$((FAILED_COUNT + 1))
     fi
 done
-
-# Update VERSION file
-if curl -fsSL "$REPO_URL/VERSION" -o "VERSION" 2>/dev/null; then
-    NEW_VERSION=$(cat VERSION)
-    echo -e "  ${GREEN}✓${NC} Updated to version $NEW_VERSION"
-else
-    echo -e "  ${YELLOW}⚠${NC} Could not fetch version information"
-fi
 
 # Make setup-refs.sh executable if it was updated
 if [[ " ${UPDATES_AVAILABLE[@]} " =~ " setup-refs.sh " ]]; then
