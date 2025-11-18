@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project uses date-based versioning: `YYYY.MM.DD.patch`
 
+## [2025.11.17.0] - 2025-11-17
+
+### Added
+- **Multi-Root Workspace Generation** - Complete fix for @ mention completion in Cline
+  - `setup-refs.sh` now generates `.code-workspace` files automatically
+  - Workspace files enable full VS Code indexing of all linked repositories
+  - New `--workspace-only` flag to regenerate workspace without touching symlinks
+  - Hybrid approach: symlinks for file browser + workspace for @ mentions
+  
+### Fixed
+- **@ Mention Autocomplete** - Resolved issue where symlinked reference files didn't appear in Cline's @ mention suggestions
+  - VS Code wasn't indexing symlinked directories
+  - Multi-root workspace makes all repos first-class citizens
+  - Full autocomplete now works for all linked repositories
+  
+### Changed
+- Updated `template/.gitignore` to exclude `*.code-workspace` files (developer-specific paths)
+- Enhanced reference system to be fully idempotent (safe to re-run anytime)
+- Improved `setup-refs.sh` output with workspace file usage instructions
+
+### Documentation
+- Added "Troubleshooting: @ Mentions Not Working?" section to README.md
+- Complete rewrite of `template/clineflow/README.md` usage section
+- Documented dual access model (workspace vs symlinks)
+- Added workspace vs folder comparison
+- Clear upgrade path for existing users
+
+---
+
 ## [2025.11.12.0] - 2025-11-12
 
 ### Added
