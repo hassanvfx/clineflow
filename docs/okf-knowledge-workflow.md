@@ -1,6 +1,6 @@
 # ClineFlow OKF Knowledge Workflow
 
-ClineFlow stores new persistent engineering context as an [Open Knowledge Format (OKF) v0.2](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundle. The format keeps knowledge portable, human-readable, agent-readable, and reviewable in Git.
+ClineFlow stores new persistent engineering context as an Open Knowledge Format bundle, following [Google Cloud's introduction to OKF](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) and targeting the [OKF v0.2 specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md). The format keeps knowledge portable, human-readable, agent-readable, and reviewable in Git.
 
 ## Bundle layout
 

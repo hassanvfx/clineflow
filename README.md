@@ -24,7 +24,7 @@
 
 ## The memory layer for AI coding agents
 
-ClineFlow turns engineering context into portable, version-controlled knowledge. New projects use a native [Open Knowledge Format (OKF) v0.2](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundle, so people and agents share the same Markdown and YAML knowledge graph—without a platform, service, or lock-in.
+ClineFlow turns engineering context into portable, version-controlled knowledge. It adopts the [Open Knowledge Format introduced by Google Cloud](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) and targets the [OKF v0.2 specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md), so people and agents share the same Markdown and YAML knowledge graph—without a platform, service, or lock-in.
 
 - **Persistent context:** task history, decisions, tests, and next steps survive every session.
 - **Open knowledge:** `knowledge/` is a readable, Git-native OKF bundle with indexes, links, and change history.
