@@ -12,7 +12,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-INSTALL_URL="https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh"
+INSTALL_URL="${INSTALL_URL:-https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh}"
 TEST_DIR=""
 VERBOSE=false
 NO_CLEANUP=false
@@ -103,6 +103,11 @@ create_test_environment() {
     git config user.name "Test User" > /dev/null 2>&1
     git config user.email "test@example.com" > /dev/null 2>&1
     pass_test "Created test project directory"
+
+    # Legacy journals must remain untouched when the native OKF workflow is installed.
+    mkdir -p docs/journals
+    echo "# Legacy journal" > docs/journals/legacy-task.md
+    LEGACY_JOURNAL_HASH=$(shasum -a 256 docs/journals/legacy-task.md | awk '{print $1}')
     
     # Create mock repositories
     create_mock_repository "mock-backend-api" "Backend API"
@@ -168,11 +173,23 @@ run_installation() {
     pass_test "Installation completed successfully"
     
     # Verify files were created
-    if [ -f .clinerules ] && [ -d clineflow ] && [ -d docs/journals ]; then
+    if [ -f .clinerules ] && [ -d clineflow ] && [ -f knowledge/index.md ] && [ -f knowledge/log.md ] && [ -f knowledge/journals/TASK_TEMPLATE.md ] && [ -f validate-okf ]; then
         pass_test "All files created in correct locations"
     else
         fail_test "Missing expected files after installation"
         return 1
+    fi
+
+    if [ "$(shasum -a 256 docs/journals/legacy-task.md | awk '{print $1}')" = "$LEGACY_JOURNAL_HASH" ]; then
+        pass_test "Legacy journals preserved unchanged"
+    else
+        fail_test "Legacy journal was modified during installation"
+    fi
+
+    if bash validate-okf > /dev/null 2>&1; then
+        pass_test "Generated knowledge bundle passes OKF validation"
+    else
+        fail_test "Generated knowledge bundle did not pass OKF validation"
     fi
 }
 

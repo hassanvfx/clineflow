@@ -1,116 +1,31 @@
-# ClineFlow: Universal AI Assistant Memory System
+# ClineFlow: OKF Knowledge Workflow
 
-> **Persistent Context Through Intelligent Documentation**
->
-> This project uses ClineFlow to maintain persistent memory across AI assistant sessions through automatic journaling and intelligent commit workflows.
+This project keeps persistent engineering context in the `knowledge/` Open Knowledge Format (OKF) v0.2 bundle.
 
-## 📚 Core Workflow
+## Task knowledge rules
 
-### MANDATORY: Every Task Must Have a Journal
+1. For each substantial task, create or resume `knowledge/journals/<task-name>.md` using `knowledge/journals/TASK_TEMPLATE.md`.
+2. Every task journal is an OKF concept. Keep its YAML frontmatter valid, retain `type: Engineering Journal`, and update `generated.at` after meaningful changes.
+3. Use `status: draft` while work is active and `status: stable` when it is complete. Do not add `verified` or `sources` unless they are factual.
+4. Before starting or resuming work, search `knowledge/` first. If `docs/journals/` exists, search it too as read-only legacy context. Never create or update new work there.
+5. Link related concepts with normal Markdown links. Update `knowledge/log.md` for material knowledge changes.
 
-**No Exceptions - All Tasks Require Documentation**
+## Commit workflow
 
-1. **Single Task**: Create `docs/journals/[task-name].md`
-2. **Multi-Task Continuation**: Add new section to existing journal
-3. **Use Template**: See `clineflow/JOURNAL_TEMPLATE.md`
-4. **Update Regularly**: Journal progresses with each commit
+When the user asks to commit:
 
-**Multi-Task Pattern:**
-- First task creates journal with Task 1 section
-- Subsequent tasks add Task 2, Task 3, etc. sections to SAME journal
-- Maintain task history index at top
-- Keeps all related work in single source of truth
+1. Update the active `knowledge/journals/` concept with the implementation summary, decisions, tests, and next steps.
+2. Update `knowledge/log.md` if the change added or materially changed knowledge.
+3. Run `./validate-okf` and resolve validation failures. When the project has optional PyYAML available, prefer `./validate-okf --strict` before committing.
+4. Stage the code and updated knowledge artifacts together, then create a descriptive commit.
 
-## 🚀 Intelligent Commit Command
+## Knowledge navigation
 
-**When user says:** `"commit changes"`, `"commit"`, or `"please commit"`
+- Start with `knowledge/index.md` and descend through `index.md` files for progressive disclosure.
+- `docs/journals/` is optional legacy history; it is not part of the OKF bundle and must not be passed to `validate-okf`.
+- The reference-repository system under `clineflow/` remains optional and unchanged.
 
-**Automatically:**
-1. ✅ Detect active journal (most recent in `docs/journals/`)
-2. ✅ Generate context-aware journal entry from conversation
-3. ✅ Append entry to journal file
-4. ✅ Stage ALL changes + updated journal
-5. ✅ Create descriptive commit message
-6. ✅ Execute `git commit`
-7. ✅ Confirm completion
+## Code quality
 
-**Result**: Single commit with code changes + meaningful journal documentation
-
-## 🏗️ Code Organization Standards
-
-### Module/File Size Rules
-- **Ideal Size**: 300-500 lines of code (LOC)
-- **Maximum Size**: 1000 LOC (hard limit)
-- **Over 1K LOC**: Unacceptable - must be refactored
-
-### Design Principles
-- **Single Responsibility**: Each file should have one clear purpose
-- **Modular Composition**: Break large files into focused units
-- **Code Quality**: No unnecessary code, specific to module purpose only
-
-### Universal Application
-These rules apply to ALL languages:
-- Python classes
-- JavaScript/TypeScript components
-- Go packages
-- Rust modules
-- Java classes
-- C++ files
-- Any programming language
-
-## 📋 Documentation Requirements
-
-### Journal Structure
-- Clear task descriptions
-- Implementation status tracking
-- Technical decisions explained
-- Success criteria defined
-- Issues and resolutions documented
-- Quick reference for future work
-
-### Commit Messages
-- Descriptive and meaningful
-- Reference journal entries when relevant
-- Explain "why" not just "what"
-
-## 🔄 Cross-Repository Code Access (Optional)
-
-If using ClineFlow's reference system:
-- Symlinks in `clineflow/` point to external repositories
-- Access code from other projects without duplication
-- Changes sync instantly via filesystem symlinks
-- See `clineflow/README.md` for configuration details
-
-## 🎯 Workflow Summary
-
-1. **Start Task**: Create or identify journal
-2. **Work Iteratively**: Document decisions as you go
-3. **Commit Intelligently**: Use "please commit" command
-4. **Resume Seamlessly**: Load journal context in next session
-
-## 💡 Best Practices
-
-- Keep journal entries concise but technically dense
-- Document the "why" behind technical decisions
-- Update journal before major commits
-- Use multi-task pattern for related work
-- Reference specific files and line numbers when relevant
-- Include code snippets for complex explanations
-
-## 🤝 Team Collaboration
-
-- Journals serve as onboarding documentation
-- New team members read journals to understand context
-- Decision history preserved for entire project lifecycle
-- No tribal knowledge - everything documented
-
----
-
-**This configuration works with any AI coding assistant:**
-- Cline
-- Cursor
-- GitHub Copilot
-- Windsurf
-- And more
-
-For questions or issues, see: https://github.com/hassanvfx/clineflow
+- Prefer focused modules (roughly 300–500 lines; refactor files over 1,000 lines).
+- Keep documentation concise, factual, and linked to the concepts or files it describes.

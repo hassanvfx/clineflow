@@ -23,6 +23,7 @@ TEMPLATE_FILES=(
     "clineflow/README.md"
     "setup-refs.sh"
     ".clineflow.example"
+    "validate-okf"
     "VERSION"
 )
 
@@ -30,6 +31,7 @@ TEMPLATE_FILES=(
 PROTECTED_FILES=(
     ".clinerules"
     ".clineflow.local"
+    "knowledge/*"
     "docs/journals/*"
 )
 
@@ -97,6 +99,13 @@ fi
 
 echo -e "${BLUE}Current version:${NC} $CURRENT_VERSION"
 echo ""
+
+if [ ! -d "knowledge" ] && [ -d "docs/journals" ]; then
+    echo -e "${YELLOW}Legacy journal layout detected.${NC}"
+    echo "This updater will preserve docs/journals/ and will not migrate it to OKF."
+    echo "Install ClineFlow 2.x in a fresh project to start a native knowledge/ bundle."
+    echo ""
+fi
 
 # Check what would be updated
 echo -e "${YELLOW}Checking for updates...${NC}"
@@ -180,9 +189,12 @@ for file in "${UPDATES_AVAILABLE[@]}"; do
     fi
 done
 
-# Make setup-refs.sh executable if it was updated
+# Make executable scripts executable if they were updated
 if [[ " ${UPDATES_AVAILABLE[@]} " =~ " setup-refs.sh " ]]; then
     chmod +x setup-refs.sh
+fi
+if [[ " ${UPDATES_AVAILABLE[@]} " =~ " validate-okf " ]]; then
+    chmod +x validate-okf
 fi
 
 echo ""
@@ -206,6 +218,7 @@ echo ""
 echo -e "${BLUE}Your customizations are safe:${NC}"
 echo "  • .clinerules preserved"
 echo "  • .clineflow.local preserved"
+echo "  • All knowledge in knowledge/ preserved"
 echo "  • All journals in docs/journals/ preserved"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
