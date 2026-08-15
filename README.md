@@ -26,6 +26,12 @@
 
 ClineFlow turns engineering context into portable, version-controlled knowledge. It adopts the [Open Knowledge Format introduced by Google Cloud](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) and targets the [OKF v0.2 specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md), so people and agents share the same Markdown and YAML knowledge graph—without a platform, service, or lock-in.
 
+## Why Open Knowledge Format?
+
+The [Google Cloud introduction to OKF](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) describes a deliberately small, open contract for AI-ready knowledge: Markdown files for the human-readable narrative, YAML frontmatter for queryable metadata, normal links for relationships, and optional indexes and logs for progressive discovery and history. It is a format—not a service or SDK—so the same knowledge can move between people, coding agents, repositories, and tools.
+
+That matters because reliable AI coding depends on context that survives the chat that created it. ClineFlow had already been built around many of the practices OKF formalizes: keeping task history beside the code, capturing decisions and verification, making context discoverable before work begins, and staying independent of any one agent or vendor. The native `knowledge/` bundle makes those conventions interoperable: every new task becomes a typed Engineering Journal concept, connected through standard Markdown, versioned with the project, and usable by any conforming producer or consumer.
+
 - **Persistent context:** task history, decisions, tests, and next steps survive every session.
 - **Open knowledge:** `knowledge/` is a readable, Git-native OKF bundle with indexes, links, and change history.
 - **Agent-agnostic workflow:** Cline, Cursor, Copilot, Windsurf, and future tools receive the same instructions.
