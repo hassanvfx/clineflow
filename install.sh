@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 VERSION="2.0.0"
 
 # Base URL for raw files (GitHub)
-BASE_URL="https://raw.githubusercontent.com/hassanvfx/clineflow/main/template"
+BASE_URL="${CLINEFLOW_BASE_URL:-https://raw.githubusercontent.com/hassanvfx/clineflow/main/template}"
 
 # Cache-busting timestamp to ensure latest version
 CACHE_BUST="?t=$(date +%s)"

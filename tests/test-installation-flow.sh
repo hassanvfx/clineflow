@@ -12,7 +12,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-INSTALL_URL="${INSTALL_URL:-https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh}"
+REPOSITORY_ROOT=$(cd "$(dirname "$0")/.." && pwd)
+INSTALL_SOURCE="${INSTALL_SOURCE:-$REPOSITORY_ROOT/install.sh}"
+TEMPLATE_BASE_URL="${TEMPLATE_BASE_URL:-file://$REPOSITORY_ROOT/template}"
 TEST_DIR=""
 VERBOSE=false
 NO_CLEANUP=false
@@ -151,13 +153,13 @@ run_installation() {
     
     cd "$TEST_DIR/test-project"
     
-    # Download install script
-    verbose "Downloading install script from: $INSTALL_URL"
-    if curl -fsSL "$INSTALL_URL" -o install.sh 2>&1 | grep -q "error"; then
-        fail_test "Failed to download install script"
+    # Copy the checked-out installer so CI verifies the current branch, not main.
+    verbose "Copying install script from: $INSTALL_SOURCE"
+    if ! cp "$INSTALL_SOURCE" install.sh; then
+        fail_test "Failed to copy install script"
         return 1
     fi
-    pass_test "Downloaded install script from GitHub"
+    pass_test "Copied install script from current checkout"
     
     # Make executable
     chmod +x install.sh
@@ -165,9 +167,9 @@ run_installation() {
     # Run installation (suppress output unless verbose)
     verbose "Running installation..."
     if [ "$VERBOSE" = true ]; then
-        bash install.sh
+        CLINEFLOW_BASE_URL="$TEMPLATE_BASE_URL" bash install.sh
     else
-        bash install.sh > /dev/null 2>&1
+        CLINEFLOW_BASE_URL="$TEMPLATE_BASE_URL" bash install.sh > /dev/null 2>&1
     fi
     
     pass_test "Installation completed successfully"
