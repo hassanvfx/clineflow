@@ -38,7 +38,7 @@ show_removal_list() {
     
     echo "  ${BLUE}Agent Configuration Files:${NC}"
     [ -f .clinerules ] && echo "    • .clinerules (Cline)"
-    [ -f AGENTS.md ] && echo "    • AGENTS.md (Cursor, Copilot)"
+    [ -f AGENTS.md ] && echo "    • AGENTS.md (ChatGPT Codex, Cursor, Copilot)"
     [ -f .github/copilot-instructions.md ] && echo "    • .github/copilot-instructions.md (GitHub Copilot)"
     [ -f .windsurf/rules/clineflow.md ] && echo "    • .windsurf/rules/clineflow.md (Windsurf)"
     
@@ -48,6 +48,7 @@ show_removal_list() {
     [ -f setup-refs.sh ] && echo "    • setup-refs.sh"
     [ -f .clineflow.example ] && echo "    • .clineflow.example"
     [ -f validate-okf ] && echo "    • validate-okf"
+    [ -f clineflow-doctor ] && echo "    • clineflow-doctor"
     [ -f .clineflow.local ] && echo "    • .clineflow.local"
     [ -f .github/workflows/test.yml ] && echo "    • .github/workflows/test.yml (CI/CD workflow)"
     
@@ -90,10 +91,10 @@ remove_files() {
         removed_count=$((removed_count + 1))
     fi
     
-    # Remove AGENTS.md (Cursor, Copilot, universal)
+    # Remove AGENTS.md (ChatGPT Codex, Cursor, Copilot, universal)
     if [ -f AGENTS.md ]; then
         rm -f AGENTS.md
-        print_success "Removed AGENTS.md (Cursor, Copilot)"
+        print_success "Removed AGENTS.md (ChatGPT Codex, Cursor, Copilot)"
         removed_count=$((removed_count + 1))
     fi
     
@@ -150,6 +151,12 @@ remove_files() {
     if [ -f validate-okf ]; then
         rm -f validate-okf
         print_success "Removed validate-okf"
+        removed_count=$((removed_count + 1))
+    fi
+
+    if [ -f clineflow-doctor ]; then
+        rm -f clineflow-doctor
+        print_success "Removed clineflow-doctor"
         removed_count=$((removed_count + 1))
     fi
     
@@ -245,7 +252,7 @@ if [ "$DRY_RUN" = true ]; then
 fi
 
 # Check if anything to remove
-if [ ! -f .clinerules ] && [ ! -f AGENTS.md ] && [ ! -f .github/copilot-instructions.md ] && [ ! -f .windsurf/rules/clineflow.md ] && [ ! -d clineflow ] && [ ! -f setup-refs.sh ] && [ ! -f .clineflow.example ] && [ ! -f .clineflow.local ] && [ ! -f validate-okf ]; then
+if [ ! -f .clinerules ] && [ ! -f AGENTS.md ] && [ ! -f .github/copilot-instructions.md ] && [ ! -f .windsurf/rules/clineflow.md ] && [ ! -d clineflow ] && [ ! -f setup-refs.sh ] && [ ! -f .clineflow.example ] && [ ! -f .clineflow.local ] && [ ! -f validate-okf ] && [ ! -f clineflow-doctor ]; then
     print_warning "No ClineFlow files found to remove"
     exit 0
 fi

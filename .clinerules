@@ -1,5 +1,7 @@
 # ClineFlow OKF Knowledge Rules
 
+This is the shared OKF workflow used alongside ChatGPT Codex (`AGENTS.md`), Cursor, Copilot, Windsurf, and other compatible agents.
+
 ## Always read first
 
 - `knowledge/index.md` — the OKF bundle entry point.

@@ -20,16 +20,19 @@ TEMPLATE_FILES=(
     "clineflow/PROCEDURES.md"
     "clineflow/JOURNAL_TEMPLATE.md"
     "clineflow/WORKING_WITH_CLINE.md"
+    "clineflow/WORKING_WITH_CODEX.md"
     "clineflow/README.md"
     "setup-refs.sh"
     ".clineflow.example"
     "validate-okf"
+    "clineflow-doctor"
     "VERSION"
 )
 
 # Files that are NEVER updated (user files)
 PROTECTED_FILES=(
     ".clinerules"
+    "AGENTS.md"
     ".clineflow.local"
     "knowledge/*"
     "docs/journals/*"
@@ -65,7 +68,7 @@ while [[ $# -gt 0 ]]; do
             echo "  - .clineflow.example config template"
             echo ""
             echo "What stays protected:"
-            echo "  - .clinerules (your custom rules)"
+            echo "  - .clinerules and AGENTS.md (your custom agent rules)"
             echo "  - .clineflow.local (your local config)"
             echo "  - docs/journals/* (your task journals)"
             echo ""
@@ -196,6 +199,9 @@ fi
 if [[ " ${UPDATES_AVAILABLE[@]} " =~ " validate-okf " ]]; then
     chmod +x validate-okf
 fi
+if [[ " ${UPDATES_AVAILABLE[@]} " =~ " clineflow-doctor " ]]; then
+    chmod +x clineflow-doctor
+fi
 
 echo ""
 echo -e "${BLUE}════════════════════════════════════════${NC}"
@@ -217,6 +223,7 @@ fi
 echo ""
 echo -e "${BLUE}Your customizations are safe:${NC}"
 echo "  • .clinerules preserved"
+echo "  • AGENTS.md preserved"
 echo "  • .clineflow.local preserved"
 echo "  • All knowledge in knowledge/ preserved"
 echo "  • All journals in docs/journals/ preserved"

@@ -1,57 +1,35 @@
-# Cline AI Assistant Rules
+# ClineFlow: OKF Knowledge Workflow
 
-## 📚 Full Documentation
-See **clineflow/WORKING_WITH_CLINE.md** for complete procedures and best practices.
+This project keeps persistent engineering context in the `knowledge/` Open Knowledge Format (OKF) v0.2 bundle.
 
-## 🔑 Essential Context Files
+## Shared agent workflow
 
-### Always Read First
-- **clineflow/PROCEDURES.md** - Complete system rules and procedures
-- **clineflow/JOURNAL_TEMPLATE.md** - Template for task journals
+The same OKF knowledge contract is used by Cline, ChatGPT Codex, Cursor, Copilot, Windsurf, and compatible agents. ChatGPT Codex reads `AGENTS.md`; Cline follows these rules directly.
 
-### MANDATORY: Every Task MUST Have a Journal
+## Task knowledge rules
 
-**No Exceptions - All Tasks Require Documentation**
+1. For each substantial task, create or resume `knowledge/journals/<task-name>.md` using `knowledge/journals/TASK_TEMPLATE.md`.
+2. Every task journal is an OKF concept. Keep its YAML frontmatter valid, retain `type: Engineering Journal`, and update `generated.at` after meaningful changes.
+3. Use `status: draft` while work is active and `status: stable` when it is complete. Do not add `verified` or `sources` unless they are factual.
+4. Before starting or resuming work, search `knowledge/` first. If `docs/journals/` exists, search it too as read-only legacy context. Never create or update new work there.
+5. Link related concepts with normal Markdown links. Update `knowledge/log.md` for material knowledge changes.
 
-1. **Single Task**: Create `docs/journals/[task-name].md`
-2. **Multi-Task Continuation**: Add new section to existing journal
-3. **Use Template**: **clineflow/JOURNAL_TEMPLATE.md**
-4. **Update Regularly**: Journal progresses with each commit
+## Commit workflow
 
-**Multi-Task Pattern:**
-- First task creates journal with Task 1 section
-- Subsequent tasks add Task 2, Task 3, etc. sections to SAME journal
-- Maintain task history index at top
-- Keeps all related work in single source of truth
+When the user asks to commit:
 
-## 🚀 Intelligent Commit Command
+1. Update the active `knowledge/journals/` concept with the implementation summary, decisions, tests, and next steps.
+2. Update `knowledge/log.md` if the change added or materially changed knowledge.
+3. Run `./validate-okf` and resolve validation failures. When the project has optional PyYAML available, prefer `./validate-okf --strict` before committing.
+4. Stage the code and updated knowledge artifacts together, then create a descriptive commit.
 
-**When you say:** `"commit changes"`, `"commit"`, or `"please commit"`
+## Knowledge navigation
 
-**I will automatically:**
-1. ✅ Detect active journal (most recent in `docs/journals/`)
-2. ✅ Generate context-aware journal entry from our conversation
-3. ✅ Append entry to journal file
-4. ✅ Stage ALL changes + updated journal
-5. ✅ Create descriptive commit message
-6. ✅ Execute `git commit`
-7. ✅ Confirm completion to you
+- Start with `knowledge/index.md` and descend through `index.md` files for progressive disclosure.
+- `docs/journals/` is optional legacy history; it is not part of the OKF bundle and must not be passed to `validate-okf`.
+- The reference-repository system under `clineflow/` remains optional and unchanged.
 
-**Result**: Single commit with code changes + meaningful journal documentation
+## Code quality
 
-**See**: clineflow/PROCEDURES.md SOP-005 for complete workflow details
-
-## 🎯 Quick Rules
-
-**Code Composition:**
-- Module/File Size: 300-500 LOC ideal, >1K LOC unacceptable
-- Single Responsibility: Each file should have one clear purpose
-- Modularization: Break down large files always
-- Code Quality: No unnecessary code, specific to module purpose only
-
-**Documentation:**
-- Follow patterns in docs/
-- Every task has a journal - no exceptions
-
-## 📖 Reference
-For complete details, read **clineflow/WORKING_WITH_CLINE.md**
+- Prefer focused modules (roughly 300–500 lines; refactor files over 1,000 lines).
+- Keep documentation concise, factual, and linked to the concepts or files it describes.

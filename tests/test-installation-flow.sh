@@ -175,7 +175,7 @@ run_installation() {
     pass_test "Installation completed successfully"
     
     # Verify files were created
-    if [ -f .clinerules ] && [ -d clineflow ] && [ -f knowledge/index.md ] && [ -f knowledge/log.md ] && [ -f knowledge/journals/TASK_TEMPLATE.md ] && [ -f validate-okf ]; then
+    if [ -f .clinerules ] && [ -f AGENTS.md ] && [ -d clineflow ] && [ -f clineflow/WORKING_WITH_CODEX.md ] && [ -f knowledge/index.md ] && [ -f knowledge/log.md ] && [ -f knowledge/journals/TASK_TEMPLATE.md ] && [ -f validate-okf ] && [ -x clineflow-doctor ]; then
         pass_test "All files created in correct locations"
     else
         fail_test "Missing expected files after installation"
@@ -192,6 +192,72 @@ run_installation() {
         pass_test "Generated knowledge bundle passes OKF validation"
     else
         fail_test "Generated knowledge bundle did not pass OKF validation"
+    fi
+
+    if grep -q "ChatGPT Codex" AGENTS.md && grep -q "WORKING_WITH_CODEX.md" AGENTS.md; then
+        pass_test "Generated AGENTS.md includes the Codex workflow"
+    else
+        fail_test "Generated AGENTS.md does not include the Codex workflow"
+        return 1
+    fi
+
+    if bash clineflow-doctor > /dev/null 2>&1; then
+        pass_test "ClineFlow doctor passes on the generated installation"
+    else
+        fail_test "ClineFlow doctor did not pass on the generated installation"
+        return 1
+    fi
+}
+
+# Phase 2b: Verify Codex compatibility and doctor failures
+test_codex_integration() {
+    echo ""
+    echo -e "${BLUE}🤖 Phase 2b: Codex Integration${NC}"
+
+    cd "$TEST_DIR/test-project"
+
+    printf '%s\n' "# Existing user instructions" "Do not replace these rules." > AGENTS.md
+
+    local agents_hash
+    agents_hash=$(shasum -a 256 AGENTS.md | awk '{print $1}')
+    if CLINEFLOW_BASE_URL="$TEMPLATE_BASE_URL" bash install.sh > /dev/null 2>&1 && [ "$agents_hash" = "$(shasum -a 256 AGENTS.md | awk '{print $1}')" ]; then
+        pass_test "Existing AGENTS.md is preserved on reinstall"
+    else
+        fail_test "Existing AGENTS.md was changed on reinstall"
+    fi
+
+    local doctor_fixture="$TEST_DIR/doctor-fixture"
+    mkdir -p "$doctor_fixture"
+    git init "$doctor_fixture" > /dev/null 2>&1
+    cp AGENTS.md clineflow-doctor validate-okf "$doctor_fixture/"
+    cp -R knowledge "$doctor_fixture/knowledge"
+    chmod +x "$doctor_fixture/clineflow-doctor" "$doctor_fixture/validate-okf"
+
+    mkdir -p "$doctor_fixture/no-pyyaml"
+    cat > "$doctor_fixture/no-pyyaml/python3" << 'EOF'
+#!/bin/sh
+exit 1
+EOF
+    chmod +x "$doctor_fixture/no-pyyaml/python3"
+    if (cd "$doctor_fixture" && PATH="$doctor_fixture/no-pyyaml:$PATH" bash ./clineflow-doctor --strict) > "$doctor_fixture/strict.out" 2>&1 && grep -q "Strict validation skipped" "$doctor_fixture/strict.out"; then
+        pass_test "Doctor warns but passes when optional PyYAML is unavailable"
+    else
+        fail_test "Doctor did not handle unavailable PyYAML as optional"
+    fi
+
+    rm "$doctor_fixture/AGENTS.md"
+    if ! (cd "$doctor_fixture" && bash ./clineflow-doctor) > "$doctor_fixture/missing-agents.out" 2>&1 && grep -q "Missing shared Codex and agent instructions" "$doctor_fixture/missing-agents.out"; then
+        pass_test "Doctor reports missing AGENTS.md"
+    else
+        fail_test "Doctor did not report missing AGENTS.md"
+    fi
+
+    cp AGENTS.md "$doctor_fixture/AGENTS.md"
+    rm "$doctor_fixture/knowledge/log.md"
+    if ! (cd "$doctor_fixture" && bash ./clineflow-doctor) > "$doctor_fixture/missing-log.out" 2>&1 && grep -q "Missing OKF bundle log" "$doctor_fixture/missing-log.out"; then
+        pass_test "Doctor reports a missing required knowledge file"
+    else
+        fail_test "Doctor did not report a missing required knowledge file"
     fi
 }
 
@@ -376,6 +442,7 @@ main() {
     # Run test phases
     create_test_environment
     run_installation
+    test_codex_integration
     setup_reference_system
     test_git_safety
     test_file_access

@@ -114,12 +114,12 @@ generate_agent_configs() {
         print_warning ".clinerules already exists (skipping)"
     fi
     
-    # Generate AGENTS.md (Cursor, Copilot, universal)
+    # Generate AGENTS.md (ChatGPT Codex, Cursor, and compatible agents)
     if [ ! -f AGENTS.md ] || [ "$FORCE" = true ]; then
         echo "$template_content" > AGENTS.md
-        print_success "AGENTS.md (Cursor, Copilot, others)"
+        print_success "AGENTS.md (ChatGPT Codex, Cursor, Copilot, others)"
     else
-        print_warning "AGENTS.md already exists (skipping)"
+        print_warning "AGENTS.md already exists (preserved). Add the ClineFlow OKF workflow manually if it is not already present."
     fi
     
     # Generate .github/copilot-instructions.md (GitHub Copilot)
@@ -164,7 +164,7 @@ install_workflow() {
     print_info "Downloading workflow files..."
     
     # clineflow files
-    local clineflow_files=("JOURNAL_TEMPLATE.md" "PROCEDURES.md" "WORKING_WITH_CLINE.md" "README.md")
+    local clineflow_files=("JOURNAL_TEMPLATE.md" "PROCEDURES.md" "WORKING_WITH_CLINE.md" "WORKING_WITH_CODEX.md" "README.md")
     for file in "${clineflow_files[@]}"; do
         if [ ! -f "clineflow/$file" ] || [ "$FORCE" = true ]; then
             download_file "${BASE_URL}/clineflow/${file}" "clineflow/$file"
@@ -191,6 +191,14 @@ install_workflow() {
         print_success "validate-okf"
     else
         print_warning "validate-okf already exists (skipping)"
+    fi
+
+    if [ ! -f clineflow-doctor ] || [ "$FORCE" = true ]; then
+        download_file "${BASE_URL}/clineflow-doctor" "clineflow-doctor"
+        chmod +x clineflow-doctor
+        print_success "clineflow-doctor"
+    else
+        print_warning "clineflow-doctor already exists (skipping)"
     fi
     
     # Reference system files
@@ -235,19 +243,20 @@ show_next_steps() {
     echo "   ClineFlow works with any AI coding assistant!"
     echo
     echo "   ✓ Cline (.clinerules)"
-    echo "   ✓ Cursor (AGENTS.md)"
+    echo "   ✓ ChatGPT Codex, Cursor, and compatible agents (AGENTS.md)"
     echo "   ✓ GitHub Copilot (.github/copilot-instructions.md)"
     echo "   ✓ Windsurf (.windsurf/rules/)"
     echo
     echo "📚 Next Steps:"
     echo "  1. Start working with your AI assistant in your IDE"
-    echo "  2. Read clineflow/WORKING_WITH_CLINE.md for complete guide"
+    echo "  2. ChatGPT Codex: read clineflow/WORKING_WITH_CODEX.md"
     echo "  3. Create your first knowledge journal: knowledge/journals/your-feature.md"
     echo "  4. Validate it with: ./validate-okf"
     echo "  5. Try the intelligent commit: just say 'please commit'"
-    echo "  6. (Optional) Set up reference system: ./setup-refs.sh --help"
+    echo "  6. Check the setup with: ./clineflow-doctor"
+    echo "  7. (Optional) Set up reference system: ./setup-refs.sh --help"
     echo
-    echo "📖 Documentation: clineflow/WORKING_WITH_CLINE.md"
+    echo "📖 Codex guide: clineflow/WORKING_WITH_CODEX.md"
     echo "🔗 Reference System: clineflow/README.md"
     echo "🐛 Issues: https://github.com/hassanvfx/clineflow/issues"
     echo
@@ -283,7 +292,7 @@ uninstall_workflow() {
     
     # Remove workflow files
     rm -rf clineflow
-    rm -f setup-refs.sh .clineflow.example
+    rm -f setup-refs.sh .clineflow.example clineflow-doctor
     
     # Keep authored knowledge and legacy journals but inform user
     print_warning "knowledge/ preserved (remove manually if needed)"
@@ -357,7 +366,7 @@ if [ "$DRY_RUN" = true ]; then
     echo
     print_info "Would create agent configuration files:"
     echo "  .clinerules (Cline)"
-    echo "  AGENTS.md (Cursor, Copilot, universal)"
+    echo "  AGENTS.md (ChatGPT Codex, Cursor, Copilot, compatible agents)"
     echo "  .github/copilot-instructions.md (GitHub Copilot)"
     echo "  .windsurf/rules/clineflow.md (Windsurf)"
     echo
@@ -365,12 +374,14 @@ if [ "$DRY_RUN" = true ]; then
     echo "  clineflow/JOURNAL_TEMPLATE.md"
     echo "  clineflow/PROCEDURES.md"
     echo "  clineflow/WORKING_WITH_CLINE.md"
+    echo "  clineflow/WORKING_WITH_CODEX.md"
     echo "  clineflow/README.md"
     echo "  knowledge/index.md"
     echo "  knowledge/log.md"
     echo "  knowledge/journals/index.md"
     echo "  knowledge/journals/TASK_TEMPLATE.md"
     echo "  validate-okf"
+    echo "  clineflow-doctor"
     echo "  setup-refs.sh"
     echo "  .clineflow.example"
     echo
