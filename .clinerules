@@ -1,57 +1,24 @@
-# Cline AI Assistant Rules
+# ClineFlow OKF Knowledge Rules
 
-## 📚 Full Documentation
-See **clineflow/WORKING_WITH_CLINE.md** for complete procedures and best practices.
+## Always read first
 
-## 🔑 Essential Context Files
+- `knowledge/index.md` — the OKF bundle entry point.
+- `knowledge/journals/` — active and completed Engineering Journal concepts.
+- `knowledge/journals/TASK_TEMPLATE.md` — the template for new task concepts.
 
-### Always Read First
-- **clineflow/PROCEDURES.md** - Complete system rules and procedures
-- **clineflow/JOURNAL_TEMPLATE.md** - Template for task journals
+## Task knowledge workflow
 
-### MANDATORY: Every Task MUST Have a Journal
+1. Search `knowledge/` for relevant context before work begins.
+2. If `docs/journals/` exists, search it as read-only legacy context; never create or update new work there.
+3. For substantial work, create or resume `knowledge/journals/<task-name>.md` from `knowledge/journals/TASK_TEMPLATE.md`.
+4. Keep YAML frontmatter valid with a non-empty `type`, and record decisions, testing, and next steps in the concept body.
+5. Update `knowledge/log.md` for material knowledge changes.
 
-**No Exceptions - All Tasks Require Documentation**
+## Commit workflow
 
-1. **Single Task**: Create `docs/journals/[task-name].md`
-2. **Multi-Task Continuation**: Add new section to existing journal
-3. **Use Template**: **clineflow/JOURNAL_TEMPLATE.md**
-4. **Update Regularly**: Journal progresses with each commit
+When asked to commit, update the active knowledge journal, run `./validate-okf` (or `./validate-okf --strict` when optional PyYAML is available), stage code and knowledge together, then create a descriptive commit.
 
-**Multi-Task Pattern:**
-- First task creates journal with Task 1 section
-- Subsequent tasks add Task 2, Task 3, etc. sections to SAME journal
-- Maintain task history index at top
-- Keeps all related work in single source of truth
+## Code quality
 
-## 🚀 Intelligent Commit Command
-
-**When you say:** `"commit changes"`, `"commit"`, or `"please commit"`
-
-**I will automatically:**
-1. ✅ Detect active journal (most recent in `docs/journals/`)
-2. ✅ Generate context-aware journal entry from our conversation
-3. ✅ Append entry to journal file
-4. ✅ Stage ALL changes + updated journal
-5. ✅ Create descriptive commit message
-6. ✅ Execute `git commit`
-7. ✅ Confirm completion to you
-
-**Result**: Single commit with code changes + meaningful journal documentation
-
-**See**: clineflow/PROCEDURES.md SOP-005 for complete workflow details
-
-## 🎯 Quick Rules
-
-**Code Composition:**
-- Module/File Size: 300-500 LOC ideal, >1K LOC unacceptable
-- Single Responsibility: Each file should have one clear purpose
-- Modularization: Break down large files always
-- Code Quality: No unnecessary code, specific to module purpose only
-
-**Documentation:**
-- Follow patterns in docs/
-- Every task has a journal - no exceptions
-
-## 📖 Reference
-For complete details, read **clineflow/WORKING_WITH_CLINE.md**
+- Prefer focused modules (roughly 300–500 lines; refactor files over 1,000 lines).
+- Keep documentation factual, concise, and linked to related knowledge concepts or project files.

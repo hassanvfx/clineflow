@@ -375,13 +375,13 @@ if [ $SUCCESS_COUNT -gt 0 ]; then
     echo ""
     
     # Detect workspace file name
-    local project_name
+    project_name=""
     if [ -d ".git" ]; then
         project_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")
     else
         project_name=$(basename "$(pwd)")
     fi
-    local workspace_file="${project_name}.code-workspace"
+    workspace_file="${project_name}.code-workspace"
     
     echo -e "${GREEN}VS Code Workspace:${NC}"
     echo -e "  ✓ Generated ${workspace_file}"

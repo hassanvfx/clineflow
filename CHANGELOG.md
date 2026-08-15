@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project uses date-based versioning: `YYYY.MM.DD.patch`
 
+## [Unreleased]
+
+### Added
+- Native Open Knowledge Format (OKF) v0.2 knowledge bundles at `knowledge/` for new installations.
+- `validate-okf`, a dependency-free Bash structural validator for OKF bundles.
+- Optional `validate-okf --strict` validation that parses frontmatter with PyYAML when available.
+- Read-only legacy discovery for pre-OKF `docs/journals/` histories.
+
+### Changed
+- New task journals are Engineering Journal concepts in `knowledge/journals/`.
+- Install, update, and uninstall flows preserve both `knowledge/` and legacy `docs/journals/` user content.
+
 ## [2025.11.17.0] - 2025-11-17
 
 ### Added

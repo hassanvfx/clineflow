@@ -7,9 +7,9 @@
   ╚═════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ 
 ```
 
-> **Universal Memory System for AI Coding Assistants**
+> **Persistent Context, Open Knowledge**
 >
-> Give your AI assistant persistent memory. Get a teammate who never forgets.
+> **ClineFlow — AI coding memory, now native OKF.**
 
 🤖 **Works with any AI assistant** • Cline • Cursor • GitHub Copilot • Windsurf  
 ✅ **Fully tested with Cline** by core development team
@@ -17,6 +17,23 @@
 [![Test Status](https://github.com/hassanvfx/clineflow/workflows/Test%20ClineFlow/badge.svg)](https://github.com/hassanvfx/clineflow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Agent Agnostic](https://img.shields.io/badge/Agent-Agnostic-green)](https://github.com/hassanvfx/clineflow)
+
+---
+
+![ClineFlow — Persistent Context, Open Knowledge](assets/clineflow-okf-cover.png)
+
+## The memory layer for AI coding agents
+
+ClineFlow turns engineering context into portable, version-controlled knowledge. New projects use a native [Open Knowledge Format (OKF) v0.2](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundle, so people and agents share the same Markdown and YAML knowledge graph—without a platform, service, or lock-in.
+
+- **Persistent context:** task history, decisions, tests, and next steps survive every session.
+- **Open knowledge:** `knowledge/` is a readable, Git-native OKF bundle with indexes, links, and change history.
+- **Agent-agnostic workflow:** Cline, Cursor, Copilot, Windsurf, and future tools receive the same instructions.
+- **No added runtime:** the default validator is Bash-only; full YAML parsing is available through optional strict mode.
+
+Existing `docs/journals/` directories remain supported as read-only legacy context. New work is always written to `knowledge/journals/`.
+
+Read the [OKF knowledge workflow guide](docs/okf-knowledge-workflow.md) for the architecture, validation model, and upgrade behavior.
 
 ---
 
@@ -50,6 +67,21 @@ graph TD
 ---
 
 ## 🎯 Easy as 1-2-3
+
+New task journals live at `knowledge/journals/<task>.md`, use YAML frontmatter, and are validated with:
+
+```bash
+./validate-okf
+```
+
+The bundled validator uses Bash only; no additional runtime or package installation is required.
+
+For full YAML parsing in environments that already use Python, strict validation is optional:
+
+```bash
+python3 -m pip install PyYAML
+./validate-okf --strict
+```
 
 **Turn Cline into a teammate who remembers everything**
 
@@ -187,7 +219,7 @@ Changed your mind? No hard feelings!
 ./uninstall.sh
 ```
 
-Your `docs/journals/` are safe and require manual removal if desired. [See all options →](#installation-options)
+Your `knowledge/` bundle and legacy `docs/journals/` are safe and require manual removal if desired. [See all options →](#installation-options)
 
 ---
 
@@ -588,13 +620,17 @@ your-project/
 │   └── rules/
 │       └── clineflow.md           # Windsurf
 ├── clineflow/                     # Reference documentation
-│   ├── JOURNAL_TEMPLATE.md        # Template for task journals
+│   ├── JOURNAL_TEMPLATE.md        # Legacy-journal compatibility notice
 │   ├── PROCEDURES.md              # Standard operating procedures
 │   ├── WORKING_WITH_CLINE.md      # Complete user guide
 │   └── README.md                  # ClineFlow overview
-├── docs/
-│   └── journals/                  # Your task journals go here
-│       └── .gitkeep
+├── knowledge/                     # Native OKF v0.2 knowledge bundle
+│   ├── index.md                   # Bundle navigation and version declaration
+│   ├── log.md                     # Dated knowledge history
+│   └── journals/                  # Engineering Journal concepts
+│       ├── index.md
+│       └── TASK_TEMPLATE.md
+├── validate-okf                   # Dependency-free OKF structural validator
 ├── setup-refs.sh                  # Reference system setup (optional)
 ├── .clineflow.example             # Reference system config example (optional)
 ├── update.sh                      # Update script (get latest features)
@@ -630,7 +666,7 @@ Or if you already have the script:
 
 🔒 **Your customizations** - `.clinerules` remains untouched  
 🔒 **Your local config** - `.clineflow.local` preserved  
-🔒 **Your work** - All journals in `docs/journals/` safe
+🔒 **Your work** - All knowledge in `knowledge/` and legacy journals in `docs/journals/` safe
 
 ### Preview Changes First
 
@@ -668,7 +704,7 @@ Real scenarios showing ClineFlow in action:
 ### Scenario 1: Feature Development
 ```
 You: "Build a user dashboard"
-Cline: Creates docs/journals/user-dashboard.md automatically
+Cline: Creates knowledge/journals/user-dashboard.md automatically
 You: Work together, discuss approaches
 Cline: Documents every decision in journal
 You: "please commit"
@@ -679,7 +715,7 @@ Cline: Commits code + updated journal together
 ### Scenario 2: Bug Fix
 ```
 You: "Fix the login timeout issue"
-Cline: Updates existing auth-system.md journal
+Cline: Updates existing knowledge/journals/auth-system.md journal
 You: Discuss root cause analysis
 Cline: Documents the fix and reasoning
 You: "please commit"
@@ -746,9 +782,10 @@ wget -qO- https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.s
 - `clineflow/` directory
 - `setup-refs.sh` and `.clineflow.example`
 - `.clineflow.local` (if exists)
+- `validate-okf`
 - Reference symlinks (if configured)
 
-**⚠️ Note:** Your `docs/journals/` are safe and require manual removal if desired.
+**⚠️ Note:** Your `knowledge/` bundle and any legacy `docs/journals/` are safe and require manual removal if desired.
 
 **Options:**
 ```bash
@@ -884,7 +921,8 @@ code my-project.code-workspace
 
 - **[WORKING_WITH_CLINE.md](template/clineflow/WORKING_WITH_CLINE.md)** - Complete user guide
 - **[PROCEDURES.md](template/clineflow/PROCEDURES.md)** - Standard operating procedures
-- **[JOURNAL_TEMPLATE.md](template/clineflow/JOURNAL_TEMPLATE.md)** - Journal template
+- **[TASK_TEMPLATE.md](template/knowledge/journals/TASK_TEMPLATE.md)** - Native OKF journal template
+- **[OKF Knowledge Workflow](docs/okf-knowledge-workflow.md)** - Bundle architecture, validation, and legacy compatibility
 - **[clineflow/README.md](template/clineflow/README.md)** - Reference system overview
 
 ---
@@ -910,7 +948,7 @@ Contributions welcome! Please:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Create a journal documenting your work
+4. Create an Engineering Journal concept documenting your work
 5. Submit a pull request
 
 **We use ClineFlow to build ClineFlow** - your contribution will be a real-world example!

@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Script version
-VERSION="1.0.0"
+VERSION="2.0.0"
 
 # Function to print colored output
 print_info() {
@@ -47,11 +47,13 @@ show_removal_list() {
     [ -d clineflow ] && echo "    • clineflow/ (including any reference symlinks)"
     [ -f setup-refs.sh ] && echo "    • setup-refs.sh"
     [ -f .clineflow.example ] && echo "    • .clineflow.example"
+    [ -f validate-okf ] && echo "    • validate-okf"
     [ -f .clineflow.local ] && echo "    • .clineflow.local"
     [ -f .github/workflows/test.yml ] && echo "    • .github/workflows/test.yml (CI/CD workflow)"
     
     echo ""
     echo -e "${GREEN}The following will be PRESERVED:${NC}"
+    echo "  • knowledge/ (your OKF knowledge bundle is safe)"
     echo "  • docs/journals/ (your task journals are safe)"
     [ -d .github/workflows ] && [ "$(ls -A .github/workflows 2>/dev/null | grep -v test.yml | wc -l)" -gt 0 ] && echo "  • .github/workflows/ (your other workflows)"
     [ -d .github ] && [ -f .github/copilot-instructions.md ] && [ "$(ls -A .github 2>/dev/null | grep -v copilot-instructions.md | wc -l)" -gt 0 ] && echo "  • .github/ (your other GitHub files)"
@@ -142,6 +144,12 @@ remove_files() {
     if [ -f .clineflow.example ]; then
         rm -f .clineflow.example
         print_success "Removed .clineflow.example"
+        removed_count=$((removed_count + 1))
+    fi
+
+    if [ -f validate-okf ]; then
+        rm -f validate-okf
+        print_success "Removed validate-okf"
         removed_count=$((removed_count + 1))
     fi
     
@@ -237,7 +245,7 @@ if [ "$DRY_RUN" = true ]; then
 fi
 
 # Check if anything to remove
-if [ ! -f .clinerules ] && [ ! -f AGENTS.md ] && [ ! -f .github/copilot-instructions.md ] && [ ! -f .windsurf/rules/clineflow.md ] && [ ! -d clineflow ] && [ ! -f setup-refs.sh ] && [ ! -f .clineflow.example ] && [ ! -f .clineflow.local ]; then
+if [ ! -f .clinerules ] && [ ! -f AGENTS.md ] && [ ! -f .github/copilot-instructions.md ] && [ ! -f .windsurf/rules/clineflow.md ] && [ ! -d clineflow ] && [ ! -f setup-refs.sh ] && [ ! -f .clineflow.example ] && [ ! -f .clineflow.local ] && [ ! -f validate-okf ]; then
     print_warning "No ClineFlow files found to remove"
     exit 0
 fi
@@ -273,7 +281,13 @@ fi
 echo "═══════════════════════════════════════════════════════════"
 echo ""
 
-# Reminder about journals
+# Reminder about preserved knowledge
+if [ -d knowledge ]; then
+    echo -e "${BLUE}📚 Note: Your OKF knowledge is preserved in knowledge/${NC}"
+    echo -e "${BLUE}   Remove manually if desired:${NC} rm -rf knowledge/"
+    echo ""
+fi
+
 if [ -d docs/journals ]; then
     echo -e "${BLUE}📚 Note: Your journals are preserved in docs/journals/${NC}"
     echo -e "${BLUE}   Remove manually if desired:${NC} rm -rf docs/journals/"

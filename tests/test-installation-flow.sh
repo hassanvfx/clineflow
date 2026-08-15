@@ -12,7 +12,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-INSTALL_URL="https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh"
+REPOSITORY_ROOT=$(cd "$(dirname "$0")/.." && pwd)
+INSTALL_SOURCE="${INSTALL_SOURCE:-$REPOSITORY_ROOT/install.sh}"
+TEMPLATE_BASE_URL="${TEMPLATE_BASE_URL:-file://$REPOSITORY_ROOT/template}"
 TEST_DIR=""
 VERBOSE=false
 NO_CLEANUP=false
@@ -103,6 +105,11 @@ create_test_environment() {
     git config user.name "Test User" > /dev/null 2>&1
     git config user.email "test@example.com" > /dev/null 2>&1
     pass_test "Created test project directory"
+
+    # Legacy journals must remain untouched when the native OKF workflow is installed.
+    mkdir -p docs/journals
+    echo "# Legacy journal" > docs/journals/legacy-task.md
+    LEGACY_JOURNAL_HASH=$(shasum -a 256 docs/journals/legacy-task.md | awk '{print $1}')
     
     # Create mock repositories
     create_mock_repository "mock-backend-api" "Backend API"
@@ -146,13 +153,13 @@ run_installation() {
     
     cd "$TEST_DIR/test-project"
     
-    # Download install script
-    verbose "Downloading install script from: $INSTALL_URL"
-    if curl -fsSL "$INSTALL_URL" -o install.sh 2>&1 | grep -q "error"; then
-        fail_test "Failed to download install script"
+    # Copy the checked-out installer so CI verifies the current branch, not main.
+    verbose "Copying install script from: $INSTALL_SOURCE"
+    if ! cp "$INSTALL_SOURCE" install.sh; then
+        fail_test "Failed to copy install script"
         return 1
     fi
-    pass_test "Downloaded install script from GitHub"
+    pass_test "Copied install script from current checkout"
     
     # Make executable
     chmod +x install.sh
@@ -160,19 +167,31 @@ run_installation() {
     # Run installation (suppress output unless verbose)
     verbose "Running installation..."
     if [ "$VERBOSE" = true ]; then
-        bash install.sh
+        CLINEFLOW_BASE_URL="$TEMPLATE_BASE_URL" bash install.sh
     else
-        bash install.sh > /dev/null 2>&1
+        CLINEFLOW_BASE_URL="$TEMPLATE_BASE_URL" bash install.sh > /dev/null 2>&1
     fi
     
     pass_test "Installation completed successfully"
     
     # Verify files were created
-    if [ -f .clinerules ] && [ -d clineflow ] && [ -d docs/journals ]; then
+    if [ -f .clinerules ] && [ -d clineflow ] && [ -f knowledge/index.md ] && [ -f knowledge/log.md ] && [ -f knowledge/journals/TASK_TEMPLATE.md ] && [ -f validate-okf ]; then
         pass_test "All files created in correct locations"
     else
         fail_test "Missing expected files after installation"
         return 1
+    fi
+
+    if [ "$(shasum -a 256 docs/journals/legacy-task.md | awk '{print $1}')" = "$LEGACY_JOURNAL_HASH" ]; then
+        pass_test "Legacy journals preserved unchanged"
+    else
+        fail_test "Legacy journal was modified during installation"
+    fi
+
+    if bash validate-okf > /dev/null 2>&1; then
+        pass_test "Generated knowledge bundle passes OKF validation"
+    else
+        fail_test "Generated knowledge bundle did not pass OKF validation"
     fi
 }
 

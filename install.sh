@@ -12,10 +12,10 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Script version
-VERSION="1.0.0"
+VERSION="2.0.0"
 
 # Base URL for raw files (GitHub)
-BASE_URL="https://raw.githubusercontent.com/hassanvfx/clineflow/main/template"
+BASE_URL="${CLINEFLOW_BASE_URL:-https://raw.githubusercontent.com/hassanvfx/clineflow/main/template}"
 
 # Cache-busting timestamp to ensure latest version
 CACHE_BUST="?t=$(date +%s)"
@@ -150,8 +150,11 @@ install_workflow() {
     
     # Create directories
     print_info "Creating directory structure..."
-    mkdir -p clineflow docs/journals
+    mkdir -p clineflow knowledge/journals
     print_success "Directories created"
+    if [ -d "docs/journals" ]; then
+        print_info "Legacy docs/journals/ detected; it will be preserved and searched as read-only context."
+    fi
     echo
     
     # Generate agent config files from template
@@ -171,9 +174,24 @@ install_workflow() {
         fi
     done
     
-    # .gitignore for journals
-    touch docs/journals/.gitkeep
-    print_success "docs/journals/.gitkeep"
+    # Create the canonical OKF knowledge bundle.
+    local knowledge_files=("index.md" "log.md" "journals/index.md" "journals/TASK_TEMPLATE.md")
+    for file in "${knowledge_files[@]}"; do
+        if [ ! -f "knowledge/$file" ] || [ "$FORCE" = true ]; then
+            download_file "${BASE_URL}/knowledge/${file}" "knowledge/${file}"
+            print_success "knowledge/$file"
+        else
+            print_warning "knowledge/$file already exists (skipping)"
+        fi
+    done
+
+    if [ ! -f validate-okf ] || [ "$FORCE" = true ]; then
+        download_file "${BASE_URL}/validate-okf" "validate-okf"
+        chmod +x validate-okf
+        print_success "validate-okf"
+    else
+        print_warning "validate-okf already exists (skipping)"
+    fi
     
     # Reference system files
     if [ ! -f setup-refs.sh ] || [ "$FORCE" = true ]; then
@@ -224,9 +242,10 @@ show_next_steps() {
     echo "📚 Next Steps:"
     echo "  1. Start working with your AI assistant in your IDE"
     echo "  2. Read clineflow/WORKING_WITH_CLINE.md for complete guide"
-    echo "  3. Create your first journal: docs/journals/your-feature.md"
-    echo "  4. Try the intelligent commit: just say 'please commit'"
-    echo "  5. (Optional) Set up reference system: ./setup-refs.sh --help"
+    echo "  3. Create your first knowledge journal: knowledge/journals/your-feature.md"
+    echo "  4. Validate it with: ./validate-okf"
+    echo "  5. Try the intelligent commit: just say 'please commit'"
+    echo "  6. (Optional) Set up reference system: ./setup-refs.sh --help"
     echo
     echo "📖 Documentation: clineflow/WORKING_WITH_CLINE.md"
     echo "🔗 Reference System: clineflow/README.md"
@@ -266,7 +285,8 @@ uninstall_workflow() {
     rm -rf clineflow
     rm -f setup-refs.sh .clineflow.example
     
-    # Keep journals but inform user
+    # Keep authored knowledge and legacy journals but inform user
+    print_warning "knowledge/ preserved (remove manually if needed)"
     print_warning "docs/journals/ preserved (remove manually if needed)"
     print_warning ".gitignore entry for .clineflow.local preserved (remove manually if needed)"
     
@@ -346,7 +366,11 @@ if [ "$DRY_RUN" = true ]; then
     echo "  clineflow/PROCEDURES.md"
     echo "  clineflow/WORKING_WITH_CLINE.md"
     echo "  clineflow/README.md"
-    echo "  docs/journals/.gitkeep"
+    echo "  knowledge/index.md"
+    echo "  knowledge/log.md"
+    echo "  knowledge/journals/index.md"
+    echo "  knowledge/journals/TASK_TEMPLATE.md"
+    echo "  validate-okf"
     echo "  setup-refs.sh"
     echo "  .clineflow.example"
     echo
