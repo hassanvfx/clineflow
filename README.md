@@ -14,6 +14,8 @@
 🤖 **Works with any AI assistant** • Cline • Cursor • GitHub Copilot • Windsurf  
 ✅ **Fully tested with Cline** by core development team
 
+📖 **[Get the book: Infinite AI Context](https://hassanvfx.github.io/infinite-ai-context/)**
+
 [![Test Status](https://github.com/hassanvfx/clineflow/workflows/Test%20ClineFlow/badge.svg)](https://github.com/hassanvfx/clineflow/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Agent Agnostic](https://img.shields.io/badge/Agent-Agnostic-green)](https://github.com/hassanvfx/clineflow)
