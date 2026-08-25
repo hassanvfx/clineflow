@@ -27,7 +27,7 @@ When the user asks to commit:
 
 - Start with `knowledge/index.md` and descend through `index.md` files for progressive disclosure.
 - `docs/journals/` is optional legacy history; it is not part of the OKF bundle and must not be passed to `validate-okf`.
-- The reference-repository system under `clineflow/` remains optional and unchanged.
+- For related codebases, keep projects as sibling folders under a common parent and refer to them as “sibling project `<foldername>`” (for example, `../backend-api`).
 
 ## Code quality
 

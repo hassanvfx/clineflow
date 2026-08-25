@@ -23,8 +23,6 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# ClineFlow reference system
-.clineflow.local
 *.code-workspace
 
 # Logs
@@ -32,4 +30,3 @@ Thumbs.db
 logs/
 
 # Optional: Un-ignore if needed
-# !.clineflow.local

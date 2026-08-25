@@ -44,12 +44,9 @@ show_removal_list() {
     
     echo ""
     echo "  ${BLUE}Workflow Files:${NC}"
-    [ -d clineflow ] && echo "    • clineflow/ (including any reference symlinks)"
-    [ -f setup-refs.sh ] && echo "    • setup-refs.sh"
-    [ -f .clineflow.example ] && echo "    • .clineflow.example"
+    [ -d clineflow ] && echo "    • clineflow/"
     [ -f validate-okf ] && echo "    • validate-okf"
     [ -f clineflow-doctor ] && echo "    • clineflow-doctor"
-    [ -f .clineflow.local ] && echo "    • .clineflow.local"
     [ -f .github/workflows/test.yml ] && echo "    • .github/workflows/test.yml (CI/CD workflow)"
     
     echo ""
@@ -60,18 +57,6 @@ show_removal_list() {
     [ -d .github ] && [ -f .github/copilot-instructions.md ] && [ "$(ls -A .github 2>/dev/null | grep -v copilot-instructions.md | wc -l)" -gt 0 ] && echo "  • .github/ (your other GitHub files)"
     [ -d .windsurf ] && [ -f .windsurf/rules/clineflow.md ] && [ "$(find .windsurf -type f ! -path '.windsurf/rules/clineflow.md' | wc -l)" -gt 0 ] && echo "  • .windsurf/ (your other Windsurf configurations)"
     echo ""
-}
-
-# Function to clean reference symlinks
-clean_refs() {
-    if [ -f setup-refs.sh ]; then
-        print_info "Cleaning reference symlinks..."
-        if bash setup-refs.sh --clean 2>/dev/null; then
-            print_success "Reference symlinks cleaned"
-        else
-            print_warning "Could not clean reference symlinks (continuing anyway)"
-        fi
-    fi
 }
 
 # Function to remove files
@@ -134,20 +119,6 @@ remove_files() {
         removed_count=$((removed_count + 1))
     fi
     
-    # Remove setup-refs.sh
-    if [ -f setup-refs.sh ]; then
-        rm -f setup-refs.sh
-        print_success "Removed setup-refs.sh"
-        removed_count=$((removed_count + 1))
-    fi
-    
-    # Remove .clineflow.example
-    if [ -f .clineflow.example ]; then
-        rm -f .clineflow.example
-        print_success "Removed .clineflow.example"
-        removed_count=$((removed_count + 1))
-    fi
-
     if [ -f validate-okf ]; then
         rm -f validate-okf
         print_success "Removed validate-okf"
@@ -157,13 +128,6 @@ remove_files() {
     if [ -f clineflow-doctor ]; then
         rm -f clineflow-doctor
         print_success "Removed clineflow-doctor"
-        removed_count=$((removed_count + 1))
-    fi
-    
-    # Remove .clineflow.local if exists
-    if [ -f .clineflow.local ]; then
-        rm -f .clineflow.local
-        print_success "Removed .clineflow.local"
         removed_count=$((removed_count + 1))
     fi
     
@@ -252,7 +216,7 @@ if [ "$DRY_RUN" = true ]; then
 fi
 
 # Check if anything to remove
-if [ ! -f .clinerules ] && [ ! -f AGENTS.md ] && [ ! -f .github/copilot-instructions.md ] && [ ! -f .windsurf/rules/clineflow.md ] && [ ! -d clineflow ] && [ ! -f setup-refs.sh ] && [ ! -f .clineflow.example ] && [ ! -f .clineflow.local ] && [ ! -f validate-okf ] && [ ! -f clineflow-doctor ]; then
+if [ ! -f .clinerules ] && [ ! -f AGENTS.md ] && [ ! -f .github/copilot-instructions.md ] && [ ! -f .windsurf/rules/clineflow.md ] && [ ! -d clineflow ] && [ ! -f validate-okf ] && [ ! -f clineflow-doctor ]; then
     print_warning "No ClineFlow files found to remove"
     exit 0
 fi
@@ -267,11 +231,6 @@ if [ "$SKIP_CONFIRM" = false ]; then
         exit 0
     fi
 fi
-
-# Clean reference symlinks first
-clean_refs
-
-echo ""
 
 # Remove files
 remove_files

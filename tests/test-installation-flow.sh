@@ -1,6 +1,6 @@
 #!/bin/bash
-# ClineFlow Installation & Git Safety Test Suite
-# Tests complete installation flow with mock repositories
+# ClineFlow Installation Test Suite
+# Tests complete installation flow and the absence of retired reference artifacts
 
 set -e
 
@@ -111,39 +111,6 @@ create_test_environment() {
     echo "# Legacy journal" > docs/journals/legacy-task.md
     LEGACY_JOURNAL_HASH=$(shasum -a 256 docs/journals/legacy-task.md | awk '{print $1}')
     
-    # Create mock repositories
-    create_mock_repository "mock-backend-api" "Backend API"
-    create_mock_repository "mock-frontend-app" "Frontend App"
-    
-    pass_test "Created 2 mock repositories"
-}
-
-# Helper to create mock repository
-create_mock_repository() {
-    local repo_name=$1
-    local repo_desc=$2
-    
-    verbose "Creating mock repository: $repo_name"
-    
-    mkdir -p "$TEST_DIR/$repo_name"
-    cd "$TEST_DIR/$repo_name"
-    
-    # Initialize git
-    git init > /dev/null 2>&1
-    git config user.name "Test User" > /dev/null 2>&1
-    git config user.email "test@example.com" > /dev/null 2>&1
-    
-    # Create realistic file structure
-    echo "# $repo_desc" > README.md
-    mkdir -p src docs
-    echo "console.log('$repo_name');" > src/index.js
-    echo "# Documentation" > docs/API.md
-    
-    # Create git history
-    git add . > /dev/null 2>&1
-    git commit -m "Initial commit" > /dev/null 2>&1
-    
-    verbose "  Created files and git history for $repo_name"
 }
 
 # Phase 2: Run ClineFlow installation
@@ -179,6 +146,13 @@ run_installation() {
         pass_test "All files created in correct locations"
     else
         fail_test "Missing expected files after installation"
+        return 1
+    fi
+
+    if [ ! -e setup-refs.sh ] && [ ! -e .clineflow.example ] && [ ! -e clineflow/README.md ] && ! grep -qxF '.clineflow.local' .gitignore 2>/dev/null; then
+        pass_test "Retired reference artifacts are not installed or configured"
+    else
+        fail_test "Retired reference artifacts were installed or configured"
         return 1
     fi
 
@@ -261,138 +235,6 @@ EOF
     fi
 }
 
-# Phase 3: Setup reference system
-setup_reference_system() {
-    echo ""
-    echo -e "${BLUE}🔗 Phase 3: Reference System Setup${NC}"
-    
-    cd "$TEST_DIR/test-project"
-    
-    # Create .clineflow.local configuration
-    verbose "Creating .clineflow.local configuration"
-    cat > .clineflow.local << EOF
-# ClineFlow Reference System Configuration
-# Test configuration with mock repositories
-
-MOCK_BACKEND_API_PATH="$TEST_DIR/mock-backend-api"
-MOCK_FRONTEND_APP_PATH="$TEST_DIR/mock-frontend-app"
-EOF
-    
-    pass_test "Configured .clineflow.local with mock paths"
-    
-    # Run setup-refs.sh
-    verbose "Running setup-refs.sh"
-    if [ "$VERBOSE" = true ]; then
-        bash setup-refs.sh
-    else
-        bash setup-refs.sh > /dev/null 2>&1
-    fi
-    
-    pass_test "Ran setup-refs.sh successfully"
-    
-    # Verify symlinks were created
-    if [ -L clineflow/mock-backend-api ] && [ -L clineflow/mock-frontend-app ]; then
-        pass_test "Created 2 symlinks"
-    else
-        fail_test "Symlinks were not created"
-        return 1
-    fi
-}
-
-# Phase 4: Test git safety features
-test_git_safety() {
-    echo ""
-    echo -e "${BLUE}🔒 Phase 4: Git Safety Verification${NC}"
-    
-    cd "$TEST_DIR/test-project"
-    
-    # Test 1: Symlinks exist and are valid
-    if [ -L clineflow/mock-backend-api ] && [ -d clineflow/mock-backend-api ]; then
-        pass_test "Symlinks exist and are valid"
-    else
-        fail_test "Symlinks are broken or missing"
-    fi
-    
-    # Test 2: .git/info/exclude configured
-    if grep -q "# ClineFlow reference symlinks" .git/info/exclude 2>/dev/null; then
-        pass_test ".git/info/exclude configured correctly"
-    else
-        fail_test ".git/info/exclude not configured"
-    fi
-    
-    # Test 3: Symlinks visible via ls
-    if ls -la clineflow/ | grep -q "mock-backend-api"; then
-        pass_test "Symlinks visible via ls/VSCode"
-    else
-        fail_test "Symlinks not visible in directory listing"
-    fi
-    
-    # Test 4: Git status doesn't show symlinks
-    git add .clinerules clineflow/*.md docs/ > /dev/null 2>&1
-    if ! git status --porcelain | grep -q "clineflow/mock"; then
-        pass_test "git status shows clean (no symlinks)"
-    else
-        fail_test "git status shows symlinks (they should be excluded)"
-    fi
-    
-    # Test 5: Staged symlink warning
-    verbose "Testing staged symlink warning..."
-    # Try to stage a symlink manually
-    git add clineflow/mock-backend-api > /dev/null 2>&1 || true
-    # Run setup-refs.sh again to trigger warning check
-    if bash setup-refs.sh 2>&1 | grep -q "WARNING.*Symlinks detected"; then
-        warn_test "Staged symlink warning triggered (expected)"
-        # Unstage for next tests
-        git reset HEAD clineflow/mock-backend-api > /dev/null 2>&1 || true
-    else
-        # This is actually OK if git auto-excluded it
-        verbose "Symlink auto-excluded by git (also correct behavior)"
-    fi
-    
-    # Test 6: Idempotency - run setup again
-    verbose "Testing idempotency - running setup-refs.sh again"
-    if [ "$VERBOSE" = true ]; then
-        bash setup-refs.sh
-    else
-        bash setup-refs.sh > /dev/null 2>&1
-    fi
-    
-    if [ -L clineflow/mock-backend-api ]; then
-        pass_test "Idempotency: Second run successful"
-    else
-        fail_test "Idempotency: Second run broke symlinks"
-    fi
-}
-
-# Phase 5: Test file access
-test_file_access() {
-    echo ""
-    echo -e "${BLUE}📚 Phase 5: Reference Access${NC}"
-    
-    cd "$TEST_DIR/test-project"
-    
-    # Test reading through symlink
-    if [ -f clineflow/mock-backend-api/README.md ]; then
-        if grep -q "Backend API" clineflow/mock-backend-api/README.md; then
-            pass_test "Can read mock-backend-api/README.md"
-        else
-            fail_test "Can read file but content is wrong"
-        fi
-    else
-        fail_test "Cannot access mock-backend-api/README.md"
-    fi
-    
-    if [ -f clineflow/mock-frontend-app/src/index.js ]; then
-        if grep -q "mock-frontend-app" clineflow/mock-frontend-app/src/index.js; then
-            pass_test "Can read mock-frontend-app/src/index.js"
-        else
-            fail_test "Can read file but content is wrong"
-        fi
-    else
-        fail_test "Cannot access mock-frontend-app/src/index.js"
-    fi
-}
-
 # Generate final report
 generate_report() {
     local total=$((PASSED + FAILED))
@@ -433,7 +275,7 @@ generate_report() {
 # Main execution
 main() {
     echo -e "${BLUE}════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}🧪 ClineFlow Installation & Git Safety Test Suite${NC}"
+    echo -e "${BLUE}🧪 ClineFlow Installation Test Suite${NC}"
     echo -e "${BLUE}════════════════════════════════════════════════════${NC}"
     
     # Track execution time
@@ -443,9 +285,6 @@ main() {
     create_test_environment
     run_installation
     test_codex_integration
-    setup_reference_system
-    test_git_safety
-    test_file_access
     
     # Generate report and exit with appropriate code
     generate_report

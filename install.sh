@@ -71,28 +71,6 @@ download_file() {
     fi
 }
 
-# Function to configure .gitignore
-configure_gitignore() {
-    local gitignore_file=".gitignore"
-    
-    if [ -f "$gitignore_file" ]; then
-        # Check if already configured
-        if ! grep -q "^\.clineflow\.local$" "$gitignore_file"; then
-            echo "" >> "$gitignore_file"
-            echo "# ClineFlow - per-developer config" >> "$gitignore_file"
-            echo ".clineflow.local" >> "$gitignore_file"
-            print_success "Added .clineflow.local to .gitignore"
-        else
-            print_info ".clineflow.local already in .gitignore"
-        fi
-    else
-        # Create .gitignore if it doesn't exist
-        echo "# ClineFlow - per-developer config" > "$gitignore_file"
-        echo ".clineflow.local" >> "$gitignore_file"
-        print_success "Created .gitignore with .clineflow.local"
-    fi
-}
-
 # Function to generate agent config files from template
 generate_agent_configs() {
     local template_content
@@ -164,7 +142,7 @@ install_workflow() {
     print_info "Downloading workflow files..."
     
     # clineflow files
-    local clineflow_files=("JOURNAL_TEMPLATE.md" "PROCEDURES.md" "WORKING_WITH_CLINE.md" "WORKING_WITH_CODEX.md" "README.md")
+    local clineflow_files=("JOURNAL_TEMPLATE.md" "PROCEDURES.md" "WORKING_WITH_CLINE.md" "WORKING_WITH_CODEX.md")
     for file in "${clineflow_files[@]}"; do
         if [ ! -f "clineflow/$file" ] || [ "$FORCE" = true ]; then
             download_file "${BASE_URL}/clineflow/${file}" "clineflow/$file"
@@ -201,22 +179,6 @@ install_workflow() {
         print_warning "clineflow-doctor already exists (skipping)"
     fi
     
-    # Reference system files
-    if [ ! -f setup-refs.sh ] || [ "$FORCE" = true ]; then
-        download_file "${BASE_URL}/setup-refs.sh" "setup-refs.sh"
-        chmod +x setup-refs.sh
-        print_success "setup-refs.sh"
-    else
-        print_warning "setup-refs.sh already exists (skipping)"
-    fi
-    
-    if [ ! -f .clineflow.example ] || [ "$FORCE" = true ]; then
-        download_file "${BASE_URL}/.clineflow.example" ".clineflow.example"
-        print_success ".clineflow.example"
-    else
-        print_warning ".clineflow.example already exists (skipping)"
-    fi
-    
     # VERSION file
     if [ ! -f VERSION ] || [ "$FORCE" = true ]; then
         download_file "${BASE_URL}/VERSION" "VERSION"
@@ -224,11 +186,6 @@ install_workflow() {
     else
         print_warning "VERSION already exists (skipping)"
     fi
-    
-    # Configure .gitignore
-    echo
-    print_info "Configuring .gitignore..."
-    configure_gitignore
     
     echo
     print_success "Installation complete!"
@@ -254,10 +211,9 @@ show_next_steps() {
     echo "  4. Validate it with: ./validate-okf"
     echo "  5. Try the intelligent commit: just say 'please commit'"
     echo "  6. Check the setup with: ./clineflow-doctor"
-    echo "  7. (Optional) Set up reference system: ./setup-refs.sh --help"
+    echo "  7. Keep related projects as sibling folders under one common parent"
     echo
     echo "📖 Codex guide: clineflow/WORKING_WITH_CODEX.md"
-    echo "🔗 Reference System: clineflow/README.md"
     echo "🐛 Issues: https://github.com/hassanvfx/clineflow/issues"
     echo
 }
@@ -292,12 +248,11 @@ uninstall_workflow() {
     
     # Remove workflow files
     rm -rf clineflow
-    rm -f setup-refs.sh .clineflow.example clineflow-doctor
+    rm -f clineflow-doctor
     
     # Keep authored knowledge and legacy journals but inform user
     print_warning "knowledge/ preserved (remove manually if needed)"
     print_warning "docs/journals/ preserved (remove manually if needed)"
-    print_warning ".gitignore entry for .clineflow.local preserved (remove manually if needed)"
     
     print_success "ClineFlow files removed"
 }
@@ -375,15 +330,12 @@ if [ "$DRY_RUN" = true ]; then
     echo "  clineflow/PROCEDURES.md"
     echo "  clineflow/WORKING_WITH_CLINE.md"
     echo "  clineflow/WORKING_WITH_CODEX.md"
-    echo "  clineflow/README.md"
     echo "  knowledge/index.md"
     echo "  knowledge/log.md"
     echo "  knowledge/journals/index.md"
     echo "  knowledge/journals/TASK_TEMPLATE.md"
     echo "  validate-okf"
     echo "  clineflow-doctor"
-    echo "  setup-refs.sh"
-    echo "  .clineflow.example"
     echo
     exit 0
 fi

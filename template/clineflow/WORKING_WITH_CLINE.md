@@ -13,6 +13,6 @@ ClineFlow stores new persistent context as an [Open Knowledge Format](https://gi
 
 Projects may have pre-OKF journals in `docs/journals/`. ClineFlow searches these files for historical context when they exist, but does not modify, migrate, or validate them. All new task documentation belongs in `knowledge/journals/`.
 
-## Reference repositories
+## Related projects
 
-The optional symlink and multi-root-workspace reference system remains available. See `clineflow/README.md` and run `./setup-refs.sh --help`.
+Keep related codebases as sibling folders beneath one common parent directory. When cross-project context is needed, ask the agent to inspect “sibling project `<foldername>`” (for example, `../backend-api`). This convention needs no ClineFlow configuration, symlinks, or generated workspace file.

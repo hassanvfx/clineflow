@@ -342,7 +342,7 @@ This project uses its own workflow system. See how it works in practice:
 #### What You'll See:
 - 🔄 **Rebranding Process** - Complete documentation of renaming llm-refs to ClineFlow
 - 🧪 **Testing & Validation** - How we tested installation from GitHub  
-- 📝 **Feature Development** - Built-in reference system implementation
+- 📝 **Feature Development** - Workflow improvements recorded with their context
 - 🛡️ **Uninstall Safety** - Comprehensive uninstall with journal protection
 - 📊 **DDD Evolution** - How we restructured README for Document Driven Development
 - 🤝 **Multi-Task Pattern** - 6 tasks documented in one journal with complete context
@@ -411,141 +411,22 @@ graph TD
 
 ---
 
-## 🔗 Cross-Team Code Access
+## 🔗 Related Projects
 
-> **Simple alternative to MCP fileserver** - Give Cline instant access to your entire organization's codebase
+Keep projects that need cross-project context as sibling folders beneath one common parent directory:
 
-### The Problem
-
-Your team works across multiple repositories. Cline needs context from:
-- Backend APIs
-- Frontend applications  
-- Shared libraries
-- Documentation repos
-- Legacy systems
-
-**Traditional solution:** Complex MCP fileserver setup with running processes and network overhead.
-
-**ClineFlow solution:** 3-line config file. Done.
-
-### MCP Fileserver vs ClineFlow References
-
-| MCP Fileserver | ClineFlow References |
-|----------------|---------------------|
-| ❌ Complex server configuration | ✅ Simple config file |
-| ❌ Requires running process | ✅ Native filesystem symlinks |
-| ❌ Per-developer setup | ✅ Team shares one config |
-| ❌ Network latency | ✅ Instant local access |
-| ❌ Additional dependencies | ✅ Zero dependencies |
-
-### How It Works
-
-```mermaid
-graph LR
-    A[Your Project] --> B[.clineflow.local<br/>Config File]
-    B --> C[Backend API]
-    B --> D[Frontend App]
-    B --> E[Shared Libs]
-    C --> F[🤖 Cline Explores<br/>All Repos]
-    D --> F
-    E --> F
-    style B fill:#238636
-    style F fill:#1f6feb
+```
+projects/
+├── backend-api/
+├── frontend-app/
+└── shared-library/
 ```
 
-**Result:** Cline can explore and reference any linked repository as if it's part of your current project.
+When working in one project, tell the agent to inspect “sibling project `<foldername>`,” for example `../backend-api`. This lightweight convention needs no ClineFlow configuration, symlinks, generated workspace, or special Git handling.
 
-### 30-Second Setup
+### Migrating from references
 
-1. **Edit one config file:**
-   ```bash
-   cp .clineflow.example .clineflow.local
-   nano .clineflow.local
-   ```
-
-2. **Add your repo paths:**
-   ```bash
-   BACKEND_API_PATH="/path/to/backend-api"
-   FRONTEND_APP_PATH="/path/to/frontend-app"
-   SHARED_LIBS_PATH="/path/to/shared-libraries"
-   ```
-
-3. **Run setup:**
-   ```bash
-   ./setup-refs.sh
-   ```
-
-**That's it.** Cline now has access to all repos.
-
-### Cross-Team Use Cases
-
-**Full-Stack Development:**
-```
-You: "How does the frontend call the user authentication API?"
-Cline: Reads backend API, frontend code, shows complete flow
-```
-
-**Microservices:**
-```
-You: "Which services depend on the payment service?"
-Cline: Scans all linked repos, finds dependencies
-```
-
-**Onboarding:**
-```
-New Dev: "Explain the architecture"
-Cline: Navigates across all repos, provides complete overview
-```
-
-**Refactoring:**
-```
-You: "I'm changing this shared library function"
-Cline: Finds all usages across every linked repository
-```
-
-### Team Benefits
-
-✅ **Share config in git** - Everyone gets same setup  
-✅ **No server maintenance** - Just filesystem symlinks  
-✅ **Instant updates** - Changes sync automatically  
-✅ **Zero overhead** - Native file access  
-✅ **Works offline** - No network required
-
-### Git Safety Built-In
-
-**The reference system automatically handles git exclusion:**
-
-```mermaid
-graph LR
-    A[setup-refs.sh] --> B[Create Symlinks]
-    B --> C[Configure<br/>.git/info/exclude]
-    C --> D[✅ Visible in VSCode]
-    C --> E[✅ Ignored by Git]
-    style C fill:#238636
-    style D fill:#238636
-    style E fill:#238636
-```
-
-**Why this matters:**
-- Symlinks contain absolute paths specific to each developer
-- Committing them would break for other developers
-- `.git/info/exclude` keeps them local-only but visible
-- No `.gitignore` complexity needed
-
-**Example:**
-```
-Developer A: clineflow/backend-api → /Users/alice/repos/backend-api
-Developer B: clineflow/backend-api → /home/bob/projects/backend-api
-```
-Both work perfectly. No conflicts. Ever.
-
-### Advanced Configuration
-
-**Full details:** See [clineflow/README.md](template/clineflow/README.md) for advanced features:
-- Automatic symlink management
-- Git exclusion handling
-- Clean mode for fresh starts
-- Integration with build tools
+The former reference-repository system is no longer shipped. Existing installations are unchanged; if desired, manually remove `setup-refs.sh`, `.clineflow.example`, `.clineflow.local`, generated workspace files, and only the reference symlinks inside `clineflow/`. Keep the `clineflow/` directory itself because it contains workflow documentation.
 
 ---
 
@@ -648,12 +529,11 @@ your-project/
 ├── .windsurf/
 │   └── rules/
 │       └── clineflow.md           # Windsurf
-├── clineflow/                     # Reference documentation
+├── clineflow/                     # Workflow documentation
 │   ├── JOURNAL_TEMPLATE.md        # Legacy-journal compatibility notice
 │   ├── PROCEDURES.md              # Standard operating procedures
 │   ├── WORKING_WITH_CLINE.md      # Complete user guide
 │   ├── WORKING_WITH_CODEX.md      # ChatGPT Codex workflow guide
-│   └── README.md                  # ClineFlow overview
 ├── knowledge/                     # Native OKF v0.2 knowledge bundle
 │   ├── index.md                   # Bundle navigation and version declaration
 │   ├── log.md                     # Dated knowledge history
@@ -662,8 +542,6 @@ your-project/
 │       └── TASK_TEMPLATE.md
 ├── validate-okf                   # Dependency-free OKF structural validator
 ├── clineflow-doctor               # Dependency-free Codex and OKF setup diagnostic
-├── setup-refs.sh                  # Reference system setup (optional)
-├── .clineflow.example             # Reference system config example (optional)
 ├── update.sh                      # Update script (get latest features)
 └── VERSION                        # Tracks your installation version
 ```
@@ -690,13 +568,12 @@ Or if you already have the script:
 ### What Gets Updated
 
 ✅ **Template files** - Latest procedures, documentation, and features  
-✅ **Setup scripts** - Reference system improvements  
-✅ **Configuration examples** - New options and best practices
+✅ **Setup scripts** - Installer, validator, and diagnostic improvements
+✅ **Workflow guidance** - Current procedures and best practices
 
 ### What Stays Protected
 
 🔒 **Your customizations** - `.clinerules` remains untouched  
-🔒 **Your local config** - `.clineflow.local` preserved  
 🔒 **Your work** - All knowledge in `knowledge/` and legacy journals in `docs/journals/` safe
 
 ### Preview Changes First
@@ -811,11 +688,8 @@ wget -qO- https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.s
 **What gets removed:**
 - `.clinerules`
 - `clineflow/` directory
-- `setup-refs.sh` and `.clineflow.example`
-- `.clineflow.local` (if exists)
 - `validate-okf`
 - `clineflow-doctor`
-- Reference symlinks (if configured)
 
 **⚠️ Note:** Your `knowledge/` bundle and any legacy `docs/journals/` are safe and require manual removal if desired.
 
@@ -833,122 +707,6 @@ Edit `.clinerules` to customize for your project:
 - Add project-specific rules
 - Configure documentation patterns
 
-### Reference System (Optional)
-
-> 💡 **Super Easy Setup - Just Ask Cline!**
-> 
-> Instead of following manual steps, you can simply ask Cline:
-> 
-> *"In this project I need to setup cline refs to project-a and project-b which live in the parent folder (repos) to this. Can you help me?"*
-> 
-> Cline will read the documentation and set everything up for you automatically! ✨
-
-**Example conversation:**
-```
-You: "I need to setup cline refs to my-backend-api and my-frontend-app 
-      which are sibling directories in the parent repos folder."
-
-Cline: "I'll help you set up the reference system. I can see you need:
-        - my-backend-api (at ../my-backend-api)
-        - my-frontend-app (at ../my-frontend-app)
-        
-        I'll create the config file and run the setup script."
-        
-[Cline creates .clineflow.local, adds paths, runs ./setup-refs.sh]
-
-Cline: "✅ Reference system configured! You can now use:
-        @clineflow/my-backend-api/path/to/file
-        @clineflow/my-frontend-app/path/to/file"
-```
-
-**Link other codebases for Cline exploration** - useful when you want Cline to have context from external projects.
-
-**What it does:**
-- Creates symlinks in `clineflow/` pointing to other repositories
-- Cline can explore those repos using @ mentions: `@clineflow/backend-api/README.md`
-- No file duplication - changes sync instantly via symlinks
-
-**Quick setup (3 steps):**
-
-1. **Clone external repos** wherever you prefer:
-   ```bash
-   cd ~/projects
-   git clone https://github.com/your-org/backend-api
-   ```
-
-2. **Configure paths** in your project:
-   ```bash
-   # Copy example config
-   cp .clineflow.example .clineflow.local
-   
-   # Edit with your paths
-   nano .clineflow.local
-   ```
-   
-   Add your repository paths:
-   ```bash
-   BACKEND_API_PATH="/Users/yourname/projects/backend-api"
-   FRONTEND_APP_PATH="/Users/yourname/projects/frontend-app"
-   ```
-
-3. **Run the setup script** (included with ClineFlow):
-   ```bash
-   ./setup-refs.sh
-   ```
-
-**Result:** Cline can now explore linked repos as if they were part of your project!
-
-#### Git Safety 🔒
-
-**Symlinks are local-only and developer-specific:**
-- ✅ **Visible in VSCode** - Full file explorer access
-- ✅ **Never committed** - Automatically excluded via `.git/info/exclude`
-- ✅ **No conflicts** - Each developer has their own paths
-- ✅ **Team-ready** - Share config, not symlinks
-
-**How it works:**
-- `setup-refs.sh` automatically configures `.git/info/exclude`
-- This is like `.gitignore` but local-only (never committed)
-- Symlinks stay visible but git ignores them completely
-- Each developer can have different repository locations
-
-**Safety checks:**
-- ⚠️ Warns if symlinks are accidentally staged for commit
-- ✅ Provides clear remediation instructions
-- ✅ Works in both git and non-git projects
-
-**Full details:** See [clineflow/README.md](template/clineflow/README.md) for advanced configuration.
-
-#### Troubleshooting: @ Mentions Not Working?
-
-**Problem:** When typing `@` in Cline, symlinked files don't appear in autocomplete.
-
-**Solution:** Use the generated workspace file for full @ mention completion:
-
-```bash
-# Re-run setup to generate/update workspace file
-./setup-refs.sh
-
-# Open project with workspace file (enables @ completion)
-code my-project.code-workspace
-```
-
-**Why this works:**
-- Symlinks alone provide filesystem access but not VS Code indexing
-- Multi-root workspace makes all repos fully indexed by VS Code
-- Cline's @ mention feature depends on VS Code's file index
-- Workspace file = complete autocomplete for all linked repositories
-
-**What you get with workspace file:**
-- ✅ Full @ mention autocomplete in Cline chat
-- ✅ Search works across all repositories
-- ✅ IntelliSense recognizes linked code
-- ✅ Keeps symlinks for backward compatibility
-
-**Idempotent upgrade:** Safe to re-run `./setup-refs.sh` anytime - it updates the workspace file without breaking existing setups.
-
----
-
 ## 📚 Documentation
 
 - **[WORKING_WITH_CLINE.md](template/clineflow/WORKING_WITH_CLINE.md)** - Complete user guide
@@ -956,7 +714,6 @@ code my-project.code-workspace
 - **[PROCEDURES.md](template/clineflow/PROCEDURES.md)** - Standard operating procedures
 - **[TASK_TEMPLATE.md](template/knowledge/journals/TASK_TEMPLATE.md)** - Native OKF journal template
 - **[OKF Knowledge Workflow](docs/okf-knowledge-workflow.md)** - Bundle architecture, validation, and legacy compatibility
-- **[clineflow/README.md](template/clineflow/README.md)** - Reference system overview
 
 ---
 

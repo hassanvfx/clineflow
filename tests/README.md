@@ -1,6 +1,6 @@
 # ClineFlow Test Suite
 
-Comprehensive end-to-end testing for ClineFlow installation and git safety features.
+Comprehensive end-to-end testing for ClineFlow installation and OKF compatibility.
 
 ## 🎯 What Gets Tested
 
@@ -9,23 +9,9 @@ Comprehensive end-to-end testing for ClineFlow installation and git safety featu
 - ✅ Execute installation in fresh directory
 - ✅ Verify all files created correctly
 
-### Reference System
-- ✅ Create mock repositories
-- ✅ Configure `.clineflow.local`
-- ✅ Run `setup-refs.sh`
-- ✅ Verify symlinks created
-
-### Git Safety Features
-- ✅ Symlinks visible in filesystem
-- ✅ `.git/info/exclude` configured correctly
-- ✅ Symlinks excluded from `git status`
-- ✅ Warning shown for staged symlinks
-- ✅ Idempotency (safe to run multiple times)
-
-### File Access
-- ✅ Can reference files via symlinks
-- ✅ @ mention pattern works
-- ✅ Direct paths work
+### Retired Reference Artifacts
+- ✅ Fresh installation does not ship reference scripts, config files, or reference documentation
+- ✅ Fresh installation does not configure `.clineflow.local` in `.gitignore`
 
 ## 🚀 Quick Start
 
@@ -43,37 +29,20 @@ cd tests
 ### Expected Output
 
 ```
-🧪 ClineFlow Installation & Git Safety Test Suite
+🧪 ClineFlow Installation Test Suite
 ==================================================
 
 📦 Phase 1: Environment Setup
   ✅ Created test project directory
-  ✅ Created 2 mock repositories
-  ✅ All mock repos have git history
 
 📥 Phase 2: ClineFlow Installation
   ✅ Downloaded install script from GitHub
   ✅ Installation completed successfully
   ✅ All files created in correct locations
 
-🔗 Phase 3: Reference System Setup
-  ✅ Configured .clineflow.local with mock paths
-  ✅ Ran setup-refs.sh successfully
-  ✅ Created 2 symlinks
+  ✅ Retired reference artifacts are not installed or configured
 
-🔒 Phase 4: Git Safety Verification
-  ✅ Symlinks exist and are valid
-  ✅ .git/info/exclude configured correctly
-  ✅ Symlinks visible via ls/VSCode
-  ✅ git status shows clean (no symlinks)
-  ⚠️  Staged symlink warning triggered (expected)
-  ✅ Idempotency: Second run successful
-
-📚 Phase 5: Reference Access
-  ✅ Can read mock-backend-api/README.md
-  ✅ Can read mock-frontend-app/src/App.tsx
-
-🎉 All 14 tests passed!
+🎉 All tests passed!
 
 📊 Test Summary:
    Duration: 3.2 seconds
@@ -91,15 +60,8 @@ Tests run in isolated temporary directory:
 │   ├── .clinerules
 │   ├── clineflow/
 │   ├── docs/
-│   └── .clineflow.local
-├── mock-backend-api/       # Mock external repo
-│   ├── README.md
-│   ├── src/
-│   └── .git/
-└── mock-frontend-app/      # Mock external repo
-    ├── README.md
-    ├── src/
-    └── .git/
+│   └── knowledge/
+└── doctor-fixture/         # Temporary diagnostic fixture
 ```
 
 **Cleanup:** All test files are automatically removed after tests complete.

@@ -34,12 +34,13 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# VS Code workspaces
+*.code-workspace
+
 # Logs
 *.log
 logs/
 
-# Optional: Un-ignore if needed
-# !.clineflow.local
 EOF
 
 # Create LICENSE

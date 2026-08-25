@@ -21,9 +21,6 @@ TEMPLATE_FILES=(
     "clineflow/JOURNAL_TEMPLATE.md"
     "clineflow/WORKING_WITH_CLINE.md"
     "clineflow/WORKING_WITH_CODEX.md"
-    "clineflow/README.md"
-    "setup-refs.sh"
-    ".clineflow.example"
     "validate-okf"
     "clineflow-doctor"
     "VERSION"
@@ -33,7 +30,6 @@ TEMPLATE_FILES=(
 PROTECTED_FILES=(
     ".clinerules"
     "AGENTS.md"
-    ".clineflow.local"
     "knowledge/*"
     "docs/journals/*"
 )
@@ -64,12 +60,9 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "What gets updated:"
             echo "  - clineflow/* documentation files"
-            echo "  - setup-refs.sh script"
-            echo "  - .clineflow.example config template"
             echo ""
             echo "What stays protected:"
             echo "  - .clinerules and AGENTS.md (your custom agent rules)"
-            echo "  - .clineflow.local (your local config)"
             echo "  - docs/journals/* (your task journals)"
             echo ""
             exit 0
@@ -193,9 +186,6 @@ for file in "${UPDATES_AVAILABLE[@]}"; do
 done
 
 # Make executable scripts executable if they were updated
-if [[ " ${UPDATES_AVAILABLE[@]} " =~ " setup-refs.sh " ]]; then
-    chmod +x setup-refs.sh
-fi
 if [[ " ${UPDATES_AVAILABLE[@]} " =~ " validate-okf " ]]; then
     chmod +x validate-okf
 fi
@@ -224,7 +214,6 @@ echo ""
 echo -e "${BLUE}Your customizations are safe:${NC}"
 echo "  • .clinerules preserved"
 echo "  • AGENTS.md preserved"
-echo "  • .clineflow.local preserved"
 echo "  • All knowledge in knowledge/ preserved"
 echo "  • All journals in docs/journals/ preserved"
 echo ""

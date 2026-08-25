@@ -17,6 +17,9 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - New task journals are Engineering Journal concepts in `knowledge/journals/`.
 - Install, update, and uninstall flows preserve both `knowledge/` and legacy `docs/journals/` user content.
 
+### Removed
+- The optional symlink-based reference-repository system, including its local configuration, setup script, generated workspace support, and reference documentation. Related projects now use the sibling-project folder convention.
+
 ## [2025.11.17.0] - 2025-11-17
 
 ### Added
