@@ -151,6 +151,6 @@ Google’s Open Knowledge Format gives that memory a common language. ClineFlow 
 Adopt OKF. Keep your context. Let every agent start smarter than the last.
 
 - **Repository:** [github.com/hassanvfx/clineflow](https://github.com/hassanvfx/clineflow)
-- **Codex workflow guide:** [Working with ChatGPT Codex](https://github.com/hassanvfx/clineflow/blob/main/template/clineflow/WORKING_WITH_CODEX.md)
+- **Codex workflow guide:** [Working with ChatGPT Codex](https://github.com/hassanvfx/clineflow/blob/main/template/.clineflow/WORKING_WITH_CODEX.md)
 - **Technical guide:** [Native OKF knowledge workflow](https://github.com/hassanvfx/clineflow/blob/main/docs/okf-knowledge-workflow.md)
 - **OKF:** [Google Cloud introduction](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) · [OKF v0.2 specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)

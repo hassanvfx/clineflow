@@ -9,11 +9,11 @@ DRY_RUN=false
 
 usage() {
   cat <<'EOF'
-Usage: curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/clineflow/bin/install | bash [--] [options]
+Usage: curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/install | bash [--] [options]
 
 Options:
   --dry-run  Show the managed files that would be installed.
-  --force    Refresh ClineFlow-owned files in clineflow/ only.
+  --force    Refresh ClineFlow-owned files in .clineflow/ only.
   --help     Show this help.
 EOF
 }
@@ -47,7 +47,7 @@ install_managed() {
 
 BEGIN='<!-- BEGIN CLINEFLOW OKF RULES -->'
 END='<!-- END CLINEFLOW OKF RULES -->'
-record_owned_agent() { grep -qxF "$1" clineflow/.owned-agent-files 2>/dev/null || printf '%s\n' "$1" >> clineflow/.owned-agent-files; }
+record_owned_agent() { grep -qxF "$1" .clineflow/.owned-agent-files 2>/dev/null || printf '%s\n' "$1" >> .clineflow/.owned-agent-files; }
 
 block_status() {
   local destination=$1 begins ends
@@ -87,29 +87,41 @@ install_agent() {
   echo "refreshed ClineFlow rules in: $destination"
 }
 
+migrate_legacy_runtime() {
+  [ -d clineflow ] || return
+  for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH_CODEX.md; do
+    source="clineflow/$file" destination=".clineflow/$file"
+    [ -f "$source" ] || continue
+    if [ -e "$destination" ]; then echo "WARNING: legacy $source preserved; destination exists at $destination" >&2
+    else mv "$source" "$destination"; echo "migrated legacy runtime file: $source"; fi
+  done
+  if [ -z "$(find clineflow -mindepth 1 -maxdepth 1 -print -quit)" ]; then rmdir clineflow; else echo "WARNING: legacy clineflow/ retained with unrecognized content" >&2; fi
+}
+
 if [ "$DRY_RUN" = true ]; then
   cat <<'EOF'
-Would install ClineFlow tooling under clineflow/ and merge one managed rules block into native agent configurations.
+Would install ClineFlow tooling under .clineflow/ and merge one managed rules block into native agent configurations.
 Existing content outside ClineFlow markers and all knowledge files are never overwritten, including with --force.
 EOF
   exit 0
 fi
 
-mkdir -p clineflow/bin knowledge/journals
-[ -e clineflow/.owned-agent-files ] || : > clineflow/.owned-agent-files
+mkdir -p .clineflow/bin knowledge/journals
+[ -e .clineflow/.owned-agent-files ] || : > .clineflow/.owned-agent-files
+migrate_legacy_runtime
 install_agent .clinerules
 install_agent AGENTS.md
 install_agent .github/copilot-instructions.md
 install_agent .windsurf/rules/clineflow.md
 
 for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH_CODEX.md VERSION; do
-  install_managed "clineflow/$file" "clineflow/$file"
+  install_managed ".clineflow/$file" ".clineflow/$file"
 done
 for file in install update uninstall validate-okf doctor; do
-  install_managed "clineflow/bin/$file" "clineflow/bin/$file"
+  install_managed ".clineflow/bin/$file" ".clineflow/bin/$file"
 done
 for file in index.md log.md journals/index.md journals/TASK_TEMPLATE.md; do
   if [ -e "knowledge/$file" ]; then echo "preserved user knowledge: knowledge/$file"; else install_managed "knowledge/$file" "knowledge/$file"; fi
 done
 
-echo "ClineFlow $VERSION installed. Validate with: ./clineflow/bin/validate-okf"
+echo "ClineFlow $VERSION installed. Validate with: ./.clineflow/bin/validate-okf"

@@ -42,7 +42,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 
 ### Documentation
 - Added "Troubleshooting: @ Mentions Not Working?" section to README.md
-- Complete rewrite of `template/clineflow/README.md` usage section
+- Complete rewrite of `template/.clineflow/README.md` usage section
 - Documented dual access model (workspace vs symlinks)
 - Added workspace vs folder comparison
 - Clear upgrade path for existing users

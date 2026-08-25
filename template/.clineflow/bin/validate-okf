@@ -3,7 +3,7 @@
 set -u
 STRICT=false
 [ "${1:-}" = "--strict" ] && { STRICT=true; shift; }
-[ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ] && { echo "Usage: ./clineflow/bin/validate-okf [--strict] [BUNDLE_PATH]"; exit 0; }
+[ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ] && { echo "Usage: ./.clineflow/bin/validate-okf [--strict] [BUNDLE_PATH]"; exit 0; }
 BUNDLE="${1:-knowledge}"; ERRORS=0
 error() { echo "ERROR: $1: $2" >&2; ERRORS=$((ERRORS + 1)); }
 [ -d "$BUNDLE" ] || { error "$BUNDLE" "bundle directory does not exist"; exit 1; }

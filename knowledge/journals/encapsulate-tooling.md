@@ -27,20 +27,20 @@ Root tooling currently includes the installer, updater, uninstaller, validator, 
 
 ## 2026-08-24 - Completed
 
-Moved the ClineFlow executable interface to `template/clineflow/bin/`, which installs to `clineflow/bin/`. The installer merges one marker-delimited ClineFlow block into existing native agent configurations and records whether it owns the full file or only that block. Force refreshes only ClineFlow tooling and the managed block; uninstall removes only manifest-owned files or blocks.
+Moved the ClineFlow executable interface to `template/.clineflow/bin/`, which installs to `.clineflow/bin/`. The installer merges one marker-delimited ClineFlow block into existing native agent configurations and records whether it owns the full file or only that block. Force refreshes only ClineFlow tooling and the managed block; uninstall removes only manifest-owned files or blocks.
 
 # Decisions
 
-- New public tooling lives under `template/clineflow/bin/` and installs to `clineflow/bin/`.
+- New public tooling lives under `template/.clineflow/bin/` and installs to `.clineflow/bin/`.
 - Root script entry points are intentionally removed.
 - `--force` refreshes only ClineFlow-owned files; agent configs and knowledge are always preserved.
 
 # Testing
 
-- `bash -n template/clineflow/bin/* tests/test-installation-flow.sh tests/test-okf-validator.sh` — passed.
+- `bash -n template/.clineflow/bin/* tests/test-installation-flow.sh tests/test-okf-validator.sh` — passed.
 - `./tests/test-installation-flow.sh` — passed; verifies normal and forced installation preserve existing agent config and knowledge, then verifies ownership-aware uninstall.
 - `./tests/test-okf-validator.sh` — passed.
-- `./template/clineflow/bin/validate-okf` and `git diff --check` — passed.
+- `./template/.clineflow/bin/validate-okf` and `git diff --check` — passed.
 
 # Open Issues
 

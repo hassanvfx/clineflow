@@ -79,7 +79,7 @@ graph TD
 New task journals live at `knowledge/journals/<task>.md`, use YAML frontmatter, and are validated with:
 
 ```bash
-./clineflow/bin/validate-okf
+./.clineflow/bin/validate-okf
 ```
 
 The bundled validator uses Bash only; no additional runtime or package installation is required.
@@ -88,7 +88,7 @@ For full YAML parsing in environments that already use Python, strict validation
 
 ```bash
 python3 -m pip install PyYAML
-./clineflow/bin/validate-okf --strict
+./.clineflow/bin/validate-okf --strict
 ```
 
 **Turn Cline into a teammate who remembers everything**
@@ -106,13 +106,13 @@ Please install and setup clineflow here, from: https://github.com/hassanvfx/clin
 **Option 2: From Terminal**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/clineflow/bin/install | bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/install | bash
 ```
 
 ### 2️⃣ Ask your AI assistant "How can we work?"
 Your AI assistant reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **it remembers what you built, why you built it, and what's next.**
 
-**Using ChatGPT Codex?** Start with `clineflow/WORKING_WITH_CODEX.md`, then run `./clineflow/bin/doctor` to verify that `AGENTS.md` and the OKF bundle are ready. No Codex plugin, SDK, or runtime is required.
+**Using ChatGPT Codex?** Start with `clineflow/WORKING_WITH_CODEX.md`, then run `./.clineflow/bin/doctor` to verify that `AGENTS.md` and the OKF bundle are ready. No Codex plugin, SDK, or runtime is required.
 
 ### 3️⃣ Say "please commit"
 Your AI assistant automatically:
@@ -137,7 +137,7 @@ Your AI assistant automatically:
 
 **Why multiple config files?** Different AI assistants use different configuration formats. ClineFlow generates all of them from a single template, so it "just works" regardless of which tool you use. `AGENTS.md` is the shared entry point for ChatGPT Codex and other compatible agents.
 
-**Already have an `AGENTS.md`?** ClineFlow preserves it—even with `--force`. Read `clineflow/WORKING_WITH_CODEX.md` and add the shared OKF workflow from [the template](template/configs/rules.template.md) to your existing instructions; then run `./clineflow/bin/doctor` to check the setup.
+**Already have an `AGENTS.md`?** ClineFlow preserves it—even with `--force`. Read `clineflow/WORKING_WITH_CODEX.md` and add the shared OKF workflow from [the template](template/configs/rules.template.md) to your existing instructions; then run `./.clineflow/bin/doctor` to check the setup.
 
 **Current Status:** Core team actively develops and tests with Cline. Community members are welcome to test and contribute support for other agents!
 
@@ -154,10 +154,10 @@ Codex uses the repository-standard `AGENTS.md`; ClineFlow adds the OKF workflow 
 For substantial work, Codex records decisions and verification in `knowledge/journals/`, then validates the bundle before delivery. Confirm the setup at any time:
 
 ```bash
-./clineflow/bin/doctor
+./.clineflow/bin/doctor
 ```
 
-The doctor has no extra runtime dependencies. `./clineflow/bin/doctor --strict` uses PyYAML only when it is already available.
+The doctor has no extra runtime dependencies. `./.clineflow/bin/doctor --strict` uses PyYAML only when it is already available.
 
 ---
 
@@ -245,7 +245,7 @@ Choosing the right tool for AI-assisted development? Here's how ClineFlow stacks
 Changed your mind? No hard feelings!
 
 ```bash
-./clineflow/bin/uninstall
+./.clineflow/bin/uninstall
 ```
 
 Your `knowledge/` bundle and legacy `docs/journals/` are safe and require manual removal if desired. [See all options →](#installation-options)
@@ -709,9 +709,9 @@ Edit `.clinerules` to customize for your project:
 
 ## 📚 Documentation
 
-- **[WORKING_WITH_CLINE.md](template/clineflow/WORKING_WITH_CLINE.md)** - Complete user guide
-- **[WORKING_WITH_CODEX.md](template/clineflow/WORKING_WITH_CODEX.md)** - ChatGPT Codex workflow and prompts
-- **[PROCEDURES.md](template/clineflow/PROCEDURES.md)** - Standard operating procedures
+- **[WORKING_WITH_CLINE.md](template/.clineflow/WORKING_WITH_CLINE.md)** - Complete user guide
+- **[WORKING_WITH_CODEX.md](template/.clineflow/WORKING_WITH_CODEX.md)** - ChatGPT Codex workflow and prompts
+- **[PROCEDURES.md](template/.clineflow/PROCEDURES.md)** - Standard operating procedures
 - **[TASK_TEMPLATE.md](template/knowledge/journals/TASK_TEMPLATE.md)** - Native OKF journal template
 - **[OKF Knowledge Workflow](docs/okf-knowledge-workflow.md)** - Bundle architecture, validation, and legacy compatibility
 

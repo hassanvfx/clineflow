@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -u
-STRICT="${1:-}"; [ "$STRICT" = "--help" ] && { echo "Usage: ./clineflow/bin/doctor [--strict]"; exit 0; }
+STRICT="${1:-}"; [ "$STRICT" = "--help" ] && { echo "Usage: ./.clineflow/bin/doctor [--strict]"; exit 0; }
 errors=0
 check() { [ -f "$1" ] && echo "PASS: $2 ($1)" || { echo "ERROR: Missing $2: $1" >&2; errors=$((errors+1)); }; }
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 && echo "PASS: Git repository" || { echo "ERROR: Run from a Git repository root" >&2; errors=$((errors+1)); }
 check AGENTS.md "shared agent instructions"
 check knowledge/index.md "OKF bundle index"; check knowledge/log.md "OKF bundle log"; check knowledge/journals/index.md "journal index"; check knowledge/journals/TASK_TEMPLATE.md "Engineering Journal template"
-check clineflow/bin/validate-okf "OKF validator"
-if [ -x clineflow/bin/validate-okf ]; then clineflow/bin/validate-okf ${STRICT:+"$STRICT"} || errors=$((errors+1)); fi
+check .clineflow/bin/validate-okf "OKF validator"
+if [ -x .clineflow/bin/validate-okf ]; then .clineflow/bin/validate-okf ${STRICT:+"$STRICT"} || errors=$((errors+1)); fi
 [ "$errors" -eq 0 ] || exit 1
 echo "ClineFlow doctor: healthy."
