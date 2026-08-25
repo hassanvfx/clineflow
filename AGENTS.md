@@ -20,7 +20,7 @@ When the user asks to commit:
 
 1. Update the active `knowledge/journals/` concept with the implementation summary, decisions, tests, and next steps.
 2. Update `knowledge/log.md` if the change added or materially changed knowledge.
-3. Run `./validate-okf` and resolve validation failures. When the project has optional PyYAML available, prefer `./validate-okf --strict` before committing.
+3. Run `./clineflow/bin/validate-okf` and resolve validation failures. When the project has optional PyYAML available, prefer `./clineflow/bin/validate-okf --strict` before committing.
 4. Stage the code and updated knowledge artifacts together, then create a descriptive commit.
 
 ## Knowledge navigation

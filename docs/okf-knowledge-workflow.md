@@ -30,7 +30,7 @@ Projects may already have `docs/journals/`. ClineFlow searches that directory wh
 Run the default structural validator before committing:
 
 ```bash
-./validate-okf
+./clineflow/bin/validate-okf
 ```
 
 It has no dependencies beyond ClineFlow’s Bash baseline. It checks the bundle directory, required concept frontmatter framing, non-empty `type`, OKF reserved-file conventions, root OKF version declaration, and chronological log ordering.
@@ -39,7 +39,7 @@ For full YAML parsing, use optional strict mode in an environment with Python an
 
 ```bash
 python3 -m pip install PyYAML
-./validate-okf --strict
+./clineflow/bin/validate-okf --strict
 ```
 
 Strict mode parses every concept frontmatter block with PyYAML in addition to the structural checks. It is intentionally optional: ClineFlow does not require Python or PyYAML for installation or normal use.

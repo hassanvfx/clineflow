@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+# Install ClineFlow without replacing user-owned agent instructions or knowledge.
+set -euo pipefail
+
+VERSION="2.1.0"
+BASE_URL="${CLINEFLOW_BASE_URL:-https://raw.githubusercontent.com/hassanvfx/clineflow/main/template}"
+FORCE=false
+DRY_RUN=false
+
+usage() {
+  cat <<'EOF'
+Usage: curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/clineflow/bin/install | bash [--] [options]
+
+Options:
+  --dry-run  Show the managed files that would be installed.
+  --force    Refresh ClineFlow-owned files in clineflow/ only.
+  --help     Show this help.
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=true ;;
+    --force) FORCE=true ;;
+    --help|-h) usage; exit 0 ;;
+    *) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
+  esac
+  shift
+done
+
+fetch() {
+  local source=$1 destination=$2
+  if command -v curl >/dev/null 2>&1; then curl -fsSL "$BASE_URL/$source" -o "$destination"; else wget -q "$BASE_URL/$source" -O "$destination"; fi
+}
+
+install_managed() {
+  local source=$1 destination=$2
+  if [ -e "$destination" ] && [ "$FORCE" = false ]; then
+    echo "preserved managed file: $destination"
+    return
+  fi
+  mkdir -p "$(dirname "$destination")"
+  fetch "$source" "$destination"
+  case "$destination" in */bin/*) chmod +x "$destination" ;; esac
+  echo "installed: $destination"
+}
+
+BEGIN='<!-- BEGIN CLINEFLOW OKF RULES -->'
+END='<!-- END CLINEFLOW OKF RULES -->'
+record_owned_agent() { grep -qxF "$1" clineflow/.owned-agent-files 2>/dev/null || printf '%s\n' "$1" >> clineflow/.owned-agent-files; }
+
+block_status() {
+  local destination=$1 begins ends
+  begins=$(grep -cFx "$BEGIN" "$destination" 2>/dev/null || true)
+  ends=$(grep -cFx "$END" "$destination" 2>/dev/null || true)
+  if [ "$begins" -eq 0 ] && [ "$ends" -eq 0 ]; then echo none
+  elif [ "$begins" -eq 1 ] && [ "$ends" -eq 1 ] && [ "$(grep -nFx "$BEGIN" "$destination" | cut -d: -f1)" -lt "$(grep -nFx "$END" "$destination" | cut -d: -f1)" ]; then echo valid
+  else echo malformed; fi
+}
+
+write_block() {
+  local rules
+  rules=$(mktemp)
+  fetch "configs/rules.template.md" "$rules"
+  printf '%s\n' "$BEGIN"
+  cat "$rules"
+  printf '\n%s\n' "$END"
+  rm -f "$rules"
+}
+
+install_agent() {
+  local destination=$1 status temp
+  mkdir -p "$(dirname "$destination")"
+  if [ ! -e "$destination" ]; then write_block > "$destination"; record_owned_agent "file:$destination"; echo "installed agent configuration: $destination"; return; fi
+  status=$(block_status "$destination")
+  if [ "$status" = malformed ]; then echo "WARNING: malformed ClineFlow markers; preserved $destination" >&2; return; fi
+  if [ "$status" = none ]; then printf '\n' >> "$destination"; write_block >> "$destination"; record_owned_agent "block:$destination"; echo "merged ClineFlow rules into: $destination"; return; fi
+  temp=$(mktemp)
+  local begin_line end_line
+  begin_line=$(grep -nFx "$BEGIN" "$destination" | cut -d: -f1)
+  end_line=$(grep -nFx "$END" "$destination" | cut -d: -f1)
+  head -n $((begin_line - 1)) "$destination" > "$temp"
+  write_block >> "$temp"
+  tail -n +$((end_line + 1)) "$destination" >> "$temp"
+  mv "$temp" "$destination"
+  record_owned_agent "block:$destination"
+  echo "refreshed ClineFlow rules in: $destination"
+}
+
+if [ "$DRY_RUN" = true ]; then
+  cat <<'EOF'
+Would install ClineFlow tooling under clineflow/ and merge one managed rules block into native agent configurations.
+Existing content outside ClineFlow markers and all knowledge files are never overwritten, including with --force.
+EOF
+  exit 0
+fi
+
+mkdir -p clineflow/bin knowledge/journals
+[ -e clineflow/.owned-agent-files ] || : > clineflow/.owned-agent-files
+install_agent .clinerules
+install_agent AGENTS.md
+install_agent .github/copilot-instructions.md
+install_agent .windsurf/rules/clineflow.md
+
+for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH_CODEX.md VERSION; do
+  install_managed "clineflow/$file" "clineflow/$file"
+done
+for file in install update uninstall validate-okf doctor; do
+  install_managed "clineflow/bin/$file" "clineflow/bin/$file"
+done
+for file in index.md log.md journals/index.md journals/TASK_TEMPLATE.md; do
+  if [ -e "knowledge/$file" ]; then echo "preserved user knowledge: knowledge/$file"; else install_managed "knowledge/$file" "knowledge/$file"; fi
+done
+
+echo "ClineFlow $VERSION installed. Validate with: ./clineflow/bin/validate-okf"

@@ -17,9 +17,9 @@ create_valid_bundle() {
 
 create_valid_bundle
 printf '%s\n' '---' 'type: Engineering Journal' '---' '' '# Task' > "$BUNDLE/journals/task.md"
-bash "$ROOT/validate-okf" "$BUNDLE"
+bash "$ROOT/template/clineflow/bin/validate-okf" "$BUNDLE"
 
-if bash "$ROOT/validate-okf" --strict "$BUNDLE" >/dev/null 2>&1; then
+if bash "$ROOT/template/clineflow/bin/validate-okf" --strict "$BUNDLE" >/dev/null 2>&1; then
     echo "strict validation ran with available PyYAML"
 else
     strict_status=$?
@@ -30,17 +30,17 @@ else
 fi
 
 printf '%s\n' '---' 'title: Missing type' '---' > "$BUNDLE/journals/task.md"
-if bash "$ROOT/validate-okf" "$BUNDLE" >/dev/null 2>&1; then
+if bash "$ROOT/template/clineflow/bin/validate-okf" "$BUNDLE" >/dev/null 2>&1; then
     echo "expected missing type to fail" >&2
     exit 1
 fi
 
 printf '%s\n' '---' 'type: Custom Concept' 'producer_field: supported' '---' '' '[Future](/future.md)' > "$BUNDLE/journals/task.md"
-bash "$ROOT/validate-okf" "$BUNDLE"
+bash "$ROOT/template/clineflow/bin/validate-okf" "$BUNDLE"
 
 printf '%s\n' '---' 'title: Invalid nested index' '---' > "$BUNDLE/journals/index.md"
 printf '%s\n' '## 2026-01-01' '' '## 2026-08-15' > "$BUNDLE/log.md"
-if bash "$ROOT/validate-okf" "$BUNDLE" >/dev/null 2>&1; then
+if bash "$ROOT/template/clineflow/bin/validate-okf" "$BUNDLE" >/dev/null 2>&1; then
     echo "expected reserved-file violations to fail" >&2
     exit 1
 fi

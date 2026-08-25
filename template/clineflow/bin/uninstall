@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+DRY=false
+[ "${1:-}" = "--dry-run" ] && DRY=true
+[ "${1:-}" = "--help" ] && { echo "Usage: ./clineflow/bin/uninstall [--dry-run]"; exit 0; }
+[ -d clineflow ] || { echo "No ClineFlow directory found"; exit 0; }
+manifest="clineflow/.owned-agent-files"
+BEGIN='<!-- BEGIN CLINEFLOW OKF RULES -->'
+END='<!-- END CLINEFLOW OKF RULES -->'
+remove() { if [ "$DRY" = true ]; then echo "would remove: $1"; else rm -f "$1"; echo "removed: $1"; fi; }
+if [ -f "$manifest" ]; then
+  while IFS= read -r entry; do
+    kind=${entry%%:*}; path=${entry#*:}
+    [ -n "$path" ] || continue
+    if [ "$kind" = file ]; then remove "$path"; continue; fi
+    if [ "$kind" = block ] && [ -f "$path" ] && [ "$(grep -cFx "$BEGIN" "$path" || true)" -eq 1 ] && [ "$(grep -cFx "$END" "$path" || true)" -eq 1 ]; then
+      if [ "$DRY" = true ]; then echo "would remove ClineFlow block: $path"; else awk -v begin="$BEGIN" -v end="$END" '$0==begin { skip=1; next } $0==end { skip=0; next } !skip { print }' "$path" > "$path.tmp" && mv "$path.tmp" "$path"; echo "removed ClineFlow block: $path"; fi
+    else
+      echo "WARNING: cannot safely remove malformed ClineFlow block from $path; preserved" >&2
+    fi
+  done < "$manifest"
+else
+  echo "No ownership manifest found; preserving all agent configuration."
+fi
+if [ "$DRY" = true ]; then echo "would remove: clineflow/"; else rm -rf clineflow; echo "removed: clineflow/"; fi
+echo "knowledge/ and docs/journals/ were preserved."

@@ -2,6 +2,10 @@
 
 ## 2026-08-24
 
+* **Update**: Added an Engineering Journal for the ClineFlow tooling encapsulation and installation-safety refactor.
+
+## 2026-08-24
+
 * **Update**: Added an Engineering Journal for retiring the symlink-based reference-repository system.
 
 ## 2026-08-19
