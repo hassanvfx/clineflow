@@ -1,5 +1,9 @@
 # Knowledge Update Log
 
+## 2026-08-27
+
+* **Update**: Added an Engineering Journal for the fresh-install repair and Claude Code configuration support.
+
 ## 2026-08-24
 
 * **Update**: Added an Engineering Journal for the ClineFlow tooling encapsulation and installation-safety refactor.

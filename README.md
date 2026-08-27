@@ -11,7 +11,7 @@
 >
 > **ClineFlow — AI coding memory, now native OKF.**
 
-🤖 **Works with any AI assistant** • Cline • Cursor • GitHub Copilot • Windsurf  
+🤖 **Works with any AI assistant** • Claude Code • Cline • Cursor • GitHub Copilot • Windsurf
 ✅ **Fully tested with Cline** by core development team
 
 📖 **[Get the book: Infinite AI Context](https://hassanvfx.github.io/infinite-ai-context/)**
@@ -62,9 +62,10 @@ graph TD
 
 > 💡 **New to AI Coding Assistants?**
 > 
-> AI coding assistants like Cline, Cursor, and GitHub Copilot write code, edit files, and execute commands through natural conversation.
+> AI coding assistants like Claude Code, Cline, Cursor, and GitHub Copilot write code, edit files, and execute commands through natural conversation.
 > 
 > **Popular Options:**
+> - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview)** - Anthropic's agentic coding tool
 > - **[Cline](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)** - VS Code extension (our primary platform)
 > - **[Cursor](https://cursor.com)** - AI-first IDE
 > - **[GitHub Copilot](https://github.com/features/copilot)** - GitHub's AI assistant
@@ -97,7 +98,7 @@ python3 -m pip install PyYAML
 
 **Option 1: From VS Code (in your AI assistant)**
 
-Using ChatGPT Codex, Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and type:
+Using Claude Code, ChatGPT Codex, Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and type:
 
 ```
 Please install and setup clineflow here, from: https://github.com/hassanvfx/clineflow
@@ -113,6 +114,8 @@ curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.
 Your AI assistant reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **it remembers what you built, why you built it, and what's next.**
 
 **Using ChatGPT Codex?** Start with `clineflow/WORKING_WITH_CODEX.md`, then run `./.clineflow/bin/doctor` to verify that `AGENTS.md` and the OKF bundle are ready. No Codex plugin, SDK, or runtime is required.
+
+**Using Claude Code?** ClineFlow installs its shared workflow in `CLAUDE.md`, Claude Code's project-memory file. Run `./.clineflow/bin/doctor` to verify the instructions and OKF bundle.
 
 ### 3️⃣ Say "please commit"
 Your AI assistant automatically:
@@ -130,12 +133,13 @@ Your AI assistant automatically:
 
 - ✅ **Cline** (`.clinerules`) - *Fully tested by core team*
 - ✅ **ChatGPT Codex** (`AGENTS.md` + `clineflow/WORKING_WITH_CODEX.md`)
+- ✅ **Claude Code** (`CLAUDE.md`)
 - ✅ **Cursor** (`AGENTS.md`)
 - ✅ **GitHub Copilot** (`.github/copilot-instructions.md`)
 - ✅ **Windsurf** (`.windsurf/rules/`)
 - ✅ **Future agents** - Ready for any tool that emerges
 
-**Why multiple config files?** Different AI assistants use different configuration formats. ClineFlow generates all of them from a single template, so it "just works" regardless of which tool you use. `AGENTS.md` is the shared entry point for ChatGPT Codex and other compatible agents.
+**Why multiple config files?** Different AI assistants use different configuration formats. ClineFlow generates all of them from a single template, so it "just works" regardless of which tool you use. `AGENTS.md` is the shared entry point for ChatGPT Codex and compatible agents; `CLAUDE.md` is Claude Code's project-memory file.
 
 **Already have an `AGENTS.md`?** ClineFlow preserves it—even with `--force`. Read `clineflow/WORKING_WITH_CODEX.md` and add the shared OKF workflow from [the template](template/configs/rules.template.md) to your existing instructions; then run `./.clineflow/bin/doctor` to check the setup.
 
@@ -500,7 +504,7 @@ Just bash + git. Works everywhere:
 
 **Method 1: Just Ask Your AI Assistant (Easiest)**
 
-Using Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and say:
+Using Claude Code, Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and say:
 
 ```
 Please install and setup clineflow here, from: https://github.com/hassanvfx/clineflow
@@ -524,6 +528,7 @@ wget -qO- https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh 
 your-project/
 ├── .clinerules                    # Cline
 ├── AGENTS.md                      # ChatGPT Codex, Cursor, Copilot, compatible agents
+├── CLAUDE.md                      # Claude Code project instructions
 ├── .github/
 │   └── copilot-instructions.md    # GitHub Copilot
 ├── .windsurf/

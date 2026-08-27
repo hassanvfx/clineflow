@@ -88,7 +88,7 @@ install_agent() {
 }
 
 migrate_legacy_runtime() {
-  [ -d clineflow ] || return
+  [ -d clineflow ] || return 0
   for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH_CODEX.md; do
     source="clineflow/$file" destination=".clineflow/$file"
     [ -f "$source" ] || continue
@@ -111,6 +111,7 @@ mkdir -p .clineflow/bin knowledge/journals
 migrate_legacy_runtime
 install_agent .clinerules
 install_agent AGENTS.md
+install_agent CLAUDE.md
 install_agent .github/copilot-instructions.md
 install_agent .windsurf/rules/clineflow.md
 
