@@ -39,6 +39,37 @@ CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update >/dev/null
 [ -f knowledge/clineflow_timeline.yml ] && [ -f docs/durable-development-methodology.md ] || fail "update did not seed missing durable fixtures"
 pass "validator, doctor, and updater use encapsulated tooling"
 
+mkdir "$TEST_DIR/auto-init"; cd "$TEST_DIR/auto-init"
+CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
+[ -d .git ] || fail "installer did not initialize Git in a fresh directory"
+git rev-parse --is-inside-work-tree >/dev/null || fail "initialized Git repository is not usable"
+git rev-parse --verify HEAD >/dev/null 2>&1 && fail "installer unexpectedly created a Git commit"
+[ -z "$(git remote)" ] || fail "installer unexpectedly configured a Git remote"
+git config --local --get user.name >/dev/null 2>&1 && fail "installer unexpectedly configured Git identity"
+./.clineflow/bin/doctor
+pass "fresh installation initializes Git without a commit, remote, or identity"
+
+mkdir "$TEST_DIR/dry-run"; cd "$TEST_DIR/dry-run"
+output=$(CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL" --dry-run)
+grep -q 'Would initialize a Git repository' <<<"$output" || fail "dry-run did not report Git initialization"
+[ ! -e .git ] || fail "dry-run initialized Git"
+pass "dry-run reports but does not initialize Git"
+
+mkdir "$TEST_DIR/init-failure" "$TEST_DIR/init-failure-bin"; cd "$TEST_DIR/init-failure"
+cat > "$TEST_DIR/init-failure-bin/git" <<'EOF'
+#!/usr/bin/env bash
+case "${1:-}" in
+  --version) echo 'git version test' ;;
+  rev-parse|init) exit 1 ;;
+  *) exit 0 ;;
+esac
+EOF
+chmod +x "$TEST_DIR/init-failure-bin/git"
+output=$(PATH="$TEST_DIR/init-failure-bin:$PATH" CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL" 2>&1)
+grep -q 'repository initialization failed' <<<"$output" || fail "Git initialization failure was not reported"
+[ -d .clineflow ] || fail "installation did not continue after Git initialization failure"
+pass "Git initialization failure degrades safely"
+
 mkdir "$TEST_DIR/owned"; cd "$TEST_DIR/owned"; git init -q
 [ ! -d clineflow ] || fail "fresh owned project unexpectedly has legacy runtime"
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"

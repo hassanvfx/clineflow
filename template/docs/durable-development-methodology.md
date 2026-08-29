@@ -55,3 +55,5 @@ This rule is provider-neutral: Codex, Claude Code, Cline, Cursor, Copilot, Winds
 ## Maintenance standard
 
 Prefer a concise current state over a transcript. Preserve historical detail in journals and timeline events. Keep all claims factual, link evidence, and make the next recommended step specific enough for another person or agent to act safely.
+
+Fresh ClineFlow installation initializes Git when the directory is not already a work tree and Git is available. It does not create a commit, remote, identity, or branch policy; the first commit remains a deliberate project decision.

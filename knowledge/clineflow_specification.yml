@@ -4,11 +4,13 @@ confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
   - The five ClineFlow-prefixed YAML files are the required discovery and coordination layer.
+  - Fresh installation initializes Git when Git is available and the directory is not already a work tree.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
   - Knowledge and user-authored documentation are preserved during installation and updates.
   - The durable development methodology is installed in docs/ only when absent.
+  - Git initialization never creates a commit, remote, identity, or branch policy.
 non_goals: []
 open_questions: []
 journal_refs:

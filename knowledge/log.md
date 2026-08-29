@@ -2,6 +2,7 @@
 
 ## 2026-08-28
 
+* **Update**: Added deterministic Git initialization for fresh ClineFlow installations.
 * **Update**: Added the durable development methodology, installable master-index fixtures, and index-first agent workflow.
 * **Update**: Added OS-aware, approval-gated Git and downloader prerequisite bootstrapping to ClineFlow installation.
 

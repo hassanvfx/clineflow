@@ -1,14 +1,16 @@
 version: 1
 updated_at: 2026-08-28T00:00:00Z
-latest_change: Implemented installable durable development methodology and ClineFlow master indexes.
+latest_change: Added deterministic Git initialization to fresh ClineFlow installation.
 specification_summary:
-  - The methodology manual and five referential YAML indexes are installed as fixtures when absent.
+  - Fresh installation initializes Git when available and preserves existing repositories.
 verification_summary:
-  - Installation, preservation, and validation checks passed.
+  - Initialization, installation, preservation, and validation checks passed.
 goals_summary:
   - Supported agents must use index-first context recovery for substantial work.
-next_recommended_step: Use the new indexes during the next substantial ClineFlow task and refine the templates from observed usage.
+next_recommended_step: Verify the deterministic Git initialization behavior on native Windows after Git for Windows bootstrap.
 next_step_refs:
   - journals/durable-development-master-indexes.md
+  - journals/deterministic-git-initialization.md
 journal_refs:
   - journals/durable-development-master-indexes.md
+  - journals/deterministic-git-initialization.md

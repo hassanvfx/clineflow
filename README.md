@@ -118,7 +118,7 @@ On Windows, run the native bootstrap from PowerShell:
 irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/bootstrap.ps1 | iex
 ```
 
-The installer first prints an OS-specific prerequisite plan. It only installs missing Git and `curl` after approval (or `--yes` for already-authorized automation), never configures Git identity, and continues ClineFlow setup if prerequisites cannot be installed. macOS uses Homebrew; Linux supports `apt-get`, `dnf`, `pacman`, `zypper`, and `apk`; Windows uses `winget` to install Git for Windows. Run `./.clineflow/bin/doctor` afterward to verify Git, a downloader, and the repository.
+The installer first prints an OS-specific prerequisite plan. It only installs missing Git and `curl` after approval (or `--yes` for already-authorized automation), then initializes Git when the directory is not already a repository. It never creates a commit, configures identity, adds a remote, or changes branch policy. If Git setup cannot complete, ClineFlow setup continues with a clear warning. macOS uses Homebrew; Linux supports `apt-get`, `dnf`, `pacman`, `zypper`, and `apk`; Windows uses `winget` to install Git for Windows. Run `./.clineflow/bin/doctor` afterward to verify Git, a downloader, and the repository.
 
 ### 2️⃣ Ask your AI assistant "How can we work?"
 Your AI assistant reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **it remembers what you built, why you built it, and what's next.**

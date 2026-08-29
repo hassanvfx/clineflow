@@ -137,10 +137,37 @@ load_prerequisites() {
 if load_prerequisites; then clineflow_prereq_run "$DRY_RUN" "$ASSUME_YES" || true
 else echo "WARNING: prerequisite preflight unavailable; continuing with ClineFlow installation." >&2; fi
 
+ensure_git_repository() {
+  if ! command -v git >/dev/null 2>&1; then
+    echo "WARNING: Git is unavailable; ClineFlow cannot initialize this repository." >&2
+    return 0
+  fi
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Git repository already available."
+    return 0
+  fi
+  if [ "$DRY_RUN" = true ]; then
+    echo "Would initialize a Git repository in: $(pwd)"
+    return 0
+  fi
+  if ! git init -q; then
+    echo "WARNING: Git is available but repository initialization failed; ClineFlow installation will continue." >&2
+    return 0
+  fi
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Initialized Git repository in: $(pwd)"
+  else
+    echo "WARNING: Git initialization did not create a usable work tree; ClineFlow installation will continue." >&2
+  fi
+}
+
+ensure_git_repository
+
 if [ "$DRY_RUN" = true ]; then
   cat <<'EOF'
 Would install ClineFlow tooling under .clineflow/ and merge one managed rules block into native agent configurations.
 Would also create missing durable-development fixtures in knowledge/ and docs/.
+Would initialize Git when this directory is not already a Git work tree and Git is available.
 Existing content outside ClineFlow markers, knowledge files, and documentation fixtures is never overwritten, including with --force.
 EOF
   exit 0
