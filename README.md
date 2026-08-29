@@ -83,6 +83,8 @@ New task journals live at `knowledge/journals/<task>.md`, use YAML frontmatter, 
 ./.clineflow/bin/validate-okf
 ```
 
+Every installation also creates an index-first durable development workspace: `docs/durable-development-methodology.md` explains the operating loop, while `knowledge/clineflow_specification.yml`, `clineflow_verification.yml`, `clineflow_goals.yml`, `clineflow_last_session.yml`, and `clineflow_timeline.yml` provide current project context and a linked ledger. Agents read these before substantial work and update them alongside the detailed Engineering Journal.
+
 The bundled validator uses Bash only; no additional runtime or package installation is required.
 
 For full YAML parsing in environments that already use Python, strict validation is optional:

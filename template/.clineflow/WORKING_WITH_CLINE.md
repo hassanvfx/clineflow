@@ -4,9 +4,9 @@ ClineFlow stores new persistent context as an [Open Knowledge Format](https://gi
 
 ## Daily workflow
 
-1. Ask the agent to inspect `knowledge/index.md` before starting work.
+1. Ask the agent to inspect `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five `knowledge/clineflow_*.yml` indexes before starting work.
 2. For a substantial task, create `knowledge/journals/<task-name>.md` from `knowledge/journals/TASK_TEMPLATE.md`.
-3. Keep decisions, testing evidence, progress, and next steps in that concept.
+3. Keep decisions, testing evidence, progress, and next steps in that concept; update the relevant master indexes and timeline as the work changes.
 4. At commit time, validate with `./.clineflow/bin/validate-okf`, update `knowledge/log.md` when appropriate, and commit code plus knowledge together.
 
 ## Legacy journal discovery

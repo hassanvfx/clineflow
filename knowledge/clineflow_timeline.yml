@@ -1,0 +1,20 @@
+version: 1
+updated_at: 2026-08-28T00:00:00Z
+events:
+  - at: 2026-08-28T00:00:00Z
+    actor: codex
+    type: planning
+    summary: Approved the durable development loop and master index model.
+    refs:
+      - journals/durable-development-master-indexes.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-08-28T00:00:00Z
+    actor: codex
+    type: implementation
+    summary: Added installable durable development methodology, master-index fixtures, validation, and agent rules.
+    refs:
+      - journals/durable-development-master-indexes.md
+      - ../docs/durable-development-methodology.md
+    git_revision: null
+    usage_capture: unavailable

@@ -1,0 +1,15 @@
+version: 1
+updated_at: 2026-08-28T00:00:00Z
+confirmed:
+  - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
+  - Engineering Journals remain the detailed canonical record for substantial work.
+  - The five ClineFlow-prefixed YAML files are the required discovery and coordination layer.
+assumptions: []
+constraints:
+  - ClineFlow-owned runtime files remain under .clineflow/.
+  - Knowledge and user-authored documentation are preserved during installation and updates.
+  - The durable development methodology is installed in docs/ only when absent.
+non_goals: []
+open_questions: []
+journal_refs:
+  - journals/durable-development-master-indexes.md

@@ -1,0 +1,11 @@
+version: 1
+updated_at: 2026-08-28T00:00:00Z
+active_goals:
+  - Maintain the installed, agent-operational durable development workflow.
+priorities: []
+success_measures: []
+blocked_goals: []
+completed_goals:
+  - Add the durable development methodology and master indexes to ClineFlow.
+journal_refs:
+  - journals/durable-development-master-indexes.md

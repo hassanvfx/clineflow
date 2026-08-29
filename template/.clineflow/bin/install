@@ -50,6 +50,14 @@ install_managed() {
   echo "installed: $destination"
 }
 
+install_fixture() {
+  local source=$1 destination=$2
+  if [ -e "$destination" ]; then echo "preserved user fixture: $destination"; return 0; fi
+  mkdir -p "$(dirname "$destination")"
+  if ! fetch "$source" "$destination"; then rm -f "$destination"; echo "WARNING: could not install fixture $destination" >&2; return 0; fi
+  echo "installed fixture: $destination"
+}
+
 BEGIN='<!-- BEGIN CLINEFLOW OKF RULES -->'
 END='<!-- END CLINEFLOW OKF RULES -->'
 record_owned_agent() { grep -qxF "$1" .clineflow/.owned-agent-files 2>/dev/null || printf '%s\n' "$1" >> .clineflow/.owned-agent-files; }
@@ -132,12 +140,13 @@ else echo "WARNING: prerequisite preflight unavailable; continuing with ClineFlo
 if [ "$DRY_RUN" = true ]; then
   cat <<'EOF'
 Would install ClineFlow tooling under .clineflow/ and merge one managed rules block into native agent configurations.
-Existing content outside ClineFlow markers and all knowledge files are never overwritten, including with --force.
+Would also create missing durable-development fixtures in knowledge/ and docs/.
+Existing content outside ClineFlow markers, knowledge files, and documentation fixtures is never overwritten, including with --force.
 EOF
   exit 0
 fi
 
-mkdir -p .clineflow/bin knowledge/journals
+mkdir -p .clineflow/bin knowledge/journals docs
 [ -e .clineflow/.owned-agent-files ] || : > .clineflow/.owned-agent-files
 migrate_legacy_runtime
 install_agent .clinerules
@@ -155,5 +164,9 @@ done
 for file in index.md log.md journals/index.md journals/TASK_TEMPLATE.md; do
   if [ -e "knowledge/$file" ]; then echo "preserved user knowledge: knowledge/$file"; else install_managed "knowledge/$file" "knowledge/$file"; fi
 done
+for file in clineflow_specification.yml clineflow_verification.yml clineflow_goals.yml clineflow_last_session.yml clineflow_timeline.yml; do
+  install_fixture "knowledge/$file" "knowledge/$file"
+done
+install_fixture "docs/durable-development-methodology.md" "docs/durable-development-methodology.md"
 
-echo "ClineFlow $VERSION installed. Prerequisite warnings, if any, do not block setup. Verify with: ./.clineflow/bin/doctor"
+echo "ClineFlow $VERSION installed. Read docs/durable-development-methodology.md, then verify with: ./.clineflow/bin/doctor"

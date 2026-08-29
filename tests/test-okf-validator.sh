@@ -13,11 +13,23 @@ create_valid_bundle() {
     printf '%s\n' '---' 'okf_version: "0.2"' '---' '' '# Knowledge' > "$BUNDLE/index.md"
     printf '%s\n' '# Log' '' '## 2026-08-15' '' '* **Creation**: Initialized.' > "$BUNDLE/log.md"
     printf '%s\n' '# Journals' > "$BUNDLE/journals/index.md"
+    printf '%s\n' 'version: 1' 'updated_at: null' 'confirmed: []' 'assumptions: []' 'constraints: []' 'non_goals: []' 'open_questions: []' 'journal_refs: []' > "$BUNDLE/clineflow_specification.yml"
+    printf '%s\n' 'version: 1' 'updated_at: null' 'acceptance_criteria: []' 'regression_checks: []' 'evidence_refs: []' 'open_verification: []' 'journal_refs: []' > "$BUNDLE/clineflow_verification.yml"
+    printf '%s\n' 'version: 1' 'updated_at: null' 'active_goals: []' 'priorities: []' 'success_measures: []' 'blocked_goals: []' 'completed_goals: []' 'journal_refs: []' > "$BUNDLE/clineflow_goals.yml"
+    printf '%s\n' 'version: 1' 'updated_at: null' 'latest_change: null' 'specification_summary: []' 'verification_summary: []' 'goals_summary: []' 'next_recommended_step: null' 'next_step_refs: []' 'journal_refs: []' > "$BUNDLE/clineflow_last_session.yml"
+    printf '%s\n' 'version: 1' 'updated_at: null' 'events: []' > "$BUNDLE/clineflow_timeline.yml"
 }
 
 create_valid_bundle
 printf '%s\n' '---' 'type: Engineering Journal' '---' '' '# Task' > "$BUNDLE/journals/task.md"
 bash "$ROOT/template/.clineflow/bin/validate-okf" "$BUNDLE"
+
+rm "$BUNDLE/clineflow_timeline.yml"
+if bash "$ROOT/template/.clineflow/bin/validate-okf" "$BUNDLE" >/dev/null 2>&1; then
+    echo "expected missing master index to fail" >&2
+    exit 1
+fi
+create_valid_bundle
 
 if bash "$ROOT/template/.clineflow/bin/validate-okf" --strict "$BUNDLE" >/dev/null 2>&1; then
     echo "strict validation ran with available PyYAML"

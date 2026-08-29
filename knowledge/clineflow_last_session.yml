@@ -1,0 +1,14 @@
+version: 1
+updated_at: 2026-08-28T00:00:00Z
+latest_change: Implemented installable durable development methodology and ClineFlow master indexes.
+specification_summary:
+  - The methodology manual and five referential YAML indexes are installed as fixtures when absent.
+verification_summary:
+  - Installation, preservation, and validation checks passed.
+goals_summary:
+  - Supported agents must use index-first context recovery for substantial work.
+next_recommended_step: Use the new indexes during the next substantial ClineFlow task and refine the templates from observed usage.
+next_step_refs:
+  - journals/durable-development-master-indexes.md
+journal_refs:
+  - journals/durable-development-master-indexes.md

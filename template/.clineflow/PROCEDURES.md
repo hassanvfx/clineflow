@@ -2,8 +2,8 @@
 
 ## Start or resume work
 
-1. Read `knowledge/index.md` and the relevant concept indexes.
-2. Search `knowledge/` for related task journals, decisions, and references.
+1. Read `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five `knowledge/clineflow_*.yml` master indexes.
+2. Follow relevant master-index references, then search `knowledge/` for related task journals, decisions, and references.
 3. When present, search `docs/journals/` for relevant legacy context. Treat these files as read-only historical material.
 4. Create or resume `knowledge/journals/<task-name>.md` from `knowledge/journals/TASK_TEMPLATE.md` for substantial work.
 
@@ -13,6 +13,7 @@
 - Reserve `index.md` for navigation and `log.md` for dated change history.
 - Use Markdown links for relationships; broken links are acceptable when knowledge is not written yet.
 - Record only factual provenance, verification, and lifecycle fields.
+- Update the master indexes with concise current state and references; keep detailed reasoning and evidence in linked Engineering Journals.
 
 ## Commit
 

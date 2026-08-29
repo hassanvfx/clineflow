@@ -12,4 +12,13 @@ for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH
   mkdir -p "$(dirname "$target")"; fetch ".clineflow/$file" "$target"; case "$target" in */bin/*) chmod +x "$target";; esac
   echo "updated: $target"
 done
+for file in clineflow_specification.yml clineflow_verification.yml clineflow_goals.yml clineflow_last_session.yml clineflow_timeline.yml; do
+  target="knowledge/$file"
+  if [ "$DRY" = true ]; then [ -e "$target" ] || echo "would install fixture: $target"; continue; fi
+  if [ -e "$target" ]; then echo "preserved user fixture: $target"; else mkdir -p knowledge; fetch "knowledge/$file" "$target"; echo "installed fixture: $target"; fi
+done
+manual="docs/durable-development-methodology.md"
+if [ "$DRY" = true ]; then [ -e "$manual" ] || echo "would install fixture: $manual"
+elif [ -e "$manual" ]; then echo "preserved user fixture: $manual"
+else mkdir -p docs; fetch "$manual" "$manual"; echo "installed fixture: $manual"; fi
 echo "User agent configuration and knowledge were preserved."

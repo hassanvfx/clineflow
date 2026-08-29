@@ -4,14 +4,14 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 ## Start or resume a task
 
-1. Read `AGENTS.md` and `knowledge/index.md`.
-2. Search `knowledge/` for relevant concepts. When present, search `docs/journals/` as read-only legacy context too.
+1. Read `AGENTS.md`, `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five `knowledge/clineflow_*.yml` indexes.
+2. Follow the indexes' relevant journal references, then search `knowledge/` for related concepts. When present, search `docs/journals/` as read-only legacy context too.
 3. Summarize the relevant context before changing code. For a substantial change, propose a concise implementation plan first.
 4. Create or resume `knowledge/journals/<task-name>.md` from `knowledge/journals/TASK_TEMPLATE.md`.
 
 ## Work and deliver
 
-- Keep the active Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps.
+- Keep the active Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps. Update the specification, verification, goals, last-session, and timeline indexes as defined by the durable development methodology.
 - Link related knowledge with normal Markdown links and update `knowledge/log.md` when the knowledge changed materially.
 - Before a delivery or commit, run `./.clineflow/bin/validate-okf`, the relevant project tests, and `git diff --check`.
 - When the user asks to commit, update the journal and log first, then commit the code and knowledge artifacts together.

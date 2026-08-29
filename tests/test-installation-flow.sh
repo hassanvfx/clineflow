@@ -18,15 +18,25 @@ shasum -a 256 knowledge/log.md > before.hashes
 [ ! -d clineflow ] || fail "fresh test project unexpectedly has legacy runtime"
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
 for tool in install update uninstall validate-okf doctor prereqs bootstrap.ps1; do [ -x ".clineflow/bin/$tool" ] || fail "missing .clineflow/bin/$tool"; done
+[ -f docs/durable-development-methodology.md ] || fail "missing durable development methodology fixture"
+for index in clineflow_specification.yml clineflow_verification.yml clineflow_goals.yml clineflow_last_session.yml clineflow_timeline.yml; do [ -f "knowledge/$index" ] || fail "missing knowledge/$index"; done
+grep -q 'durable-development-methodology.md' AGENTS.md || fail "agent rules do not require the durable loop"
 [ -f .clineflow/VERSION ] && [ ! -e validate-okf ] && [ ! -e clineflow-doctor ] || fail "root tooling layout is incorrect"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do grep -qFx "$(cat "$file.user")" "$file" && grep -q 'BEGIN CLINEFLOW' "$file" || fail "install did not safely merge $file"; done
 shasum -a 256 knowledge/log.md > after.hashes; cmp before.hashes after.hashes || fail "install replaced user knowledge"
+printf '%s\n' '# user index preservation' >> knowledge/clineflow_goals.yml
+printf '%s\n' '<!-- user manual preservation -->' >> docs/durable-development-methodology.md
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL" --force
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do [ "$(grep -c 'BEGIN CLINEFLOW' "$file")" -eq 1 ] || fail "force duplicated block in $file"; done
 shasum -a 256 knowledge/log.md > force.hashes; cmp before.hashes force.hashes || fail "force replaced user knowledge"
+grep -q 'user index preservation' knowledge/clineflow_goals.yml || fail "force replaced user index"
+grep -q 'user manual preservation' docs/durable-development-methodology.md || fail "force replaced user methodology manual"
 pass "fresh install and force merge agent configuration without changing user content"
 ./.clineflow/bin/validate-okf; ./.clineflow/bin/doctor
 CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update --dry-run >/dev/null
+rm knowledge/clineflow_timeline.yml docs/durable-development-methodology.md
+CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update >/dev/null
+[ -f knowledge/clineflow_timeline.yml ] && [ -f docs/durable-development-methodology.md ] || fail "update did not seed missing durable fixtures"
 pass "validator, doctor, and updater use encapsulated tooling"
 
 mkdir "$TEST_DIR/owned"; cd "$TEST_DIR/owned"; git init -q
