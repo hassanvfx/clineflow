@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
+# Diagnose ClineFlow without changing system or Git configuration.
 set -u
 STRICT="${1:-}"; [ "$STRICT" = "--help" ] && { echo "Usage: ./.clineflow/bin/doctor [--strict]"; exit 0; }
 errors=0
 check() { [ -f "$1" ] && echo "PASS: $2 ($1)" || { echo "ERROR: Missing $2: $1" >&2; errors=$((errors+1)); }; }
-git rev-parse --is-inside-work-tree >/dev/null 2>&1 && echo "PASS: Git repository" || { echo "ERROR: Run from a Git repository root" >&2; errors=$((errors+1)); }
+manual_help() { case "$(uname -s 2>/dev/null || true)" in Darwin) printf 'Install with Homebrew: brew install git curl' ;; Linux) printf 'Install Git and curl with your Linux package manager.' ;; MINGW*|MSYS*|CYGWIN*) printf 'Run .clineflow\\bin\\bootstrap.ps1 in PowerShell, or install Git for Windows.' ;; *) printf 'Install Git and curl, then rerun doctor.' ;; esac; }
+if command -v git >/dev/null 2>&1; then
+  echo "PASS: Git executable ($(git --version 2>/dev/null || printf 'unknown version'))"
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 && echo "PASS: Git repository" || { echo "ERROR: Not inside a Git repository" >&2; errors=$((errors+1)); }
+else echo "ERROR: Missing Git executable. $(manual_help)" >&2; errors=$((errors+1)); fi
+if command -v curl >/dev/null 2>&1; then echo "PASS: downloader (curl)"
+elif command -v wget >/dev/null 2>&1; then echo "PASS: downloader (wget)"
+else echo "ERROR: Missing downloader (curl or wget). $(manual_help)" >&2; errors=$((errors+1)); fi
 if [ -f AGENTS.md ] || [ -f CLAUDE.md ]; then
   echo "PASS: project agent instructions (AGENTS.md or CLAUDE.md)"
 else

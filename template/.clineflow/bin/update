@@ -6,7 +6,7 @@ DRY=false
 [ "${1:-}" = "--help" ] && { echo "Usage: ./.clineflow/bin/update [--dry-run]"; exit 0; }
 [ -d .clineflow ] || { echo "ClineFlow is not installed" >&2; exit 1; }
 fetch() { if command -v curl >/dev/null 2>&1; then curl -fsSL "$BASE_URL/$1" -o "$2"; else wget -q "$BASE_URL/$1" -O "$2"; fi; }
-for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH_CODEX.md VERSION bin/install bin/update bin/uninstall bin/validate-okf bin/doctor; do
+for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH_CODEX.md VERSION bin/install bin/update bin/uninstall bin/validate-okf bin/doctor bin/prereqs bin/bootstrap.ps1; do
   target=".clineflow/$file"
   if [ "$DRY" = true ]; then echo "would update: $target"; continue; fi
   mkdir -p "$(dirname "$target")"; fetch ".clineflow/$file" "$target"; case "$target" in */bin/*) chmod +x "$target";; esac

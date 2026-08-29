@@ -17,7 +17,7 @@ for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .win
 shasum -a 256 knowledge/log.md > before.hashes
 [ ! -d clineflow ] || fail "fresh test project unexpectedly has legacy runtime"
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
-for tool in install update uninstall validate-okf doctor; do [ -x ".clineflow/bin/$tool" ] || fail "missing .clineflow/bin/$tool"; done
+for tool in install update uninstall validate-okf doctor prereqs bootstrap.ps1; do [ -x ".clineflow/bin/$tool" ] || fail "missing .clineflow/bin/$tool"; done
 [ -f .clineflow/VERSION ] && [ ! -e validate-okf ] && [ ! -e clineflow-doctor ] || fail "root tooling layout is incorrect"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do grep -qFx "$(cat "$file.user")" "$file" && grep -q 'BEGIN CLINEFLOW' "$file" || fail "install did not safely merge $file"; done
 shasum -a 256 knowledge/log.md > after.hashes; cmp before.hashes after.hashes || fail "install replaced user knowledge"
@@ -45,3 +45,5 @@ rm AGENTS.md
 ./.clineflow/bin/uninstall
 grep -qFx 'user claude only' CLAUDE.md && ! grep -q 'BEGIN CLINEFLOW' CLAUDE.md || fail "uninstall did not preserve user-owned CLAUDE.md"
 pass "doctor accepts CLAUDE.md and uninstall preserves merged Claude instructions"
+
+bash "$ROOT/tests/test-prerequisites.sh"

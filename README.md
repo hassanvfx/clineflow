@@ -110,10 +110,18 @@ Please install and setup clineflow here, from: https://github.com/hassanvfx/clin
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/install | bash
 ```
 
+On Windows, run the native bootstrap from PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/bootstrap.ps1 | iex
+```
+
+The installer first prints an OS-specific prerequisite plan. It only installs missing Git and `curl` after approval (or `--yes` for already-authorized automation), never configures Git identity, and continues ClineFlow setup if prerequisites cannot be installed. macOS uses Homebrew; Linux supports `apt-get`, `dnf`, `pacman`, `zypper`, and `apk`; Windows uses `winget` to install Git for Windows. Run `./.clineflow/bin/doctor` afterward to verify Git, a downloader, and the repository.
+
 ### 2️⃣ Ask your AI assistant "How can we work?"
 Your AI assistant reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **it remembers what you built, why you built it, and what's next.**
 
-**Using ChatGPT Codex?** Start with `clineflow/WORKING_WITH_CODEX.md`, then run `./.clineflow/bin/doctor` to verify that `AGENTS.md` and the OKF bundle are ready. No Codex plugin, SDK, or runtime is required.
+**Using ChatGPT Codex?** Start with `.clineflow/WORKING_WITH_CODEX.md`, then run `./.clineflow/bin/doctor` to verify that `AGENTS.md` and the OKF bundle are ready. No Codex plugin, SDK, or runtime is required.
 
 **Using Claude Code?** ClineFlow installs its shared workflow in `CLAUDE.md`, Claude Code's project-memory file. Run `./.clineflow/bin/doctor` to verify the instructions and OKF bundle.
 
@@ -132,7 +140,7 @@ Your AI assistant automatically:
 **ClineFlow automatically configures itself for multiple AI assistants.** ChatGPT Codex is a first-class workflow: it reads the shared `AGENTS.md`, navigates the OKF bundle, and has a dedicated guide and setup diagnostic—without a plugin, SDK, or proprietary runtime. During installation, ClineFlow creates configuration files for:
 
 - ✅ **Cline** (`.clinerules`) - *Fully tested by core team*
-- ✅ **ChatGPT Codex** (`AGENTS.md` + `clineflow/WORKING_WITH_CODEX.md`)
+- ✅ **ChatGPT Codex** (`AGENTS.md` + `.clineflow/WORKING_WITH_CODEX.md`)
 - ✅ **Claude Code** (`CLAUDE.md`)
 - ✅ **Cursor** (`AGENTS.md`)
 - ✅ **GitHub Copilot** (`.github/copilot-instructions.md`)
@@ -141,7 +149,7 @@ Your AI assistant automatically:
 
 **Why multiple config files?** Different AI assistants use different configuration formats. ClineFlow generates all of them from a single template, so it "just works" regardless of which tool you use. `AGENTS.md` is the shared entry point for ChatGPT Codex and compatible agents; `CLAUDE.md` is Claude Code's project-memory file.
 
-**Already have an `AGENTS.md`?** ClineFlow preserves it—even with `--force`. Read `clineflow/WORKING_WITH_CODEX.md` and add the shared OKF workflow from [the template](template/configs/rules.template.md) to your existing instructions; then run `./.clineflow/bin/doctor` to check the setup.
+**Already have an `AGENTS.md`?** ClineFlow preserves it—even with `--force`. Read `.clineflow/WORKING_WITH_CODEX.md` and add the shared OKF workflow from [the template](template/configs/rules.template.md) to your existing instructions; then run `./.clineflow/bin/doctor` to check the setup.
 
 **Current Status:** Core team actively develops and tests with Cline. Community members are welcome to test and contribute support for other agents!
 
@@ -515,11 +523,11 @@ Your AI assistant will read the repository, understand the installation process,
 **Method 2: Direct Installation (Traditional)**
 
 ```bash
-# Using curl
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh | bash
+# macOS and Linux
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/install | bash
 
-# Using wget
-wget -qO- https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh | bash
+# Windows PowerShell
+irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/bootstrap.ps1 | iex
 ```
 
 ### What Gets Installed
@@ -534,21 +542,23 @@ your-project/
 ├── .windsurf/
 │   └── rules/
 │       └── clineflow.md           # Windsurf
-├── clineflow/                     # Workflow documentation
+├── .clineflow/                    # ClineFlow-owned runtime and documentation
 │   ├── JOURNAL_TEMPLATE.md        # Legacy-journal compatibility notice
 │   ├── PROCEDURES.md              # Standard operating procedures
 │   ├── WORKING_WITH_CLINE.md      # Complete user guide
 │   ├── WORKING_WITH_CODEX.md      # ChatGPT Codex workflow guide
-├── knowledge/                     # Native OKF v0.2 knowledge bundle
-│   ├── index.md                   # Bundle navigation and version declaration
-│   ├── log.md                     # Dated knowledge history
-│   └── journals/                  # Engineering Journal concepts
-│       ├── index.md
-│       └── TASK_TEMPLATE.md
-├── validate-okf                   # Dependency-free OKF structural validator
-├── clineflow-doctor               # Dependency-free Codex and OKF setup diagnostic
-├── update.sh                      # Update script (get latest features)
-└── VERSION                        # Tracks your installation version
+│   └── bin/
+│       ├── install                # OS-aware installer and prerequisite plan
+│       ├── bootstrap.ps1          # Native Windows entrypoint
+│       ├── validate-okf           # Dependency-free OKF structural validator
+│       ├── doctor                 # Dependency-free setup diagnostic
+│       └── update                 # Update script
+└── knowledge/                     # Native OKF v0.2 knowledge bundle
+    ├── index.md                   # Bundle navigation and version declaration
+    ├── log.md                     # Dated knowledge history
+    └── journals/                  # Engineering Journal concepts
+        ├── index.md
+        └── TASK_TEMPLATE.md
 ```
 
 ---
@@ -560,14 +570,14 @@ Already have ClineFlow installed? Get the latest features and improvements!
 ### Quick Update
 
 ```bash
-# Download and run update script
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash
+# Run the installed updater
+./.clineflow/bin/update
 ```
 
 Or if you already have the script:
 
 ```bash
-./update.sh
+./.clineflow/bin/update
 ```
 
 ### What Gets Updated
@@ -585,25 +595,24 @@ Or if you already have the script:
 
 ```bash
 # See what would be updated without changing anything
-./update.sh --dry-run
+./.clineflow/bin/update --dry-run
 ```
 
 ### Check Version
 
 ```bash
 # Your current version
-cat VERSION
+cat .clineflow/VERSION
 
 # Latest available version
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/VERSION
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/VERSION
 ```
 
 ### Update Options
 
 ```bash
-./update.sh --help      # Show all options
-./update.sh --dry-run   # Preview updates
-./update.sh --yes       # Skip confirmation
+./.clineflow/bin/update --help      # Show all options
+./.clineflow/bin/update --dry-run   # Preview updates
 ```
 
 **📋 Full update history:** See [CHANGELOG.md](CHANGELOG.md) for complete release notes.
@@ -661,16 +670,16 @@ You: Continue exactly where you left off
 
 ```bash
 # Dry run (see what would be installed)
-./install.sh --dry-run
+./.clineflow/bin/install --dry-run
 
 # Force overwrite existing files
-./install.sh --force
+./.clineflow/bin/install --force
 
 # Uninstall
-./install.sh --uninstall
+./.clineflow/bin/uninstall
 
 # Show help
-./install.sh --help
+./.clineflow/bin/install --help
 ```
 
 ### Returns Accepted Anytime 🔄
@@ -680,29 +689,19 @@ Changed your mind? No hard feelings!
 Download and run the uninstall script in your project directory:
 
 ```bash
-# Using curl
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.sh | bash
-
-# Using wget
-wget -qO- https://raw.githubusercontent.com/hassanvfx/clineflow/main/uninstall.sh | bash
-
-# Or if you have the repo
-./uninstall.sh
+./.clineflow/bin/uninstall
 ```
 
 **What gets removed:**
 - `.clinerules`
-- `clineflow/` directory
-- `validate-okf`
-- `clineflow-doctor`
+- `.clineflow/` runtime directory
 
 **⚠️ Note:** Your `knowledge/` bundle and any legacy `docs/journals/` are safe and require manual removal if desired.
 
 **Options:**
 ```bash
-./uninstall.sh --dry-run    # Preview what would be removed
-./uninstall.sh --yes        # Skip confirmation prompt
-./uninstall.sh --help       # Show all options
+./.clineflow/bin/uninstall --dry-run    # Preview what would be removed
+./.clineflow/bin/uninstall --help       # Show all options
 ```
 
 ### Customization

@@ -6,6 +6,7 @@ VERSION="2.1.0"
 BASE_URL="${CLINEFLOW_BASE_URL:-https://raw.githubusercontent.com/hassanvfx/clineflow/main/template}"
 FORCE=false
 DRY_RUN=false
+ASSUME_YES=false
 
 usage() {
   cat <<'EOF'
@@ -14,6 +15,7 @@ Usage: curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/tem
 Options:
   --dry-run  Show the managed files that would be installed.
   --force    Refresh ClineFlow-owned files in .clineflow/ only.
+  --yes      Approve the detected prerequisite installation without prompting.
   --help     Show this help.
 EOF
 }
@@ -22,6 +24,7 @@ while [ "$#" -gt 0 ]; do
   case "$1" in
     --dry-run) DRY_RUN=true ;;
     --force) FORCE=true ;;
+    --yes) ASSUME_YES=true ;;
     --help|-h) usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
   esac
@@ -30,7 +33,9 @@ done
 
 fetch() {
   local source=$1 destination=$2
-  if command -v curl >/dev/null 2>&1; then curl -fsSL "$BASE_URL/$source" -o "$destination"; else wget -q "$BASE_URL/$source" -O "$destination"; fi
+  if command -v curl >/dev/null 2>&1; then curl -fsSL "$BASE_URL/$source" -o "$destination"
+  elif command -v wget >/dev/null 2>&1; then wget -q "$BASE_URL/$source" -O "$destination"
+  else echo "WARNING: no downloader is available to fetch $source" >&2; return 1; fi
 }
 
 install_managed() {
@@ -40,7 +45,7 @@ install_managed() {
     return
   fi
   mkdir -p "$(dirname "$destination")"
-  fetch "$source" "$destination"
+  if ! fetch "$source" "$destination"; then echo "WARNING: could not install $destination; preserved installation progress" >&2; return 0; fi
   case "$destination" in */bin/*) chmod +x "$destination" ;; esac
   echo "installed: $destination"
 }
@@ -61,7 +66,7 @@ block_status() {
 write_block() {
   local rules
   rules=$(mktemp)
-  fetch "configs/rules.template.md" "$rules"
+  if ! fetch "configs/rules.template.md" "$rules"; then rm -f "$rules"; return 1; fi
   printf '%s\n' "$BEGIN"
   cat "$rules"
   printf '\n%s\n' "$END"
@@ -71,16 +76,24 @@ write_block() {
 install_agent() {
   local destination=$1 status temp
   mkdir -p "$(dirname "$destination")"
-  if [ ! -e "$destination" ]; then write_block > "$destination"; record_owned_agent "file:$destination"; echo "installed agent configuration: $destination"; return; fi
+  if [ ! -e "$destination" ]; then
+    if write_block > "$destination"; then record_owned_agent "file:$destination"; echo "installed agent configuration: $destination"
+    else rm -f "$destination"; echo "WARNING: could not create $destination; preserved installation progress" >&2; fi
+    return
+  fi
   status=$(block_status "$destination")
   if [ "$status" = malformed ]; then echo "WARNING: malformed ClineFlow markers; preserved $destination" >&2; return; fi
-  if [ "$status" = none ]; then printf '\n' >> "$destination"; write_block >> "$destination"; record_owned_agent "block:$destination"; echo "merged ClineFlow rules into: $destination"; return; fi
+  if [ "$status" = none ]; then
+    if { printf '\n'; write_block; } >> "$destination"; then record_owned_agent "block:$destination"; echo "merged ClineFlow rules into: $destination"
+    else echo "WARNING: could not merge ClineFlow rules into $destination; preserved installation progress" >&2; fi
+    return
+  fi
   temp=$(mktemp)
   local begin_line end_line
   begin_line=$(grep -nFx "$BEGIN" "$destination" | cut -d: -f1)
   end_line=$(grep -nFx "$END" "$destination" | cut -d: -f1)
   head -n $((begin_line - 1)) "$destination" > "$temp"
-  write_block >> "$temp"
+  if ! write_block >> "$temp"; then rm -f "$temp"; echo "WARNING: could not refresh ClineFlow rules in $destination; preserved installation progress" >&2; return; fi
   tail -n +$((end_line + 1)) "$destination" >> "$temp"
   mv "$temp" "$destination"
   record_owned_agent "block:$destination"
@@ -97,6 +110,24 @@ migrate_legacy_runtime() {
   done
   if [ -z "$(find clineflow -mindepth 1 -maxdepth 1 -print -quit)" ]; then rmdir clineflow; else echo "WARNING: legacy clineflow/ retained with unrecognized content" >&2; fi
 }
+
+load_prerequisites() {
+  local script_path="${BASH_SOURCE[0]:-}" script_dir module temp
+  if [ -n "$script_path" ] && [ -f "$script_path" ]; then
+    script_dir=$(cd "$(dirname "$script_path")" && pwd)
+    module="$script_dir/prereqs"
+  elif [ -f .clineflow/bin/prereqs ]; then
+    module=.clineflow/bin/prereqs
+  fi
+  if [ -n "${module:-}" ] && [ -f "$module" ]; then . "$module"; return 0; fi
+  temp=$(mktemp) || return 1
+  if fetch ".clineflow/bin/prereqs" "$temp"; then . "$temp"; rm -f "$temp"; return 0; fi
+  rm -f "$temp"
+  return 1
+}
+
+if load_prerequisites; then clineflow_prereq_run "$DRY_RUN" "$ASSUME_YES" || true
+else echo "WARNING: prerequisite preflight unavailable; continuing with ClineFlow installation." >&2; fi
 
 if [ "$DRY_RUN" = true ]; then
   cat <<'EOF'
@@ -118,11 +149,11 @@ install_agent .windsurf/rules/clineflow.md
 for file in JOURNAL_TEMPLATE.md PROCEDURES.md WORKING_WITH_CLINE.md WORKING_WITH_CODEX.md VERSION; do
   install_managed ".clineflow/$file" ".clineflow/$file"
 done
-for file in install update uninstall validate-okf doctor; do
+for file in install update uninstall validate-okf doctor prereqs bootstrap.ps1; do
   install_managed ".clineflow/bin/$file" ".clineflow/bin/$file"
 done
 for file in index.md log.md journals/index.md journals/TASK_TEMPLATE.md; do
   if [ -e "knowledge/$file" ]; then echo "preserved user knowledge: knowledge/$file"; else install_managed "knowledge/$file" "knowledge/$file"; fi
 done
 
-echo "ClineFlow $VERSION installed. Validate with: ./.clineflow/bin/validate-okf"
+echo "ClineFlow $VERSION installed. Prerequisite warnings, if any, do not block setup. Verify with: ./.clineflow/bin/doctor"
