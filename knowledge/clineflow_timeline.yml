@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-08-28T00:00:00Z
+updated_at: 2026-08-30T00:00:00Z
 events:
   - at: 2026-08-28T00:00:00Z
     actor: codex
@@ -24,5 +24,15 @@ events:
     summary: Added deterministic Git initialization for fresh ClineFlow installations.
     refs:
       - journals/deterministic-git-initialization.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-08-30T00:00:00Z
+    actor: codex
+    type: documentation
+    summary: Standardized the agentic ClineFlow installation prompt in the README and installed methodology.
+    refs:
+      - journals/canonical-agent-installation-prompt.md
+      - ../README.md
+      - ../docs/durable-development-methodology.md
     git_revision: null
     usage_capture: unavailable

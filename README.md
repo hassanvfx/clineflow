@@ -103,7 +103,7 @@ python3 -m pip install PyYAML
 Using Claude Code, ChatGPT Codex, Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and type:
 
 ```
-Please install and setup clineflow here, from: https://github.com/hassanvfx/clineflow
+Please install ClineFlow by following the instructions provided at [https://github.com/hassanvfx/clineflow](https://github.com/hassanvfx/clineflow)
 ```
 
 **Option 2: From Terminal**
@@ -517,7 +517,7 @@ Just bash + git. Works everywhere:
 Using Claude Code, Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and say:
 
 ```
-Please install and setup clineflow here, from: https://github.com/hassanvfx/clineflow
+Please install ClineFlow by following the instructions provided at [https://github.com/hassanvfx/clineflow](https://github.com/hassanvfx/clineflow)
 ```
 
 Your AI assistant will read the repository, understand the installation process, and set everything up for you.

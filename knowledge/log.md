@@ -1,5 +1,9 @@
 # Knowledge Update Log
 
+## 2026-08-30
+
+* **Update**: Standardized the canonical agentic ClineFlow installation prompt in the README and installed durable-development methodology.
+
 ## 2026-08-28
 
 * **Update**: Added deterministic Git initialization for fresh ClineFlow installations.

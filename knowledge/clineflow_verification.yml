@@ -4,10 +4,13 @@ acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
   - Fresh non-Git installation initializes a usable work tree and doctor passes without a commit, remote, or local identity.
+  - README and installed methodology present the canonical agentic installation prompt.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
 evidence_refs:
   - journals/durable-development-master-indexes.md
+  - journals/canonical-agent-installation-prompt.md
 open_verification: []
 journal_refs:
   - journals/durable-development-master-indexes.md
+  - journals/canonical-agent-installation-prompt.md

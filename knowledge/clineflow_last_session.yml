@@ -1,16 +1,18 @@
 version: 1
-updated_at: 2026-08-28T00:00:00Z
-latest_change: Added deterministic Git initialization to fresh ClineFlow installation.
+updated_at: 2026-08-30T00:00:00Z
+latest_change: Standardized the canonical prompt for agent-led ClineFlow installation.
 specification_summary:
-  - Fresh installation initializes Git when available and preserves existing repositories.
+  - The README and installed methodology direct agents to the authoritative repository instructions.
 verification_summary:
-  - Initialization, installation, preservation, and validation checks passed.
+  - The canonical prompt is present in README and both methodology copies.
 goals_summary:
   - Supported agents must use index-first context recovery for substantial work.
 next_recommended_step: Verify the deterministic Git initialization behavior on native Windows after Git for Windows bootstrap.
 next_step_refs:
   - journals/durable-development-master-indexes.md
   - journals/deterministic-git-initialization.md
+  - journals/canonical-agent-installation-prompt.md
 journal_refs:
   - journals/durable-development-master-indexes.md
   - journals/deterministic-git-initialization.md
+  - journals/canonical-agent-installation-prompt.md

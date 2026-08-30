@@ -32,6 +32,14 @@ Before substantial work, an agent must read the indexes and linked journals, sum
 
 If a requested decision is not covered by the specification, the agent stops implementation and asks for direction. It may document options, but it must not silently promote an assumption into an approved requirement.
 
+## Installing ClineFlow through an agent
+
+To ask a coding agent to install ClineFlow, use this exact prompt:
+
+> Please install ClineFlow by following the instructions provided at [https://github.com/hassanvfx/clineflow](https://github.com/hassanvfx/clineflow)
+
+The repository provides the current OS-aware installation instructions; the agent should follow them instead of relying on stale copied commands.
+
 ## Evidence-first examples
 
 ### Product capability
