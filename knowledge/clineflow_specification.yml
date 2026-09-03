@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T12:28:25Z
+updated_at: 2026-09-03T12:34:05Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -43,6 +43,7 @@ constraints:
   - The Project Story is derived only from normalized facts and canonical document identifiers; it does not infer contributor productivity or create unsourced claims.
   - Executive activity metrics ignore generated report runs and choose the newest knowledge event or Git commit instead.
   - The report reuses ClineFlow’s public visual principles—deep navy, electric blue, bold editorial hierarchy, and restrained geometry—without copying site media, code, or remote dependencies.
+  - The dashboard has no chapter-navigation component; it leads with immediate context, a source-linked Recent Story, a compact Time Spine, and an explicit whole-story expansion.
 non_goals: []
 open_questions: []
 journal_refs:

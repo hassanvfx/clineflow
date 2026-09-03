@@ -35,21 +35,21 @@
 
   document.getElementById("app").innerHTML = `<main class="shell" id="main">
     <header class="topbar"><div class="brand"><span class="brand-mark">CF</span><span>Knowledge Visor / ${esc(data.schema.split("/")[1])}</span></div><div class="toolbar"><span class="pill">${data.git.dirty ? "Working tree · changed" : "Working tree · clean"}</span><button id="time-mode" type="button">Local time</button><span class="pill">${esc(data.git.branch || "detached")}</span></div></header>
-    <nav class="story-nav" aria-label="Dashboard story"><a href="#executive"><span>01</span>Now</a><a href="#trajectory"><span>02</span>Trajectory</a><a href="#decisions"><span>03</span>Story</a><a href="#proof"><span>04</span>Proof</a><a href="#source"><span>05</span>Source</a></nav>
     <section class="hero" id="executive"><article class="hero-main"><div><p class="eyebrow">01 / Executive brief · ${esc(time(data.run_at))}</p><h1>What changed.<br>Why it matters.<br>What comes next.</h1><p class="lede">${esc(summary)}</p></div><div class="audience-switch" id="audience-switch" role="tablist" aria-label="Narrative audience"><button class="active" data-audience="executive" role="tab" aria-selected="true">Executive</button><button data-audience="manager" role="tab" aria-selected="false">Manager</button><button data-audience="engineer" role="tab" aria-selected="false">Engineer</button></div><div class="audience-story" id="audience-story" aria-live="polite"></div><div class="brief-grid"><div><span class="label">Current intent</span><p>${esc(currentIntent)}</p></div><div><span class="label">Latest proof</span><p>${esc(latestVerification?.summary || "No verification event recorded yet.")}</p></div><div><span class="label">Next move</span><p>${esc(nextMove)}</p></div></div><div class="legend"><span><i class="dot" style="background:var(--mint)"></i>Knowledge events</span><span><i class="dot" style="background:var(--cyan)"></i>Git commits</span><span><i class="dot" style="background:var(--violet)"></i>Evidence</span></div></article>
       <aside class="hero-side"><div class="metric"><span class="label">Latest knowledge activity</span><strong>${esc(latestRecorded?.when ? new Date(latestRecorded.when).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Latest verification</span><strong>${esc(eventTime(latestVerification) ? new Date(eventTime(latestVerification)).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Open questions</span><strong>${full.format(unresolved)}</strong></div><div class="metric"><span class="label">Knowledge footprint</span><strong>${compact.format(data.current_footprint.knowledge_bytes)}B</strong></div><div class="metric"><span class="label">Current net lines</span><strong>${data.current_change.net >= 0 ? "+" : ""}${full.format(data.current_change.net)}</strong></div></aside></section>
     <div class="grid">
-      <header class="chapter" id="trajectory"><span>02</span><div><p class="eyebrow">Manager view</p><h2>Trajectory and change</h2><p>Follow the sequence, scope, and growth behind the current phase: <strong>${esc(phase)}</strong>.</p></div></header>
-      <section class="panel wide"><div class="panel-head"><div><h2>Time spine</h2><p class="panel-copy">Exact knowledge and Git chronology remain separate; dashed annotations are inferred.</p></div></div><div class="time-spine" id="time-spine"></div></section>
+      <header class="section-intro" id="story"><div><p class="eyebrow">The essential story</p><h2>Where the project stands</h2><p>Read the reasoning first: how the work evolved, what matters now, what needs attention, and the next deliberate move.</p></div></header>
+      <section class="panel wide project-story-panel"><div class="panel-head"><div><h2>Project story</h2><p class="panel-copy">Each claim below is derived from facts and hands off to its canonical record.</p></div><span class="story-badge">Source-bound reasoning</span></div><div id="project-story" class="project-story" aria-live="polite"></div></section>
+      <section class="panel wide recent-story-panel" id="recent"><div class="panel-head"><div><p class="eyebrow">Recent story</p><h2>The moments that got us here</h2><p class="panel-copy">The newest knowledge and engineering events, in plain language.</p></div><span class="story-badge" id="recent-count"></span></div><div id="recent-story" class="recent-story" aria-live="polite"></div></section>
+      <header class="section-intro" id="trajectory"><div><p class="eyebrow">The whole story</p><h2>Chronology and change</h2><p>Follow the full sequence, scope, and growth behind the current phase: <strong>${esc(phase)}</strong>.</p></div></header>
+      <section class="panel wide"><div class="panel-head"><div><h2>Time spine</h2><p class="panel-copy">Exact knowledge and Git chronology remain separate; dashed annotations are inferred.</p></div><button class="text-action" id="timeline-toggle" type="button"></button></div><div class="time-spine" id="time-spine"></div></section>
       <section class="panel"><div class="panel-head"><div><h2>Change pulse</h2><p class="panel-copy">Committed additions and deletions by moment.</p></div></div><div class="chart" id="change-chart" role="img" aria-label="Git change volume over time"></div></section>
       <section class="panel"><div class="panel-head"><div><h2>Growth ribbon</h2><p class="panel-copy">Tracked project and canonical knowledge bytes.</p></div></div><div class="chart" id="growth-chart" role="img" aria-label="Project and knowledge growth over time"></div></section>
-      <header class="chapter" id="decisions"><span>03</span><div><p class="eyebrow">Reasoning view</p><h2>The project story</h2><p>Not a graph: a source-bound explanation of how the work evolved, what matters now, and where attention belongs next.</p></div></header>
-      <section class="panel wide project-story-panel"><div class="panel-head"><div><h2>Project story</h2><p class="panel-copy">Each claim below is derived from facts and hands off to its canonical record.</p></div><span class="story-badge">Source-bound reasoning</span></div><div id="project-story" class="project-story" aria-live="polite"></div></section>
-      <header class="chapter" id="proof"><span>04</span><div><p class="eyebrow">Shared proof</p><h2>Confidence without a magic score</h2><p>${full.format(evidenceCount)} evidence references, explicit open questions, and source drift remain inspectable.</p></div></header>
+      <header class="section-intro" id="proof"><div><p class="eyebrow">What backs it up</p><h2>Proof without a magic score</h2><p>${full.format(evidenceCount)} evidence references, explicit open questions, and source drift remain inspectable.</p></div></header>
       <section class="panel third"><div class="panel-head"><div><h2>Integrity signals</h2><p class="panel-copy">Transparent facts, never a magic score.</p></div></div><div class="signals" id="signals"></div></section>
       <section class="panel third"><div class="panel-head"><div><h2>Drift since baseline</h2><p class="panel-copy">Changed canonical sources.</p></div></div><div class="signals" id="drift"></div></section>
       <section class="panel third"><div class="panel-head"><div><h2>Evidence matrix</h2><p class="panel-copy">Requirements and their available evidence surface.</p></div></div><div class="signals" id="evidence"></div></section>
-      <header class="chapter" id="source"><span>05</span><div><p class="eyebrow">Source of truth</p><h2>Read the record itself</h2><p>Search the canonical ledgers and engineering journals behind every summary above.</p></div></header>
+      <header class="section-intro" id="source"><div><p class="eyebrow">Source of truth</p><h2>Read the record itself</h2><p>Search the canonical ledgers and engineering journals behind every summary above.</p></div></header>
       <section class="panel wide explorer-panel"><div class="panel-head"><div><h2>Knowledge Explorer</h2><p class="panel-copy">Understand the model first; inspect YAML or Markdown only when you need it.</p></div><div class="explorer-tools"><div class="document-filters" id="document-filters" role="group" aria-label="Document type"><button class="active" data-filter="all" type="button">All</button><button data-filter="ledger" type="button">Ledgers</button><button data-filter="journal" type="button">Journals</button></div><input class="search" id="search" type="search" placeholder="Search decisions, evidence, journals…" aria-label="Search knowledge"></div></div><div class="documents"><nav class="document-list" id="document-list" aria-label="Knowledge documents"></nav><article class="document-body" id="document-body"></article></div></section>
     </div><footer class="footer"><span>Generated ${esc(data.run_at)} · ${esc(data.run_id)}</span><span>Private local report · no browser network access</span></footer></main>`;
 
@@ -60,16 +60,35 @@
   $("#audience-switch").querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{$("#audience-switch").querySelectorAll("button").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});renderAudience(button.dataset.audience);}));
   renderAudience("executive");
   let utc = false;
+  let showFullTimeline = false;
   const formatTimelineNote = value => String(value||"").split(/\n\s*\n/).map(paragraph=>`<p>${esc(paragraph.trim())}</p>`).join("");
+  const sourceIdForRef = ref => {
+    const normalized=String(ref||"").replace(/^\.\.\//,"").replace(/^knowledge\//,"");
+    return data.documents.find(doc=>doc.path===normalized||doc.path.endsWith(`/${normalized}`)||doc.path.endsWith(String(ref||"").replace(/^\.\.\//,"")))?.id;
+  };
+  const renderRecentStory = () => {
+    const moments=timeline.filter(item=>item.lane==="event"||item.lane==="commit").slice(0,5);
+    $("#recent-count").textContent= `${moments.length} latest moments`;
+    $("#recent-story").innerHTML=moments.map(item=>{
+      const source=item.lane==="event" ? eventRefs(item).map(sourceIdForRef).find(Boolean) : null;
+      const note=item.summary&&item.summary!==item.title?`<p>${esc(item.summary)}</p>`:"";
+      return `<article class="recent-moment"><time title="${esc(item.when)}">${esc(utc&&item.when?new Date(item.when).toISOString():time(item.when))}</time><span class="lane ${esc(item.lane)}">${esc(item.label)}</span><div><strong>${esc(item.title||item.label)}</strong>${note}</div>${source?`<button type="button" data-recent-source="${esc(source)}">Open source <span aria-hidden="true">↗</span></button>`:""}</article>`;
+    }).join("")||`<div class="empty">No recent knowledge or Git events recorded.</div>`;
+    $("#recent-story").querySelectorAll("[data-recent-source]").forEach(button=>button.addEventListener("click",()=>{selectDocument(button.dataset.recentSource);$("#document-body").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});}));
+  };
   const renderTimeline = () => {
-    $("#time-spine").innerHTML = timeline.slice(0, 80).map(item => {
+    const visible=showFullTimeline?timeline:timeline.slice(0,12);
+    $("#timeline-toggle").textContent=showFullTimeline?"Show recent moments":"Show whole story";
+    $("#time-spine").innerHTML = visible.map(item => {
       const displayed = utc && item.when ? new Date(item.when).toISOString() : time(item.when);
       const inferred = item.lane === "event" && item.association?.kind === "inferred" ? `<div class="inferred">┈ likely ${esc(item.association.short_revision)} via ${esc(item.association.matching_refs.join(", "))}</div>` : "";
       const details=item.summary&&item.summary!==item.title?`<details class="time-details"><summary>Read event note</summary>${formatTimelineNote(item.summary)}</details>`:"";
       return `<div class="time-row"><time title="${esc(item.when)}">${esc(displayed)}</time><span class="lane ${item.lane}">${esc(item.label)}</span><div class="time-summary"><strong>${esc(item.title||item.label)}</strong>${details}${inferred}</div></div>`;
     }).join("") || `<div class="empty">No timeline data recorded.</div>`;
   };
-  $("#time-mode").addEventListener("click", event => { utc = !utc; event.currentTarget.textContent = utc ? "UTC time" : "Local time"; renderTimeline(); });
+  $("#time-mode").addEventListener("click", event => { utc = !utc; event.currentTarget.textContent = utc ? "UTC time" : "Local time"; renderRecentStory(); renderTimeline(); });
+  $("#timeline-toggle").addEventListener("click",()=>{showFullTimeline=!showFullTimeline;renderTimeline();});
+  renderRecentStory();
   renderTimeline();
 
   const chartBase = {backgroundColor:"transparent", textStyle:{color:"#8db5a9",fontFamily:"IBM Plex Mono"}, grid:{left:50,right:18,top:20,bottom:48}, tooltip:{trigger:"axis",backgroundColor:"#071412",borderColor:"#28534a",textStyle:{color:"#edfff9"}}, xAxis:{type:"category",axisLabel:{color:"#739b90",hideOverlap:true},axisLine:{lineStyle:{color:"#22413b"}}},yAxis:{type:"value",axisLabel:{color:"#739b90"},splitLine:{lineStyle:{color:"rgba(155,255,226,.08)"}}}};

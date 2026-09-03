@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T12:28:25Z
+updated_at: 2026-09-03T12:34:05Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -42,6 +42,7 @@ regression_checks:
   - Provided observations reject missing, malformed, or unlinked Project Story statements.
   - Executive activity output must not report the dashboard run itself as project activity.
   - Visual-system changes preserve self-contained report assets and all dormant/activated dashboard boundary tests.
+  - Dashboard tests require immediate Recent Story rendering, whole-story expansion, and absence of decorative navigation and chapter chrome.
   - User text before and after an existing managed agent block remains byte-preserved during refresh.
 evidence_refs:
   - journals/okf-adoption.md

@@ -5,8 +5,8 @@ description: "Implements an isolated, time-first dashboard for navigating durabl
 tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
-  by: clineflow/2026.09.03.9
-  at: 2026-09-03T12:28:25Z
+  by: clineflow/2026.09.03.10
+  at: 2026-09-03T12:34:05Z
 ---
 
 # Goal
@@ -75,6 +75,10 @@ The hero originally derived “latest activity” from the combined display time
 
 Reviewed the public ClineFlow landing page as a visual reference. Its deep navy base, electric-blue emphasis, Inter-like editorial hierarchy, restrained corner geometry, and quiet navigation are more cohesive than the visor’s former green grid aesthetic. Rebuilt the visor’s CSS tokens and supporting components around those principles, including a navy document explorer and blue story treatment. No landing-page media, code, copy, or remote assets were reused; the report remains self-contained.
 
+## 2026-09-03 12:34 UTC - Immediate story flow
+
+Removed the sticky five-part dashboard navigation and numbered chapter framing. The report now reads in the order a new person needs: current state, source-bound Project Story, the five newest knowledge or engineering moments, compact chronology with a deliberate whole-story expansion, proof, then direct source exploration. Recent entries can open their canonical record, so the short list is not a dead summary. This preserves comprehensive access without making the reader operate a navigation widget to understand the project.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -101,6 +105,8 @@ Reviewed the public ClineFlow landing page as a visual reference. Its deep navy 
 - Bump release `2026.09.03.8` without a migration: this is a contained narrative-quality correction in managed viewer code.
 - Use the public ClineFlow visual system as a principle-level reference only. Preserve the dashboard’s own semantic content, embedded assets, and offline CSP boundary.
 - Bump release `2026.09.03.9` without a migration for the managed visor style update.
+- Use direct reading order and purpose-specific disclosure instead of a chapter-navigation component. Recent Story is a compact source-linked window into active work; the Time Spine remains the complete audit trail.
+- Bump release `2026.09.03.10` without a migration for the contained usability and rendering update.
 
 # Testing
 
@@ -118,6 +124,7 @@ Reviewed the public ClineFlow landing page as a visual reference. Its deep navy 
 - Dashboard boundary tests pass for release `2026.09.03.7`, including deterministic mock-fact Project Story derivation, embedded story JSON, source-id validation, graph-asset removal, offline reuse, rollback, export, and uninstall preservation.
 - Dashboard tests assert that the narrative navigation names the Project Story and that executive activity ignores generated report runs.
 - Static CSS review confirms deep navy and electric-blue tokens replace the prior green dashboard palette; focused dashboard boundary tests remain the behavior proof.
+- Dashboard tests verify Recent Story output, on-demand whole timeline, and removal of the old navigation/chapter selectors while retaining dormant and activated boundary coverage.
 
 # Open Issues
 

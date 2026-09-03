@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T12:28:25Z
+updated_at: 2026-09-03T12:34:05Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -21,6 +21,7 @@ success_measures:
   - Structured evidence and timeline records remain readable in dashboard views without requiring teams to flatten their canonical YAML.
   - "Time-first observability remains scannable: short event titles and kinds lead, with full narrative available on demand."
   - The Knowledge Visor visually belongs to ClineFlow through a deep-navy, electric-blue editorial system without introducing browser-time dependencies.
+  - A dashboard reader can understand now, recent moments, the full project story, proof, and source records without decorative navigation chrome.
 blocked_goals: []
 completed_goals:
   - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.
