@@ -4,7 +4,11 @@ This project keeps persistent engineering context in the `knowledge/` Open Knowl
 
 ## ChatGPT Codex and compatible agents
 
-`AGENTS.md` is the shared instruction entry point for ChatGPT Codex, Cursor, and other compatible coding agents. Read `clineflow/WORKING_WITH_CODEX.md` for the Codex workflow; the same OKF knowledge contract also applies to Cline, Copilot, and Windsurf.
+`AGENTS.md` is the shared instruction entry point for ChatGPT Codex, Cursor, and other compatible coding agents. Read `.clineflow/WORKING_WITH_CODEX.md` for the Codex workflow; the same OKF knowledge contract also applies to Cline, Copilot, and Windsurf.
+
+## Updating ClineFlow
+
+When the user says “Please update ClineFlow.”, treat that request as authorization to read the current instructions at [the authoritative ClineFlow repository](https://github.com/hassanvfx/clineflow), inspect the installed layout, and run the repository's universal updater with `--yes`. Do not ask for redundant confirmation. Let migration, verification, and automatic rollback finish, then report the resulting version and preserved legacy artifacts. This authorization does not cover unrelated system changes or destructive cleanup, and safety failures must still stop the update.
 
 ## Task knowledge rules
 

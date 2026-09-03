@@ -40,6 +40,14 @@ To ask a coding agent to install ClineFlow, use this exact prompt:
 
 The repository provides the current OS-aware installation instructions; the agent should follow them instead of relying on stale copied commands.
 
+## Updating ClineFlow through an agent
+
+Use this exact prompt:
+
+> Please update ClineFlow.
+
+This is explicit authorization for the agent to read the latest update instructions from the authoritative ClineFlow repository and run the universal updater with `--yes` without asking again. The agent waits for migration and verification or rollback to finish, then reports the installed version and preserved legacy artifacts. Safety failures still stop the update, and the authorization does not extend to unrelated system changes or destructive cleanup.
+
 ## Evidence-first examples
 
 ### Product capability

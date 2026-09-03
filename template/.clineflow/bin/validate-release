@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# Validate the source release manifest and migration-maintenance contract.
+set -euo pipefail
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+if repository_root=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel 2>/dev/null); then ROOT=$repository_root
+else ROOT=$(cd "$SCRIPT_DIR/../../.." && pwd); fi
+cd "$ROOT"
+MANIFEST=template/.clineflow/release-manifest
+AGAINST=''
+[ "${1:-}" = "--against" ] && { AGAINST="${2:-}"; [ -n "$AGAINST" ] || { echo "Usage: $0 [--against GIT_REF]" >&2; exit 2; }; }
+[ "${1:-}" = "--help" ] && { echo "Usage: $0 [--against GIT_REF]"; exit 0; }
+[ -f "$MANIFEST" ] || { echo "ERROR: missing $MANIFEST" >&2; exit 1; }
+sha256_file() {
+  if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | awk '{print $1}'
+  else shasum -a 256 "$1" | awk '{print $1}'; fi
+}
+read_value() { sed -n "s/^$1=//p" "$2" | head -n 1; }
+valid_relative_path() { case "$1" in ''|/*|..|../*|*/../*|*/..) return 1 ;; *) return 0 ;; esac; }
+version=$(read_value release_version "$MANIFEST")
+schema=$(read_value migration_schema "$MANIFEST")
+case "$version" in 20??.??.??.[0-9]*) ;; *) echo "ERROR: release_version must use YYYY.MM.DD.patch" >&2; exit 1 ;; esac
+case "$schema" in ''|*[!0-9]*) echo "ERROR: migration_schema must be numeric" >&2; exit 1 ;; esac
+[ "$(tr -d '\r\n' < template/.clineflow/VERSION)" = "$version" ] || { echo "ERROR: .clineflow/VERSION differs from the manifest" >&2; exit 1; }
+
+sources="$({ sed -n 's/^payload|[^|]*|[^|]*|\([^|]*\)|.*$/\1/p' "$MANIFEST"; } | sort)"
+targets="$({ sed -n 's/^payload|[^|]*|[^|]*|[^|]*|\([^|]*\)|.*$/\1/p' "$MANIFEST"; } | sort)"
+[ -n "$sources" ] || { echo "ERROR: manifest has no payloads" >&2; exit 1; }
+[ "$(printf '%s\n' "$sources" | uniq -d)" = '' ] || { echo "ERROR: duplicate manifest source" >&2; exit 1; }
+[ "$(printf '%s\n' "$targets" | uniq -d)" = '' ] || { echo "ERROR: duplicate manifest target" >&2; exit 1; }
+
+while IFS='|' read -r record policy mode source target expected; do
+  [ "$record" = payload ] || continue
+  valid_relative_path "$source" && valid_relative_path "$target" || { echo "ERROR: unsafe manifest path" >&2; exit 1; }
+  case "$policy" in managed|fixture|agent) ;; *) echo "ERROR: invalid policy for $source" >&2; exit 1 ;; esac
+  case "$mode" in 0644|0755) ;; *) echo "ERROR: invalid mode for $source" >&2; exit 1 ;; esac
+  [ -f "template/$source" ] || { echo "ERROR: missing source template/$source" >&2; exit 1; }
+  [ "$(sha256_file "template/$source")" = "$expected" ] || { echo "ERROR: stale checksum for $source" >&2; exit 1; }
+  if [ "$mode" = 0755 ]; then [ -x "template/$source" ] || { echo "ERROR: $source must be executable" >&2; exit 1; }; fi
+done < "$MANIFEST"
+
+while IFS= read -r runtime_source; do
+  relative=${runtime_source#template/}
+  [ "$relative" = .clineflow/release-manifest ] && continue
+  printf '%s\n' "$sources" | grep -qxF "$relative" || { echo "ERROR: unmanaged runtime file $relative" >&2; exit 1; }
+done < <(find template/.clineflow -type f | sort)
+while IFS= read -r fixture_source; do
+  relative=${fixture_source#template/}
+  printf '%s\n' "$sources" | grep -qxF "$relative" || { echo "ERROR: unmanaged fixture $relative" >&2; exit 1; }
+done < <(find template/knowledge -type f | sort)
+for required_source in configs/rules.template.md docs/durable-development-methodology.md; do
+  printf '%s\n' "$sources" | grep -qxF "$required_source" || { echo "ERROR: unmanaged required source $required_source" >&2; exit 1; }
+done
+
+grep -q "migrate_0_to_1()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 0 -> 1" >&2; exit 1; }
+for required in README.md template/configs/rules.template.md template/docs/durable-development-methodology.md template/.clineflow/WORKING_WITH_CODEX.md template/.clineflow/WORKING_WITH_CLINE.md; do
+  grep -q 'Please update ClineFlow\.' "$required" || { echo "ERROR: canonical update prompt missing from $required" >&2; exit 1; }
+done
+for required_test in tests/certify-release.sh tests/test-installation-flow.sh tests/test-update-migrations.sh tests/test-uninstall-safety.sh tests/test-release-contract.sh tests/test-okf-validator.sh; do
+  [ -x "$required_test" ] || { echo "ERROR: missing executable lifecycle check $required_test" >&2; exit 1; }
+done
+grep -qF './tests/test-uninstall-safety.sh' tests/certify-release.sh || { echo "ERROR: release certification omits uninstall safety" >&2; exit 1; }
+grep -qF './tests/test-installation-flow.sh' tests/certify-release.sh || { echo "ERROR: release certification omits installation" >&2; exit 1; }
+grep -qF './tests/test-update-migrations.sh' tests/certify-release.sh || { echo "ERROR: release certification omits updates" >&2; exit 1; }
+grep -qF './tests/certify-release.sh' .github/workflows/test.yml || { echo "ERROR: CI does not run lifecycle certification" >&2; exit 1; }
+
+if [ -n "$AGAINST" ]; then
+  old_version=$(git show "${AGAINST}:template/.clineflow/VERSION" 2>/dev/null || true)
+  changed=$(git diff --name-only "$AGAINST" -- template/.clineflow template/configs/rules.template.md template/knowledge template/docs/durable-development-methodology.md)
+  if [ -n "$changed" ] && [ "$old_version" = "$version" ]; then echo "ERROR: managed payloads changed without a release-version bump" >&2; exit 1; fi
+fi
+echo "ClineFlow release contract passed: $version (schema $schema)"

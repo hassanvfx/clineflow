@@ -6,6 +6,10 @@ This project keeps persistent engineering context in the `knowledge/` Open Knowl
 
 `AGENTS.md` is the shared instruction entry point for ChatGPT Codex, Cursor, and other compatible coding agents. Read `clineflow/WORKING_WITH_CODEX.md` for the Codex workflow; the same OKF knowledge contract also applies to Cline, Copilot, and Windsurf.
 
+## Updating ClineFlow
+
+When the user says “Please update ClineFlow.”, treat that request as authorization to read the current instructions at [the authoritative ClineFlow repository](https://github.com/hassanvfx/clineflow), inspect the installed layout, and run the repository's universal updater with `--yes`. Do not ask for redundant confirmation. Let migration, verification, and automatic rollback finish, then report the resulting version and preserved legacy artifacts. This authorization does not cover unrelated system changes or destructive cleanup, and safety failures must still stop the update.
+
 ## Task knowledge rules
 
 1. Before substantial work, read `docs/durable-development-methodology.md`, all five `knowledge/clineflow_*.yml` indexes, and their linked journals. Summarize the current contract and next safe step before changing code.
@@ -24,6 +28,8 @@ When the user asks to commit:
 2. Update affected `knowledge/clineflow_*.yml` indexes and `knowledge/log.md` if the change added or materially changed knowledge.
 3. Run `./.clineflow/bin/validate-okf` and resolve validation failures. When the project has optional PyYAML available, prefer `./.clineflow/bin/validate-okf --strict` before committing.
 4. Stage the code and updated knowledge artifacts together, then create a descriptive commit.
+
+For changes to installed files, persistent formats, ownership, or required behavior, update the ClineFlow release manifest and either add the next migration or record and test that no migration is required. Run `./tests/certify-release.sh` before delivery.
 
 ## Knowledge navigation
 

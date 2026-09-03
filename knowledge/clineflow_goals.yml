@@ -1,11 +1,17 @@
 version: 1
-updated_at: 2026-08-28T00:00:00Z
+updated_at: 2026-09-03T07:35:32Z
 active_goals:
   - Maintain the installed, agent-operational durable development workflow.
-priorities: []
-success_measures: []
+priorities:
+  - Preserve user-authored project context during every update and migration.
+success_measures:
+  - All supported historical layouts converge to the current release and pass validation.
+  - Release validation rejects unmanaged payload changes and incomplete migration chains.
+  - One CI-required command certifies installer, updater, remover, preservation, and rollback behavior.
 blocked_goals: []
 completed_goals:
   - Add the durable development methodology and master indexes to ClineFlow.
+  - Deliver a universal transactional updater for supported OKF-era installations.
 journal_refs:
   - journals/durable-development-master-indexes.md
+  - journals/universal-update-migrations.md

@@ -46,4 +46,4 @@ Strict mode parses every concept frontmatter block with PyYAML in addition to th
 
 ## Upgrade and removal
 
-Fresh installations create the native `knowledge/` bundle and `validate-okf`. Existing pre-OKF projects are not automatically migrated. `update.sh` protects user-authored knowledge and legacy journals; `uninstall.sh` removes ClineFlow-managed tooling but preserves both knowledge locations for manual retention or removal.
+Fresh installations create the native `knowledge/` bundle and manifest-managed runtime. The permanent `update.sh` entrypoint migrates OKF-era installations from `2026.08.15.0` onward, while preserving authored knowledge and legacy journals. It stages and verifies the full release, backs up affected paths, and rolls back failed migrations automatically. Pre-OKF projects are not automatically migrated. The uninstaller removes ClineFlow-managed tooling but preserves both knowledge locations for manual retention or removal.

@@ -30,6 +30,12 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 > Update the active Engineering Journal with decisions and verification evidence, update `knowledge/log.md` if needed, run `./.clineflow/bin/validate-okf` and relevant tests, then show me the delivery summary.
 
+**Update ClineFlow**
+
+> Please update ClineFlow.
+
+This prompt authorizes Codex to read the current repository instructions and invoke the universal updater with `--yes` immediately. Codex must wait for verification or rollback to finish and report the outcome; it must still stop on safety failures or requests for unrelated system changes.
+
 ## Diagnose the setup
 
 Run `./.clineflow/bin/doctor` after installation or when Codex does not appear to have project context. It checks the shared instructions, required OKF files, Git repository, and structural validation without installing anything.

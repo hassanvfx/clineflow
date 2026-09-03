@@ -8,14 +8,24 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Added
+- A one-command lifecycle certification gate covering installation, historical updates, transactional removal, preservation, and rollback.
+- Universal transactional updates for all OKF-era layouts from `2026.08.15.0` onward.
+- A permanent remote `update.sh` bootstrap, installed PowerShell update wrapper, release manifest, migration state, automatic rollback, and release-contract validation.
+- The canonical “Please update ClineFlow.” agent command for repository-authoritative, non-interactive updates.
 - Native Open Knowledge Format (OKF) v0.2 knowledge bundles at `knowledge/` for new installations.
 - `validate-okf`, a dependency-free Bash structural validator for OKF bundles.
 - Optional `validate-okf --strict` validation that parses frontmatter with PyYAML when available.
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- Uninstall now requires confirmation (or `--yes`), validates ownership data before mutation, preserves edits to formerly owned agent files, and rolls back failures or handled interruptions.
+- Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.0`, with migration schema `1`.
+- Installation-affecting features must now declare and test their migration impact.
 - New task journals are Engineering Journal concepts in `knowledge/journals/`.
 - Install, update, and uninstall flows preserve both `knowledge/` and legacy `docs/journals/` user content.
+
+### Migration
+- Root and visible `clineflow/bin/` OKF installations are migrated into `.clineflow/`; authored knowledge and ambiguous legacy files remain preserved.
 
 ### Removed
 - The optional symlink-based reference-repository system, including its local configuration, setup script, generated workspace support, and reference documentation. Related projects now use the sibling-project folder convention.

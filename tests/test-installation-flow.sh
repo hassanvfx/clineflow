@@ -17,10 +17,11 @@ for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .win
 shasum -a 256 knowledge/log.md > before.hashes
 [ ! -d clineflow ] || fail "fresh test project unexpectedly has legacy runtime"
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
-for tool in install update uninstall validate-okf doctor prereqs bootstrap.ps1; do [ -x ".clineflow/bin/$tool" ] || fail "missing .clineflow/bin/$tool"; done
+for tool in install update update.ps1 uninstall validate-okf validate-release doctor prereqs bootstrap.ps1; do [ -x ".clineflow/bin/$tool" ] || fail "missing .clineflow/bin/$tool"; done
 [ -f docs/durable-development-methodology.md ] || fail "missing durable development methodology fixture"
 for index in clineflow_specification.yml clineflow_verification.yml clineflow_goals.yml clineflow_last_session.yml clineflow_timeline.yml; do [ -f "knowledge/$index" ] || fail "missing knowledge/$index"; done
 grep -q 'durable-development-methodology.md' AGENTS.md || fail "agent rules do not require the durable loop"
+grep -q 'Please update ClineFlow\.' AGENTS.md || fail "agent rules do not include the canonical update prompt"
 [ -f .clineflow/VERSION ] && [ ! -e validate-okf ] && [ ! -e clineflow-doctor ] || fail "root tooling layout is incorrect"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do grep -qFx "$(cat "$file.user")" "$file" && grep -q 'BEGIN CLINEFLOW' "$file" || fail "install did not safely merge $file"; done
 shasum -a 256 knowledge/log.md > after.hashes; cmp before.hashes after.hashes || fail "install replaced user knowledge"
@@ -35,7 +36,7 @@ pass "fresh install and force merge agent configuration without changing user co
 ./.clineflow/bin/validate-okf; ./.clineflow/bin/doctor
 CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update --dry-run >/dev/null
 rm knowledge/clineflow_timeline.yml docs/durable-development-methodology.md
-CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update >/dev/null
+CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update --yes >/dev/null
 [ -f knowledge/clineflow_timeline.yml ] && [ -f docs/durable-development-methodology.md ] || fail "update did not seed missing durable fixtures"
 pass "validator, doctor, and updater use encapsulated tooling"
 
@@ -74,7 +75,7 @@ mkdir "$TEST_DIR/owned"; cd "$TEST_DIR/owned"; git init -q
 [ ! -d clineflow ] || fail "fresh owned project unexpectedly has legacy runtime"
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
 [ -s .clineflow/.owned-agent-files ] || fail "missing ownership manifest"
-./.clineflow/bin/uninstall
+./.clineflow/bin/uninstall --yes
 [ ! -d clineflow ] && [ ! -e AGENTS.md ] && [ ! -e CLAUDE.md ] && [ ! -e .clinerules ] || fail "uninstall did not remove owned files"
 pass "uninstall removes only manifest-owned agent files"
 
@@ -83,7 +84,7 @@ printf 'user claude only\n' > CLAUDE.md
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
 rm AGENTS.md
 ./.clineflow/bin/doctor
-./.clineflow/bin/uninstall
+./.clineflow/bin/uninstall --yes
 grep -qFx 'user claude only' CLAUDE.md && ! grep -q 'BEGIN CLINEFLOW' CLAUDE.md || fail "uninstall did not preserve user-owned CLAUDE.md"
 pass "doctor accepts CLAUDE.md and uninstall preserves merged Claude instructions"
 

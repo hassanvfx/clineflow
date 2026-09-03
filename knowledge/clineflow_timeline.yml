@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-08-30T00:00:00Z
+updated_at: 2026-09-03T07:40:19Z
 events:
   - at: 2026-08-28T00:00:00Z
     actor: codex
@@ -34,5 +34,42 @@ events:
       - journals/canonical-agent-installation-prompt.md
       - ../README.md
       - ../docs/durable-development-methodology.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-02T00:00:00Z
+    actor: codex
+    type: planning
+    summary: Approved the universal transactional updater, OKF-era migration boundary, and ongoing release enforcement contract.
+    refs:
+      - journals/universal-update-migrations.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T07:20:23Z
+    actor: codex
+    type: implementation
+    summary: Implemented and verified manifest-driven installation, transactional OKF-era migrations, rollback, canonical agent updates, and release CI enforcement.
+    refs:
+      - journals/universal-update-migrations.md
+      - ../update.sh
+      - ../docs/releasing.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T07:35:32Z
+    actor: codex
+    type: implementation
+    summary: Added the CI-required lifecycle certification gate and transactional, ownership-safe removal with rollback coverage.
+    refs:
+      - journals/universal-update-migrations.md
+      - ../tests/certify-release.sh
+      - ../tests/test-uninstall-safety.sh
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T07:40:19Z
+    actor: codex
+    type: verification
+    summary: Passed the complete lifecycle certification against HEAD immediately before commit and push.
+    refs:
+      - journals/universal-update-migrations.md
+      - ../tests/certify-release.sh
     git_revision: null
     usage_capture: unavailable

@@ -1,16 +1,26 @@
 version: 1
-updated_at: 2026-08-28T00:00:00Z
+updated_at: 2026-09-03T07:35:32Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
   - Fresh non-Git installation initializes a usable work tree and doctor passes without a commit, remote, or local identity.
   - README and installed methodology present the canonical agentic installation prompt.
+  - The restored remote update command migrates every supported OKF-era layout transactionally.
+  - Failed updates restore the prior usable installation and retain recovery evidence.
+  - “Please update ClineFlow” directs agents to current repository instructions and authorized non-interactive execution.
+  - Release validation enforces manifest, version, payload, and migration consistency.
+  - The lifecycle certification gate proves install, update, and uninstall behavior and cannot omit removal safety while passing release validation.
+  - Removal rejects unsafe ownership paths and malformed markers before mutation and restores the prior state after injected failure or termination.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
+  - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.
+  - Edited agent files retain user text during uninstall; exact managed-only files are removed.
 evidence_refs:
   - journals/durable-development-master-indexes.md
   - journals/canonical-agent-installation-prompt.md
+  - journals/universal-update-migrations.md
 open_verification: []
 journal_refs:
   - journals/durable-development-master-indexes.md
   - journals/canonical-agent-installation-prompt.md
+  - journals/universal-update-migrations.md

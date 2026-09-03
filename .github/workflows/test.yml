@@ -13,12 +13,53 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       - name: Run test suite
-        run: ./tests/test-installation-flow.sh
+        run: ./tests/certify-release.sh
+
+      - name: Require release bump for managed pull-request changes
+        if: github.event_name == 'pull_request'
+        run: ./template/.clineflow/bin/validate-release --against "${{ github.event.pull_request.base.sha }}"
       
       - name: Display test results
         if: always()
         run: |
           echo "Test suite completed"
           echo "Check the job logs above for detailed results"
+
+  windows-lifecycle-smoke:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code with release byte normalization
+        uses: actions/checkout@v4
+
+      - name: Install through Git Bash
+        shell: bash
+        run: |
+          mkdir windows-smoke
+          cd windows-smoke
+          git init -q
+          export CLINEFLOW_BASE_URL="file:///$(cygpath -m "$GITHUB_WORKSPACE")/template"
+          bash "$GITHUB_WORKSPACE/template/.clineflow/bin/install" --yes
+          ./.clineflow/bin/doctor
+
+      - name: Exercise the native PowerShell update wrapper
+        shell: pwsh
+        run: |
+          Set-Location "$env:GITHUB_WORKSPACE/windows-smoke"
+          $templatePath = (Resolve-Path "$env:GITHUB_WORKSPACE/template").Path -replace '\\', '/'
+          $workspaceUri = ('file:///' + $templatePath.TrimStart('/')).TrimEnd('/')
+          $env:CLINEFLOW_BASE_URL = $workspaceUri
+          & ./.clineflow/bin/update.ps1 -DryRun
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Exercise transactional removal through Git Bash
+        shell: bash
+        run: |
+          cd windows-smoke
+          ./.clineflow/bin/uninstall --yes
+          test ! -e .clineflow
+          test -d knowledge

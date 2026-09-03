@@ -1,17 +1,25 @@
 version: 1
-updated_at: 2026-08-28T00:00:00Z
+updated_at: 2026-09-03T07:35:32Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
   - The five ClineFlow-prefixed YAML files are the required discovery and coordination layer.
   - Fresh installation initializes Git when Git is available and the directory is not already a work tree.
+  - ClineFlow provides one stable update entrypoint for every OKF-era installation from 2026.08.15.0 onward.
+  - Updates are manifest-driven, transactional, verified, and automatically rolled back on failure.
+  - The prompt “Please update ClineFlow” authorizes an agent to read current repository instructions and run the updater non-interactively.
+  - Removal validates trusted ownership and markers before mutation, requires confirmation, preserves user text, and rolls back failures or handled interruptions.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
   - Knowledge and user-authored documentation are preserved during installation and updates.
   - The durable development methodology is installed in docs/ only when absent.
   - Git initialization never creates a commit, remote, identity, or branch policy.
+  - Updates preserve existing knowledge, legacy journals, user-authored documentation, retired reference artifacts, and ambiguous legacy files.
+  - Installation-affecting releases must declare and verify whether a schema migration is required.
+  - CI and releases must run the single lifecycle certification entrypoint covering installation, update, removal, and durable knowledge.
 non_goals: []
 open_questions: []
 journal_refs:
   - journals/durable-development-master-indexes.md
+  - journals/universal-update-migrations.md

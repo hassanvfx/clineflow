@@ -1,18 +1,17 @@
 version: 1
-updated_at: 2026-08-30T00:00:00Z
-latest_change: Standardized the canonical prompt for agent-led ClineFlow installation.
+updated_at: 2026-09-03T07:40:19Z
+latest_change: Added lifecycle certification and transactional, ownership-safe removal for release 2026.09.03.0.
 specification_summary:
-  - The README and installed methodology direct agents to the authoritative repository instructions.
+  - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
+  - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
 verification_summary:
-  - The canonical prompt is present in README and both methodology copies.
+  - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
+  - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
 goals_summary:
-  - Supported agents must use index-first context recovery for substantial work.
-next_recommended_step: Verify the deterministic Git initialization behavior on native Windows after Git for Windows bootstrap.
+  - Future installation-affecting features must update the release manifest and prove their migration decision.
+next_recommended_step: Confirm the first native Windows lifecycle smoke job passes before publishing release 2026.09.03.0.
 next_step_refs:
-  - journals/durable-development-master-indexes.md
-  - journals/deterministic-git-initialization.md
-  - journals/canonical-agent-installation-prompt.md
+  - journals/universal-update-migrations.md
+  - ../docs/releasing.md
 journal_refs:
-  - journals/durable-development-master-indexes.md
-  - journals/deterministic-git-initialization.md
-  - journals/canonical-agent-installation-prompt.md
+  - journals/universal-update-migrations.md

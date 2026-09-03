@@ -1,5 +1,6 @@
 # Task Journals
 
+* [Universal update and migration system](universal-update-migrations.md) - Transactional updates, historical layout migration, and future release enforcement.
 * [Canonical agent installation prompt](canonical-agent-installation-prompt.md) - Standardizes the ClineFlow installation request for coding agents.
 * [OKF adoption](okf-adoption.md) - Implementation record for ClineFlow's native OKF workflow.
 * [Add book link](add-book-link.md) - Records the README link to Infinite AI Context.

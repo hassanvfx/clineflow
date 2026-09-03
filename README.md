@@ -545,6 +545,9 @@ your-project/
 │   └── rules/
 │       └── clineflow.md           # Windsurf
 ├── .clineflow/                    # ClineFlow-owned runtime and documentation
+│   ├── VERSION                     # Date-based installed release
+│   ├── state                       # Release and migration-schema state
+│   ├── release-manifest            # Managed payloads, modes, and checksums
 │   ├── JOURNAL_TEMPLATE.md        # Legacy-journal compatibility notice
 │   ├── PROCEDURES.md              # Standard operating procedures
 │   ├── WORKING_WITH_CLINE.md      # Complete user guide
@@ -552,7 +555,9 @@ your-project/
 │   └── bin/
 │       ├── install                # OS-aware installer and prerequisite plan
 │       ├── bootstrap.ps1          # Native Windows entrypoint
+│       ├── update.ps1             # Native PowerShell update wrapper
 │       ├── validate-okf           # Dependency-free OKF structural validator
+│       ├── validate-release       # Release and migration contract checker
 │       ├── doctor                 # Dependency-free setup diagnostic
 │       └── update                 # Update script
 └── knowledge/                     # Native OKF v0.2 knowledge bundle
@@ -569,17 +574,30 @@ your-project/
 
 Already have ClineFlow installed? Get the latest features and improvements!
 
+Using an AI coding agent, say:
+
+> Please update ClineFlow.
+
+That request authorizes the agent to read the current instructions from this repository and run the verified updater with `--yes`, without asking for redundant confirmation. The agent will report the installed version and any preserved legacy artifacts after verification or rollback completes.
+
 ### Quick Update
 
 ```bash
-# Run the installed updater
+# Universal command for every supported OKF-era installation
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash
+
+# Or run the installed updater
 ./.clineflow/bin/update
 ```
 
-Or if you already have the script:
+On Windows PowerShell:
 
-```bash
-./.clineflow/bin/update
+```powershell
+# Universal command for supported legacy layouts
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/update.ps1))) -Yes
+
+# Or run the installed wrapper
+./.clineflow/bin/update.ps1
 ```
 
 ### What Gets Updated
@@ -590,7 +608,7 @@ Or if you already have the script:
 
 ### What Stays Protected
 
-🔒 **Your customizations** - `.clinerules` remains untouched  
+🔒 **Your customizations** - Content outside ClineFlow's marked rules block is preserved
 🔒 **Your work** - All knowledge in `knowledge/` and legacy journals in `docs/journals/` safe
 
 ### Preview Changes First
@@ -615,6 +633,7 @@ curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.
 ```bash
 ./.clineflow/bin/update --help      # Show all options
 ./.clineflow/bin/update --dry-run   # Preview updates
+./.clineflow/bin/update --yes       # Authorized non-interactive update
 ```
 
 **📋 Full update history:** See [CHANGELOG.md](CHANGELOG.md) for complete release notes.
@@ -678,7 +697,7 @@ You: Continue exactly where you left off
 ./.clineflow/bin/install --force
 
 # Uninstall
-./.clineflow/bin/uninstall
+./.clineflow/bin/uninstall --yes
 
 # Show help
 ./.clineflow/bin/install --help
@@ -695,16 +714,19 @@ Download and run the uninstall script in your project directory:
 ```
 
 **What gets removed:**
-- `.clinerules`
-- `.clineflow/` runtime directory
+- The managed ClineFlow block from supported agent configuration files; a file is deleted only when no user-authored content remains
+- The `.clineflow/` runtime directory
 
 **⚠️ Note:** Your `knowledge/` bundle and any legacy `docs/journals/` are safe and require manual removal if desired.
 
 **Options:**
 ```bash
 ./.clineflow/bin/uninstall --dry-run    # Preview what would be removed
+./.clineflow/bin/uninstall --yes        # Show the plan and remove without prompting
 ./.clineflow/bin/uninstall --help       # Show all options
 ```
+
+Removal validates ownership paths and markers before mutation, then runs transactionally. A failure or handled interruption restores the runtime and agent files. Knowledge, documentation, unrelated files, and retired reference artifacts remain untouched.
 
 ### Customization
 
@@ -720,6 +742,7 @@ Edit `.clinerules` to customize for your project:
 - **[PROCEDURES.md](template/.clineflow/PROCEDURES.md)** - Standard operating procedures
 - **[TASK_TEMPLATE.md](template/knowledge/journals/TASK_TEMPLATE.md)** - Native OKF journal template
 - **[OKF Knowledge Workflow](docs/okf-knowledge-workflow.md)** - Bundle architecture, validation, and legacy compatibility
+- **[Release and Migration Process](docs/releasing.md)** - Manifest, versioning, migration decisions, and required verification
 
 ---
 
