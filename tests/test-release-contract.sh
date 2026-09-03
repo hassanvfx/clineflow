@@ -29,6 +29,10 @@ refresh_checksum() {
 "$ROOT/template/.clineflow/bin/validate-release" >/dev/null
 pass "current release contract is valid"
 
+for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' 'template/.clineflow/dashboard-component-manifest text eol=lf'; do
+  grep -qF "$pattern" "$ROOT/.gitattributes" || fail "release payload line endings are not pinned: $pattern"
+done
+
 portable="$TEST_ROOT/portable"; copy_release "$portable"
 "$portable/template/.clineflow/bin/validate-release" >/dev/null || fail "copied release fixture is incomplete"
 

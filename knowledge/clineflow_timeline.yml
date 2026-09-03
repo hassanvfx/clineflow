@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:30:05Z
+updated_at: 2026-09-03T20:34:40Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -446,4 +446,14 @@ events:
       - journals/old-install-update-rescue.md
       - ../.github/workflows/test.yml
       - ../README.md
+    git_revision: null
+  - at: 2026-09-03T20:34:40Z
+    actor: codex
+    type: fix
+    summary: Read the hosted Windows failure log, identified CRLF checkout conversion as the manifest checksum mismatch, and pinned every managed text format to platform-stable LF bytes.
+    refs:
+      - journals/old-install-update-rescue.md
+      - ../.gitattributes
+      - ../tests/test-release-contract.sh
+      - ../.github/workflows/test.yml
     git_revision: null

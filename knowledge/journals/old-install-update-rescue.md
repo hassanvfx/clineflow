@@ -6,7 +6,7 @@ tags: [engineering, documentation, updates]
 status: draft
 generated:
   by: clineflow/2.0.0
-  at: 2026-09-03T20:30:05Z
+  at: 2026-09-03T20:34:40Z
 ---
 
 # Goal
@@ -28,6 +28,10 @@ Promoted the permanent macOS/Linux remote bootstrap in the README under an expli
 ## 2026-09-03 20:30 - Repaired the failing Windows lifecycle check
 
 The public workflow API showed that the Linux certification job passed at commit `1f03ac5`, while `windows-lifecycle-smoke` failed during the Git Bash installation step. Moved the Windows smoke project out of the checked-out repository and into `RUNNER_TEMP`, normalized all Bash/Windows path boundaries with `cygpath`, let the installer exercise its own Git initialization, passed the resolved location to PowerShell and removal steps, upgraded checkout to its Node 24 generation, and changed the README badge to the workflow-file URL scoped to `main`.
+
+## 2026-09-03 20:34 - Fixed checksum drift at Windows checkout
+
+The signed-in hosted log identified the exact failure: `ERROR: checksum mismatch for .clineflow/JOURNAL_TEMPLATE.md`. The manifest contains LF-byte checksums, while Windows checkout was allowed to materialize Markdown and other text fixtures as CRLF. Added explicit LF attributes for every managed text extension and the extensionless dashboard manifest, plus release-contract coverage for the critical attribute rules. This preserves identical verified payload bytes on Linux, macOS, and Windows.
 
 # Decisions
 

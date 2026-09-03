@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:30:05Z
+updated_at: 2026-09-03T20:34:40Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -65,6 +65,7 @@ regression_checks:
   - Release-contract tests reject a missing old-install heading or a rescue command that drops non-interactive authorization.
   - Complete lifecycle certification passes for release 2026.09.03.21 with old-install rescue guidance and migration schema 1.
   - GitHub workflow evidence must show both the Linux certification job and windows-lifecycle-smoke passing before the badge repair is complete.
+  - Release-contract tests require explicit LF attributes for managed Markdown, YAML, PowerShell, and the extensionless dashboard manifest.
 evidence_refs:
   - journals/okf-adoption.md
   - journals/encapsulate-tooling.md

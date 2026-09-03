@@ -8,7 +8,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Fixed
-- Windows lifecycle CI now installs in the runner's temporary workspace through normalized Git Bash paths, allowing installer-owned Git initialization before PowerShell update and removal checks.
+- Windows lifecycle CI now preserves checksum-stable LF bytes for every manifest-managed text format and installs in the runner's temporary workspace through normalized cross-shell paths.
 - Executive metrics now use the latest knowledge or Git activity rather than mistaking report generation for project activity.
 - Replaced the remaining Decision Atlas graph with a calmer, source-bound Project Story, eliminating the graph library and its repetitive relationship UI.
 - Decision Atlas and Timeline now normalize structured YAML records and common field aliases before rendering, preventing `[object Object]` evidence labels and empty event summaries.
