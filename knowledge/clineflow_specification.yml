@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T23:16:14Z
+updated_at: 2026-09-03T23:21:39Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -47,6 +47,7 @@ confirmed:
   - PowerShell payloads use regular-file mode 0644; only commands that require POSIX execution use mode 0755.
   - On Git Bash, MSYS, and Cygwin, removal re-executes from an external temporary copy so Windows does not lock the managed runtime while it is moved transactionally.
   - ClineFlow publishes Citation File Format 1.2.0 metadata naming Hassan Uriostegui as author and matching the project's date-based release version.
+  - ClineFlow's permanent concept DOI is 10.5281/zenodo.22288632, and release 2026.09.03.23 has version DOI 10.5281/zenodo.22288633.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -73,7 +74,7 @@ constraints:
   - Knowledge Explorer source-status indicators remain compact, non-growing controls and must not distort document headers.
   - Public documentation must not reference a dashboard image unless that local asset exists and has been visually verified.
   - Old-install rescue guidance runs from the intended project root, never prefers a bundled legacy updater, and verifies the final .clineflow/VERSION.
-  - Citation metadata does not claim a DOI until Zenodo has assigned it to an archived GitHub release.
+  - Citation metadata distinguishes the stable concept DOI from the DOI assigned to a specific archived release.
 non_goals: []
 open_questions: []
 journal_refs:

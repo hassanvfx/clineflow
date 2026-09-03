@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T23:16:14Z
-latest_change: Added canonical Citation File Format metadata for Hassan Uriostegui and prepared release 2026.09.03.23 for Zenodo archival without claiming an unassigned DOI.
+updated_at: 2026-09-03T23:21:39Z
+latest_change: Added the published Zenodo DOI badge to the README and recorded ClineFlow's concept and release-specific DOIs in CITATION.cff.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -31,7 +31,7 @@ specification_summary:
   - Windows lifecycle CI uses an isolated RUNNER_TEMP project, normalized Git Bash paths, and a shared resolved path for the PowerShell and removal stages.
   - Repository attributes force platform-stable LF bytes for managed Markdown, YAML, JSON, JavaScript, CSS, Python, PowerShell, scripts, and extensionless release manifests.
   - PowerShell files are manifest-managed as mode 0644 while Bash entrypoints remain mode 0755.
-  - ClineFlow citation metadata uses CFF 1.2.0, the date-based release version, the MIT license, and the canonical GitHub repository; DOI metadata remains pending Zenodo assignment.
+  - ClineFlow citation metadata uses CFF 1.2.0, the date-based release version, the MIT license, the canonical GitHub repository, concept DOI 10.5281/zenodo.22288632, and release DOI 10.5281/zenodo.22288633.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -61,11 +61,12 @@ verification_summary:
   - GitHub Actions run 47 passed both the Linux certification and Windows lifecycle jobs for release 2026.09.03.23 at commit 7f684a3.
   - CITATION.cff parses successfully and contains the confirmed Hassan Uriostegui authorship and release 2026.09.03.23 metadata.
   - Complete lifecycle certification passes with the citation metadata and synchronized durable knowledge in the working tree.
+  - Zenodo's public record API confirms release 2026.09.03.23 is published; the DOI resolver and badge SVG both return successfully.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-  - Publish the first Zenodo-archived GitHub release with canonical citation metadata.
-next_recommended_step: Commit and push CITATION.cff with its synchronized knowledge record, then create GitHub release 2026.09.03.23 and capture the DOI assigned by Zenodo.
+  - Maintain accurate concept and version DOI metadata as future ClineFlow releases are archived.
+next_recommended_step: Commit and push the README badge, DOI-enriched CITATION.cff, and synchronized Zenodo record.
 next_step_refs:
   - journals/software-citation-zenodo.md
   - ../CITATION.cff

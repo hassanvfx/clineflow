@@ -1,9 +1,8 @@
 version: 1
-updated_at: 2026-09-03T23:16:14Z
+updated_at: 2026-09-03T23:21:39Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
   - Add a representative fixture-backed Knowledge Visor screenshot when an allowed capture surface is available.
-  - Publish ClineFlow's first Zenodo-archived GitHub release with canonical citation metadata.
 priorities:
   - Prevent journal and documentation changes from leaving any of the five durable ledgers stale.
   - Preserve user-authored project context during every update and migration.
@@ -48,6 +47,7 @@ completed_goals:
   - Deliver a universal transactional updater for supported OKF-era installations.
   - Deliver the isolated, time-first ClineFlow Knowledge Visor.
   - Restore portable transactional updates for mixed schema-0 installations on macOS.
+  - Publish ClineFlow's first Zenodo-archived GitHub release with canonical citation metadata and DOI discovery.
 journal_refs:
   - journals/okf-adoption.md
   - journals/add-book-link.md

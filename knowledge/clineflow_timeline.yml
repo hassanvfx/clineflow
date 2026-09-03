@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T23:16:14Z
+updated_at: 2026-09-03T23:21:39Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -501,4 +501,14 @@ events:
       - journals/software-citation-zenodo.md
       - ../CITATION.cff
       - ../tests/certify-release.sh
+    git_revision: null
+  - at: 2026-09-03T23:21:39Z
+    actor: codex
+    type: documentation
+    summary: Added the published Zenodo release DOI badge and recorded ClineFlow's concept and version DOI identifiers in canonical citation metadata.
+    refs:
+      - journals/software-citation-zenodo.md
+      - ../README.md
+      - ../CITATION.cff
+      - https://zenodo.org/records/22288633
     git_revision: null

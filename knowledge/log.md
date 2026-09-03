@@ -2,6 +2,7 @@
 
 ## 2026-09-03
 
+* **DOI**: Added the published Zenodo release badge to the README and distinguished concept DOI `10.5281/zenodo.22288632` from release DOI `10.5281/zenodo.22288633` in CITATION.cff.
 * **Citation**: Added CFF 1.2.0 metadata for Hassan Uriostegui and release `2026.09.03.23`, intentionally leaving DOI metadata pending Zenodo archival.
 * **Verification**: Passed complete lifecycle certification with the citation metadata and synchronized Zenodo preparation record.
 * **Verification**: GitHub Actions run 47 passed both Linux certification and native Windows lifecycle coverage for release `2026.09.03.23`, restoring the README badge to passing.

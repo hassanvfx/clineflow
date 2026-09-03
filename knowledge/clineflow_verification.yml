@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T23:16:14Z
+updated_at: 2026-09-03T23:21:39Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -39,6 +39,7 @@ acceptance_criteria:
   - Managed agent guidance requires the dashboard observation pipeline for natural-language requests and preserves direct CLI generation as the no-insights fallback.
   - Release validation requires the README and lifecycle guide to expose the old-install rescue path and the complete non-interactive remote-bootstrap command.
   - CITATION.cff parses as Citation File Format 1.2.0 metadata with the confirmed author, MIT license, canonical repository URL, and current date-based release version.
+  - The README DOI badge resolves to Zenodo's published release record, while CITATION.cff records both the concept DOI and the version DOI with their distinct roles.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
   - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.

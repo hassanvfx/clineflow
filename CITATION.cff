@@ -5,6 +5,11 @@ type: software
 authors:
   - family-names: Uriostegui
     given-names: Hassan
+doi: "10.5281/zenodo.22288632"
+identifiers:
+  - description: "Version DOI for ClineFlow 2026.09.03.23."
+    type: doi
+    value: "10.5281/zenodo.22288633"
 abstract: >-
   ClineFlow gives AI coding agents durable, portable project context through a
   Git-versioned Open Knowledge Format bundle, synchronized engineering journals,

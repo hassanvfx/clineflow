@@ -5,6 +5,7 @@
 ClineFlow gives coding agents durable, Git-native project context. Decisions, goals, verification, and handoffs live beside the code in an open knowledge bundle—not inside one temporary chat or proprietary memory service.
 
 [![Test ClineFlow](https://github.com/hassanvfx/clineflow/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/hassanvfx/clineflow/actions/workflows/test.yml?query=branch%3Amain)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22288633.svg)](https://doi.org/10.5281/zenodo.22288633)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![OKF v0.2](https://img.shields.io/badge/OKF-v0.2-1e9fff)](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
 [![Agent Agnostic](https://img.shields.io/badge/agents-Cline%20%7C%20Codex%20%7C%20Claude%20Code%20%7C%20Cursor%20%7C%20Copilot%20%7C%20Windsurf-1e9fff)](#works-with-your-agent)
