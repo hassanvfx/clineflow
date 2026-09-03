@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:56:24Z
+updated_at: 2026-09-03T19:16:18Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -27,7 +27,7 @@ acceptance_criteria:
   - Migration tests reproduce and pass a valid managed agent block beginning on line one under macOS-compatible shell utilities.
   - Release validation requires canonical agent instructions to name the permanent remote bootstrap and prohibit running local updater copies first.
   - Dashboard fixtures render comprehensive, minimal, and empty facts through observation and render stages with exact embedded presentation JSON and honest empty-state guidance.
-  - Dashboard tests prove local edit prompts retain source path and requested instruction, require regeneration, and expose no repository write path.
+  - Dashboard tests prove reports expose no source-edit or browser-storage workflow and that prepared titles, summaries, and expandable details remain self-contained.
   - Dashboard retention tests cover default three-run pruning, configured limits, unlimited history, and the ignored dashboard settings boundary.
   - Dashboard output exposes a Current Agentic Loop backed by goal, specification, session, and verification facts without browser-time source access.
   - Migration tests prove numeric ordering across date-based release segments, including `.5` to a two-digit patch upgrade and `.10` to `.5` downgrade rejection before mutation.

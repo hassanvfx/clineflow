@@ -614,6 +614,11 @@ def first_present(value: dict[str, Any], *keys: str) -> Any:
 def concise_title(value: Any, limit: int = 74) -> str:
     """Create a scannable title when a timeline record has only a long note."""
     text = re.sub(r"\s+", " ", observation_text(value)).strip()
+    # Timeline entries are frequently authored as "at: <timestamp> · event: ...".
+    # A timestamp is useful metadata, but it is a poor headline.
+    text = re.sub(r"^(?:at|on)\s*:\s*", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"^\d{4}-\d{2}-\d{2}(?:[T ][^\s]+)?\s*(?:[·—:-]\s*)?", "", text).strip()
+    text = re.sub(r"^(?:event|summary|change)\s*:\s*", "", text, flags=re.IGNORECASE)
     if not text:
         return "Recorded event"
     natural_breaks = re.split(r"(?<=[.!?])\s+|\s+\(|\s+—\s+|\s+[-:]\s+", text, maxsplit=1)
@@ -622,6 +627,63 @@ def concise_title(value: Any, limit: int = 74) -> str:
         return candidate
     clipped = candidate[:limit + 1].rsplit(" ", 1)[0].rstrip(".,;:")
     return f"{clipped or candidate[:limit]}…"
+
+
+def compact_summary(value: Any, limit: int = 180) -> str:
+    """Create readable summary copy while retaining the original value in detail."""
+    text = re.sub(r"\s+", " ", observation_text(value)).strip()
+    if len(text) <= limit:
+        return text
+    clipped = text[:limit + 1].rsplit(" ", 1)[0].rstrip(".,;:")
+    return f"{clipped or text[:limit]}…"
+
+
+def display_record(value: Any, kind: str, source_ids: list[str] | None = None) -> dict[str, Any]:
+    """Prepare an inspectable record: a short label, a readable summary, and full detail."""
+    raw = json_safe(value)
+    if isinstance(value, dict):
+        preferred = next((key for key in ("title", "summary", "status", "criterion", "requirement", "name", "text", "description") if value.get(key) not in (None, "")), None)
+        title_value = value.get(preferred) if preferred else value
+        title = concise_title(title_value, 68)
+        remaining = {key: item for key, item in value.items() if key != preferred}
+        summary = compact_summary(remaining or title_value)
+        fields = [{"label": humanize_key(key), "value": compact_summary(item, 150), "detail": observation_text(item)} for key, item in remaining.items()]
+    else:
+        title = concise_title(value, 68)
+        summary = compact_summary(value)
+        fields = []
+    return {"kind": kind, "title": title, "summary": summary, "detail": observation_text(value), "fields": fields, "source_ids": source_ids or [], "raw": raw}
+
+
+def humanize_key(value: Any) -> str:
+    return re.sub(r"\s+", " ", str(value).replace("_", " ")).strip().title()
+
+
+def guided_document(doc: dict[str, Any]) -> dict[str, Any]:
+    """Build the document-guided view before HTML rendering; raw source stays available separately."""
+    structured = doc.get("structured")
+    sections: list[dict[str, Any]] = []
+    if isinstance(structured, dict):
+        for key, value in structured.items():
+            if isinstance(value, list):
+                sections.append({"label": humanize_key(key), "type": "list", "items": [display_record(item, humanize_key(key)) for item in value]})
+            elif isinstance(value, dict):
+                sections.append({"label": humanize_key(key), "type": "fields", "items": [
+                    {"label": humanize_key(item_key), "value": compact_summary(item_value, 170), "detail": observation_text(item_value)}
+                    for item_key, item_value in value.items()
+                ]})
+            else:
+                detail = observation_text(value)
+                sections.append({"label": humanize_key(key), "type": "scalar", "value": compact_summary(value, 220), "detail": detail})
+    elif isinstance(structured, list):
+        sections.append({"label": "Recorded items", "type": "list", "items": [display_record(item, "Recorded item") for item in structured]})
+    else:
+        detail = observation_text(structured if structured is not None else doc.get("raw", ""))
+        sections.append({"label": "Recorded source", "type": "scalar", "value": compact_summary(detail, 220), "detail": detail})
+    return {
+        "summary": compact_summary(doc.get("description") or "Structured source ready to inspect."),
+        "sections": sections,
+    }
 
 
 def normalize_event(value: Any) -> dict[str, Any]:
@@ -831,7 +893,7 @@ def safe_json_for_script(data: Any) -> str:
 
 def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft_scope: str | None = None) -> dict[str, Any]:
     """Build the only view model consumed by the browser renderer."""
-    documents = data.get("documents", [])
+    documents = [{**item, "guided": guided_document(item)} for item in data.get("documents", [])]
     document_ids = {item.get("id") for item in documents}
     document_id_for_path = {item.get("path"): item.get("id") for item in documents}
     ledgers = data.get("ledgers") or {}
@@ -856,14 +918,14 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
     latest = next((item for item in timeline if item["lane"] in {"event", "commit"}), None)
     latest_verification = next((item for item in timeline if item["lane"] == "event" and item["label"] == "verification"), None)
     unresolved = [
-        {"kind": "Decision needed", "text": observation_text(item), "why": "The specification still leaves this choice open.", "next": "Choose an owner and record the decision.", "source_ids": [document_id_for_path["knowledge/clineflow_specification.yml"]] if document_id_for_path.get("knowledge/clineflow_specification.yml") else []}
+        {**display_record(item, "Decision needed", [document_id_for_path["knowledge/clineflow_specification.yml"]] if document_id_for_path.get("knowledge/clineflow_specification.yml") else []), "why": "The specification still leaves this choice open.", "next": "Choose an owner and record the decision."}
         for item in specification.get("open_questions") or []
     ] + [
-        {"kind": "Proof gap", "text": observation_text(item), "why": "The implementation has no recorded verification for this point yet.", "next": "Run or record the missing evidence.", "source_ids": [document_id_for_path["knowledge/clineflow_verification.yml"]] if document_id_for_path.get("knowledge/clineflow_verification.yml") else []}
+        {**display_record(item, "Proof gap", [document_id_for_path["knowledge/clineflow_verification.yml"]] if document_id_for_path.get("knowledge/clineflow_verification.yml") else []), "why": "The implementation has no recorded verification for this point yet.", "next": "Run or record the missing evidence."}
         for item in verification.get("open_verification") or []
     ]
     constraints = [
-        {"kind": "Constraint", "text": observation_text(item), "why": "This boundary shapes the implementation decision.", "next": "Keep the constraint visible while deciding.", "source_ids": [document_id_for_path["knowledge/clineflow_specification.yml"]] if document_id_for_path.get("knowledge/clineflow_specification.yml") else []}
+        {**display_record(item, "Constraint", [document_id_for_path["knowledge/clineflow_specification.yml"]] if document_id_for_path.get("knowledge/clineflow_specification.yml") else []), "why": "This boundary shapes the implementation decision.", "next": "Keep the constraint visible while deciding."}
         for item in specification.get("constraints") or []
     ]
     active_goal = observation_text(next(iter(goals.get("active_goals") or []), ""))
@@ -885,7 +947,6 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
         {"step": "03", "label": "Act", "text": observation_text(session.get("next_recommended_step") or "Choose and record the next deliberate move."), "source_ids": ledger_source("knowledge/clineflow_last_session.yml")},
         {"step": "04", "label": "Prove", "text": proof_text, "source_ids": ledger_source("knowledge/clineflow_verification.yml")},
     ]
-    scope_paths = draft_scope or "|".join(sorted(str(item.get("path", "")) for item in documents))
     commits = data.get("commits") or []
     project_pulse = {
         "commits": [{
@@ -909,7 +970,6 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
         "schema": PRESENTATION_SCHEMA,
         "generated_at": data.get("run_at"),
         "source": {"snapshot_schema": data.get("schema"), "source_hash": data.get("source_hash"), "observation_schema": observations.get("schema")},
-        "draft_scope": sha256_bytes(scope_paths.encode())[:20],
         "report": {"run_id": data.get("run_id"), "git": data.get("git") or {}, "retention": data.get("retention")},
         "now": {
             "headline": headline,
@@ -930,7 +990,7 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
         "agentic_loop": agentic_loop,
         "project_pulse": project_pulse,
         "delivery_estimate": delivery_estimate,
-        "evidence": [{"text": observation_text(item), "source_ids": []} for item in verification.get("evidence") or verification.get("acceptance_criteria") or []],
+        "evidence": [display_record(item, "Verification evidence", ledger_source("knowledge/clineflow_verification.yml")) for item in verification.get("evidence") or verification.get("acceptance_criteria") or []],
         "metrics": {
             "documents": len(documents), "events": len(events), "usage": len(data.get("usage") or []),
             "drift": data.get("drift") or {"added": [], "changed": [], "removed": []},

@@ -2,6 +2,9 @@
 
 ## 2026-09-03
 
+* **Refinement**: Removed dashboard edit-request controls and moved title, summary, structured-field, and expandable-detail preparation into the self-contained presentation JSON pipeline.
+* **Usability**: Long event and source prose now stays out of hero/proof labels; reports without agent estimate inputs omit Delivery Scenarios rather than showing an inactive state.
+
 * **Fix**: Corrected the Knowledge Explorer Source ready badge so flex layout cannot stretch or wrap it into a large vertical control.
 
 * **Feature**: Added a Project Pulse for committed change/footprint context and source-bound agent delivery scenarios with transparent planning assumptions.

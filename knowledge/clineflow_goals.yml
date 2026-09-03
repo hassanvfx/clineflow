@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:56:24Z
+updated_at: 2026-09-03T19:16:18Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -23,7 +23,7 @@ success_measures:
   - The Knowledge Visor visually belongs to ClineFlow through a deep-navy, electric-blue editorial system without introducing browser-time dependencies.
   - A dashboard reader can understand now, recent moments, the full project story, proof, and source records without decorative navigation chrome.
   - Dashboard narrative quality is regression-tested against comprehensive, sparse, and empty normalized knowledge fixtures.
-  - Dashboard source edit requests remain browser-local, agent-ready handoffs and never mutate canonical files.
+  - Dashboard source records remain read-only, concise, and progressively disclosable without a dashboard edit workflow.
   - The dashboard's first read connects active goal, decision boundary, next action, and verification in a source-linked Current Agentic Loop.
   - Date-based updater releases compare numeric version segments so multi-digit patch upgrades remain valid.
   - Dashboard trajectory makes committed change and tracked knowledge growth inspectable without inferring contributor productivity.

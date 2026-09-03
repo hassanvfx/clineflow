@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:56:24Z
+updated_at: 2026-09-03T19:16:18Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -25,7 +25,7 @@ confirmed:
   - Dashboard facts normalize flexible timeline aliases into canonical event fields while retaining raw records; structured evidence, goals, and constraints render named statements and readable metadata instead of object coercions.
   - Report timeline events carry a short title, compact kind, and full narrative note; the Time Spine displays the title first and reveals formatted detail only on request.
   - Dashboard rendering creates clineflow-dashboard-presentation/v1 after facts and observations; the browser consumes the presentation model while adjacent and embedded JSON remain exact copies.
-  - Dashboard source edit requests are browser-local drafts that produce copyable agent prompts and never write repository files.
+  - Dashboard source records are read-only; the presentation model supplies compact titles, summaries, fields, and expandable detail before browser rendering.
   - Dashboard report retention defaults to three complete runs and can be configured under knowledge/dashboard/settings.json with null representing unlimited history.
   - The Current Agentic Loop derives active goal, current decision/constraint, next deliberate action, and verification state exclusively from canonical report facts and links each step to its ledger source.
   - Agent-rule refresh is portable when the managed block begins on the first line or follows user-authored text.
@@ -55,6 +55,7 @@ constraints:
   - Dashboard retention pruning removes only complete, schema-owned run directories after a successful replacement report; settings and malformed directories remain preserved.
   - A malformed recognized installed or release version aborts before any update mutation.
   - The dashboard does not infer delivery time, cost, model configuration, or counterfactual savings when no explicit agent estimate is supplied.
+  - Estimate-free reports omit the Delivery Scenarios surface rather than displaying an inactive planning card.
   - Knowledge Explorer source-status indicators remain compact, non-growing controls and must not distort document headers.
 non_goals: []
 open_questions: []

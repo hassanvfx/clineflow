@@ -5,8 +5,8 @@ description: "Adds commit-and-footprint trajectory context plus agent-authored d
 tags: [engineering, dashboard, observability, planning, estimates]
 status: stable
 generated:
-  by: clineflow/2026.09.03.15
-  at: 2026-09-03T18:56:24Z
+  by: clineflow/2026.09.03.16
+  at: 2026-09-03T19:16:18Z
 ---
 
 # Goal
@@ -33,11 +33,17 @@ Added an ECharts Project Pulse with committed insertions/deletions and tracked/k
 
 The fixture-review browser exposed an over-stretched `Source ready` status badge in the Knowledge Explorer. Aligned the document header to the top and made the badge non-growing, non-wrapping, and compact. The correction is visual only; release `2026.09.03.15` keeps schema `1`.
 
+## 2026-09-03 - Read-only compact presentation refinement
+
+Removed the dashboard's browser-local source edit-request and Pending edits controls. The observer/presentation stage now builds compact titles, summaries, structured field rows, and retained full detail for evidence, decision records, and every structured source document before HTML is rendered. The browser only renders that prepared representation and exposes full source prose through deliberate expansion or raw-source view. Estimate-free reports omit Delivery Scenarios entirely; supplied estimates retain their source-bound, agent-authored model. Release `2026.09.03.16` keeps migration schema `1` and the self-contained `file://` contract.
+
 # Decisions
 
 - The invoking agent supplies the optional estimate through the existing insights input; ClineFlow does not call an AI provider or infer model configuration.
 - Engineering-hours estimates, not elapsed Git timeline duration, anchor the scenarios.
 - Browser controls show revision instructions only; they never edit planning assumptions or canonical source files.
+- Source inspection is read-only; no dashboard interaction creates local drafts, stores browser state, or presents a source-edit handoff.
+- Long prose belongs in presentation detail, never as a hero heading, proof title, or guided-source field value.
 - Sanitized exports exclude delivery estimates and agent metadata.
 
 # Testing
@@ -45,6 +51,7 @@ The fixture-review browser exposed an over-stretched `Source ready` status badge
 - `./tests/test-dashboard.sh` passed dormancy, activation, local-file rendering, embedded JSON equality, comprehensive/minimal/empty fixtures, valid delivery scenarios, invalid estimate rejection, export redaction, retention, rollback, and uninstall preservation.
 - `./template/.clineflow/bin/validate-release` and `./tests/test-release-contract.sh` passed for `2026.09.03.14`, schema `1`.
 - `./tests/certify-release.sh` passed the combined installation, updater, removal, dashboard-boundary, OKF, synchronization, syntax, and whitespace lifecycle gate.
+- `./tests/test-dashboard.sh` passed after removing edit controls, omitting estimate-free panels, and rendering prepared compact source/evidence records.
 
 # Open Issues
 

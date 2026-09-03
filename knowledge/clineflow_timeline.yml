@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:56:24Z
+updated_at: 2026-09-03T19:16:18Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -373,6 +373,17 @@ events:
     summary: Corrected the Knowledge Explorer source-status badge so it remains a compact, readable header indicator.
     refs:
       - journals/dashboard-project-pulse.md
+      - ../template/optional/dashboard/visor.css
+      - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T19:16:18Z
+    actor: codex
+    type: refinement
+    summary: Made dashboard source records read-only and introduced presentation-stage compact titles, summaries, structured fields, and expandable detail for narrative, proof, and explorer views.
+    refs:
+      - journals/dashboard-project-pulse.md
+      - ../template/optional/dashboard/dashboard.py
+      - ../template/optional/dashboard/visor.js
       - ../template/optional/dashboard/visor.css
       - ../tests/test-dashboard.sh
     git_revision: null

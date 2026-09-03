@@ -105,16 +105,6 @@ const helpers = new Function(`${source.slice(start, end)}; return {statementText
 const evidence = {summary: "Dashboard evidence is structured", command: "./tests/certify-release.sh", status: "passed"};
 if (helpers.statementText(evidence) !== "Dashboard evidence is structured") throw new Error("Explorer did not select a structured evidence summary");
 NODE
-node - "$fixture/source/visor.js" <<'NODE'
-const fs = require("fs");
-const source = fs.readFileSync(process.argv[2], "utf8");
-const start = source.indexOf("  const editPrompt =");
-const end = source.indexOf("  const copy =");
-if (start < 0 || end < 0 || !source.includes("localStorage") || !source.includes("Copy all agent instructions")) throw new Error("Local edit-request controls are missing");
-const helpers = new Function(`${source.slice(start, end)}; return {editPrompt};`)();
-const prompt = helpers.editPrompt({path: "knowledge/clineflow_goals.yml", instruction: "Clarify the active goal."});
-if (!prompt.includes("knowledge/clineflow_goals.yml") || !prompt.includes("Clarify the active goal.") || !prompt.includes("regenerate the ClineFlow dashboard")) throw new Error("Edit prompt does not preserve target, instruction, and regeneration boundary");
-NODE
 PYTHONPATH="$fixture/modules" python3 - "$fixture/source/dashboard.py" <<'PY'
 import importlib.util
 import sys
@@ -193,14 +183,14 @@ grep -q "connect-src 'none'" "$report" || fail "generated report permits browser
 ! grep -Eq "<(script|link|img)[^>]+(src|href)=['\\\"]https?://" "$report" || fail "self-contained report references a remote browser asset"
 grep -q 'data:font/woff2;base64,' "$report" || fail "self-contained report omitted embedded fonts"
 ! grep -q 'About this report' "$report" || fail "dashboard retained the removed asset panel"
-grep -q 'Understand before you inspect' "$report" && grep -q 'Source' "$report" && grep -q 'Pending edits' "$report" || fail "dashboard omitted its guided narrative controls"
+grep -q 'Understand before you inspect' "$report" && grep -q 'Source' "$report" && ! grep -q 'Pending edits\|Request an edit\|localStorage' "$report" || fail "dashboard retained removed edit-request controls"
 grep -q 'Project story' "$report" && grep -q 'Narrative arc' "$report" && grep -q 'Current Agentic Loop' "$report" || fail "dashboard omitted the narrative project-story surface"
 grep -q 'Latest activity' "$report" || fail "dashboard omitted current activity context"
 grep -q 'Recent story' "$report" && grep -q 'Open audit timeline' "$report" && grep -q 'const renderRecentStory' "$report" || fail "dashboard omitted immediate recent-story access"
 ! grep -q 'story-nav' "$report" && ! grep -q 'class="chapter"' "$report" || fail "dashboard retained decorative navigation chrome"
 grep -q 'Read event note' "$report" && grep -q 'const eventTitle' "$report" || fail "Time Spine omitted compact titles and expandable notes"
 ! grep -q 'cytoscape.min.js' "$report" && ! grep -q 'decision-graph' "$report" || fail "dashboard retained the removed graph Atlas"
-grep -q 'Guided view' "$report" && grep -q 'Copy normalized YAML' "$report" || fail "Knowledge Explorer omitted YAML interpretation and repair controls"
+grep -q 'Guided view' "$report" && grep -q 'Copy normalized YAML' "$report" && grep -q 'Structured context first' "$report" || fail "Knowledge Explorer omitted compact YAML interpretation and repair controls"
 grep -q 'data-filter="ledger"' "$report" && grep -q 'data-filter="journal"' "$report" || fail "Knowledge Explorer omitted progressive document filters"
 grep -q 'clineflow-dashboard/v1' "${report%/index.html}/snapshot.json" || fail "snapshot omitted dashboard schema"
 python3 - "$report" "${report%/index.html}/snapshot.json" "${report%/index.html}/observations.json" "${report%/index.html}/presentation.json" <<'PY'
@@ -302,8 +292,8 @@ if sys.argv[3] == "empty" and "Capture the first milestone" not in page:
     raise SystemExit("empty fixture omitted onboarding narrative")
 if sys.argv[3] == "comprehensive" and "Verified local-only reports" not in page:
     raise SystemExit("comprehensive fixture omitted verification narrative")
-if "Project Pulse" not in page or "Delivery Scenarios" not in page:
-    raise SystemExit("fixture omitted project-pulse or delivery-scenario surfaces")
+if "Project Pulse" not in page:
+    raise SystemExit("fixture omitted project-pulse surface")
 estimate = model.get("delivery_estimate")
 if sys.argv[3] == "comprehensive":
     if not estimate or estimate.get("agent", {}).get("model") != "gpt-5.6-sol":
@@ -313,7 +303,7 @@ if sys.argv[3] == "comprehensive":
         raise SystemExit("delivery scenario costs were not calculated from constants")
     if "Estimated planning model" not in page or "How to revise estimate" not in page:
         raise SystemExit("delivery estimate omitted its safety label or revision guidance")
-elif estimate is not None or "No delivery estimate supplied" not in page:
+elif estimate is not None:
     raise SystemExit("sparse fixture fabricated a delivery estimate")
 PY
 done
