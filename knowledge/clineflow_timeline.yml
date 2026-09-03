@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:37:25Z
+updated_at: 2026-09-03T20:48:35Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -466,4 +466,13 @@ events:
       - ../template/.clineflow/release-manifest
       - ../tests/test-installation-flow.sh
       - ../tests/test-release-contract.sh
+    git_revision: null
+  - at: 2026-09-03T20:48:35Z
+    actor: codex
+    type: fix
+    summary: Used the third hosted Windows run to isolate an NTFS lock on the active uninstaller, then re-executed removal from an external temporary copy and prepared release 2026.09.03.23.
+    refs:
+      - journals/old-install-update-rescue.md
+      - ../template/.clineflow/bin/uninstall
+      - ../tests/test-uninstall-safety.sh
     git_revision: null

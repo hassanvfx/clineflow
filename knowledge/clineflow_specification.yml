@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:37:25Z
+updated_at: 2026-09-03T20:48:35Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -45,6 +45,7 @@ confirmed:
   - The README test badge targets the canonical test.yml workflow on main, whose Windows smoke project is isolated in RUNNER_TEMP and shared across Bash and PowerShell through normalized paths.
   - Git checkout preserves LF bytes for manifest-managed text formats on every platform so release checksums remain stable before installation.
   - PowerShell payloads use regular-file mode 0644; only commands that require POSIX execution use mode 0755.
+  - On Git Bash, MSYS, and Cygwin, removal re-executes from an external temporary copy so Windows does not lock the managed runtime while it is moved transactionally.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.

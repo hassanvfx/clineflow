@@ -1,8 +1,8 @@
-release_version=2026.09.03.22
+release_version=2026.09.03.23
 migration_schema=1
 payload|managed|0644|.clineflow/JOURNAL_TEMPLATE.md|.clineflow/JOURNAL_TEMPLATE.md|02ee9466736a44116882f475198d37dcce3d43b7604c97f058ccca8e2b271f2b
 payload|managed|0644|.clineflow/PROCEDURES.md|.clineflow/PROCEDURES.md|6881a7ca5a2b774b251d9a238559c58de7628eb7eb6297e2faffe224b03c2795
-payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|63b9f6c559e2cff0455f712a2b8a6824a36113b843bfc0765ef73543b986b7d5
+payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|12ab8549847bb44627eb15ada3f46cd03a6f9e06d4f0fa213763568bbd0273e9
 payload|managed|0644|.clineflow/WORKING_WITH_CLINE.md|.clineflow/WORKING_WITH_CLINE.md|0dbf68e3f6d9702dfb322bba029874f3dec0f23fb94da94bf6ef6e8232d80ac7
 payload|managed|0644|.clineflow/WORKING_WITH_CODEX.md|.clineflow/WORKING_WITH_CODEX.md|167e9ff1ac975b40e383b3c8d9385ccc19fb9e702f33aafdaca25561abd02e40
 payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|d3f99b70baa0f57bc56190c98f9ac356d70d585cef7132b780f089a814ab3fef
@@ -11,7 +11,7 @@ payload|managed|0755|.clineflow/bin/dashboard|.clineflow/bin/dashboard|93bb1a11f
 payload|managed|0755|.clineflow/bin/doctor|.clineflow/bin/doctor|9e5b97593d637d10ca6993040b4508c1c390e51314ea0dbae12862e64b47e2ae
 payload|managed|0755|.clineflow/bin/install|.clineflow/bin/install|9eb0777cc82dfa436d04fec66bcd45ab9893e3034246210d8e520012cad470a5
 payload|managed|0755|.clineflow/bin/prereqs|.clineflow/bin/prereqs|1e136b16e308e158aef538e2b03df57c73e483cf305f6d1b48e812139df9faff
-payload|managed|0755|.clineflow/bin/uninstall|.clineflow/bin/uninstall|30fc14c32b34f549dc4dde76d99b21c2cfbd9b9fe9d766183e2061e43662d754
+payload|managed|0755|.clineflow/bin/uninstall|.clineflow/bin/uninstall|b30d0561b83ea56abd036aa200af284b8bfc5873c96ddef670dc4eae36864733
 payload|managed|0755|.clineflow/bin/update|.clineflow/bin/update|b0bc37f8c85dd50a4d77d0fc6ae5bc876010e64751a16c55d427977c53816cfd
 payload|managed|0644|.clineflow/bin/update.ps1|.clineflow/bin/update.ps1|3d128335c1f7bf24c8f8ddce3b7ce8f3e89f268065a2d1e96fdd0e0222f40a8a
 payload|managed|0755|.clineflow/bin/validate-knowledge-sync|.clineflow/bin/validate-knowledge-sync|649ccfc21e56df393a9810bb6461fe340babfd726d27ea293b510bde760d7cfd

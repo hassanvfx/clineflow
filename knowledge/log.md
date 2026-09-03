@@ -2,6 +2,7 @@
 
 ## 2026-09-03
 
+* **Fix**: Avoided the Windows active-uninstaller file lock by re-executing removal from an external temporary copy and prepared release `2026.09.03.23` without a schema migration.
 * **Fix**: Corrected PowerShell payload modes for native Windows lifecycle validation and prepared release `2026.09.03.22` without a schema migration.
 * **Fix**: Repaired the Windows lifecycle smoke path handling and CRLF checksum drift behind the failing README badge, then targeted the canonical main-branch workflow URL.
 * **Update**: Added the raw remote-bootstrap rescue path for old installations, its recovery boundaries, release-contract enforcement, and release `2026.09.03.21` context.

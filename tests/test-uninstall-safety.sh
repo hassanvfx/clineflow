@@ -52,6 +52,13 @@ for path in knowledge docs/journals/user.md docs/user-guide.md unrelated.txt set
 [ ! -e "$preserve/CLAUDE.md" ] && [ ! -e "$preserve/.clinerules" ] || fail "uninstall retained unchanged owned agent files"
 pass "removal preserves authored and retired content while deleting only managed content"
 
+external="$TEST_ROOT/external-reexec"
+install_project "$external"
+(cd "$external" && CLINEFLOW_TEST_FORCE_EXTERNAL_REEXEC=true ./.clineflow/bin/uninstall --yes >/dev/null)
+[ ! -e "$external/.clineflow" ] || fail "external self-copy uninstall retained the managed runtime"
+[ -d "$external/knowledge" ] || fail "external self-copy uninstall removed project knowledge"
+pass "external self-copy permits Windows-safe runtime removal"
+
 malformed="$TEST_ROOT/malformed"
 install_project "$malformed"
 sed '/END CLINEFLOW OKF RULES/d' "$malformed/AGENTS.md" > "$malformed/AGENTS.tmp"

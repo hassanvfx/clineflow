@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T20:37:25Z
-latest_change: Corrected PowerShell payload modes after hosted Windows CI passed installation checksums but rejected POSIX executable checks, preparing release 2026.09.03.22.
+updated_at: 2026-09-03T20:48:35Z
+latest_change: Re-executed Windows removal from an external temporary copy after hosted CI passed installation and native PowerShell update but hit an NTFS lock on the active uninstaller, preparing release 2026.09.03.23.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -56,10 +56,11 @@ verification_summary:
   - The GitHub API confirms the prior main run's Linux job passed and its Windows installation step failed; the corrected hosted Windows result requires a push.
   - The signed-in Windows job log identified `.clineflow/JOURNAL_TEMPLATE.md` checksum mismatch after checkout; local release-contract coverage now guards the LF rules.
   - The subsequent hosted run passed all checksums and failed only on POSIX executable assertions for the two PowerShell files; release 2026.09.03.22 corrects those modes and awaits hosted confirmation.
+  - The next hosted run passed installation, doctor, and native PowerShell update, then exposed a Windows lock on the active uninstaller path; release 2026.09.03.23 re-executes externally before transactional removal.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Push the workflow repair, confirm both GitHub Actions jobs pass, then close the journal and return to the deferred Knowledge Visor image.
+next_recommended_step: Validate and push release 2026.09.03.23, confirm both GitHub Actions jobs pass, then close the journal and return to the deferred Knowledge Visor image.
 next_step_refs:
   - journals/old-install-update-rescue.md
   - journals/readme-documentation-redesign.md

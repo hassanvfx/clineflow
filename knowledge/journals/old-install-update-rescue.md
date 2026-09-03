@@ -6,7 +6,7 @@ tags: [engineering, documentation, updates]
 status: draft
 generated:
   by: clineflow/2.0.0
-  at: 2026-09-03T20:37:25Z
+  at: 2026-09-03T20:48:35Z
 ---
 
 # Goal
@@ -37,6 +37,10 @@ The signed-in hosted log identified the exact failure: `ERROR: checksum mismatch
 
 The next hosted run proved that installation and every payload checksum passed, then doctor rejected `bootstrap.ps1` and `update.ps1` because Git Bash does not expose POSIX executable semantics for PowerShell files. Changed only those manifest entries from `0755` to `0644`, retained executable mode for Bash commands, updated installation and release-contract tests, and bumped the release to `2026.09.03.22`. Schema `1` remains valid because the updater already applies declared manifest modes transactionally and no persistent format changes.
 
+## 2026-09-03 20:48 - Avoided the active-file lock during Windows removal
+
+The third hosted run passed installation, doctor, and native PowerShell update, then Windows denied moving `.clineflow/` because the running uninstaller itself was inside that directory. The uninstaller now detects Git Bash/MSYS/Cygwin, copies itself to the external temporary directory, and re-executes there before opening the removal transaction. A forced-platform regression proves that the runtime is removed while project knowledge remains. Prepared release `2026.09.03.23`; schema `1` remains valid because persistent formats are unchanged.
+
 # Decisions
 
 - The natural-language prompt stays the easiest default for current installations.
@@ -52,12 +56,12 @@ The next hosted run proved that installation and every payload checksum passed, 
 - `./template/.clineflow/bin/validate-knowledge-sync` — passed at the shared completion timestamp.
 - `./tests/certify-release.sh` — passed the complete installation, dashboard, migration, uninstall, release, OKF, synchronization, and whitespace matrix.
 - `git diff --check` — passed.
-- The hosted Windows workflow result is pending the commit and push that can exercise `windows-latest`.
+- The hosted Windows workflow passed installation, doctor, and native PowerShell update before exposing the active-uninstaller file lock; release `2026.09.03.23` awaits hosted confirmation of the removal repair.
 
 # Open Issues
 
 - The existing deferred Knowledge Visor screenshot remains unrelated and blocked by the local browser capture policy.
-- The badge will remain red until the corrected workflow is committed, pushed, and completes successfully on GitHub's Windows runner.
+- The badge will remain red until release `2026.09.03.23` is committed, pushed, and completes successfully on GitHub's Windows runner.
 
 # References
 

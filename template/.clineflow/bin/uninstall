@@ -12,6 +12,19 @@ TRANSACTION_ACTIVE=false
 COMMITTED=false
 TRANSACTION_DIR=''
 DASHBOARD_EXCLUDE=''
+SELF_TEMP=${CLINEFLOW_UNINSTALL_SELF_TEMP:-}
+
+if [ -z "$SELF_TEMP" ]; then
+  platform=$(uname -s 2>/dev/null || printf unknown)
+  case "$platform" in MINGW*|MSYS*|CYGWIN*) external_reexec=true ;; *) external_reexec=false ;; esac
+  [ "${CLINEFLOW_TEST_FORCE_EXTERNAL_REEXEC:-false}" != true ] || external_reexec=true
+  if [ "$external_reexec" = true ]; then
+    self_copy=$(mktemp "${TMPDIR:-/tmp}/clineflow-uninstall-XXXXXX")
+    if ! cp "$0" "$self_copy"; then rm -f "$self_copy"; echo "ERROR: could not prepare the Windows removal transaction." >&2; exit 1; fi
+    chmod +x "$self_copy"
+    CLINEFLOW_UNINSTALL_SELF_TEMP="$self_copy" exec bash "$self_copy" "$@"
+  fi
+fi
 
 usage() {
   cat <<'EOF'
@@ -39,7 +52,10 @@ done
 
 manifest=.clineflow/.owned-agent-files
 entries=$(mktemp "${TMPDIR:-/tmp}/clineflow-uninstall-entries-XXXXXX")
-cleanup_entries() { rm -f "$entries"; }
+cleanup_entries() {
+  rm -f "$entries"
+  [ -z "$SELF_TEMP" ] || rm -f "$SELF_TEMP" 2>/dev/null || true
+}
 allowed_agent_path() {
   case "$1" in
     .clinerules|AGENTS.md|CLAUDE.md|.github/copilot-instructions.md|.windsurf/rules/clineflow.md) return 0 ;;
