@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:33:27Z
+updated_at: 2026-09-03T11:38:33Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -39,6 +39,7 @@ regression_checks:
   - Direct file-protocol reports parse embedded facts and observations without browser fetches, servers, or remote connections.
   - Structured ledger records do not render as JavaScript object coercions or blank timeline summaries.
   - Dense event notes stay collapsed and paragraph-formatted until deliberately expanded.
+  - Canonical prose list statements containing colons remain YAML scalars and do not introduce accidental structured values.
   - User text before and after an existing managed agent block remains byte-preserved during refresh.
 evidence_refs:
   - journals/okf-adoption.md

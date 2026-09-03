@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T11:33:27Z
-latest_change: Refined the Time Spine into short kind and title scan layers with expandable formatted event notes, while preserving structured evidence and timeline normalization.
+updated_at: 2026-09-03T11:38:33Z
+latest_change: Validated the rendered fact model, repaired accidental YAML mapping coercion in prose ledger items, and retained the compact, expandable Time Spine.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -12,6 +12,7 @@ specification_summary:
   - YAML ledgers render as structured guided sections with diagnostics and non-mutating normalized repair output.
   - Timeline aliases normalize into canonical report facts while retaining raw provenance, and the Atlas selects named evidence statements from structured records.
   - Time Spine rows lead with a concise title and reveal full narrative notes only on request.
+  - Prose statements with colon punctuation are quoted as YAML scalars so they remain narrative facts rather than unintended mappings.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -30,7 +31,7 @@ verification_summary:
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Update to release 2026.09.03.6 and regenerate the report to confirm the compact, expandable Time Spine reads cleanly for the project.
+next_recommended_step: Regenerate the report after release 2026.09.03.6 and review the compact, expandable Time Spine and fact-model-driven narrative with project data.
 next_step_refs:
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md

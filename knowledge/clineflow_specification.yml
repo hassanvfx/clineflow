@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:33:27Z
+updated_at: 2026-09-03T11:38:33Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -17,7 +17,7 @@ confirmed:
   - Dashboard invocation without a subcommand forwards `generate` so its parser defaults exist before engine execution.
   - Dashboard metrics are report-derived Git and knowledge facts; absent provider usage is omitted rather than recorded as unavailable.
   - Decision Atlas uses progressive goal, constraint, evidence, and journal views capped at ten visible nodes with full text in a separate detail surface.
-  - The report follows five linked chapters: executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration.
+  - "The report follows five linked chapters: executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration."
   - Asset provenance remains structured in report manifests and is not rendered as a standalone dashboard panel.
   - Dashboard collection emits normalized facts without narrative interpretation; a separate replaceable observation stage emits clineflow-dashboard-observations/v1 bound to the facts source hash.
   - Each report stores snapshot.json and observations.json beside index.html and embeds exact inert copies of both so file-protocol viewing performs no fetch.

@@ -6,7 +6,7 @@ tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
   by: clineflow/2026.09.03.6
-  at: 2026-09-03T11:33:27Z
+  at: 2026-09-03T11:38:33Z
 ---
 
 # Goal
@@ -59,6 +59,10 @@ Reproduced `[object Object]` labels in the Evidence Atlas and blank timeline des
 
 Reworked each Time Spine row into a short kind pill, a concise supplied or derived title, and a collapsed “Read event note” disclosure. Long `event:` strings are now interpreted as the narrative note rather than the lane type; their first clause becomes a bounded, scan-friendly title. Expanded notes retain their paragraph boundaries, while concise events remain compact without an unnecessary disclosure.
 
+## 2026-09-03 11:38 UTC - YAML prose scalar repair
+
+Inspection of the generated fact model caught two prose list entries containing an unquoted colon. YAML correctly interpreted those entries as mappings, which is not the intended canonical shape. Quoted the entries so the facts model retains scalar strings. This confirms the structured renderer is working as intended and prevents malformed prose from leaking into executive observations or visual labels.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -78,6 +82,7 @@ Reworked each Time Spine row into a short kind pill, a concise supplied or deriv
 - Normalize flexible timeline records only in report facts, preserving each original object under `raw`; do not impose a new persistent ledger schema.
 - Prefer named statement fields when rendering structured evidence or decisions, and expose all remaining fields in the readable detail surface rather than serializing objects into labels.
 - Treat Time Spine labels as event kinds and titles as the scan layer; retain full event narration only in explicit disclosure.
+- Quote prose list items containing a colon followed by whitespace in canonical YAML when they are intended to be scalar statements.
 
 # Testing
 

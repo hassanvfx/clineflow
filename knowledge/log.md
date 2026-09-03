@@ -2,6 +2,8 @@
 
 ## 2026-09-03
 
+* **Fix**: Quoted colon-containing prose ledger entries so YAML retains the intended scalar narrative facts rather than coercing them into mappings.
+* **Verification**: Generated and inspected a real self-contained report model, confirming compact timeline titles and detecting the scalar-shape issue.
 * **Fix**: Made the Time Spine scannable with short event titles and kinds, moving full narrative notes into expandable formatted disclosure.
 * **Verification**: Added long-event regressions that prove descriptive notes do not become lane labels and remain intact when expanded.
 * **Fix**: Normalized structured Evidence Atlas statements and flexible timeline fields so report labels never coerce objects or lose event summaries.
