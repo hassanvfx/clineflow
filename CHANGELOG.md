@@ -8,6 +8,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Fixed
+- PowerShell bootstrap and updater payloads now use regular-file mode instead of requiring POSIX executable semantics that Git Bash cannot represent for `.ps1` files on Windows.
 - Windows lifecycle CI now preserves checksum-stable LF bytes for every manifest-managed text format and installs in the runner's temporary workspace through normalized cross-shell paths.
 - Executive metrics now use the latest knowledge or Git activity rather than mistaking report generation for project activity.
 - Replaced the remaining Decision Atlas graph with a calmer, source-bound Project Story, eliminating the graph library and its repetitive relationship UI.
@@ -35,6 +36,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- Release `2026.09.03.22` corrects Windows PowerShell payload modes; migration schema `1` remains valid because the transactional updater applies manifest modes without changing persistent formats.
 - Release `2026.09.03.21` documents the permanent remote bootstrap as the old-install compatibility escape hatch; migration schema `1` remains valid because no persistent format changes.
 - Release `2026.09.03.20` makes removal preview-first and confirmation-gated at the agent-instruction layer while preserving the existing transactional remover and schema `1`.
 - Public documentation now explains the hidden runtime, OKF knowledge base, five ledgers, self-documenting commit loop, and dormant dashboard without duplicating implementation detail in the README.

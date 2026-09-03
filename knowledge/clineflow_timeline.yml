@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:34:40Z
+updated_at: 2026-09-03T20:37:25Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -456,4 +456,14 @@ events:
       - ../.gitattributes
       - ../tests/test-release-contract.sh
       - ../.github/workflows/test.yml
+    git_revision: null
+  - at: 2026-09-03T20:37:25Z
+    actor: codex
+    type: fix
+    summary: Used the second hosted Windows run to isolate incorrect POSIX executable requirements for PowerShell payloads, changed them to regular-file mode, and prepared release 2026.09.03.22.
+    refs:
+      - journals/old-install-update-rescue.md
+      - ../template/.clineflow/release-manifest
+      - ../tests/test-installation-flow.sh
+      - ../tests/test-release-contract.sh
     git_revision: null

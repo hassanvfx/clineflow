@@ -6,7 +6,7 @@ tags: [engineering, documentation, updates]
 status: draft
 generated:
   by: clineflow/2.0.0
-  at: 2026-09-03T20:34:40Z
+  at: 2026-09-03T20:37:25Z
 ---
 
 # Goal
@@ -32,6 +32,10 @@ The public workflow API showed that the Linux certification job passed at commit
 ## 2026-09-03 20:34 - Fixed checksum drift at Windows checkout
 
 The signed-in hosted log identified the exact failure: `ERROR: checksum mismatch for .clineflow/JOURNAL_TEMPLATE.md`. The manifest contains LF-byte checksums, while Windows checkout was allowed to materialize Markdown and other text fixtures as CRLF. Added explicit LF attributes for every managed text extension and the extensionless dashboard manifest, plus release-contract coverage for the critical attribute rules. This preserves identical verified payload bytes on Linux, macOS, and Windows.
+
+## 2026-09-03 20:37 - Corrected PowerShell payload modes
+
+The next hosted run proved that installation and every payload checksum passed, then doctor rejected `bootstrap.ps1` and `update.ps1` because Git Bash does not expose POSIX executable semantics for PowerShell files. Changed only those manifest entries from `0755` to `0644`, retained executable mode for Bash commands, updated installation and release-contract tests, and bumped the release to `2026.09.03.22`. Schema `1` remains valid because the updater already applies declared manifest modes transactionally and no persistent format changes.
 
 # Decisions
 

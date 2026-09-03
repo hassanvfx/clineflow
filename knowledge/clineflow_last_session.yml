@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T20:34:40Z
-latest_change: Traced the Windows lifecycle failure to CRLF checksum drift and pinned manifest-managed text formats to LF for release 2026.09.03.21.
+updated_at: 2026-09-03T20:37:25Z
+latest_change: Corrected PowerShell payload modes after hosted Windows CI passed installation checksums but rejected POSIX executable checks, preparing release 2026.09.03.22.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -30,6 +30,7 @@ specification_summary:
   - Old installations whose agent rules do not recognize the update prompt can bypass stale local guidance with the permanent raw remote bootstrap from the project root.
   - Windows lifecycle CI uses an isolated RUNNER_TEMP project, normalized Git Bash paths, and a shared resolved path for the PowerShell and removal stages.
   - Repository attributes force platform-stable LF bytes for managed Markdown, YAML, JSON, JavaScript, CSS, Python, PowerShell, scripts, and extensionless release manifests.
+  - PowerShell files are manifest-managed as mode 0644 while Bash entrypoints remain mode 0755.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -54,6 +55,7 @@ verification_summary:
   - Release-contract coverage rejects missing or incomplete old-install rescue guidance, and complete lifecycle certification passes for release 2026.09.03.21.
   - The GitHub API confirms the prior main run's Linux job passed and its Windows installation step failed; the corrected hosted Windows result requires a push.
   - The signed-in Windows job log identified `.clineflow/JOURNAL_TEMPLATE.md` checksum mismatch after checkout; local release-contract coverage now guards the LF rules.
+  - The subsequent hosted run passed all checksums and failed only on POSIX executable assertions for the two PowerShell files; release 2026.09.03.22 corrects those modes and awaits hosted confirmation.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.

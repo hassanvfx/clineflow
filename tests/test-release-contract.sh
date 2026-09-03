@@ -32,6 +32,8 @@ pass "current release contract is valid"
 for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' 'template/.clineflow/dashboard-component-manifest text eol=lf'; do
   grep -qF "$pattern" "$ROOT/.gitattributes" || fail "release payload line endings are not pinned: $pattern"
 done
+grep -qF 'payload|managed|0644|.clineflow/bin/bootstrap.ps1|' "$ROOT/template/.clineflow/release-manifest" || fail "PowerShell bootstrap incorrectly requires POSIX executable mode"
+grep -qF 'payload|managed|0644|.clineflow/bin/update.ps1|' "$ROOT/template/.clineflow/release-manifest" || fail "PowerShell updater incorrectly requires POSIX executable mode"
 
 portable="$TEST_ROOT/portable"; copy_release "$portable"
 "$portable/template/.clineflow/bin/validate-release" >/dev/null || fail "copied release fixture is incomplete"

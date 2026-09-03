@@ -17,7 +17,8 @@ for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .win
 shasum -a 256 knowledge/log.md > before.hashes
 [ ! -d clineflow ] || fail "fresh test project unexpectedly has legacy runtime"
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
-for tool in install dashboard update update.ps1 uninstall validate-knowledge-sync validate-okf validate-release doctor prereqs bootstrap.ps1; do [ -x ".clineflow/bin/$tool" ] || fail "missing .clineflow/bin/$tool"; done
+for tool in install dashboard update uninstall validate-knowledge-sync validate-okf validate-release doctor prereqs; do [ -x ".clineflow/bin/$tool" ] || fail "missing executable .clineflow/bin/$tool"; done
+for tool in update.ps1 bootstrap.ps1; do [ -f ".clineflow/bin/$tool" ] || fail "missing PowerShell command .clineflow/bin/$tool"; done
 [ -f .clineflow/dashboard-component-manifest ] || fail "missing inert dashboard component manifest"
 [ ! -e .clineflow/optional ] && [ ! -e knowledge/dashboard ] || fail "installation activated the optional dashboard"
 ! grep -q 'CLINEFLOW DASHBOARD GENERATED REPORTS' .git/info/exclude || fail "installation changed dashboard exclusions"
