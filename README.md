@@ -1,831 +1,199 @@
-```
-  ██████╗██╗     ██╗███╗   ██╗███████╗███████╗██╗      ██████╗ ██╗    ██╗
- ██╔════╝██║     ██║████╗  ██║██╔════╝██╔════╝██║     ██╔═══██╗██║    ██║
- ██║     ██║     ██║██╔██╗ ██║█████╗  █████╗  ██║     ██║   ██║██║ █╗ ██║
- ██║     ██║     ██║██║╚██╗██║██╔══╝  ██╔══╝  ██║     ██║   ██║██║███╗██║
- ╚██████╗███████╗██║██║ ╚████║███████╗██║     ███████╗╚██████╔╝╚███╔███╔╝
-  ╚═════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ 
-```
+# ClineFlow
 
-> **Persistent Context, Open Knowledge**
->
-> **ClineFlow — AI coding memory, now native OKF.**
+> **Infinite AI Memory across chats, agents, and teams.**
 
-🤖 **Works with any AI assistant** • Claude Code • Cline • Cursor • GitHub Copilot • Windsurf
-✅ **Fully tested with Cline** by core development team
-
-📖 **[Get the book: Infinite AI Context](https://hassanvfx.github.io/infinite-ai-context/)**
+ClineFlow gives coding agents durable, Git-native project context. Decisions, goals, verification, and handoffs live beside the code in an open knowledge bundle—not inside one temporary chat or proprietary memory service.
 
 [![Test Status](https://github.com/hassanvfx/clineflow/workflows/Test%20ClineFlow/badge.svg)](https://github.com/hassanvfx/clineflow/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Agent Agnostic](https://img.shields.io/badge/Agent-Agnostic-green)](https://github.com/hassanvfx/clineflow)
-
----
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![OKF v0.2](https://img.shields.io/badge/OKF-v0.2-1e9fff)](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
+[![Agent Agnostic](https://img.shields.io/badge/agents-Cline%20%7C%20Codex%20%7C%20Claude%20Code%20%7C%20Cursor%20%7C%20Copilot%20%7C%20Windsurf-1e9fff)](#works-with-your-agent)
 
 ![ClineFlow — Persistent Context, Open Knowledge](assets/clineflow-okf-cover.png)
 
-## The memory layer for AI coding agents
+## Install ClineFlow
 
-ClineFlow turns engineering context into portable, version-controlled knowledge. It adopts the [Open Knowledge Format introduced by Google Cloud](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) and targets the [OKF v0.2 specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md), so people and agents share the same Markdown and YAML knowledge graph—without a platform, service, or lock-in.
+Open your project in a coding agent and paste:
 
-## Why Open Knowledge Format?
-
-The [Google Cloud introduction to OKF](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) describes a deliberately small, open contract for AI-ready knowledge: Markdown files for the human-readable narrative, YAML frontmatter for queryable metadata, normal links for relationships, and optional indexes and logs for progressive discovery and history. It is a format—not a service or SDK—so the same knowledge can move between people, coding agents, repositories, and tools.
-
-That matters because reliable AI coding depends on context that survives the chat that created it. ClineFlow had already been built around many of the practices OKF formalizes: keeping task history beside the code, capturing decisions and verification, making context discoverable before work begins, and staying independent of any one agent or vendor. The native `knowledge/` bundle makes those conventions interoperable: every new task becomes a typed Engineering Journal concept, connected through standard Markdown, versioned with the project, and usable by any conforming producer or consumer.
-
-- **Persistent context:** task history, decisions, tests, and next steps survive every session.
-- **Open knowledge:** `knowledge/` is a readable, Git-native OKF bundle with indexes, links, and change history.
-- **Agent-agnostic workflow:** ChatGPT Codex, Cline, Cursor, Copilot, Windsurf, and future tools receive the same instructions.
-- **No added runtime:** the default validator is Bash-only; full YAML parsing is available through optional strict mode.
-
-Existing `docs/journals/` directories remain supported as read-only legacy context. New work is always written to `knowledge/journals/`.
-
-Read the [OKF knowledge workflow guide](docs/okf-knowledge-workflow.md) for the architecture, validation model, and upgrade behavior.
-
----
-
-```mermaid
-graph TD
-    A[💭 Vibecoding<br/>Lost Context] --> B[🎯 ClineFlow<br/>Persistent Memory]
-    B --> C[🚀 Ship Faster]
-    B --> D[👥 Team Ready]
-    B --> E[📖 Self-<br/>Documenting]
-    C --> B
-    D --> B
-    E --> B
-    style A fill:#ff6b6b
-    style B fill:#238636
+```text
+Please install ClineFlow by following the instructions provided at https://github.com/hassanvfx/clineflow
 ```
 
----
+The agent reads the current installation instructions, shows the prerequisite plan, installs ClineFlow into the project, and verifies the result.
 
-> 💡 **New to AI Coding Assistants?**
-> 
-> AI coding assistants like Claude Code, Cline, Cursor, and GitHub Copilot write code, edit files, and execute commands through natural conversation.
-> 
-> **Popular Options:**
-> - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview)** - Anthropic's agentic coding tool
-> - **[Cline](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)** - VS Code extension (our primary platform)
-> - **[Cursor](https://cursor.com)** - AI-first IDE
-> - **[GitHub Copilot](https://github.com/features/copilot)** - GitHub's AI assistant
-> - **[Windsurf](https://windsurf.com)** - Codeium's agentic IDE
-> 
-> **ClineFlow gives them all persistent memory** - so they remember your entire project history across sessions.
-
----
-
-## 🎯 Easy as 1-2-3
-
-New task journals live at `knowledge/journals/<task>.md`, use YAML frontmatter, and are validated with:
-
-```bash
-./.clineflow/bin/validate-okf
-```
-
-Every installation also creates an index-first durable development workspace: `docs/durable-development-methodology.md` explains the operating loop, while `knowledge/clineflow_specification.yml`, `clineflow_verification.yml`, `clineflow_goals.yml`, `clineflow_last_session.yml`, and `clineflow_timeline.yml` provide current project context and a linked ledger. Agents read these before substantial work and update them alongside the detailed Engineering Journal.
-
-The bundled validator uses Bash only; no additional runtime or package installation is required.
-
-For full YAML parsing in environments that already use Python, strict validation is optional:
-
-```bash
-python3 -m pip install PyYAML
-./.clineflow/bin/validate-okf --strict
-```
-
-**Turn Cline into a teammate who remembers everything**
-
-### 1️⃣ Install ClineFlow
-
-**Option 1: From VS Code (in your AI assistant)**
-
-Using Claude Code, ChatGPT Codex, Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and type:
-
-```
-Please install ClineFlow by following the instructions provided at [https://github.com/hassanvfx/clineflow](https://github.com/hassanvfx/clineflow)
-```
-
-**Option 2: From Terminal**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/install | bash
-```
-
-On Windows, run the native bootstrap from PowerShell:
-
-```powershell
-irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/bootstrap.ps1 | iex
-```
-
-The installer first prints an OS-specific prerequisite plan. It only installs missing Git and `curl` after approval (or `--yes` for already-authorized automation), then initializes Git when the directory is not already a repository. It never creates a commit, configures identity, adds a remote, or changes branch policy. If Git setup cannot complete, ClineFlow setup continues with a clear warning. macOS uses Homebrew; Linux supports `apt-get`, `dnf`, `pacman`, `zypper`, and `apk`; Windows uses `winget` to install Git for Windows. Run `./.clineflow/bin/doctor` afterward to verify Git, a downloader, and the repository.
-
-### 2️⃣ Ask your AI assistant "How can we work?"
-Your AI assistant reads your project's workflow and becomes context-aware. Through journals, every conversation builds on the last - **it remembers what you built, why you built it, and what's next.**
-
-**Using ChatGPT Codex?** Start with `.clineflow/WORKING_WITH_CODEX.md`, then run `./.clineflow/bin/doctor` to verify that `AGENTS.md` and the OKF bundle are ready. No Codex plugin, SDK, or runtime is required.
-
-**Using Claude Code?** ClineFlow installs its shared workflow in `CLAUDE.md`, Claude Code's project-memory file. Run `./.clineflow/bin/doctor` to verify the instructions and OKF bundle.
-
-### 3️⃣ Say "please commit"
-Your AI assistant automatically:
-- 📝 Documents decisions and reconciles all five knowledge ledgers
-- ✅ Validates the journal, ledgers, timeline, handoff, and knowledge log as one change set
-- 💾 Commits code + synchronized knowledge together
-- 🔄 Creates context for your next session
-
-**Result:** Every new task starts with full context. No more "what did we do last time?" 🎉
-
----
-
-## 🌍 Agent-Agnostic Architecture
-
-**ClineFlow automatically configures itself for multiple AI assistants.** ChatGPT Codex is a first-class workflow: it reads the shared `AGENTS.md`, navigates the OKF bundle, and has a dedicated guide and setup diagnostic—without a plugin, SDK, or proprietary runtime. During installation, ClineFlow creates configuration files for:
-
-- ✅ **Cline** (`.clinerules`) - *Fully tested by core team*
-- ✅ **ChatGPT Codex** (`AGENTS.md` + `.clineflow/WORKING_WITH_CODEX.md`)
-- ✅ **Claude Code** (`CLAUDE.md`)
-- ✅ **Cursor** (`AGENTS.md`)
-- ✅ **GitHub Copilot** (`.github/copilot-instructions.md`)
-- ✅ **Windsurf** (`.windsurf/rules/`)
-- ✅ **Future agents** - Ready for any tool that emerges
-
-**Why multiple config files?** Different AI assistants use different configuration formats. ClineFlow generates all of them from a single template, so it "just works" regardless of which tool you use. `AGENTS.md` is the shared entry point for ChatGPT Codex and compatible agents; `CLAUDE.md` is Claude Code's project-memory file.
-
-**Already have an `AGENTS.md`?** ClineFlow preserves it—even with `--force`. Read `.clineflow/WORKING_WITH_CODEX.md` and add the shared OKF workflow from [the template](template/configs/rules.template.md) to your existing instructions; then run `./.clineflow/bin/doctor` to check the setup.
-
-**Current Status:** Core team actively develops and tests with Cline. Community members are welcome to test and contribute support for other agents!
-
-> 💡 **Using a different agent?** The installation works the same - ClineFlow will create the appropriate config files automatically.
-
----
-
-## ⚡ ChatGPT Codex: fast path
-
-Codex uses the repository-standard `AGENTS.md`; ClineFlow adds the OKF workflow there during a fresh install. Start a Codex task with:
-
-> Read `AGENTS.md` and `knowledge/index.md`, search relevant journals, summarize the current context, and propose the next safe step.
-
-For substantial work, Codex records decisions and verification in `knowledge/journals/`, then validates the bundle before delivery. Confirm the setup at any time:
-
-```bash
-./.clineflow/bin/doctor
-```
-
-The doctor has no extra runtime dependencies. `./.clineflow/bin/doctor --strict` uses PyYAML only when it is already available.
-
----
-
-## 🔍 How ClineFlow Compares
-
-Choosing the right tool for AI-assisted development? Here's how ClineFlow stacks up against other popular solutions:
-
-### Comparison Table
-
-| Aspect | **ClineFlow** | Kiro | spec-kit |
-|--------|---------------|------|----------|
-| **Type** | Memory & Documentation Layer | Standalone AI IDE | Agent-Agnostic Framework |
-| **Primary Focus** | Persistent context via journals | Spec-driven development | Methodology + Commands |
-| **Installation** | One-line bash script | Full IDE install | Python CLI + Git |
-| **Agent Support** | Works with any (Cline, Cursor, Copilot, Windsurf) | Kiro-only | Multiple agents (Cline, Claude Code, Copilot, Cursor, etc.) |
-| **Learning Curve** | Minimal - natural conversations | Medium - structured workflow | Medium - multiple phases |
-| **Ceremony Level** | Low (automatic journaling) | High (formal specs required) | Medium (guided steps) |
-| **Best For** | Memory persistence, ongoing projects | Greenfield projects, formal specs | Structured development, enterprise |
-| **Setup Time** | < 1 minute | Full IDE switch | Several minutes |
-| **Dependencies** | bash + git only | Standalone IDE | Python 3.11+, uv, git |
-
-### When to Choose ClineFlow
-
-✅ **Choose ClineFlow if you:**
-- Want memory without changing workflow
-- Already have a preferred AI assistant (Cline, Cursor, etc.)
-- Value documentation that emerges naturally from work
-- Need cross-repo code exploration (symlinks)
-- Want minimal setup (1 bash script)
-- Prefer iterative, conversation-driven development
-- Working solo or small team
-
-### When to Choose Alternatives
-
-**Choose Kiro if you:**
-- Want a purpose-built AI IDE
-- Need autonomous agents with background hooks
-- Building greenfield projects from scratch
-- Want guided spec-driven workflow with formal specs
-- Need multimodal input (images, diagrams)
-- Willing to switch entire IDE
-- Working on complex enterprise projects
-
-**Choose spec-kit if you:**
-- Want spec-driven without IDE lock-in
-- Using multiple AI tools across team
-- Need agent-agnostic workflow with formal methodology
-- Working across different AI platforms
-- Need formal spec documents for compliance
-- Contributing to open source standard
-
-### ClineFlow's Unique Value
-
-**The Memory Layer That Works Everywhere:**
-- Works alongside existing tools (not replacing them)
-- Zero commitment (one bash script to try)
-- Natural documentation (journals emerge from work)
-- Cross-repo exploration (symlink system)
-- Intelligent commits (automatic context preservation)
-
-**Core Differentiator:** ClineFlow is the ONLY tool focused purely on giving AI assistants persistent memory through journals, working with any agent, with zero ceremony.
-
----
-
-## 💡 Why This Changes Everything
-
-**Without ClineFlow:**
-- ❌ Each Cline session starts from scratch
-- ❌ You repeat context manually every time
-- ❌ No history of why decisions were made
-- ❌ Can't resume work seamlessly
-
-**With ClineFlow:**
-- ✅ **Persistent Memory**: Journals capture every decision, every conversation
-- ✅ **Seamless Continuation**: New tasks load previous context automatically
-- ✅ **True Collaboration**: Cline becomes a partner who remembers your project
-- ✅ **Zero Context Loss**: Work today, continue tomorrow without explanation
-
-**This isn't just documentation - it's turning Cline into a teammate with memory.**
-
----
-
-## 🔄 Returns Accepted Anytime
-
-Changed your mind? No hard feelings!
-
-```bash
-./.clineflow/bin/uninstall
-```
-
-Your `knowledge/` bundle and legacy `docs/journals/` are safe and require manual removal if desired. [See all options →](#installation-options)
-
----
-
-## 🚀 Document Driven Development (DDD)
-
-> **From vibecoding to professional software engineering** - ClineFlow transforms informal AI chats into expert-supervised, fully documented development.
-
-### The Natural Workflow
-
-```mermaid
-graph TD
-    A[💭 You: Build auth system] --> B[🤖 Cline creates journal automatically]
-    B --> C[💻 Cline builds feature]
-    C --> D[📝 Documents decisions as you talk]
-    D --> E[✅ You: please commit]
-    E --> F[📦 Synchronizes ledgers + commits]
-    F --> G[🔄 Next session loads context]
-    G --> A
-    style E fill:#238636
-    style F fill:#238636
-```
-
-**1. Just Ask Cline**
-```
-"Build a user authentication system"
-```
-Cline reads `.clinerules`, understands your project standards, and gets to work. **No manual setup needed.**
-
-**2. Cline Works Like a Senior Developer**
-- 📋 **Automatically creates and updates journal** for the task
-- 💬 **Documents every decision** as you discuss
-- 🏗️ **Follows code organization rules** (300-500 LOC modules)
-- 🧠 **Maintains context** throughout the conversation
-- ✅ **Asks clarifying questions** when needed
-
-**3. Say "please commit"**
-Cline automatically:
-- Updates the journal and reconciles all five ledgers plus the knowledge log
-- Runs OKF and knowledge-sync validation
-- Stages code + synchronized knowledge together and validates the staged change
-- Creates descriptive commit message
-- Commits everything
-
-**Result:** Professional development workflow with complete documentation - automatically.
-
----
-
-### From Vibecoding to Document Driven Development
-
-| Vibecoding (Before) | Document Driven Development (After) |
-|---------------------|-------------------------------------|
-| 💭 Informal chats | 📋 Structured journals |
-| 🤷 Lost context between sessions | 🧠 Persistent memory across weeks |
-| ❓ "What did we do last time?" | 📖 Complete decision history |
-| 🎲 Hope for consistency | ✅ Expert-supervised process |
-| 👤 Solo knowledge | 👥 Team-ready documentation |
-
-### Why Document Driven Development Matters
-
-**🎯 Professional Standards**
-- Not just coding - engineering with documentation
-- Every decision recorded and justified
-- Code and context together in every commit
-
-**👥 Team-Ready From Day One**
-- New developers read journals to understand the "why"
-- Onboarding becomes reading, not guessing
-- Institutional knowledge preserved
-
-**🔍 Expert-Supervised AI**
-- AI follows your documented rules and standards
-- Maintains code quality guidelines automatically
-- Consistent patterns across the entire project
-
-**📊 Complete Audit Trail**
-- Every decision, every conversation, fully documented
-- Understand why code exists, not just what it does
-- Debug with context, not archaeology
-
-**This isn't just AI pair programming - it's professional software engineering with AI assistance.**
-
----
-
-## 🎬 See Real ClineFlow in Action
-
-### We Built ClineFlow WITH ClineFlow
-
-This project uses its own workflow system. See how it works in practice:
-
-**📖 [View Our Development Journal →](docs/journals/clineflow-development.md)**
-
-#### What You'll See:
-- 🔄 **Rebranding Process** - Complete documentation of renaming llm-refs to ClineFlow
-- 🧪 **Testing & Validation** - How we tested installation from GitHub  
-- 📝 **Feature Development** - Workflow improvements recorded with their context
-- 🛡️ **Uninstall Safety** - Comprehensive uninstall with journal protection
-- 📊 **DDD Evolution** - How we restructured README for Document Driven Development
-- 🤝 **Multi-Task Pattern** - 6 tasks documented in one journal with complete context
-
-**Result:** Professional development with complete documentation - exactly what your projects will look like.
-
-### What Your Journals Will Look Like
-
-Your first task with ClineFlow will create a journal like ours:
-- ✅ Implementation status tracking
-- 📋 Detailed entries with timestamps
-- 💭 Technical decisions explained
-- 🎯 Success criteria defined
-- 🐛 Issues tracked
-- 📚 Quick reference for future work
-
-**This is what professional AI-assisted development looks like.**
-
----
-
-## 🌍 Works For Everyone
-
-ClineFlow scales from solo hackers to enterprise teams - same simplicity, same power.
-
-### Solo Vibecoder
-
-```mermaid
-graph LR
-    A[💡 Idea] --> B[💬 Chat with Cline]
-    B --> C[🏗️ Build]
-    C --> D[✅ please commit]
-    D --> E[📝 Context Saved]
-    E --> F[🔄 Next Idea<br/>with History]
-    F --> B
-    style D fill:#238636
-    style E fill:#238636
-```
-
-**Your workflow:**
-- Idea → Build → Commit
-- Zero overhead
-- Automatic memory
-- Just creation
-
-### Enterprise Team
-
-```mermaid
-graph TD
-    A[👤 Developer A<br/>Creates Feature] --> B[📝 Documents in Journal]
-    B --> C[💾 Commits with Context]
-    C --> D[👥 Developer B<br/>Reads Journal]
-    D --> E[🧠 Full Context Instantly]
-    E --> F[🔄 Continues Work]
-    F --> G[📋 PR with Complete History]
-    style B fill:#238636
-    style E fill:#238636
-```
-
-**Team workflow:**
-- Onboarding = reading journals
-- Complete decision history
-- No tribal knowledge
-- Audit-ready documentation
-
-**Same tool. Any scale.**
-
----
-
-## 🔗 Related Projects
-
-Keep projects that need cross-project context as sibling folders beneath one common parent directory:
-
-```
-projects/
-├── backend-api/
-├── frontend-app/
-└── shared-library/
-```
-
-When working in one project, tell the agent to inspect “sibling project `<foldername>`,” for example `../backend-api`. This lightweight convention needs no ClineFlow configuration, symlinks, generated workspace, or special Git handling.
-
-### Migrating from references
-
-The former reference-repository system is no longer shipped. Existing installations are unchanged; if desired, manually remove `setup-refs.sh`, `.clineflow.example`, `.clineflow.local`, generated workspace files, and only the reference symlinks inside `clineflow/`. Keep the `clineflow/` directory itself because it contains workflow documentation.
-
----
-
-## 🎁 What You Get
-
-### 🚀 Intelligent Commits
-Just say "please commit" to any supported agent:
-```mermaid
-graph LR
-    A[You: please commit] --> B[📝 Reconcile Journal + 5 Ledgers]
-    B --> C[✅ Validate Knowledge Sync]
-    C --> D[📦 Stage Code + Knowledge]
-    D --> E[✅ Validate Staged Sync]
-    E --> F[✍️ Commit]
-    style A fill:#1f6feb
-    style F fill:#238636
-```
-
-Traditional workflow requires 5+ manual steps. ClineFlow: **One phrase.**
-
-### 📝 Persistent Context
-```mermaid
-graph LR
-    A[Session 1<br/>Build Feature] --> B[📖 Journal]
-    B --> C[💾 Git Commit]
-    C --> D[Session 2<br/>Loads Journal]
-    D --> E[🧠 Complete Context]
-    E --> F[Session 3<br/>Enhanced AI]
-    style B fill:#238636
-    style E fill:#238636
-```
-
-**Never repeat yourself again.** Each session builds on the last.
-
-### 🏗️ Professional Code Organization
-
-Built-in guidelines ensure maintainable code:
-
-- **Module/File Size**: 300-500 LOC ideal, >1K LOC unacceptable
-- **Single Responsibility**: Each file has one clear purpose
-- **Composition Over Monoliths**: Break large files into focused units
-
-**Universal:** Works for any language - Python classes, JavaScript components, Go packages, Rust modules, etc.
-
-### 🔄 Multi-Task Journals
-
-```mermaid
-graph TD
-    A[Task 1: Initial Build] --> B[Same Journal]
-    B --> C[Task 2: Bug Fix]
-    C --> B
-    B --> D[Task 3: Enhancement]
-    D --> B
-    style B fill:#238636
-```
-
-Keep related work in one place. Complete context for entire feature lifecycle.
-
-### 🎯 Zero Dependencies
-
-Just bash + git. Works everywhere:
-- ✅ Python projects
-- ✅ JavaScript/TypeScript
-- ✅ Go, Rust, Java, C++
-- ✅ Any language with git
-
----
-
-## 🎬 Quick Start
-
-### One-Line Install
-
-**Method 1: Just Ask Your AI Assistant (Easiest)**
-
-Using Claude Code, Cline, Cursor, GitHub Copilot, Windsurf, or any AI coding assistant - just start a new task and say:
-
-```
-Please install ClineFlow by following the instructions provided at [https://github.com/hassanvfx/clineflow](https://github.com/hassanvfx/clineflow)
-```
-
-Your AI assistant will read the repository, understand the installation process, and set everything up for you.
-
-**Method 2: Direct Installation (Traditional)**
+Prefer the terminal?
 
 ```bash
 # macOS and Linux
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/install | bash
+```
 
+```powershell
 # Windows PowerShell
 irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/bootstrap.ps1 | iex
 ```
 
-### What Gets Installed
+The installer preserves existing project instructions and knowledge. When Git is available, it initializes a repository if needed—but never creates a commit, configures identity, adds a remote, or chooses a branch policy.
 
+[Installation, lifecycle options, and troubleshooting →](docs/installation-and-lifecycle.md)
+
+## The whole workflow is three sentences
+
+### 1. Install once
+
+Paste the installation prompt. ClineFlow adds a small hidden runtime, an open knowledge bundle, and shared instructions for supported coding agents.
+
+### 2. Describe the outcome
+
+Ask for a feature, fix, investigation, or refactor as usual. For substantial work, the agent recovers current project context and creates or resumes an Engineering Journal.
+
+### 3. Say “please commit”
+
+```text
+Please commit.
 ```
+
+The agent updates the task journal, reconciles the five knowledge ledgers, records verification and the next safe step, validates the complete change set, and commits code plus context together.
+
+The next chat begins from what the project already knows.
+
+[See how the self-documenting loop works →](docs/how-clineflow-works.md)
+
+## Quick tutorial
+
+[![Watch the ClineFlow 30-minute tutorial](assets/clineflow-tutorial-thumbnail.jpg)](https://vimeo.com/1220645170?fl=pl&fe=cm)
+
+**[Watch the 30-minute ClineFlow masterclass →](https://vimeo.com/1220645170?fl=pl&fe=cm)**
+
+It walks through grounding a task, defining proof, building with an agent, preserving the verified state, and carrying that context into the next session.
+
+## What gets installed
+
+```text
 your-project/
-├── .clinerules                    # Cline
-├── AGENTS.md                      # ChatGPT Codex, Cursor, Copilot, compatible agents
-├── CLAUDE.md                      # Claude Code project instructions
-├── .github/
-│   └── copilot-instructions.md    # GitHub Copilot
-├── .windsurf/
-│   └── rules/
-│       └── clineflow.md           # Windsurf
-├── .clineflow/                    # ClineFlow-owned runtime and documentation
-│   ├── VERSION                     # Date-based installed release
-│   ├── state                       # Release and migration-schema state
-│   ├── release-manifest            # Managed payloads, modes, and checksums
-│   ├── JOURNAL_TEMPLATE.md        # Legacy-journal compatibility notice
-│   ├── PROCEDURES.md              # Standard operating procedures
-│   ├── WORKING_WITH_CLINE.md      # Complete user guide
-│   ├── WORKING_WITH_CODEX.md      # ChatGPT Codex workflow guide
-│   └── bin/
-│       ├── install                # OS-aware installer and prerequisite plan
-│       ├── dashboard              # Inert launcher for the optional Knowledge Visor
-│       ├── bootstrap.ps1          # Native Windows entrypoint
-│       ├── update.ps1             # Native PowerShell update wrapper
-│       ├── validate-okf           # Dependency-free OKF structural validator
-│       ├── validate-release       # Release and migration contract checker
-│       ├── doctor                 # Dependency-free setup diagnostic
-│       └── update                 # Update script
-└── knowledge/                     # Native OKF v0.2 knowledge bundle
-    ├── index.md                   # Bundle navigation and version declaration
-    ├── log.md                     # Dated knowledge history
-    └── journals/                  # Engineering Journal concepts
-        ├── index.md
-        └── TASK_TEMPLATE.md
+├── .clineflow/                         # Hidden, ClineFlow-managed runtime
+│   ├── bin/                            # Install, update, remove, doctor, and validators
+│   ├── VERSION                         # Installed release
+│   ├── state                           # Release and migration state
+│   ├── release-manifest                # Managed payload checksums and ownership
+│   ├── PROCEDURES.md                   # Operating procedures
+│   ├── WORKING_WITH_CLINE.md           # Cline guide
+│   └── WORKING_WITH_CODEX.md           # Codex guide
+├── knowledge/                          # Your Git-native OKF knowledge base
+│   ├── index.md                        # Progressive-disclosure entry point
+│   ├── clineflow_goals.yml             # Outcomes and priorities
+│   ├── clineflow_specification.yml     # Requirements and constraints
+│   ├── clineflow_verification.yml      # Acceptance criteria and evidence
+│   ├── clineflow_last_session.yml      # Current handoff and next step
+│   ├── clineflow_timeline.yml          # Project events and decisions
+│   ├── log.md                          # Knowledge change history
+│   └── journals/                       # Detailed Engineering Journals
+├── docs/
+│   └── durable-development-methodology.md
+├── .claude/commands/update-clineflow.md # Deterministic Claude update command
+├── AGENTS.md                           # Codex, Cursor, and compatible agents
+├── CLAUDE.md                           # Claude Code
+├── .clinerules                         # Cline
+├── .github/copilot-instructions.md     # GitHub Copilot
+└── .windsurf/rules/clineflow.md        # Windsurf
 ```
 
-The optional Knowledge Visor is deliberately dormant after installation. ClineFlow does not install Python, visual libraries, fonts, caches, or reports unless you explicitly run `./.clineflow/bin/dashboard` or tell your agent, “Show me the ClineFlow dashboard.” First use displays an approval plan, downloads pinned assets from approved CDNs with a checksum-equivalent fallback, installs the verified runtime under `.clineflow/optional/`, and generates a private report under `knowledge/dashboard/runs/`. Each `index.html` embeds its data, CSS, fonts, and visual libraries; it needs no asset access through the file protocol and makes no browser-time network requests. The matching `snapshot.json` beside it is the inspectable `clineflow-dashboard/v1` structured representation. Generated reports do not participate in the five-ledger synchronization contract.
+Existing agent files are not replaced. ClineFlow adds one marker-delimited block and records whether it owns the whole file or only that block. The hidden `.clineflow/` directory is tooling; `knowledge/` is your project memory.
 
-```bash
-# Inspect the dormant or activated state without installing anything
-./.clineflow/bin/dashboard doctor
+[Complete installed-file and ownership reference →](docs/installation-and-lifecycle.md#what-the-installer-adds)
 
-# Explicitly activate on first use, then generate a time-first report
-./.clineflow/bin/dashboard
+## Journals hold the story. Ledgers make it discoverable.
+
+An Engineering Journal is the durable record for one substantial task: its goal, decisions, work log, verification, open issues, and next steps. It replaces the fragile chat transcript with concise project knowledge.
+
+The five YAML ledgers are the front door:
+
+| Ledger | The question it answers |
+| --- | --- |
+| `clineflow_goals.yml` | Why are we doing this, and what does success mean? |
+| `clineflow_specification.yml` | What behavior and constraints have we agreed on? |
+| `clineflow_verification.yml` | What proves the work is complete? |
+| `clineflow_last_session.yml` | What is true now, and what should happen next? |
+| `clineflow_timeline.yml` | How did the project reach this state? |
+
+Agents read the ledgers first, then follow links into relevant journals. At commit time, the journal and all five ledgers move forward together with one shared timestamp. ClineFlow validates that synchronization before the commit is created.
+
+[Explore the OKF knowledge structure →](docs/okf-knowledge-workflow.md)
+
+## See the project memory
+
+Ask your agent:
+
+```text
+Please show me the ClineFlow dashboard.
 ```
 
----
+The Knowledge Visor stays dormant until explicitly requested. On first use it shows an approval plan for its optional pinned runtime and visual assets, then generates a private, self-contained report from local OKF knowledge and Git history. The report does not edit canonical knowledge or make browser-time network requests.
 
-## 🔄 Updating ClineFlow
+Generated reports remain in `knowledge/dashboard/` even if ClineFlow tooling is later removed.
 
-Already have ClineFlow installed? Get the latest features and improvements!
+[See the Knowledge Visor's report surfaces, activation, privacy, retention, and export workflow →](docs/knowledge-visor.md)
 
-Using an AI coding agent, say:
+## Update or remove it in plain English
 
-> Please update ClineFlow.
+To update:
 
-That request authorizes the agent to read the current instructions from this repository and immediately run the permanent remote bootstrap with `--yes`, without asking for redundant confirmation:
+```text
+Please update ClineFlow.
+```
+
+That request authorizes the agent to consult this authoritative repository and immediately run the permanent remote updater with `--yes`. **Do not run any existing local updater first**; legacy copies can overwrite themselves. Updates are manifest-verified, preserve user-authored knowledge and instructions, and roll back automatically on failure.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes
 ```
 
-Do not run any existing local updater first; legacy copies can overwrite themselves. The agent will report the installed version and any preserved legacy artifacts after verification or rollback completes.
+To remove:
 
-### Quick Update
+```text
+Please remove ClineFlow.
+```
+
+The agent first runs a dry run and explains what will be removed and preserved. It asks for confirmation before applying the removal. The managed `.clineflow/` runtime and managed instruction blocks are removed transactionally; `knowledge/`, generated dashboard reports, user documentation, and unrelated files remain.
 
 ```bash
-# Universal command for every supported OKF-era installation
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash
-
-# Or run the installed updater
-./.clineflow/bin/update
+./.clineflow/bin/uninstall --dry-run
 ```
 
-On Windows PowerShell:
+[Update and removal details →](docs/installation-and-lifecycle.md#update-clineflow)
 
-```powershell
-# Universal command for supported legacy layouts
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/update.ps1))) -Yes
+## Works with your agent
 
-# Or run the installed wrapper
-./.clineflow/bin/update.ps1
-```
+ClineFlow distributes one agent-neutral workflow through the native project-instruction files used by:
 
-### What Gets Updated
+- Cline
+- ChatGPT Codex
+- Claude Code
+- Cursor
+- GitHub Copilot
+- Windsurf
 
-✅ **Template files** - Latest procedures, documentation, and features  
-✅ **Setup scripts** - Installer, validator, and diagnostic improvements
-✅ **Workflow guidance** - Current procedures and best practices
+No Codex plugin, proprietary service, or always-running ClineFlow process is required. The durable contract is Markdown, YAML, links, and Git.
 
-### What Stays Protected
+## Go deeper
 
-🔒 **Your customizations** - Content outside ClineFlow's marked rules block is preserved
-🔒 **Your work** - All knowledge in `knowledge/` and legacy journals in `docs/journals/` safe
+- [Installation and lifecycle](docs/installation-and-lifecycle.md)
+- [How ClineFlow works](docs/how-clineflow-works.md)
+- [OKF knowledge workflow](docs/okf-knowledge-workflow.md)
+- [Knowledge Visor](docs/knowledge-visor.md)
+- [Durable development methodology](docs/durable-development-methodology.md)
+- [Working with ChatGPT Codex](template/.clineflow/WORKING_WITH_CODEX.md)
+- [Working with Cline](template/.clineflow/WORKING_WITH_CLINE.md)
+- [Release and migration process](docs/releasing.md)
+- [Changelog](CHANGELOG.md)
 
-### Preview Changes First
+## Learn and contribute
 
-```bash
-# See what would be updated without changing anything
-./.clineflow/bin/update --dry-run
-```
+- [ClineFlow website](https://www.clineflow.com/)
+- [Infinite AI Context — free eBook and print edition](https://hassanvfx.github.io/infinite-ai-context/)
+- [Report an issue](https://github.com/hassanvfx/clineflow/issues)
+- [Contribute](https://github.com/hassanvfx/clineflow/pulls)
 
-### Check Version
+## License
 
-```bash
-# Your current version
-cat .clineflow/VERSION
-
-# Latest available version
-curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/VERSION
-```
-
-### Update Options
-
-```bash
-./.clineflow/bin/update --help      # Show all options
-./.clineflow/bin/update --dry-run   # Preview updates
-./.clineflow/bin/update --yes       # Authorized non-interactive update
-```
-
-**📋 Full update history:** See [CHANGELOG.md](CHANGELOG.md) for complete release notes.
-
----
-
-## 🎯 Quick Wins
-
-Real scenarios showing ClineFlow in action:
-
-### Scenario 1: Feature Development
-```
-You: "Build a user dashboard"
-Cline: Creates knowledge/journals/user-dashboard.md automatically
-You: Work together, discuss approaches
-Cline: Documents every decision in journal
-You: "please commit"
-Cline: Reconciles all five ledgers, validates the staged context, and commits code + knowledge
-```
-**Result:** Complete feature with documentation trail.
-
-### Scenario 2: Bug Fix
-```
-You: "Fix the login timeout issue"
-Cline: Updates existing knowledge/journals/auth-system.md journal
-You: Discuss root cause analysis
-Cline: Documents the fix and reasoning
-You: "please commit"
-Cline: Reconciles the five ledgers and commits the complete troubleshooting context
-```
-**Result:** Bug fixed with complete troubleshooting history.
-
-### Scenario 3: Code Review
-```
-Developer 1: Builds feature, journals it
-Developer 2: Reads journal before reviewing code
-Developer 2: "I see why you chose this approach"
-```
-**Result:** Informed code reviews, no guessing.
-
-### Scenario 4: Resuming Work
-```
-You: Return after 2 weeks
-You: "What were we working on?"
-Cline: Reads latest journal, provides complete summary
-You: Continue exactly where you left off
-```
-**Result:** Zero context loss, instant resumption.
-
----
-
-## 🛠️ Power User Tips
-
-### Installation Options
-
-```bash
-# Dry run (see what would be installed)
-./.clineflow/bin/install --dry-run
-
-# Force overwrite existing files
-./.clineflow/bin/install --force
-
-# Uninstall
-./.clineflow/bin/uninstall --yes
-
-# Show help
-./.clineflow/bin/install --help
-```
-
-### Returns Accepted Anytime 🔄
-
-Changed your mind? No hard feelings!
-
-Download and run the uninstall script in your project directory:
-
-```bash
-./.clineflow/bin/uninstall
-```
-
-**What gets removed:**
-- The managed ClineFlow block from supported agent configuration files; a file is deleted only when no user-authored content remains
-- The `.clineflow/` runtime directory
-
-**⚠️ Note:** Your `knowledge/` bundle and any legacy `docs/journals/` are safe and require manual removal if desired.
-
-**Options:**
-```bash
-./.clineflow/bin/uninstall --dry-run    # Preview what would be removed
-./.clineflow/bin/uninstall --yes        # Show the plan and remove without prompting
-./.clineflow/bin/uninstall --help       # Show all options
-```
-
-Removal validates ownership paths and markers before mutation, then runs transactionally. A failure or handled interruption restores the runtime and agent files. Knowledge, documentation, unrelated files, and retired reference artifacts remain untouched.
-
-### Customization
-
-Edit `.clinerules` to customize for your project:
-- Adjust code size limits
-- Add project-specific rules
-- Configure documentation patterns
-
-## 📚 Documentation
-
-- **[WORKING_WITH_CLINE.md](template/.clineflow/WORKING_WITH_CLINE.md)** - Complete user guide
-- **[WORKING_WITH_CODEX.md](template/.clineflow/WORKING_WITH_CODEX.md)** - ChatGPT Codex workflow and prompts
-- **[PROCEDURES.md](template/.clineflow/PROCEDURES.md)** - Standard operating procedures
-- **[TASK_TEMPLATE.md](template/knowledge/journals/TASK_TEMPLATE.md)** - Native OKF journal template
-- **[OKF Knowledge Workflow](docs/okf-knowledge-workflow.md)** - Bundle architecture, validation, and legacy compatibility
-- **[Release and Migration Process](docs/releasing.md)** - Manifest, versioning, migration decisions, and required verification
-
----
-
-## 🚀 Be an Early Adopter
-
-⭐ **[Star us on GitHub](https://github.com/hassanvfx/clineflow)** - Help others discover ClineFlow
-
-🐛 **[Report Issues](https://github.com/hassanvfx/clineflow/issues)** - Found a bug? Let us know
-
-💡 **[Request Features](https://github.com/hassanvfx/clineflow/issues)** - Have an idea? We're listening
-
-🤝 **[Contribute](https://github.com/hassanvfx/clineflow/pulls)** - Help build the future of AI-assisted development
-
-**Help us build the future of AI-assisted development** - where AI doesn't just write code, it becomes your teammate with memory.
-
----
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Create an Engineering Journal concept documenting your work
-5. Submit a pull request
-
-**We use ClineFlow to build ClineFlow** - your contribution will be a real-world example!
-
----
-
-## 🐛 Issues & Support
-
-- **Issues**: [GitHub Issues](https://github.com/hassanvfx/clineflow/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/hassanvfx/clineflow/discussions)
-
----
-
-## 🚀 What's Next?
-
-After installation:
-
-1. **Ask Cline**: "How can we work together?"
-2. **Start Building**: Tell Cline what you want
-3. **Commit Intelligently**: Just say "please commit"
-4. **Read Our Journal**: See ClineFlow in action: [docs/journals/clineflow-development.md](docs/journals/clineflow-development.md)
-
-**Welcome to Document Driven Development! 🎉**
-
----
-
-## 📝 License
-
-MIT License - see [LICENSE](LICENSE) for details
-
----
-
-## 🙏 Acknowledgments
-
-Created to solve the challenge of maintaining context and documentation when working with AI assistants.
-
-**Because AI assistants with memory become teammates.**
-
----
-
-Made with ❤️ for developers working with AI assistants
+[MIT](LICENSE)

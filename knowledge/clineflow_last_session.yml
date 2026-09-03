@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T19:37:45Z
-latest_change: Routed natural-language dashboard requests through the formal facts, observations, and render pipeline so grounded agent insights can reach the report.
+updated_at: 2026-09-03T20:16:12Z
+latest_change: Replaced the sprawling README with an installation-first guide, added focused references and a tutorial preview, and standardized commit, update, preview-before-removal, and dashboard prompts for release 2026.09.03.20.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -25,6 +25,8 @@ specification_summary:
   - ClineFlow update requests must execute the permanent remote bootstrap before any release check and report a final installed version or exact blocker; Claude Code has an equivalent project slash command.
   - Dashboard headlines strip ISO timestamps and source-path parentheticals before visual rendering; the original narrative remains in summary/detail fields.
   - Natural-language dashboard requests use the formal collect → insights → observe → render workflow; a direct dashboard CLI invocation intentionally remains estimate-free without insights.
+  - “Please remove ClineFlow” previews and explains removal, then requires explicit confirmation before the agent applies it.
+  - The README now leads with installation, the three-step durable loop, installed layout, five ledgers, Knowledge Visor, and concise lifecycle commands.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -44,11 +46,14 @@ verification_summary:
   - Dashboard fixtures prove valid calculated delivery scenarios, invalid input rejection, missing-estimate guidance, Project Pulse rendering, and sanitized-export redaction.
   - Complete lifecycle certification passes for release 2026.09.03.14 with dormant and activated dashboard boundaries intact.
   - The focused dashboard suite passes after the Source ready explorer-status correction and read-only compact-record presentation update.
+  - Release validation, release-contract tests, and installation-flow tests pass for the new lifecycle prompts and release 2026.09.03.20.
+  - Complete lifecycle certification passes for release 2026.09.03.20 after the documentation and knowledge reconciliation.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Release ClineFlow 2026.09.03.19, update Agentic Analytics, then regenerate the dashboard through an agent so it can provide a grounded estimate payload when explicit constants are available.
+next_recommended_step: Capture and inspect the deterministic comprehensive Knowledge Visor report through an allowed local browser surface, add the resulting 1600×1000 image to the README, then close the documentation journal.
 next_step_refs:
+  - journals/readme-documentation-redesign.md
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md
   - journals/knowledge-dashboard.md
@@ -58,6 +63,7 @@ next_step_refs:
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
   - journals/dashboard-project-pulse.md
+  - ../docs/knowledge-visor.md
 journal_refs:
   - journals/okf-adoption.md
   - journals/add-book-link.md
@@ -75,3 +81,4 @@ journal_refs:
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
   - journals/dashboard-project-pulse.md
+  - journals/readme-documentation-redesign.md

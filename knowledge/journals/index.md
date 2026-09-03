@@ -1,5 +1,6 @@
 # Task Journals
 
+* [Installation-first README and documentation redesign](readme-documentation-redesign.md) - Reframes installation, durable commits, lifecycle prompts, and the Knowledge Visor for new users.
 * [Portable line-one agent rule updates](updater-macos-line-zero.md) - Repairs macOS updates when the managed rules block begins on line one.
 * [ClineFlow Knowledge Visor](knowledge-dashboard.md) - Adds an isolated, time-first dashboard with self-contained reports and structured snapshots.
 * [Repair source instruction paths](repair-source-instruction-paths.md) - Aligns distribution-checkout agent instructions with the actual template runtime layout.

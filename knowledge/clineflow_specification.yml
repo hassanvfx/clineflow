@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T19:37:45Z
+updated_at: 2026-09-03T20:16:12Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -8,6 +8,9 @@ confirmed:
   - ClineFlow provides one stable update entrypoint for every OKF-era installation from 2026.08.15.0 onward.
   - Updates are manifest-driven, transactional, verified, and automatically rolled back on failure.
   - The prompt “Please update ClineFlow” authorizes an agent to read current repository instructions and run the updater non-interactively.
+  - The prompt “Please remove ClineFlow” requires a dry-run explanation and explicit confirmation before final removal.
+  - The prompt “Please commit” closes the durable loop by synchronizing and validating implementation with project knowledge before committing.
+  - The prompt “Please show me the ClineFlow dashboard” explicitly invokes the agent-insights dashboard pipeline while preserving first-use approval.
   - Removal validates trusted ownership and markers before mutation, requires confirmation, preserves user text, and rolls back failures or handled interruptions.
   - Cline, Codex, Claude Code, Cursor, GitHub Copilot, and Windsurf receive one canonical agent-neutral durable knowledge contract.
   - Any Git change set containing a journal, documentation, or knowledge-base edit reconciles all five ledgers, the active Engineering Journal, and knowledge/log.md.
@@ -37,6 +40,7 @@ confirmed:
   - Delivery scenarios are planning estimates, not labor telemetry, productivity scores, or realized savings; sanitized exports omit estimates and agent metadata.
   - “Please update ClineFlow.” is an execution request: agents run the permanent remote bootstrap before any release check and report the resulting `.clineflow/VERSION` or an exact blocker.
   - An agent handling “Show me the ClineFlow dashboard” collects facts, supplies source-linked observations when grounded, then observes and renders; bare CLI generation stays an explicit no-insights fallback.
+  - The public README is installation-first and delegates lifecycle, workflow, OKF, and Knowledge Visor detail to focused Markdown references.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -61,6 +65,7 @@ constraints:
   - Estimate-free reports omit the Delivery Scenarios surface rather than displaying an inactive planning card.
   - Claude Code receives a fixture-installed `/update-clineflow` project command that performs the same remote-bootstrap workflow.
   - Knowledge Explorer source-status indicators remain compact, non-growing controls and must not distort document headers.
+  - Public documentation must not reference a dashboard image unless that local asset exists and has been visually verified.
 non_goals: []
 open_questions: []
 journal_refs:
@@ -80,3 +85,4 @@ journal_refs:
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
   - journals/dashboard-project-pulse.md
+  - journals/readme-documentation-redesign.md

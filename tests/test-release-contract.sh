@@ -54,7 +54,19 @@ if "$prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail
 
 local_first="$TEST_ROOT/local-first"; copy_release "$local_first"; sed 's/Do not run any existing local updater first/Local updater use is permitted/' "$local_first/README.md" > "$local_first/README.tmp"; mv "$local_first/README.tmp" "$local_first/README.md"
 if "$local_first/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing stale-local-updater warning was accepted"; fi
-pass "release validation rejects unmanaged files, stale checksums, missing prompts, and local-first agent instructions"
+
+removal="$TEST_ROOT/removal"; copy_release "$removal"; sed 's/Please remove ClineFlow\./Remove the tool./g' "$removal/README.md" > "$removal/README.tmp"; mv "$removal/README.tmp" "$removal/README.md"
+if "$removal/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical removal prompt was accepted"; fi
+
+removal_preview="$TEST_ROOT/removal-preview"; copy_release "$removal_preview"; sed 's#\./\.clineflow/bin/uninstall --dry-run#./.clineflow/bin/uninstall --yes#g' "$removal_preview/README.md" > "$removal_preview/README.tmp"; mv "$removal_preview/README.tmp" "$removal_preview/README.md"
+if "$removal_preview/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "removal guidance without a dry-run preview was accepted"; fi
+
+commit_prompt="$TEST_ROOT/commit-prompt"; copy_release "$commit_prompt"; sed 's/Please commit\./Commit now./g' "$commit_prompt/README.md" > "$commit_prompt/README.tmp"; mv "$commit_prompt/README.tmp" "$commit_prompt/README.md"
+if "$commit_prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical commit prompt was accepted"; fi
+
+dashboard_prompt="$TEST_ROOT/dashboard-prompt"; copy_release "$dashboard_prompt"; sed 's/Please show me the ClineFlow dashboard\./Open the dashboard./g' "$dashboard_prompt/README.md" > "$dashboard_prompt/README.tmp"; mv "$dashboard_prompt/README.tmp" "$dashboard_prompt/README.md"
+if "$dashboard_prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical dashboard prompt was accepted"; fi
+pass "release validation rejects missing lifecycle prompts, unsafe removal guidance, and local-first updates"
 
 chain="$TEST_ROOT/chain"; copy_release "$chain"; sed 's/migrate_0_to_1()/removed_0_to_1()/' "$chain/template/.clineflow/bin/update" > "$chain/update.tmp"; mv "$chain/update.tmp" "$chain/template/.clineflow/bin/update"; chmod +x "$chain/template/.clineflow/bin/update"; refresh_checksum "$chain" .clineflow/bin/update
 if "$chain/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing migration chain was accepted"; fi

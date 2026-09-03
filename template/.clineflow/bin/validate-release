@@ -81,6 +81,10 @@ for required in README.md template/configs/rules.template.md template/docs/durab
   grep -q 'Please update ClineFlow\.' "$required" || { echo "ERROR: canonical update prompt missing from $required" >&2; exit 1; }
   grep -qF 'https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh' "$required" || { echo "ERROR: authoritative remote update entrypoint missing from $required" >&2; exit 1; }
   grep -qF 'Do not run any existing local updater first' "$required" || { echo "ERROR: stale-local-updater warning missing from $required" >&2; exit 1; }
+  grep -q 'Please remove ClineFlow\.' "$required" || { echo "ERROR: canonical removal prompt missing from $required" >&2; exit 1; }
+  grep -qF './.clineflow/bin/uninstall --dry-run' "$required" || { echo "ERROR: removal preview missing from $required" >&2; exit 1; }
+  grep -q 'Please commit\.' "$required" || { echo "ERROR: canonical commit prompt missing from $required" >&2; exit 1; }
+  grep -q 'Please show me the ClineFlow dashboard\.' "$required" || { echo "ERROR: canonical dashboard prompt missing from $required" >&2; exit 1; }
 done
 for required_test in tests/certify-release.sh tests/test-dashboard.sh tests/test-installation-flow.sh tests/test-update-migrations.sh tests/test-uninstall-safety.sh tests/test-release-contract.sh tests/test-okf-validator.sh tests/test-knowledge-sync.sh; do
   [ -x "$required_test" ] || { echo "ERROR: missing executable lifecycle check $required_test" >&2; exit 1; }
@@ -91,7 +95,7 @@ grep -qF './tests/test-update-migrations.sh' tests/certify-release.sh || { echo 
 grep -qF './tests/test-knowledge-sync.sh' tests/certify-release.sh || { echo "ERROR: release certification omits knowledge synchronization" >&2; exit 1; }
 grep -qF './tests/test-dashboard.sh' tests/certify-release.sh || { echo "ERROR: release certification omits the optional dashboard boundary" >&2; exit 1; }
 grep -qF 'validate-knowledge-sync --staged' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the staged knowledge synchronization gate" >&2; exit 1; }
-grep -qF 'Show me the ClineFlow dashboard' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the explicit dashboard invocation" >&2; exit 1; }
+grep -qF 'Please show me the ClineFlow dashboard.' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the explicit dashboard invocation" >&2; exit 1; }
 grep -qF 'this is an execution request, not a request to check for releases' template/configs/rules.template.md || { echo "ERROR: shared agent rules do not distinguish update execution from release checks" >&2; exit 1; }
 grep -qF 'never claim the installation is up to date' template/configs/rules.template.md || { echo "ERROR: shared agent rules permit unverified update claims" >&2; exit 1; }
 [ -f template/.claude/commands/update-clineflow.md ] || { echo "ERROR: deterministic Claude update command is missing" >&2; exit 1; }

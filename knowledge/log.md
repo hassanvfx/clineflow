@@ -2,6 +2,10 @@
 
 ## 2026-09-03
 
+* **Documentation**: Replaced the sprawling README with an installation-first guide and added focused lifecycle, workflow, Knowledge Visor, and expanded OKF references.
+* **Workflow**: Standardized “Please commit,” “Please update ClineFlow,” preview-before-removal, and explicit dashboard prompts across supported agent guidance for release `2026.09.03.20`.
+* **Media**: Added the verified local Vimeo tutorial poster; deferred the fixture-backed dashboard screenshot because local browser capture was blocked, leaving no broken README image reference.
+
 * **Workflow**: Natural-language dashboard requests now use the formal facts, agent-insights, observations, and render pipeline; direct CLI generation remains a deliberate no-insights fallback.
 
 * **Fix**: Normalized timestamped event prose into concise dashboard hero titles while retaining full source narrative as inspectable detail.

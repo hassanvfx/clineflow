@@ -1,7 +1,8 @@
 version: 1
-updated_at: 2026-09-03T19:37:45Z
+updated_at: 2026-09-03T20:16:12Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
+  - Add a representative fixture-backed Knowledge Visor screenshot when an allowed capture surface is available.
 priorities:
   - Prevent journal and documentation changes from leaving any of the five durable ledgers stale.
   - Preserve user-authored project context during every update and migration.
@@ -31,7 +32,9 @@ success_measures:
   - ClineFlow update requests execute the permanent remote bootstrap or report a concrete blocker; they never substitute a stale release check.
   - Dashboard headings remain concise even when the only available source is a timestamped narrative event.
   - Natural-language dashboard requests use the source-linked observation pipeline rather than a bare report generation path.
-blocked_goals: []
+  - New users can understand installation, journals, ledgers, lifecycle prompts, and the optional dashboard from a concise README and focused references.
+blocked_goals:
+  - The in-app browser security policy blocks local file report capture; the dashboard screenshot requires an allowed capture surface or a user-provided image.
 completed_goals:
   - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.
   - Adopt native OKF journals while preserving legacy journals as read-only context.
@@ -58,3 +61,4 @@ journal_refs:
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
   - journals/dashboard-project-pulse.md
+  - journals/readme-documentation-redesign.md

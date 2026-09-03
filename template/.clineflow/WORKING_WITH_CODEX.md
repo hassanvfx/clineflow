@@ -14,7 +14,7 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 - Keep the active Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps. For every journal, documentation, or knowledge-base change, reconcile all five ledgers with the journal and one shared timestamp, even when a ledger has no semantic change.
 - Link the active journal from every ledger and update `knowledge/log.md`.
 - Before delivery, run `./.clineflow/bin/validate-okf`, `./.clineflow/bin/validate-knowledge-sync`, the relevant project tests, and `git diff --check`.
-- When the user asks to commit, stage code and knowledge together, require `./.clineflow/bin/validate-knowledge-sync --staged` to pass, then commit.
+- When the user says “Please commit.” or otherwise asks to commit, stage code and knowledge together, require `./.clineflow/bin/validate-knowledge-sync --staged` to pass, then commit.
 
 ## Useful prompts for Codex
 
@@ -36,9 +36,15 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 This prompt authorizes Codex to read the current repository instructions and immediately invoke `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes`. Do not run any existing local updater first; legacy copies can overwrite themselves. Codex must wait for verification or rollback to finish and report the outcome; it must still stop on safety failures or requests for unrelated system changes.
 
+**Remove ClineFlow**
+
+> Please remove ClineFlow.
+
+Codex first runs `./.clineflow/bin/uninstall --dry-run`, explains what will be removed and preserved, and asks for explicit confirmation. Only after confirmation may it run the remover; `--yes` is valid only when the final removal has been authorized.
+
 **Open the Knowledge Visor**
 
-> Show me the ClineFlow dashboard.
+> Please show me the ClineFlow dashboard.
 
 Only this explicit request, a direct Knowledge Visor request, or a direct `./.clineflow/bin/dashboard` command activates the optional dashboard. When responding to the natural-language request, collect facts into temporary storage, read them, author a source-linked insights JSON when grounded observations or delivery assumptions are available, then run `dashboard observe` and `dashboard render`. The direct CLI command remains the intentional no-insights fallback. First use displays and approval-gates every runtime and visual-asset download. Ordinary ClineFlow work never installs or runs the visor.
 

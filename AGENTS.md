@@ -16,9 +16,13 @@ curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh 
 
 Do not run any existing local updater first; legacy copies can overwrite themselves. Do not ask for redundant confirmation. Let migration, verification, and automatic rollback finish, then report the resulting version and preserved legacy artifacts. This authorization does not cover unrelated system changes or destructive cleanup, and safety failures must still stop the update.
 
+## Removing ClineFlow
+
+When the user says “Please remove ClineFlow.”, first run `./.clineflow/bin/uninstall --dry-run`, explain which managed files and rule blocks would be removed and which project knowledge and user content would be preserved, and ask for explicit confirmation. Only after that confirmation may you run the remover, using `--yes` only when the user has authorized the final removal. Do not treat the initial phrase as authorization to bypass this preview and confirmation.
+
 ## Knowledge Visor
 
-Only when the user explicitly requests the ClineFlow dashboard or Knowledge Visor, invoke the installed project's `./.clineflow/bin/dashboard`. Never activate the optional runtime proactively during normal development, installation, validation, or commit preparation.
+Only when the user explicitly says “Please show me the ClineFlow dashboard.” or otherwise directly requests the ClineFlow dashboard or Knowledge Visor, invoke the installed project's `./.clineflow/bin/dashboard`. Never activate the optional runtime proactively during normal development, installation, validation, or commit preparation.
 
 ## Task knowledge rules
 
@@ -32,7 +36,7 @@ Only when the user explicitly requests the ClineFlow dashboard or Knowledge Viso
 
 ## Commit workflow
 
-When the user asks to commit:
+When the user says “Please commit.” or otherwise asks to commit:
 
 1. Update the active `knowledge/journals/` concept with the implementation summary, decisions, tests, and next steps.
 2. Reconcile all five `knowledge/clineflow_*.yml` ledgers and update `knowledge/log.md`.

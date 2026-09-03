@@ -42,6 +42,14 @@ To ask a coding agent to install ClineFlow, use this exact prompt:
 
 The repository provides the current OS-aware installation instructions; the agent should follow them instead of relying on stale copied commands.
 
+## Committing through an agent
+
+Use this exact prompt:
+
+> Please commit.
+
+This asks the agent to finish the active Engineering Journal, reconcile all five ledgers and `knowledge/log.md`, run the required validators and project checks, stage code and durable context together, run staged knowledge synchronization, and create a descriptive commit only after the gates pass.
+
 ## Updating ClineFlow through an agent
 
 Use this exact prompt:
@@ -49,6 +57,22 @@ Use this exact prompt:
 > Please update ClineFlow.
 
 This is explicit authorization for the agent to read the latest update instructions from the authoritative ClineFlow repository and immediately run `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes` without asking again. Do not run any existing local updater first; legacy copies can overwrite themselves. The agent waits for migration and verification or rollback to finish, then reports the installed version and preserved legacy artifacts. Safety failures still stop the update, and the authorization does not extend to unrelated system changes or destructive cleanup.
+
+## Removing ClineFlow through an agent
+
+Use this exact prompt:
+
+> Please remove ClineFlow.
+
+The agent first runs `./.clineflow/bin/uninstall --dry-run`, explains the managed files and rule blocks that would be removed and the knowledge and user content that would remain, and asks for explicit confirmation. Only that confirmation authorizes final removal; the initial prompt never bypasses the preview.
+
+## Opening the Knowledge Visor through an agent
+
+Use this exact prompt:
+
+> Please show me the ClineFlow dashboard.
+
+This explicitly authorizes dashboard generation, but first use still previews and approval-gates the optional pinned runtime and visual assets. Normal development and commit preparation never activate the visor proactively.
 
 ## Evidence-first examples
 

@@ -18,6 +18,8 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Source-repository agent instructions now reference the runtime guides and validators under `template/.clineflow/`, and the legacy Cline compatibility template matches the canonical shared rules.
 
 ### Added
+- An installation-first README, focused lifecycle/workflow/Knowledge Visor guides, and a linked 30-minute tutorial with a local preview image.
+- Canonical “Please commit.”, “Please remove ClineFlow.”, and “Please show me the ClineFlow dashboard.” prompts across distributed agent guidance.
 - The optional, time-first ClineFlow Knowledge Visor with an inert bootstrap, approval-gated and checksum-verified assets, self-contained HTML reports plus adjacent JSON snapshots, sanitized exports, and dormant/activated boundary certification.
 - A formal dashboard pipeline that collects normalized facts, derives source-bound narrative observations, and renders both JSON models into file-protocol-safe HTML; the replaceable `observe` stage is ready for a future CLI/LLM implementation.
 - An agent-independent `validate-knowledge-sync` commit gate for journals, documentation, all five durable ledgers, and the knowledge log.
@@ -31,6 +33,8 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- Release `2026.09.03.20` makes removal preview-first and confirmation-gated at the agent-instruction layer while preserving the existing transactional remover and schema `1`.
+- Public documentation now explains the hidden runtime, OKF knowledge base, five ledgers, self-documenting commit loop, and dormant dashboard without duplicating implementation detail in the README.
 - Knowledge Visor now leads with a source-linked Recent Story, defaults the Time Spine to useful recent moments, and exposes the whole chronology on demand; decorative chapter navigation has been removed.
 - Knowledge Visor adopts ClineFlow’s public deep-navy and electric-blue visual language, editorial type scale, restrained geometry, and high-contrast navigation while retaining its offline embedded assets.
 - Story navigation now names the Project Story directly; the managed Knowledge Visor release is `2026.09.03.8`.

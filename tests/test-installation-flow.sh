@@ -25,8 +25,13 @@ for tool in install dashboard update update.ps1 uninstall validate-knowledge-syn
 for index in clineflow_specification.yml clineflow_verification.yml clineflow_goals.yml clineflow_last_session.yml clineflow_timeline.yml; do [ -f "knowledge/$index" ] || fail "missing knowledge/$index"; done
 grep -q 'durable-development-methodology.md' AGENTS.md || fail "agent rules do not require the durable loop"
 grep -q 'Please update ClineFlow\.' AGENTS.md || fail "agent rules do not include the canonical update prompt"
-grep -q 'Show me the ClineFlow dashboard' AGENTS.md || fail "agent rules do not include the explicit dashboard prompt"
-for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do grep -q 'all five.*ledgers' "$file" && grep -q 'validate-knowledge-sync --staged' "$file" || fail "agent rules do not enforce ledger synchronization in $file"; done
+for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do
+  grep -q 'all five.*ledgers' "$file" && grep -q 'validate-knowledge-sync --staged' "$file" || fail "agent rules do not enforce ledger synchronization in $file"
+  grep -q 'Please commit\.' "$file" || fail "agent rules omit the canonical commit prompt in $file"
+  grep -q 'Please update ClineFlow\.' "$file" || fail "agent rules omit the canonical update prompt in $file"
+  grep -q 'Please remove ClineFlow\.' "$file" && grep -qF './.clineflow/bin/uninstall --dry-run' "$file" || fail "agent rules omit preview-before-removal in $file"
+  grep -q 'Please show me the ClineFlow dashboard\.' "$file" || fail "agent rules omit the canonical dashboard prompt in $file"
+done
 [ -f .clineflow/VERSION ] && [ ! -e validate-okf ] && [ ! -e clineflow-doctor ] || fail "root tooling layout is incorrect"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do grep -qFx "$(cat "$file.user")" "$file" && grep -q 'BEGIN CLINEFLOW' "$file" || fail "install did not safely merge $file"; done
 shasum -a 256 knowledge/log.md > after.hashes; cmp before.hashes after.hashes || fail "install replaced user knowledge"
