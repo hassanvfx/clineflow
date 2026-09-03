@@ -42,7 +42,6 @@ fixture="$TEST_ROOT/fixture"
 mkdir -p "$fixture/source" "$fixture/assets" "$fixture/uv/uv-test" "$fixture/modules"
 cp "$ROOT"/template/optional/dashboard/* "$fixture/source/"
 printf 'var echarts={init:function(){return {setOption:function(){},resize:function(){}}}};\n' > "$fixture/assets/echarts.min.js"
-printf 'function cytoscape(){return {on:function(){}}}\n' > "$fixture/assets/cytoscape.min.js"
 printf 'var gsap={from:function(){}};\n' > "$fixture/assets/gsap.min.js"
 printf 'wOF2space' > "$fixture/assets/space-grotesk.woff2"
 printf 'wOF2ibm400' > "$fixture/assets/ibm-plex-mono-400.woff2"
@@ -98,13 +97,11 @@ node - "$fixture/source/visor.js" <<'NODE'
 const fs = require("fs");
 const source = fs.readFileSync(process.argv[2], "utf8");
 const start = source.indexOf("  const humanize =");
-const end = source.indexOf("  const journalDocs =");
-if (start < 0 || end < 0) throw new Error("Atlas statement formatter is missing");
-const helpers = new Function(`${source.slice(start, end)}; return {statementText, statementDetail, shortLabel};`)();
+const end = source.indexOf("  const projectStory =");
+if (start < 0 || end < 0) throw new Error("Structured statement formatter is missing");
+const helpers = new Function(`${source.slice(start, end)}; return {statementText};`)();
 const evidence = {summary: "Dashboard evidence is structured", command: "./tests/certify-release.sh", status: "passed"};
-if (helpers.statementText(evidence) !== "Dashboard evidence is structured") throw new Error("Atlas did not select a structured evidence summary");
-if (!helpers.statementDetail(evidence).includes("Command: ./tests/certify-release.sh")) throw new Error("Atlas did not preserve structured evidence metadata");
-if (helpers.shortLabel(evidence).includes("[object Object]")) throw new Error("Atlas still coerces evidence objects");
+if (helpers.statementText(evidence) !== "Dashboard evidence is structured") throw new Error("Explorer did not select a structured evidence summary");
 NODE
 PYTHONPATH="$fixture/modules" python3 - "$fixture/source/dashboard.py" <<'PY'
 import importlib.util
@@ -120,6 +117,33 @@ assert event["type"] == "verification"
 assert event["summary"] == "Built and verified a reusable validation harness (analytics/tools/validation)"
 assert event["title"] == "Built and verified a reusable validation harness"
 assert event["refs"] == ["journals/example.md"]
+mock_snapshot = {
+    "schema": "clineflow-dashboard/v1", "run_at": "2026-09-03T12:00:00Z", "source_hash": "mock",
+    "documents": [
+        {"id": "goals", "path": "knowledge/clineflow_goals.yml"},
+        {"id": "session", "path": "knowledge/clineflow_last_session.yml"},
+        {"id": "verification", "path": "knowledge/clineflow_verification.yml"},
+        {"id": "specification", "path": "knowledge/clineflow_specification.yml"},
+        {"id": "timeline", "path": "knowledge/clineflow_timeline.yml"},
+    ],
+    "ledgers": {
+        "clineflow_goals": {"active_goals": ["Ship a durable decision dashboard"]},
+        "clineflow_last_session": {"latest_change": "Replaced a noisy graph with a project story", "next_recommended_step": "Review the source-bound story with the team"},
+        "clineflow_verification": {"open_verification": ["Check keyboard navigation on the story cards"]},
+        "clineflow_specification": {"open_questions": ["Which audience needs a weekly export?"]},
+    },
+    "events": [
+        {"at": "2026-09-01T09:00:00Z", "title": "Defined the narrative brief", "summary": "Discovery began."},
+        {"at": "2026-09-03T11:00:00Z", "title": "Reframed the dashboard around project story", "summary": "The design now leads with decisions."},
+    ],
+    "drift": {"added": ["knowledge/journals/story.md"], "changed": ["knowledge/clineflow_goals.yml"], "removed": []},
+}
+story = module.derive_observations(mock_snapshot)["project_story"]
+assert story["evolution"]["text"].startswith("From Defined the narrative brief")
+assert story["important_now"]["text"] == "Ship a durable decision dashboard"
+assert "Which audience needs a weekly export?" in story["urgency"]["text"]
+assert story["next_action"]["text"] == "Review the source-bound story with the team"
+assert len(story["milestones"]) == 2
 PY
 
 component="$project/.clineflow/dashboard-component-manifest"
@@ -136,7 +160,7 @@ component="$project/.clineflow/dashboard-component-manifest"
   echo "runtime|linux-x86_64-gnu|tar.gz|file://$fixture/assets/uv.tar.gz|$(sha256_file "$fixture/assets/uv.tar.gz")"
   echo "runtime|linux-x86_64-musl|tar.gz|file://$fixture/assets/uv.tar.gz|$(sha256_file "$fixture/assets/uv.tar.gz")"
   echo "runtime|windows-x86_64|tar.gz|file://$fixture/assets/uv.tar.gz|$(sha256_file "$fixture/assets/uv.tar.gz")"
-  for asset in echarts.min.js cytoscape.min.js gsap.min.js; do
+  for asset in echarts.min.js gsap.min.js; do
     echo "asset|javascript|$asset|test|file://$fixture/assets/$asset|-|$(sha256_file "$fixture/assets/$asset")|MIT"
   done
   for asset in space-grotesk.woff2 ibm-plex-mono-400.woff2 ibm-plex-mono-500.woff2; do
@@ -157,11 +181,10 @@ grep -q "connect-src 'none'" "$report" || fail "generated report permits browser
 ! grep -Eq "<(script|link|img)[^>]+(src|href)=['\\\"]https?://" "$report" || fail "self-contained report references a remote browser asset"
 grep -q 'data:font/woff2;base64,' "$report" || fail "self-contained report omitted embedded fonts"
 ! grep -q 'About this report' "$report" || fail "dashboard retained the removed asset panel"
-grep -q 'Manager view' "$report" && grep -q 'Engineering view' "$report" && grep -q 'Source of truth' "$report" || fail "dashboard omitted its multi-audience story chapters"
-grep -q 'data-atlas="overview"' "$report" && grep -q 'data-atlas="journals"' "$report" || fail "Decision Atlas omitted progressive disclosure controls"
+grep -q 'Manager view' "$report" && grep -q 'data-audience="engineer"' "$report" && grep -q 'Source of truth' "$report" || fail "dashboard omitted its multi-audience story chapters"
+grep -q 'Project story' "$report" && grep -q 'Source-bound reasoning' "$report" || fail "dashboard omitted the narrative project-story surface"
 grep -q 'Read event note' "$report" && grep -q 'const eventTitle' "$report" || fail "Time Spine omitted compact titles and expandable notes"
-grep -q 'slice(0,10)' "$report" || fail "Decision Atlas omitted its visible-node cap"
-! grep -q 'layout:{name:"cose"' "$report" || fail "Decision Atlas retained the overlapping force layout"
+! grep -q 'cytoscape.min.js' "$report" && ! grep -q 'decision-graph' "$report" || fail "dashboard retained the removed graph Atlas"
 grep -q 'Guided view' "$report" && grep -q 'Copy normalized YAML' "$report" || fail "Knowledge Explorer omitted YAML interpretation and repair controls"
 grep -q 'data-filter="ledger"' "$report" && grep -q 'data-filter="journal"' "$report" || fail "Knowledge Explorer omitted progressive document filters"
 grep -q 'clineflow-dashboard/v1' "${report%/index.html}/snapshot.json" || fail "snapshot omitted dashboard schema"
@@ -184,6 +207,9 @@ if observations.get("source", {}).get("source_hash") != snapshot.get("source_has
     raise SystemExit("observations are not bound to their source facts")
 if set(observations.get("audiences", {})) != {"executive", "manager", "engineer"}:
     raise SystemExit("observations omitted an audience narrative")
+story = observations.get("project_story", {})
+if set(("evolution", "important_now", "urgency", "next_action")) - set(story):
+    raise SystemExit("observations omitted the narrative project story")
 ledger = next((doc for doc in snapshot["documents"] if doc.get("kind") == "ledger"), None)
 if not ledger or not ledger.get("yaml", {}).get("valid") or not isinstance(ledger.get("structured"), dict):
     raise SystemExit("dashboard did not retain a parsed, structured YAML ledger")

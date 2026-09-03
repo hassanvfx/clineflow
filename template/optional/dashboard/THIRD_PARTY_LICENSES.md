@@ -3,7 +3,6 @@
 The optional dashboard downloads and embeds these pinned components only after explicit activation:
 
 - Apache ECharts — Apache License 2.0
-- Cytoscape.js — MIT License
 - GSAP — GSAP Standard License
 - Space Grotesk — SIL Open Font License 1.1
 - IBM Plex Mono — SIL Open Font License 1.1

@@ -5,8 +5,8 @@ description: "Implements an isolated, time-first dashboard for navigating durabl
 tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
-  by: clineflow/2026.09.03.6
-  at: 2026-09-03T11:38:33Z
+  by: clineflow/2026.09.03.7
+  at: 2026-09-03T11:49:41Z
 ---
 
 # Goal
@@ -19,7 +19,7 @@ Add an explicitly invoked ClineFlow Knowledge Visor that visualizes OKF knowledg
 - [x] In progress
 - [x] Complete
 - [x] Visual defect reproduced
-- [x] Atlas redesign complete
+- [x] Project Story redesign complete
 
 # Work Log
 
@@ -63,6 +63,10 @@ Reworked each Time Spine row into a short kind pill, a concise supplied or deriv
 
 Inspection of the generated fact model caught two prose list entries containing an unquoted colon. YAML correctly interpreted those entries as mappings, which is not the intended canonical shape. Quoted the entries so the facts model retains scalar strings. This confirms the structured renderer is working as intended and prevents malformed prose from leaking into executive observations or visual labels.
 
+## 2026-09-03 11:49 UTC - Project Story replaced the Atlas
+
+Removed the remaining graph-based Decision Atlas after it continued to make the report feel repetitive and less narrative than the underlying durable record. The renderer now derives a formal `project_story` object from normalized facts: evolution, what matters now, attention required, next deliberate move, and a compact milestone arc. The viewer renders those source-linked claims as navigable cards that open their canonical supporting record. Cytoscape is no longer part of the optional asset manifest, release validation, report bytes, or visual system.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -83,6 +87,9 @@ Inspection of the generated fact model caught two prose list entries containing 
 - Prefer named statement fields when rendering structured evidence or decisions, and expose all remaining fields in the readable detail surface rather than serializing objects into labels.
 - Treat Time Spine labels as event kinds and titles as the scan layer; retain full event narration only in explicit disclosure.
 - Quote prose list items containing a colon followed by whitespace in canonical YAML when they are intended to be scalar statements.
+- Replace the graph Atlas rather than repeatedly restyling it. A small narrative surface better matches the decision-making job and avoids accidental relationship semantics from ledger synchronization metadata.
+- Validate every Project Story card and milestone in supplied observations against known canonical document IDs. This keeps the future CLI/LLM observation boundary source-bound.
+- Bump the managed release and optional component to `2026.09.03.7`; no migration is required because this changes only isolated managed runtime and asset behavior, not the OKF persistent schema.
 
 # Testing
 
@@ -97,6 +104,7 @@ Inspection of the generated fact model caught two prose list entries containing 
 - Dashboard boundary tests pass the independent facts → observations → render commands, assert exact embedded/adjacent JSON equality, bind observations to the facts source hash, require all three audience narratives, and verify structured YAML plus normalized repair output.
 - Structured-record regressions prove evidence labels never coerce to `[object Object]`, narrative observations choose a human-readable statement, and timeline aliases normalize into time, type, summary, references, and raw provenance.
 - Time Spine regression coverage verifies long `event:` notes derive a concise title, retain the full note, and expose the progressive disclosure control.
+- Dashboard boundary tests pass for release `2026.09.03.7`, including deterministic mock-fact Project Story derivation, embedded story JSON, source-id validation, graph-asset removal, offline reuse, rollback, export, and uninstall preservation.
 
 # Open Issues
 

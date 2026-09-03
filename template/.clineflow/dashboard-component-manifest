@@ -1,10 +1,10 @@
-component_version=2026.09.03.6
+component_version=2026.09.03.7
 python_version=3.12
-file|dashboard.py|dashboard.py|8798889a6eb3cb0575c1cf2464ad3b67d83dafc4ea7b40c80ff2949685271a43
+file|dashboard.py|dashboard.py|477f995c8354f2c96a0c781dfe751442f8ed95f6c62e4cfe1e8022724a8639d1
 file|dashboard.py.lock|dashboard.py.lock|d8718fd36653fb86c6bdbdaea7281f13b1146bdbbbb40df9563fde012a2e9d5d
-file|visor.css|visor.css|adb574a317e271866f264e8005a5e2a44e950d6cc372c5d17b760ff2bae1b109
-file|visor.js|visor.js|6069f9a901e1934c5382892e5e652ef34c5f9a2f3b8a39026b9483d48bee1464
-file|THIRD_PARTY_LICENSES.md|THIRD_PARTY_LICENSES.md|4e3024e54d4eea2f0f8ac18beaf7670fac4efa9b85c2adb49f5881165a2bd181
+file|visor.css|visor.css|222e449e6414b97a1254280fd250bf4ee8bb8b4032719273ea75c3e259bd9cdc
+file|visor.js|visor.js|c5a9d4f5e767ea67e3bc635f2ee7c6436e2599ee58d29657cab3636003c007be
+file|THIRD_PARTY_LICENSES.md|THIRD_PARTY_LICENSES.md|07ba401c7add0f5e89afee21cc6a1d076e983baf8e7b5454fadcef0b9b5ad49c
 runtime|darwin-arm64|tar.gz|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-aarch64-apple-darwin.tar.gz|5bb0e5fe008a773c3dbcb97ff79cd89e1241464fe9d2f986d52ad8f1b037bd62
 runtime|darwin-x86_64|tar.gz|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-x86_64-apple-darwin.tar.gz|b3b2137477cf96c9686ebfb71524614cec780c673fd73e59bce099aef02e70e8
 runtime|linux-arm64-gnu|tar.gz|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-aarch64-unknown-linux-gnu.tar.gz|9bf43b4d1a07665bf64d4c4e710930b382321a785e0eb10aac07f46471f86a31
@@ -13,7 +13,6 @@ runtime|linux-x86_64-gnu|tar.gz|https://github.com/astral-sh/uv/releases/downloa
 runtime|linux-x86_64-musl|tar.gz|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-x86_64-unknown-linux-musl.tar.gz|a4742988791c9aeae68c78150d6cba762062ad2a47e53738c2779d2b596bfcdb
 runtime|windows-x86_64|zip|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-x86_64-pc-windows-msvc.zip|4c4d49d8738847d9b71ba319e49a5688c93eac0fe6204b1df24e98528dddf39a
 asset|javascript|echarts.min.js|6.0.0|https://cdn.jsdelivr.net/npm/echarts@6.0.0/dist/echarts.min.js|https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js|baa8dfe7e1d9336b98e8986ba7e20ea15e7cdbea1ef42a59d59478632fa45a1d|Apache-2.0
-asset|javascript|cytoscape.min.js|3.33.1|https://cdn.jsdelivr.net/npm/cytoscape@3.33.1/dist/cytoscape.min.js|https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.33.1/cytoscape.min.js|f55947f3daa3bae53209d4b885c195c157f595c225e508a6b382598d9452d6e2|MIT
 asset|javascript|gsap.min.js|3.13.0|https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js|https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js|96c01b81f44a3290e2b4532f55e2c9534b2adc43273a19f3756b2cb41f0fd0b6|LicenseRef-GSAP-Standard
 asset|font|space-grotesk.woff2|22|https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4C_k3HqU.woff2|-|a0d054c4af557de20afd6ca59f47ab353bcaec49c63ff04b6c9d39d0f8910557|OFL-1.1
 asset|font|ibm-plex-mono-400.woff2|20|https://fonts.gstatic.com/s/ibmplexmono/v20/-F63fjptAgt5VM-kVkqdyU8n1i8q131nj-o.woff2|-|c36f509c0a8f9f85f29cb44bc8701d8a9e0b14c499e77a884f789ead7093a7ac|OFL-1.1

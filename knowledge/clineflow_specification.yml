@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:38:33Z
+updated_at: 2026-09-03T11:49:41Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -16,7 +16,7 @@ confirmed:
   - The Knowledge Visor is activated only by explicit invocation; reports contain embedded verified assets and a matching clineflow-dashboard/v1 snapshot.json.
   - Dashboard invocation without a subcommand forwards `generate` so its parser defaults exist before engine execution.
   - Dashboard metrics are report-derived Git and knowledge facts; absent provider usage is omitted rather than recorded as unavailable.
-  - Decision Atlas uses progressive goal, constraint, evidence, and journal views capped at ten visible nodes with full text in a separate detail surface.
+  - Dashboard observations include a validated source-bound Project Story with evolution, current importance, urgency, next action, and selected timeline milestones.
   - "The report follows five linked chapters: executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration."
   - Asset provenance remains structured in report manifests and is not rendered as a standalone dashboard panel.
   - Dashboard collection emits normalized facts without narrative interpretation; a separate replaceable observation stage emits clineflow-dashboard-observations/v1 bound to the facts source hash.
@@ -40,6 +40,7 @@ constraints:
   - Changes to docs/journals/ are rejected because it is immutable legacy context.
   - The optional dashboard may modify only .clineflow/optional/, knowledge/dashboard/, and its exact repository-local Git exclude marker.
   - Browser-opened reports have no remote runtime dependencies, background process, analytics, iframe, or external connection.
+  - The Project Story is derived only from normalized facts and canonical document identifiers; it does not infer contributor productivity or create unsourced claims.
 non_goals: []
 open_questions: []
 journal_refs:

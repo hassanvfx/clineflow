@@ -1,11 +1,11 @@
-release_version=2026.09.03.6
+release_version=2026.09.03.7
 migration_schema=1
 payload|managed|0644|.clineflow/JOURNAL_TEMPLATE.md|.clineflow/JOURNAL_TEMPLATE.md|02ee9466736a44116882f475198d37dcce3d43b7604c97f058ccca8e2b271f2b
 payload|managed|0644|.clineflow/PROCEDURES.md|.clineflow/PROCEDURES.md|6881a7ca5a2b774b251d9a238559c58de7628eb7eb6297e2faffe224b03c2795
-payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|9edf5c23f600b2a2fee9333564d6031add8ebb33dd95a41c2557f36f2ef3d471
+payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|85683371aa0b103dadd73c8d0526b2b678f8657ba544cd4e3a58c5eed9f2611b
 payload|managed|0644|.clineflow/WORKING_WITH_CLINE.md|.clineflow/WORKING_WITH_CLINE.md|28dbd580f81455ee35ca6b7e0de0953d84141f3ebc5f8e17278ff47f4216aa49
 payload|managed|0644|.clineflow/WORKING_WITH_CODEX.md|.clineflow/WORKING_WITH_CODEX.md|67c6b2e251ea2d13cb7fab732e44f9072db54ac98e938154f11e16bd9a525e48
-payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|8be2c1c019e1e111695102bc864ee219e2c187721b777377883f0ebd1cab646e
+payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|67fb920a497072890a14969a38e0b78ca89e580cceca1debb79abb8dbf14fcfe
 payload|managed|0755|.clineflow/bin/bootstrap.ps1|.clineflow/bin/bootstrap.ps1|1692a254c9f910c54aba06e96a81855ab45ed4f3b80e2f5900a412449ebab165
 payload|managed|0755|.clineflow/bin/dashboard|.clineflow/bin/dashboard|d819e876e51e9ce20a29dc2bcb94640dbf1bf3b479a03e7d0bd805fce9ac6913
 payload|managed|0755|.clineflow/bin/doctor|.clineflow/bin/doctor|9e5b97593d637d10ca6993040b4508c1c390e51314ea0dbae12862e64b47e2ae
@@ -16,7 +16,7 @@ payload|managed|0755|.clineflow/bin/update|.clineflow/bin/update|ccde85a1f1567f3
 payload|managed|0755|.clineflow/bin/update.ps1|.clineflow/bin/update.ps1|3d128335c1f7bf24c8f8ddce3b7ce8f3e89f268065a2d1e96fdd0e0222f40a8a
 payload|managed|0755|.clineflow/bin/validate-knowledge-sync|.clineflow/bin/validate-knowledge-sync|649ccfc21e56df393a9810bb6461fe340babfd726d27ea293b510bde760d7cfd
 payload|managed|0755|.clineflow/bin/validate-okf|.clineflow/bin/validate-okf|a9d9d8aa9d29df1b2548ceaa3b5f35f4fc6b6a5d5a7ca77f712b8bef0b0ca838
-payload|managed|0755|.clineflow/bin/validate-release|.clineflow/bin/validate-release|3fdadd13f796b8c1832dc302f8453d6b3c0ce89c2fa51cad64d5361a0a175a2f
+payload|managed|0755|.clineflow/bin/validate-release|.clineflow/bin/validate-release|3338795968938bd75d2d7455292ae0a50ecc4175f630675a30d2cf971ebe201b
 payload|agent|0644|configs/rules.template.md|configs/rules.template.md|30cf702d32a615898e1d159aff6bccdb2d0311f851dd3beea1c7289730197a21
 payload|fixture|0644|docs/durable-development-methodology.md|docs/durable-development-methodology.md|ec2662b2caff12ef917263bc10c5b3bc5b4787112500f23fdfd6a588017c1afa
 payload|fixture|0644|knowledge/index.md|knowledge/index.md|c0e6f8bdc023f58fa8bc38ab6da067882f9cf2d2698279c4f6d48f8f57b2a1d9

@@ -71,7 +71,6 @@ grep -q '^runtime|darwin-arm64|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboa
 grep -q '^runtime|linux-x86_64-gnu|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits Linux x86-64 runtime" >&2; exit 1; }
 grep -q '^runtime|windows-x86_64|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits Windows x86-64 runtime" >&2; exit 1; }
 grep -q '^asset|javascript|echarts.min.js|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits ECharts" >&2; exit 1; }
-grep -q '^asset|javascript|cytoscape.min.js|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits Cytoscape.js" >&2; exit 1; }
 grep -q '^asset|javascript|gsap.min.js|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits GSAP" >&2; exit 1; }
 grep -q '^asset|font|space-grotesk.woff2|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits Space Grotesk" >&2; exit 1; }
 grep -Eq '^asset\|[^|]+\|[^|]+\|[^|]+\|https://[^|]+\|[^|]+\|[0-9a-f]{64}\|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard assets are not pinned" >&2; exit 1; }

@@ -2,6 +2,8 @@
 
 ## 2026-09-03
 
+* **Update**: Replaced the graph-heavy Decision Atlas with a source-bound Project Story covering evolution, present importance, urgency, next action, and selected milestones.
+* **Verification**: Removed Cytoscape from the optional asset set and passed dashboard boundary tests, including Project Story JSON, source-id validation, offline reuse, rollback, export, and uninstall preservation.
 * **Fix**: Quoted colon-containing prose ledger entries so YAML retains the intended scalar narrative facts rather than coercing them into mappings.
 * **Verification**: Generated and inspected a real self-contained report model, confirming compact timeline titles and detecting the scalar-shape issue.
 * **Fix**: Made the Time Spine scannable with short event titles and kinds, moving full narrative notes into expandable formatted disclosure.

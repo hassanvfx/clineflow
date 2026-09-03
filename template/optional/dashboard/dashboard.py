@@ -530,6 +530,8 @@ def derive_observations(snapshot: dict[str, Any], insights_path: Path | None = N
         "knowledge/clineflow_verification.yml", "knowledge/clineflow_specification.yml",
     ) if path in path_ids]
     latest_event = max(events, key=lambda item: str(item.get("at", "")), default={})
+    ordered_events = sorted((item for item in events if item.get("at")), key=lambda item: str(item["at"]))
+    first_event = ordered_events[0] if ordered_events else {}
     active_goal = next(iter(goals.get("active_goals") or []), None)
     next_move = session.get("next_recommended_step") or active_goal or "Review the latest durable context."
     latest_change = session.get("latest_change") or latest_event.get("summary") or "Durable context is ready to explore."
@@ -537,6 +539,13 @@ def derive_observations(snapshot: dict[str, Any], insights_path: Path | None = N
     open_verification = list(verification.get("open_verification") or [])
     drift = snapshot.get("drift") or {}
     changed_count = sum(len(drift.get(key) or []) for key in ("added", "changed", "removed"))
+    timeline_source = [path_ids["knowledge/clineflow_timeline.yml"]] if "knowledge/clineflow_timeline.yml" in path_ids else []
+    urgency_items = [observation_text(item) for item in [*open_questions, *open_verification]]
+    milestones = [
+        {"at": event.get("at"), "title": event.get("title") or concise_title(event.get("summary")), "source_ids": timeline_source}
+        for event in (ordered_events[:1] + ordered_events[-2:])
+    ]
+    deduplicated_milestones = list({(item["at"], item["title"]): item for item in milestones}.values())
     observations: dict[str, Any] = {
         "schema": OBSERVATION_SCHEMA,
         "generated_at": snapshot["run_at"],
@@ -559,6 +568,33 @@ def derive_observations(snapshot: dict[str, Any], insights_path: Path | None = N
                 "why_it_matters": "Every observation can be traced back to normalized facts and canonical source documents.",
                 "next_move": next_move,
             },
+        },
+        "project_story": {
+            "evolution": {
+                "title": "How the project evolved",
+                "text": (
+                    f"From {first_event.get('title') or 'its first recorded milestone'} to "
+                    f"{latest_event.get('title') or 'the current state'}, the knowledge base records "
+                    f"{len(events)} milestones rather than a single status snapshot."
+                ),
+                "source_ids": timeline_source,
+            },
+            "important_now": {
+                "title": "What matters now",
+                "text": observation_text(active_goal or latest_change),
+                "source_ids": [item for item in source_ids if item in {path_ids.get("knowledge/clineflow_goals.yml"), path_ids.get("knowledge/clineflow_last_session.yml")}],
+            },
+            "urgency": {
+                "title": "What needs attention",
+                "text": " · ".join(urgency_items[:3]) if urgency_items else "No unresolved questions or verification gaps are recorded right now.",
+                "source_ids": [item for item in source_ids if item in {path_ids.get("knowledge/clineflow_specification.yml"), path_ids.get("knowledge/clineflow_verification.yml")}],
+            },
+            "next_action": {
+                "title": "The next deliberate move",
+                "text": observation_text(next_move),
+                "source_ids": [path_ids["knowledge/clineflow_last_session.yml"]] if "knowledge/clineflow_last_session.yml" in path_ids else source_ids,
+            },
+            "milestones": deduplicated_milestones,
         },
         "project_phases": [],
         "notable_changes": ([{"text": latest_change, "source_ids": source_ids}] if latest_change else []),
@@ -589,10 +625,30 @@ def validate_observations(path: Path, snapshot: dict[str, Any]) -> dict[str, Any
             not isinstance(story[field], str) for field in required_story_fields
         ):
             raise ValueError(f"{audience} narrative requires text headline, why_it_matters, and next_move")
+    document_ids = {item["id"] for item in snapshot["documents"]}
+    project_story = data.get("project_story")
+    required_project_story = {"evolution", "important_now", "urgency", "next_action", "milestones"}
+    if not isinstance(project_story, dict) or not required_project_story.issubset(project_story):
+        raise ValueError("observations require a complete source-bound project story")
+    for key in ("evolution", "important_now", "urgency", "next_action"):
+        card = project_story[key]
+        if not isinstance(card, dict) or not isinstance(card.get("title"), str) or not isinstance(card.get("text"), str):
+            raise ValueError(f"project story {key} requires title and text")
+        refs = card.get("source_ids", [])
+        if not isinstance(refs, list) or not set(refs).issubset(document_ids):
+            raise ValueError(f"project story {key} contains an unknown source id")
+    if not isinstance(project_story["milestones"], list):
+        raise ValueError("project story milestones must be a list")
+    for milestone in project_story["milestones"]:
+        if not isinstance(milestone, dict) or not isinstance(milestone.get("title"), str):
+            raise ValueError("project story milestones require a title")
+        refs = milestone.get("source_ids", [])
+        if not isinstance(refs, list) or not set(refs).issubset(document_ids):
+            raise ValueError("project story milestone contains an unknown source id")
     validate_insights_payload = {key: data.get(key) for key in (
         "executive_summary", "project_phases", "notable_changes", "risks", "questions"
     ) if key in data}
-    validate_insights_data(validate_insights_payload, {item["id"] for item in snapshot["documents"]})
+    validate_insights_data(validate_insights_payload, document_ids)
     return data
 
 
@@ -650,7 +706,7 @@ def build_page(runtime: Path, data: dict[str, Any], observations: dict[str, Any]
 @font-face{{font-family:'IBM Plex Mono';src:url(data:font/woff2;base64,{assets['ibm-plex-mono-500.woff2']}) format('woff2');font-weight:500;font-display:swap}}
 """
     csp = "default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'"
-    page = f"""<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"{csp}\"><title>ClineFlow Knowledge Visor</title><style>{font_css}{custom_css}</style></head><body><a class=\"skip\" href=\"#main\">Skip to knowledge</a><div id=\"app\"></div><script>{assets['echarts.min.js']}</script><script>{assets['cytoscape.min.js']}</script><script>{assets['gsap.min.js']}</script><script id=\"clineflow-data\" type=\"application/json\">{safe_json_for_script(data)}</script><script id=\"clineflow-observations\" type=\"application/json\">{safe_json_for_script(observations)}</script><script>{custom_js}</script></body></html>"""
+    page = f"""<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"{csp}\"><title>ClineFlow Knowledge Visor</title><style>{font_css}{custom_css}</style></head><body><a class=\"skip\" href=\"#main\">Skip to knowledge</a><div id=\"app\"></div><script>{assets['echarts.min.js']}</script><script>{assets['gsap.min.js']}</script><script id=\"clineflow-data\" type=\"application/json\">{safe_json_for_script(data)}</script><script id=\"clineflow-observations\" type=\"application/json\">{safe_json_for_script(observations)}</script><script>{custom_js}</script></body></html>"""
     return page, asset_manifest
 
 

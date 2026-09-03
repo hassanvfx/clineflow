@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:38:33Z
+updated_at: 2026-09-03T11:49:41Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -287,4 +287,15 @@ events:
       - journals/knowledge-dashboard.md
       - ../knowledge/clineflow_goals.yml
       - ../knowledge/clineflow_specification.yml
+    git_revision: null
+  - at: 2026-09-03T11:49:41Z
+    actor: codex
+    type: implementation
+    summary: Replaced the repetitive Decision Atlas graph with a validated, source-bound Project Story and removed its unused Cytoscape asset.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/optional/dashboard/dashboard.py
+      - ../template/optional/dashboard/visor.js
+      - ../template/optional/dashboard/visor.css
+      - ../tests/test-dashboard.sh
     git_revision: null
