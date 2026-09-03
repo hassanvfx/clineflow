@@ -1,6 +1,55 @@
 version: 1
-updated_at: 2026-09-03T07:40:19Z
+updated_at: 2026-09-03T08:31:56Z
 events:
+  - at: 2026-08-15T00:00:00Z
+    actor: codex
+    type: implementation
+    summary: Adopted native OKF Engineering Journals while preserving legacy journals as read-only context.
+    refs:
+      - journals/okf-adoption.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-08-19T18:11:10Z
+    actor: codex
+    type: documentation
+    summary: Added the Infinite AI Context book link to the project README.
+    refs:
+      - journals/add-book-link.md
+      - ../README.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-08-25T04:28:57Z
+    actor: codex
+    type: implementation
+    summary: Retired the symlink-based reference system and adopted sibling-project guidance.
+    refs:
+      - journals/retire-reference-system.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-08-25T04:42:00Z
+    actor: codex
+    type: implementation
+    summary: Encapsulated ClineFlow tooling and introduced ownership-safe agent configuration management.
+    refs:
+      - journals/encapsulate-tooling.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-08-27T01:48:30Z
+    actor: codex
+    type: implementation
+    summary: Repaired fresh installation and added ownership-safe Claude Code support.
+    refs:
+      - journals/fresh-installer-claude-code.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-08-28T00:00:00Z
+    actor: codex
+    type: implementation
+    summary: Added approval-gated Git and downloader prerequisite handling.
+    refs:
+      - journals/git-prerequisite-bootstrap.md
+    git_revision: null
+    usage_capture: unavailable
   - at: 2026-08-28T00:00:00Z
     actor: codex
     type: planning
@@ -71,5 +120,45 @@ events:
     refs:
       - journals/universal-update-migrations.md
       - ../tests/certify-release.sh
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T08:18:25Z
+    actor: codex
+    type: implementation
+    summary: Added universal five-ledger synchronization enforcement and consolidated all current Engineering Journals into the durable indexes.
+    refs:
+      - journals/universal-five-ledger-synchronization.md
+      - ../template/.clineflow/bin/validate-knowledge-sync
+      - ../template/configs/rules.template.md
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T08:22:19Z
+    actor: codex
+    type: verification
+    summary: Passed lifecycle certification for release 2026.09.03.1, including universal agent rules and the five-ledger synchronization matrix.
+    refs:
+      - journals/universal-five-ledger-synchronization.md
+      - ../tests/certify-release.sh
+      - ../tests/test-knowledge-sync.sh
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T08:24:29Z
+    actor: codex
+    type: verification
+    summary: Added and certified pull-request base-reference enforcement for knowledge synchronization.
+    refs:
+      - journals/universal-five-ledger-synchronization.md
+      - ../.github/workflows/test.yml
+      - ../template/.clineflow/bin/validate-release
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T08:31:56Z
+    actor: codex
+    type: handoff
+    summary: Reconciled all five ledgers and prepared release 2026.09.03.1 for a synchronized commit and push to main.
+    refs:
+      - journals/universal-five-ledger-synchronization.md
+      - ../CHANGELOG.md
+      - ../template/.clineflow/release-manifest
     git_revision: null
     usage_capture: unavailable

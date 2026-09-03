@@ -17,7 +17,7 @@ elif [ "$#" -gt 0 ]; then
 fi
 
 echo "==> Shell syntax"
-bash -n update.sh template/.clineflow/bin/doctor template/.clineflow/bin/install template/.clineflow/bin/prereqs template/.clineflow/bin/uninstall template/.clineflow/bin/update template/.clineflow/bin/validate-okf template/.clineflow/bin/validate-release tests/*.sh
+bash -n update.sh template/.clineflow/bin/doctor template/.clineflow/bin/install template/.clineflow/bin/prereqs template/.clineflow/bin/uninstall template/.clineflow/bin/update template/.clineflow/bin/validate-knowledge-sync template/.clineflow/bin/validate-okf template/.clineflow/bin/validate-release tests/*.sh
 
 echo "==> Release contract"
 if [ -n "$AGAINST" ]; then ./template/.clineflow/bin/validate-release --against "$AGAINST"
@@ -38,6 +38,11 @@ echo "==> Release-contract rejection matrix"
 echo "==> OKF validator matrix"
 ./tests/test-okf-validator.sh
 ./template/.clineflow/bin/validate-okf
+
+echo "==> Knowledge synchronization matrix"
+./tests/test-knowledge-sync.sh
+if [ -n "$AGAINST" ]; then ./template/.clineflow/bin/validate-knowledge-sync --against "$AGAINST"
+else ./template/.clineflow/bin/validate-knowledge-sync; fi
 
 echo "==> Whitespace integrity"
 git diff --check

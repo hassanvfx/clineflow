@@ -11,10 +11,10 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 ## Work and deliver
 
-- Keep the active Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps. Update the specification, verification, goals, last-session, and timeline indexes as defined by the durable development methodology.
-- Link related knowledge with normal Markdown links and update `knowledge/log.md` when the knowledge changed materially.
-- Before a delivery or commit, run `./.clineflow/bin/validate-okf`, the relevant project tests, and `git diff --check`.
-- When the user asks to commit, update the journal and log first, then commit the code and knowledge artifacts together.
+- Keep the active Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps. For every journal, documentation, or knowledge-base change, reconcile all five ledgers with the journal and one shared timestamp, even when a ledger has no semantic change.
+- Link the active journal from every ledger and update `knowledge/log.md`.
+- Before delivery, run `./.clineflow/bin/validate-okf`, `./.clineflow/bin/validate-knowledge-sync`, the relevant project tests, and `git diff --check`.
+- When the user asks to commit, stage code and knowledge together, require `./.clineflow/bin/validate-knowledge-sync --staged` to pass, then commit.
 
 ## Useful prompts for Codex
 
@@ -28,7 +28,7 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 **Close a task**
 
-> Update the active Engineering Journal with decisions and verification evidence, update `knowledge/log.md` if needed, run `./.clineflow/bin/validate-okf` and relevant tests, then show me the delivery summary.
+> Update the active Engineering Journal, reconcile all five ledgers and `knowledge/log.md`, run the OKF and knowledge-sync validators plus relevant tests, then show me the delivery summary.
 
 **Update ClineFlow**
 

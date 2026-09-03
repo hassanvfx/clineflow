@@ -1,17 +1,34 @@
 version: 1
-updated_at: 2026-09-03T07:35:32Z
+updated_at: 2026-09-03T08:31:56Z
 active_goals:
-  - Maintain the installed, agent-operational durable development workflow.
+  - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
+  - Prevent journal and documentation changes from leaving any of the five durable ledgers stale.
   - Preserve user-authored project context during every update and migration.
 success_measures:
+  - Every supported agent receives the same five-ledger commit discipline.
+  - Qualifying changes fail validation unless all five ledgers, the active journal, and the knowledge log are synchronized.
+  - Pull-request CI validates synchronization against the base revision.
   - All supported historical layouts converge to the current release and pass validation.
   - Release validation rejects unmanaged payload changes and incomplete migration chains.
   - One CI-required command certifies installer, updater, remover, preservation, and rollback behavior.
 blocked_goals: []
 completed_goals:
+  - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.
+  - Adopt native OKF journals while preserving legacy journals as read-only context.
+  - Encapsulate managed tooling and add ownership-safe support for Cline, Codex, Claude Code, Cursor, Copilot, and Windsurf.
+  - Add prerequisite handling and deterministic Git initialization for fresh installations.
   - Add the durable development methodology and master indexes to ClineFlow.
   - Deliver a universal transactional updater for supported OKF-era installations.
 journal_refs:
+  - journals/okf-adoption.md
+  - journals/add-book-link.md
+  - journals/retire-reference-system.md
+  - journals/encapsulate-tooling.md
+  - journals/fresh-installer-claude-code.md
+  - journals/git-prerequisite-bootstrap.md
+  - journals/deterministic-git-initialization.md
   - journals/durable-development-master-indexes.md
+  - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
+  - journals/universal-five-ledger-synchronization.md

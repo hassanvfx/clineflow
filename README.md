@@ -129,8 +129,9 @@ Your AI assistant reads your project's workflow and becomes context-aware. Throu
 
 ### 3️⃣ Say "please commit"
 Your AI assistant automatically:
-- 📝 Documents your decisions in the active journal
-- 💾 Commits code + updated journal together
+- 📝 Documents decisions and reconciles all five knowledge ledgers
+- ✅ Validates the journal, ledgers, timeline, handoff, and knowledge log as one change set
+- 💾 Commits code + synchronized knowledge together
 - 🔄 Creates context for your next session
 
 **Result:** Every new task starts with full context. No more "what did we do last time?" 🎉
@@ -278,7 +279,7 @@ graph TD
     B --> C[💻 Cline builds feature]
     C --> D[📝 Documents decisions as you talk]
     D --> E[✅ You: please commit]
-    E --> F[📦 Auto-commits code + journal]
+    E --> F[📦 Synchronizes ledgers + commits]
     F --> G[🔄 Next session loads context]
     G --> A
     style E fill:#238636
@@ -300,8 +301,9 @@ Cline reads `.clinerules`, understands your project standards, and gets to work.
 
 **3. Say "please commit"**
 Cline automatically:
-- Updates journal with session summary
-- Stages code + journal together
+- Updates the journal and reconciles all five ledgers plus the knowledge log
+- Runs OKF and knowledge-sync validation
+- Stages code + synchronized knowledge together and validates the staged change
 - Creates descriptive commit message
 - Commits everything
 
@@ -447,15 +449,16 @@ The former reference-repository system is no longer shipped. Existing installati
 ## 🎁 What You Get
 
 ### 🚀 Intelligent Commits
-Just say "please commit" and watch Cline:
+Just say "please commit" to any supported agent:
 ```mermaid
 graph LR
-    A[You: please commit] --> B[📝 Update Journal]
-    B --> C[📦 Stage Changes]
-    C --> D[✍️ Create Message]
-    D --> E[✅ Commit Done]
+    A[You: please commit] --> B[📝 Reconcile Journal + 5 Ledgers]
+    B --> C[✅ Validate Knowledge Sync]
+    C --> D[📦 Stage Code + Knowledge]
+    D --> E[✅ Validate Staged Sync]
+    E --> F[✍️ Commit]
     style A fill:#1f6feb
-    style E fill:#238636
+    style F fill:#238636
 ```
 
 Traditional workflow requires 5+ manual steps. ClineFlow: **One phrase.**
@@ -651,7 +654,7 @@ Cline: Creates knowledge/journals/user-dashboard.md automatically
 You: Work together, discuss approaches
 Cline: Documents every decision in journal
 You: "please commit"
-Cline: Commits code + updated journal together
+Cline: Reconciles all five ledgers, validates the staged context, and commits code + knowledge
 ```
 **Result:** Complete feature with documentation trail.
 
@@ -662,7 +665,7 @@ Cline: Updates existing knowledge/journals/auth-system.md journal
 You: Discuss root cause analysis
 Cline: Documents the fix and reasoning
 You: "please commit"
-Cline: New entry in journal, all context preserved
+Cline: Reconciles the five ledgers and commits the complete troubleshooting context
 ```
 **Result:** Bug fixed with complete troubleshooting history.
 

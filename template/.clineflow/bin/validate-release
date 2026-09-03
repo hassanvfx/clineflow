@@ -55,13 +55,16 @@ grep -q "migrate_0_to_1()" template/.clineflow/bin/update || { echo "ERROR: migr
 for required in README.md template/configs/rules.template.md template/docs/durable-development-methodology.md template/.clineflow/WORKING_WITH_CODEX.md template/.clineflow/WORKING_WITH_CLINE.md; do
   grep -q 'Please update ClineFlow\.' "$required" || { echo "ERROR: canonical update prompt missing from $required" >&2; exit 1; }
 done
-for required_test in tests/certify-release.sh tests/test-installation-flow.sh tests/test-update-migrations.sh tests/test-uninstall-safety.sh tests/test-release-contract.sh tests/test-okf-validator.sh; do
+for required_test in tests/certify-release.sh tests/test-installation-flow.sh tests/test-update-migrations.sh tests/test-uninstall-safety.sh tests/test-release-contract.sh tests/test-okf-validator.sh tests/test-knowledge-sync.sh; do
   [ -x "$required_test" ] || { echo "ERROR: missing executable lifecycle check $required_test" >&2; exit 1; }
 done
 grep -qF './tests/test-uninstall-safety.sh' tests/certify-release.sh || { echo "ERROR: release certification omits uninstall safety" >&2; exit 1; }
 grep -qF './tests/test-installation-flow.sh' tests/certify-release.sh || { echo "ERROR: release certification omits installation" >&2; exit 1; }
 grep -qF './tests/test-update-migrations.sh' tests/certify-release.sh || { echo "ERROR: release certification omits updates" >&2; exit 1; }
+grep -qF './tests/test-knowledge-sync.sh' tests/certify-release.sh || { echo "ERROR: release certification omits knowledge synchronization" >&2; exit 1; }
+grep -qF 'validate-knowledge-sync --staged' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the staged knowledge synchronization gate" >&2; exit 1; }
 grep -qF './tests/certify-release.sh' .github/workflows/test.yml || { echo "ERROR: CI does not run lifecycle certification" >&2; exit 1; }
+grep -qF './template/.clineflow/bin/validate-knowledge-sync --against' .github/workflows/test.yml || { echo "ERROR: pull-request CI does not enforce knowledge synchronization" >&2; exit 1; }
 
 if [ -n "$AGAINST" ]; then
   old_version=$(git show "${AGAINST}:template/.clineflow/VERSION" 2>/dev/null || true)

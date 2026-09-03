@@ -22,6 +22,10 @@ jobs:
       - name: Require release bump for managed pull-request changes
         if: github.event_name == 'pull_request'
         run: ./template/.clineflow/bin/validate-release --against "${{ github.event.pull_request.base.sha }}"
+
+      - name: Require synchronized knowledge for pull-request changes
+        if: github.event_name == 'pull_request'
+        run: ./template/.clineflow/bin/validate-knowledge-sync --against "${{ github.event.pull_request.base.sha }}"
       
       - name: Display test results
         if: always()

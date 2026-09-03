@@ -8,6 +8,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Added
+- An agent-independent `validate-knowledge-sync` commit gate for journals, documentation, all five durable ledgers, and the knowledge log.
 - A one-command lifecycle certification gate covering installation, historical updates, transactional removal, preservation, and rollback.
 - Universal transactional updates for all OKF-era layouts from `2026.08.15.0` onward.
 - A permanent remote `update.sh` bootstrap, installed PowerShell update wrapper, release manifest, migration state, automatic rollback, and release-contract validation.
@@ -18,8 +19,9 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- All supported agent configurations now require five-ledger reconciliation for every journal, documentation, or knowledge-base change and a staged synchronization check before commit.
 - Uninstall now requires confirmation (or `--yes`), validates ownership data before mutation, preserves edits to formerly owned agent files, and rolls back failures or handled interruptions.
-- Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.0`, with migration schema `1`.
+- Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.1`, with migration schema `1`.
 - Installation-affecting features must now declare and test their migration impact.
 - New task journals are Engineering Journal concepts in `knowledge/journals/`.
 - Install, update, and uninstall flows preserve both `knowledge/` and legacy `docs/journals/` user content.

@@ -83,13 +83,13 @@ Existing ClineFlow projects are not forced through a migration. If you already h
 That is why ClineFlow now gives ChatGPT Codex a first-class workflow:
 
 - **Shared instructions through `AGENTS.md`.** A new install creates the OKF workflow where Codex and other compatible agents look for repository guidance.
-- **A dedicated Codex guide.** `clineflow/WORKING_WITH_CODEX.md` defines how to start, resume, plan, verify, and deliver work.
-- **A dependency-free health check.** `./clineflow-doctor` confirms that Git, `AGENTS.md`, the required knowledge files, and structural OKF validation are ready.
+- **A dedicated Codex guide.** `.clineflow/WORKING_WITH_CODEX.md` defines how to start, resume, plan, verify, and deliver work.
+- **Dependency-free health and commit checks.** `./.clineflow/bin/doctor`, `validate-okf`, and `validate-knowledge-sync` confirm that agent instructions, durable knowledge, and staged context are ready.
 - **Respect for existing rules.** If a project already has `AGENTS.md`, ClineFlow preserves it instead of overwriting team conventions.
 
-Codex gets a clear loop: read the context, propose a safe next step for substantial work, implement, verify, update the Engineering Journal, and validate before delivery.
+Codex gets a clear loop: read the context, propose a safe next step for substantial work, implement, verify, update the Engineering Journal, reconcile all five ledgers, and validate before delivery or commit.
 
-The same OKF contract remains available to Cline, Cursor, Copilot, Windsurf, and future agents. Codex is first-class without becoming a lock-in.
+The same OKF and five-ledger synchronization contract applies to Cline, Claude Code, Cursor, Copilot, Windsurf, and future agents. Codex is first-class without becoming a lock-in.
 
 ## Install it in one minute
 
@@ -99,7 +99,7 @@ From your project root:
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/install.sh | bash
 ```
 
-The installer creates the native `knowledge/` bundle, `AGENTS.md` when one is not already present, a journal template, `validate-okf`, the Codex guide, and `clineflow-doctor`.
+The installer creates the native `knowledge/` bundle, shared agent rules, a journal template, both validators, the Codex guide, and `.clineflow/bin/doctor`.
 
 Then start a Codex task with this prompt:
 

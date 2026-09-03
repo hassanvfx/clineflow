@@ -10,7 +10,7 @@ Durable development keeps the decisions, evidence, and next action needed to con
 4. **Execute the approved slice.** Implement only what the current contract supports. Capture material decisions, discoveries, failures, and changes in the journal.
 5. **Verify and record evidence.** Run the agreed checks. Record factual outcomes, including failures and gaps, and link the evidence from the verification index.
 6. **Handoff deliberately.** Update the current-session summary and timeline so a new person or agent can recover the contract, evidence, and next safe step without reading an old chat.
-7. **Commit context with work.** Update journals and indexes before validation and commit, so the repository carries code and the explanation for it together.
+7. **Commit context with work.** Any change set containing a journal, documentation, or knowledge-base edit must reconcile all five ledgers, the active journal, and `knowledge/log.md` before validation and commit, so the repository carries code and its current explanation together.
 
 ## Master indexes
 
@@ -28,7 +28,9 @@ Use repository-relative paths in `journal_refs`, `evidence_refs`, `next_step_ref
 
 ## Operating rules for agents
 
-Before substantial work, an agent must read the indexes and linked journals, summarize the current contract and next safe step, and identify ambiguity. During work it updates the active journal first, then the affected indexes. At handoff it updates `clineflow_last_session.yml` and appends a timeline event. At commit it updates the journal, indexes, and `knowledge/log.md`, validates the bundle, and commits the code and durable context together.
+Before substantial work, an agent must read the indexes and linked journals, summarize the current contract and next safe step, and identify ambiguity. During work it updates the active journal first, then reconciles all five ledgers. At handoff it updates `clineflow_last_session.yml` and appends a timeline event. At commit it updates the journal, all five ledgers, and `knowledge/log.md`, validates the bundle and synchronization, and commits the code and durable context together.
+
+For every qualifying change set, use one timestamp for all five ledger `updated_at` fields and the active journal's `generated.at`, reference that journal from every ledger, append a timeline event at the same timestamp, and refresh the last-session handoff. Goals, specification, and verification must still be reviewed when their meaning does not change; updating only `updated_at` explicitly records that review. Before committing, run `./.clineflow/bin/validate-knowledge-sync`, stage code and knowledge together, and rerun it with `--staged`.
 
 If a requested decision is not covered by the specification, the agent stops implementation and asks for direction. It may document options, but it must not silently promote an assumption into an approved requirement.
 

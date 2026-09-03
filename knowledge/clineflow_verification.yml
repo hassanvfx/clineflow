@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T07:35:32Z
+updated_at: 2026-09-03T08:31:56Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -11,16 +11,36 @@ acceptance_criteria:
   - Release validation enforces manifest, version, payload, and migration consistency.
   - The lifecycle certification gate proves install, update, and uninstall behavior and cannot omit removal safety while passing release validation.
   - Removal rejects unsafe ownership paths and malformed markers before mutation and restores the prior state after injected failure or termination.
+  - Journal, documentation, and knowledge-base changes fail unless all five ledgers, the active journal, and knowledge/log.md are changed together.
+  - Working-tree, staged, and base-reference synchronization modes enforce shared timestamps, active-journal references, a current timeline event, and a current log date.
+  - Fresh installs and supported updates put the same synchronization rules in every managed agent configuration without replacing user-authored instructions.
+  - Release validation rejects CI configurations that omit base-reference knowledge synchronization for pull requests.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
   - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.
   - Edited agent files retain user text during uninstall; exact managed-only files are removed.
+  - Code-only changes do not trigger the knowledge synchronization gate.
+  - Legacy docs/journals/ edits are rejected.
 evidence_refs:
+  - journals/okf-adoption.md
+  - journals/encapsulate-tooling.md
+  - journals/fresh-installer-claude-code.md
+  - journals/git-prerequisite-bootstrap.md
+  - journals/deterministic-git-initialization.md
   - journals/durable-development-master-indexes.md
   - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
+  - journals/universal-five-ledger-synchronization.md
 open_verification: []
 journal_refs:
+  - journals/okf-adoption.md
+  - journals/add-book-link.md
+  - journals/retire-reference-system.md
+  - journals/encapsulate-tooling.md
+  - journals/fresh-installer-claude-code.md
+  - journals/git-prerequisite-bootstrap.md
+  - journals/deterministic-git-initialization.md
   - journals/durable-development-master-indexes.md
   - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
+  - journals/universal-five-ledger-synchronization.md

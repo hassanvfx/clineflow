@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+# Validate that documentation and knowledge changes reconcile ClineFlow's durable ledgers.
+set -u
+
+MODE=working
+AGAINST=''
+PROJECT_ROOT=.
+
+usage() {
+  cat <<'EOF'
+Usage: ./.clineflow/bin/validate-knowledge-sync [--staged | --against GIT_REF] [PROJECT_ROOT]
+
+Without a mode, validates staged, unstaged, and untracked changes against HEAD.
+--staged validates only the Git index. --against validates committed changes from
+the merge base with GIT_REF through HEAD.
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --staged)
+      [ "$MODE" = working ] || { usage >&2; exit 2; }
+      MODE=staged
+      ;;
+    --against)
+      [ "$MODE" = working ] && [ "$#" -ge 2 ] || { usage >&2; exit 2; }
+      MODE=against
+      AGAINST=$2
+      shift
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    --*)
+      echo "ERROR: unknown option: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      [ "$PROJECT_ROOT" = . ] || { usage >&2; exit 2; }
+      PROJECT_ROOT=$1
+      ;;
+  esac
+  shift
+done
+
+ROOT=$(git -C "$PROJECT_ROOT" rev-parse --show-toplevel 2>/dev/null) || {
+  echo "ERROR: knowledge synchronization requires a Git work tree." >&2
+  exit 1
+}
+cd "$ROOT" || exit 1
+
+case "$MODE" in
+  staged)
+    CHANGES=$(git diff --cached --name-only --diff-filter=ACMRD 2>/dev/null || true)
+    ;;
+  against)
+    git rev-parse --verify "$AGAINST^{commit}" >/dev/null 2>&1 || {
+      echo "ERROR: comparison ref does not resolve to a commit: $AGAINST" >&2
+      exit 1
+    }
+    CHANGES=$(git diff --name-only --diff-filter=ACMRD "$AGAINST...HEAD")
+    ;;
+  working)
+    if git rev-parse --verify HEAD >/dev/null 2>&1; then
+      CHANGES=$(git diff HEAD --name-only --diff-filter=ACMRD 2>/dev/null || true)
+    else
+      CHANGES=$(git ls-files --cached)
+    fi
+    UNTRACKED=$(git ls-files --others --exclude-standard)
+    CHANGES=$(printf '%s\n%s\n' "$CHANGES" "$UNTRACKED")
+    ;;
+esac
+CHANGES=$(printf '%s\n' "$CHANGES" | sed '/^$/d' | sort -u)
+
+changed() { printf '%s\n' "$CHANGES" | grep -qxF "$1"; }
+is_documentation_or_knowledge() {
+  case "$1" in
+    knowledge/*|docs/*|*.md|*.mdx|*.rst|*.adoc|*/*.md|*/*.mdx|*/*.rst|*/*.adoc) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+QUALIFYING=false
+LEGACY_CHANGED=false
+while IFS= read -r path; do
+  [ -n "$path" ] || continue
+  case "$path" in docs/journals/*) LEGACY_CHANGED=true ;; esac
+  is_documentation_or_knowledge "$path" && QUALIFYING=true
+done <<EOF
+$CHANGES
+EOF
+
+if [ "$LEGACY_CHANGED" = true ]; then
+  echo "ERROR: docs/journals/ is read-only legacy context; restore or move the change into knowledge/journals/." >&2
+  exit 1
+fi
+if [ "$QUALIFYING" != true ]; then
+  echo "Knowledge synchronization passed: no qualifying documentation or knowledge changes."
+  exit 0
+fi
+
+ERRORS=0
+error() { echo "ERROR: $1" >&2; ERRORS=$((ERRORS + 1)); }
+LEDGERS='knowledge/clineflow_specification.yml
+knowledge/clineflow_verification.yml
+knowledge/clineflow_goals.yml
+knowledge/clineflow_last_session.yml
+knowledge/clineflow_timeline.yml'
+
+SYNC_AT=''
+while IFS= read -r ledger; do
+  [ -n "$ledger" ] || continue
+  changed "$ledger" || error "qualifying changes must include $ledger"
+  [ -f "$ledger" ] || { error "required ledger is missing: $ledger"; continue; }
+  ledger_at=$(sed -n 's/^updated_at:[[:space:]]*//p' "$ledger" | head -n 1)
+  [ -n "$ledger_at" ] && [ "$ledger_at" != null ] || error "$ledger must have a concrete updated_at timestamp"
+  if [ -z "$SYNC_AT" ]; then SYNC_AT=$ledger_at
+  elif [ "$ledger_at" != "$SYNC_AT" ]; then error "all five ledger updated_at values must match"; fi
+done <<EOF
+$LEDGERS
+EOF
+
+changed knowledge/log.md || error "qualifying changes must include knowledge/log.md"
+[ -f knowledge/log.md ] || error "required knowledge log is missing: knowledge/log.md"
+
+ACTIVE_JOURNALS=''
+while IFS= read -r path; do
+  case "$path" in
+    knowledge/journals/index.md|knowledge/journals/TASK_TEMPLATE.md) ;;
+    knowledge/journals/*.md) ACTIVE_JOURNALS=$(printf '%s\n%s\n' "$ACTIVE_JOURNALS" "$path" | sed '/^$/d') ;;
+  esac
+done <<EOF
+$CHANGES
+EOF
+[ -n "$ACTIVE_JOURNALS" ] || error "qualifying changes must include an active Engineering Journal"
+
+while IFS= read -r journal; do
+  [ -n "$journal" ] || continue
+  [ -f "$journal" ] || { error "active journal is missing: $journal"; continue; }
+  grep -q '^type:[[:space:]]*Engineering Journal[[:space:]]*$' "$journal" || error "$journal must have type: Engineering Journal"
+  journal_at=$(awk '/^generated:[[:space:]]*$/ { generated=1; next } generated && /^  at:[[:space:]]*/ { sub(/^  at:[[:space:]]*/, ""); print; exit } generated && /^[^[:space:]]/ { exit }' "$journal")
+  [ -n "$SYNC_AT" ] && [ "$journal_at" = "$SYNC_AT" ] || error "$journal generated.at must match the five-ledger timestamp"
+  journal_ref=${journal#knowledge/}
+  for ledger in knowledge/clineflow_specification.yml knowledge/clineflow_verification.yml knowledge/clineflow_goals.yml knowledge/clineflow_last_session.yml; do
+    grep -qF "$journal_ref" "$ledger" 2>/dev/null || error "$ledger must reference $journal_ref"
+  done
+done <<EOF
+$ACTIVE_JOURNALS
+EOF
+
+latest_event=$(sed -n 's/^[[:space:]]*- at:[[:space:]]*//p' knowledge/clineflow_timeline.yml 2>/dev/null | tail -n 1)
+[ -n "$SYNC_AT" ] && [ "$latest_event" = "$SYNC_AT" ] || error "the newest timeline event must use the shared synchronization timestamp"
+latest_event_line=$(grep -n '^[[:space:]]*- at:' knowledge/clineflow_timeline.yml 2>/dev/null | tail -n 1 | cut -d: -f1)
+if [ -n "$latest_event_line" ]; then
+  latest_event_block=$(tail -n +"$latest_event_line" knowledge/clineflow_timeline.yml)
+  while IFS= read -r journal; do
+    [ -n "$journal" ] || continue
+    journal_ref=${journal#knowledge/}
+    printf '%s\n' "$latest_event_block" | grep -qF "$journal_ref" || error "the newest timeline event must reference $journal_ref"
+  done <<EOF
+$ACTIVE_JOURNALS
+EOF
+fi
+
+log_date=$(sed -nE 's/^## ([0-9]{4}-[0-9]{2}-[0-9]{2})[[:space:]]*$/\1/p' knowledge/log.md 2>/dev/null | head -n 1)
+sync_date=${SYNC_AT%%T*}
+[ -n "$SYNC_AT" ] && [ "$log_date" = "$sync_date" ] || error "the newest knowledge/log.md entry must match the synchronization date"
+
+[ "$ERRORS" -eq 0 ] || exit 1
+echo "Knowledge synchronization passed at $SYNC_AT."

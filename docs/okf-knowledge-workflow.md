@@ -7,6 +7,7 @@ ClineFlow stores new persistent engineering context as an Open Knowledge Format 
 ```text
 knowledge/
 ├── index.md                    # Bundle navigation; declares okf_version: "0.2"
+├── clineflow_*.yml             # Five synchronized durable ledgers
 ├── log.md                      # Dated bundle change history
 └── journals/
     ├── index.md                # Progressive-disclosure task listing
@@ -27,10 +28,11 @@ Projects may already have `docs/journals/`. ClineFlow searches that directory wh
 
 ## Validation
 
-Run the default structural validator before committing:
+Run structural and change-set synchronization validation before committing:
 
 ```bash
 ./.clineflow/bin/validate-okf
+./.clineflow/bin/validate-knowledge-sync
 ```
 
 It has no dependencies beyond ClineFlow’s Bash baseline. It checks the bundle directory, required concept frontmatter framing, non-empty `type`, OKF reserved-file conventions, root OKF version declaration, and chronological log ordering.
@@ -43,6 +45,8 @@ python3 -m pip install PyYAML
 ```
 
 Strict mode parses every concept frontmatter block with PyYAML in addition to the structural checks. It is intentionally optional: ClineFlow does not require Python or PyYAML for installation or normal use.
+
+Any change set containing a journal, documentation, or knowledge-base edit must update the active Engineering Journal, `knowledge/log.md`, and all five ledgers with one shared timestamp. Each ledger must reference the active journal, and the newest timeline event must use that timestamp. After staging code and knowledge together, run `./.clineflow/bin/validate-knowledge-sync --staged` as the final commit gate. These rules are shared by every supported agent integration.
 
 ## Upgrade and removal
 

@@ -21,6 +21,7 @@ assert_current() {
   local project=$1
   [ "$(cat "$project/.clineflow/VERSION")" = "$CURRENT_VERSION" ] || fail "wrong migrated version"
   grep -qx 'migration_schema=1' "$project/.clineflow/state" || fail "missing migration state"
+  [ -x "$project/.clineflow/bin/validate-knowledge-sync" ] || fail "missing knowledge synchronization validator"
   (cd "$project" && ./.clineflow/bin/doctor >/dev/null) || fail "migrated installation is unhealthy"
 }
 
@@ -42,6 +43,7 @@ assert_current "$root_project"
 [ "$legacy_hash" = "$(shasum -a 256 "$root_project/docs/journals/legacy.md" | awk '{print $1}')" ] || fail "legacy journal changed"
 [ "$refs_hash" = "$(shasum -a 256 "$root_project/setup-refs.sh" | awk '{print $1}')" ] || fail "retired reference artifact changed"
 grep -qx 'file:AGENTS.md' "$root_project/.clineflow/.owned-agent-files" || fail "stock agent rules were not adopted"
+grep -q 'validate-knowledge-sync --staged' "$root_project/AGENTS.md" || fail "updated agent rules omit staged knowledge synchronization"
 grep -qFx 'custom legacy runtime' "$root_project/clineflow/WORKING_WITH_CLINE.md" || fail "custom legacy runtime was removed"
 before_second=$(find "$root_project/.clineflow/backups" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 (cd "$root_project" && CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update --yes >/dev/null)

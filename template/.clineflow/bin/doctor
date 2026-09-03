@@ -62,6 +62,7 @@ check knowledge/log.md "OKF bundle log"
 check knowledge/journals/index.md "journal index"
 check knowledge/journals/TASK_TEMPLATE.md "Engineering Journal template"
 check .clineflow/bin/validate-okf "OKF validator"
+check .clineflow/bin/validate-knowledge-sync "knowledge synchronization validator"
 if [ -x .clineflow/bin/validate-okf ]; then .clineflow/bin/validate-okf ${STRICT:+"$STRICT"} || errors=$((errors+1)); fi
 [ "$errors" -eq 0 ] || exit 1
 echo "ClineFlow doctor: healthy."

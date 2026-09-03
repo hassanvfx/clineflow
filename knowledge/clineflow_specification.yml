@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T07:35:32Z
+updated_at: 2026-09-03T08:31:56Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -9,6 +9,9 @@ confirmed:
   - Updates are manifest-driven, transactional, verified, and automatically rolled back on failure.
   - The prompt “Please update ClineFlow” authorizes an agent to read current repository instructions and run the updater non-interactively.
   - Removal validates trusted ownership and markers before mutation, requires confirmation, preserves user text, and rolls back failures or handled interruptions.
+  - Cline, Codex, Claude Code, Cursor, GitHub Copilot, and Windsurf receive one canonical agent-neutral durable knowledge contract.
+  - Any Git change set containing a journal, documentation, or knowledge-base edit reconciles all five ledgers, the active Engineering Journal, and knowledge/log.md.
+  - All five ledger updated_at values, the active journal generated.at value, and the newest timeline event timestamp match within a synchronized change set.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -18,8 +21,20 @@ constraints:
   - Updates preserve existing knowledge, legacy journals, user-authored documentation, retired reference artifacts, and ambiguous legacy files.
   - Installation-affecting releases must declare and verify whether a schema migration is required.
   - CI and releases must run the single lifecycle certification entrypoint covering installation, update, removal, and durable knowledge.
+  - Pull-request CI runs knowledge synchronization against the pull request base revision.
+  - Every ledger references the active journal; a timestamp-only goals, specification, or verification edit means the ledger was reviewed with no semantic change.
+  - Changes to docs/journals/ are rejected because it is immutable legacy context.
 non_goals: []
 open_questions: []
 journal_refs:
+  - journals/okf-adoption.md
+  - journals/add-book-link.md
+  - journals/retire-reference-system.md
+  - journals/encapsulate-tooling.md
+  - journals/fresh-installer-claude-code.md
+  - journals/git-prerequisite-bootstrap.md
+  - journals/deterministic-git-initialization.md
   - journals/durable-development-master-indexes.md
+  - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
+  - journals/universal-five-ledger-synchronization.md

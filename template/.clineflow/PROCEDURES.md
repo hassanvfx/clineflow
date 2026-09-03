@@ -13,11 +13,11 @@
 - Reserve `index.md` for navigation and `log.md` for dated change history.
 - Use Markdown links for relationships; broken links are acceptable when knowledge is not written yet.
 - Record only factual provenance, verification, and lifecycle fields.
-- Update the master indexes with concise current state and references; keep detailed reasoning and evidence in linked Engineering Journals.
+- For every journal, documentation, or knowledge-base change, reconcile all five master indexes with one timestamp, reference the active journal from each, append a matching timeline event, refresh the handoff, and update `knowledge/log.md`. A timestamp-only update means the ledger was reviewed with no semantic change.
 
 ## Commit
 
 1. Update the active Engineering Journal with outcomes, decisions, tests, and follow-up work.
-2. Add a dated entry to `knowledge/log.md` for material changes.
-3. Run `./.clineflow/bin/validate-okf`.
-4. Commit implementation and knowledge changes together.
+2. Reconcile all five ledgers and add a dated entry to `knowledge/log.md`.
+3. Run `./.clineflow/bin/validate-okf` and `./.clineflow/bin/validate-knowledge-sync`.
+4. Stage implementation and knowledge together, run `./.clineflow/bin/validate-knowledge-sync --staged`, and commit only when it passes.
