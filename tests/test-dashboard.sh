@@ -114,10 +114,11 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 evidence = {"summary": "Dashboard evidence is structured", "command": "./tests/certify-release.sh"}
 assert module.observation_text(evidence) == "Dashboard evidence is structured"
-event = module.normalize_event({"timestamp": "2026-09-03T12:00:00Z", "category": "verification", "description": "Structured timeline event", "references": "journals/example.md"})
+event = module.normalize_event({"timestamp": "2026-09-03T12:00:00Z", "category": "verification", "event": "Built and verified a reusable validation harness (analytics/tools/validation)", "references": "journals/example.md"})
 assert event["at"] == "2026-09-03T12:00:00Z"
 assert event["type"] == "verification"
-assert event["summary"] == "Structured timeline event"
+assert event["summary"] == "Built and verified a reusable validation harness (analytics/tools/validation)"
+assert event["title"] == "Built and verified a reusable validation harness"
 assert event["refs"] == ["journals/example.md"]
 PY
 
@@ -158,6 +159,7 @@ grep -q 'data:font/woff2;base64,' "$report" || fail "self-contained report omitt
 ! grep -q 'About this report' "$report" || fail "dashboard retained the removed asset panel"
 grep -q 'Manager view' "$report" && grep -q 'Engineering view' "$report" && grep -q 'Source of truth' "$report" || fail "dashboard omitted its multi-audience story chapters"
 grep -q 'data-atlas="overview"' "$report" && grep -q 'data-atlas="journals"' "$report" || fail "Decision Atlas omitted progressive disclosure controls"
+grep -q 'Read event note' "$report" && grep -q 'const eventTitle' "$report" || fail "Time Spine omitted compact titles and expandable notes"
 grep -q 'slice(0,10)' "$report" || fail "Decision Atlas omitted its visible-node cap"
 ! grep -q 'layout:{name:"cose"' "$report" || fail "Decision Atlas retained the overlapping force layout"
 grep -q 'Guided view' "$report" && grep -q 'Copy normalized YAML' "$report" || fail "Knowledge Explorer omitted YAML interpretation and repair controls"

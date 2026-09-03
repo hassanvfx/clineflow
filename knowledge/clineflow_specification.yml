@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:19:19Z
+updated_at: 2026-09-03T11:33:27Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -23,6 +23,7 @@ confirmed:
   - Each report stores snapshot.json and observations.json beside index.html and embeds exact inert copies of both so file-protocol viewing performs no fetch.
   - Knowledge Explorer parses YAML with the pinned optional PyYAML dependency and offers guided, JSON, raw-source, diagnostic, and copyable normalized-repair views without modifying canonical files.
   - Dashboard facts normalize flexible timeline aliases into canonical event fields while retaining raw records; structured evidence, goals, and constraints render named statements and readable metadata instead of object coercions.
+  - Report timeline events carry a short title, compact kind, and full narrative note; the Time Spine displays the title first and reveals formatted detail only on request.
   - Agent-rule refresh is portable when the managed block begins on the first line or follows user-authored text.
   - The canonical agent update request invokes the permanent remote bootstrap first and never executes a legacy local updater beforehand.
 assumptions: []

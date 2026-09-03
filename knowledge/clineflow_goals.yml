@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:19:19Z
+updated_at: 2026-09-03T11:33:27Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -19,6 +19,7 @@ success_measures:
   - One progressive report communicates current meaning to executives, trajectory to managers, and inspectable decisions and sources to engineers.
   - Every dashboard narrative is a validated, source-bound JSON artifact generated after normalized facts and embedded with those facts for offline local viewing.
   - Structured evidence and timeline records remain readable in dashboard views without requiring teams to flatten their canonical YAML.
+  - Time-first observability remains scannable: short event titles and kinds lead, with full narrative available on demand.
 blocked_goals: []
 completed_goals:
   - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.

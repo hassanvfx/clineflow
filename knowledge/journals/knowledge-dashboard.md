@@ -5,8 +5,8 @@ description: "Implements an isolated, time-first dashboard for navigating durabl
 tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
-  by: clineflow/2026.09.03.5
-  at: 2026-09-03T11:19:19Z
+  by: clineflow/2026.09.03.6
+  at: 2026-09-03T11:33:27Z
 ---
 
 # Goal
@@ -55,6 +55,10 @@ Rebuilt the Knowledge Explorer around parsed YAML objects, guided sections, chro
 
 Reproduced `[object Object]` labels in the Evidence Atlas and blank timeline descriptions when projects provide richer YAML records instead of legacy strings. The collector now normalizes timeline aliases (`timestamp`, `occurred_at`, `category`, `description`, `references`, and related forms) into a canonical report event while preserving the raw source record. The viewer now selects meaningful statement fields (`summary`, `text`, `title`, `criterion`, and related forms), shows remaining metadata in the details rail, and retains compatibility with older snapshots. Added direct regressions for structured evidence, structured observation text, and aliased timeline records.
 
+## 2026-09-03 11:33 UTC - Time Spine disclosure refined
+
+Reworked each Time Spine row into a short kind pill, a concise supplied or derived title, and a collapsed “Read event note” disclosure. Long `event:` strings are now interpreted as the narrative note rather than the lane type; their first clause becomes a bounded, scan-friendly title. Expanded notes retain their paragraph boundaries, while concise events remain compact without an unnecessary disclosure.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -73,6 +77,7 @@ Reproduced `[object Object]` labels in the Evidence Atlas and blank timeline des
 - Keep YAML repair non-mutating: the pinned PyYAML runtime emits diagnostics and normalized copy output, while canonical source changes remain an explicit user action outside the dashboard boundary.
 - Normalize flexible timeline records only in report facts, preserving each original object under `raw`; do not impose a new persistent ledger schema.
 - Prefer named statement fields when rendering structured evidence or decisions, and expose all remaining fields in the readable detail surface rather than serializing objects into labels.
+- Treat Time Spine labels as event kinds and titles as the scan layer; retain full event narration only in explicit disclosure.
 
 # Testing
 
@@ -86,6 +91,7 @@ Reproduced `[object Object]` labels in the Evidence Atlas and blank timeline des
 - Dashboard tests require the executive/manager/engineering/source story markers, absence of the visible asset panel, and retention of complete asset provenance in `manifest.json`.
 - Dashboard boundary tests pass the independent facts → observations → render commands, assert exact embedded/adjacent JSON equality, bind observations to the facts source hash, require all three audience narratives, and verify structured YAML plus normalized repair output.
 - Structured-record regressions prove evidence labels never coerce to `[object Object]`, narrative observations choose a human-readable statement, and timeline aliases normalize into time, type, summary, references, and raw provenance.
+- Time Spine regression coverage verifies long `event:` notes derive a concise title, retain the full note, and expose the progressive disclosure control.
 
 # Open Issues
 

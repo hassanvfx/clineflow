@@ -9,14 +9,16 @@
   const time = value => value ? new Date(value).toLocaleString() : "Not recorded";
   const eventValue = (event, keys) => keys.map(key=>event?.[key]).find(value=>value!==undefined&&value!==null&&value!=="");
   const eventTime = event => eventValue(event,["at","timestamp","occurred_at","datetime","date","time"]);
-  const eventType = event => eventValue(event,["type","kind","category","event_type","event","action"])||"event";
-  const eventSummary = event => eventValue(event,["summary","text","description","title","message","detail","change"]);
+  const eventType = event => eventValue(event,["type","kind","category","event_type","action"])||"event";
+  const eventSummary = event => eventValue(event,["summary","text","description","message","detail","change","event"]);
+  const compactTitle = value => { const text=String(value||"Recorded event").replace(/\s+/g," ").trim(); const first=text.split(/(?<=[.!?])\s+|\s+\(|\s+—\s+|\s+[-:]\s+/)[0]||text; return first.length<=74?first:`${first.slice(0,75).replace(/\s+\S*$/,"").replace(/[.,;:]$/,"")}…`; };
+  const eventTitle = event => eventValue(event,["short_title","title","label","name"])||compactTitle(eventSummary(event));
   const eventRefs = event => { const refs=eventValue(event,["refs","references","links","journal_refs","evidence_refs"]); return Array.isArray(refs)?refs:(refs?[refs]:[]); };
   const timeline = [
-    ...data.events.map(item => ({...item, lane: "event", when: eventTime(item), label: eventType(item), summary: eventSummary(item)||"Event recorded without a narrative summary."})),
-    ...data.documents.filter(item => item.generated_at).map(item => ({...item, lane: "journal", when: item.generated_at, label: "journal", summary: item.title})),
-    ...data.commits.map(item => ({...item, lane: "commit", when: item.committed_at, label: "git"})),
-    ...(data.runs || []).map(item => ({...item, lane: "run", when: item.generated_at, label: "visor", summary: `Dashboard run ${item.run_id}`}))
+    ...data.events.map(item => ({...item, lane: "event", when: eventTime(item), label: eventType(item), title:eventTitle(item), summary: eventSummary(item)||"Event recorded without a narrative summary."})),
+    ...data.documents.filter(item => item.generated_at).map(item => ({...item, lane: "journal", when: item.generated_at, label: "journal", title:item.title, summary: item.description||item.title})),
+    ...data.commits.map(item => ({...item, lane: "commit", when: item.committed_at, label: "git", title:compactTitle(item.summary), summary:item.summary})),
+    ...(data.runs || []).map(item => ({...item, lane: "run", when: item.generated_at, label: "visor", title:"Dashboard report generated", summary: `Dashboard run ${item.run_id}`}))
   ].sort((a,b) => new Date(b.when) - new Date(a.when));
   const latest = timeline[0];
   const specification = data.ledgers.clineflow_specification || {};
@@ -58,11 +60,13 @@
   $("#audience-switch").querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{$("#audience-switch").querySelectorAll("button").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});renderAudience(button.dataset.audience);}));
   renderAudience("executive");
   let utc = false;
+  const formatTimelineNote = value => String(value||"").split(/\n\s*\n/).map(paragraph=>`<p>${esc(paragraph.trim())}</p>`).join("");
   const renderTimeline = () => {
     $("#time-spine").innerHTML = timeline.slice(0, 80).map(item => {
       const displayed = utc && item.when ? new Date(item.when).toISOString() : time(item.when);
       const inferred = item.lane === "event" && item.association?.kind === "inferred" ? `<div class="inferred">┈ likely ${esc(item.association.short_revision)} via ${esc(item.association.matching_refs.join(", "))}</div>` : "";
-      return `<div class="time-row"><time title="${esc(item.when)}">${esc(displayed)}</time><span class="lane ${item.lane}">${esc(item.label)}</span><div class="time-summary">${esc(item.summary)}${inferred}</div></div>`;
+      const details=item.summary&&item.summary!==item.title?`<details class="time-details"><summary>Read event note</summary>${formatTimelineNote(item.summary)}</details>`:"";
+      return `<div class="time-row"><time title="${esc(item.when)}">${esc(displayed)}</time><span class="lane ${item.lane}">${esc(item.label)}</span><div class="time-summary"><strong>${esc(item.title||item.label)}</strong>${details}${inferred}</div></div>`;
     }).join("") || `<div class="empty">No timeline data recorded.</div>`;
   };
   $("#time-mode").addEventListener("click", event => { utc = !utc; event.currentTarget.textContent = utc ? "UTC time" : "Local time"; renderTimeline(); });

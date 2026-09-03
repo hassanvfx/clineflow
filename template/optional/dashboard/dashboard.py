@@ -477,6 +477,19 @@ def first_present(value: dict[str, Any], *keys: str) -> Any:
     return None
 
 
+def concise_title(value: Any, limit: int = 74) -> str:
+    """Create a scannable title when a timeline record has only a long note."""
+    text = re.sub(r"\s+", " ", observation_text(value)).strip()
+    if not text:
+        return "Recorded event"
+    natural_breaks = re.split(r"(?<=[.!?])\s+|\s+\(|\s+—\s+|\s+[-:]\s+", text, maxsplit=1)
+    candidate = natural_breaks[0].strip() or text
+    if len(candidate) <= limit:
+        return candidate
+    clipped = candidate[:limit + 1].rsplit(" ", 1)[0].rstrip(".,;:")
+    return f"{clipped or candidate[:limit]}…"
+
+
 def normalize_event(value: Any) -> dict[str, Any]:
     """Normalize flexible timeline records without discarding their source structure."""
     if not isinstance(value, dict):
@@ -484,10 +497,13 @@ def normalize_event(value: Any) -> dict[str, Any]:
     refs = first_present(value, "refs", "references", "links", "journal_refs", "evidence_refs") or []
     if not isinstance(refs, list):
         refs = [refs]
+    note = first_present(value, "summary", "text", "description", "message", "detail", "change", "event")
+    title = first_present(value, "short_title", "title", "label", "name")
     normalized = {
         "at": first_present(value, "at", "timestamp", "occurred_at", "datetime", "date", "time"),
-        "type": first_present(value, "type", "kind", "category", "event_type", "event", "action") or "event",
-        "summary": first_present(value, "summary", "text", "description", "title", "message", "detail", "change"),
+        "type": first_present(value, "type", "kind", "category", "event_type", "action") or "event",
+        "title": concise_title(title if title is not None else note if note is not None else value),
+        "summary": note,
         "refs": [str(item) for item in refs],
         "raw": value,
     }

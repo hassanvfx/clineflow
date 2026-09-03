@@ -2,6 +2,8 @@
 
 ## 2026-09-03
 
+* **Fix**: Made the Time Spine scannable with short event titles and kinds, moving full narrative notes into expandable formatted disclosure.
+* **Verification**: Added long-event regressions that prove descriptive notes do not become lane labels and remain intact when expanded.
 * **Fix**: Normalized structured Evidence Atlas statements and flexible timeline fields so report labels never coerce objects or lose event summaries.
 * **Verification**: Added regressions for named evidence statements, source-bound observation text, and canonicalized timeline aliases with retained raw provenance.
 * **Feature**: Split Knowledge Visor into normalized facts, source-bound narrative observations, and rendering; both JSON artifacts are embedded exactly for direct local-file viewing.

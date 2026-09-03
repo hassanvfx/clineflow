@@ -103,7 +103,11 @@ h1 { font-size: clamp(2.7rem, 6vw, 6.4rem); max-width: 950px; line-height: .91; 
 .lane.commit { color: var(--cyan); border-color: rgba(105,217,255,.3); }
 .lane.journal { color: var(--violet); border-color: rgba(178,156,255,.3); }
 .lane.run { color: var(--amber); border-color: rgba(255,201,107,.3); }
-.time-summary { font-size: .88rem; line-height: 1.4; }
+.time-summary { font-size: .88rem; line-height: 1.4; min-width: 0; }
+.time-summary > strong { display: block; color: var(--text); font-size: .92rem; line-height: 1.35; }
+.time-details { margin-top: 7px; color: var(--muted); }
+.time-details summary { width: fit-content; font: .66rem "IBM Plex Mono", monospace; letter-spacing: .05em; text-transform: uppercase; }
+.time-details p { margin: 9px 0 0; max-width: 92ch; color: #b9d8cf; line-height: 1.55; white-space: pre-wrap; }
 .inferred { margin-top: 6px; color: var(--amber); font: .67rem "IBM Plex Mono", monospace; }
 .signals { display: grid; gap: 10px; }
 .signal { display: flex; align-items: center; justify-content: space-between; gap: 14px; border-bottom: 1px solid rgba(155,255,226,.08); padding: 11px 0; }
