@@ -18,6 +18,7 @@ import html
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import webbrowser
@@ -33,6 +34,7 @@ except ImportError as exc:  # pragma: no cover - the bootstrap supplies the lock
 
 SCHEMA = "clineflow-dashboard/v1"
 OBSERVATION_SCHEMA = "clineflow-dashboard-observations/v1"
+PRESENTATION_SCHEMA = "clineflow-dashboard-presentation/v1"
 LEDGERS = (
     "clineflow_specification.yml",
     "clineflow_verification.yml",
@@ -344,6 +346,48 @@ def collect_runs(root: Path) -> list[dict[str, Any]]:
         if isinstance(generated_at, str):
             result.append({"run_id": manifest_path.parent.name, "generated_at": generated_at})
     return result
+
+
+def dashboard_settings_path(root: Path) -> Path:
+    return root / "knowledge" / "dashboard" / "settings.json"
+
+
+def parse_retention(value: Any) -> int | None:
+    """Return a positive report count or None for unlimited retention."""
+    if value is None or value == "unlimited":
+        return None
+    if isinstance(value, bool):
+        raise ValueError("retention must be a positive integer or unlimited")
+    try:
+        retention = int(value)
+    except (TypeError, ValueError) as error:
+        raise ValueError("retention must be a positive integer or unlimited") from error
+    if retention < 1:
+        raise ValueError("retention must be a positive integer or unlimited")
+    return retention
+
+
+def read_retention(root: Path) -> int | None:
+    path = dashboard_settings_path(root)
+    if not path.is_file():
+        return 3
+    try:
+        settings = json.loads(path.read_text())
+    except json.JSONDecodeError as error:
+        raise ValueError("dashboard settings.json must contain valid JSON") from error
+    if not isinstance(settings, dict) or set(settings) != {"retention"}:
+        raise ValueError("dashboard settings.json must contain only a retention field")
+    return parse_retention(settings["retention"])
+
+
+def write_retention(root: Path, value: Any) -> int | None:
+    retention = parse_retention(value)
+    path = dashboard_settings_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+    temporary.write_text(json.dumps({"retention": retention}, indent=2) + "\n")
+    temporary.replace(path)
+    return retention
 
 
 def exact_usage(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -695,7 +739,97 @@ def safe_json_for_script(data: Any) -> str:
     return json.dumps(json_safe(data), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
-def build_page(runtime: Path, data: dict[str, Any], observations: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
+def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft_scope: str | None = None) -> dict[str, Any]:
+    """Build the only view model consumed by the browser renderer."""
+    documents = data.get("documents", [])
+    document_ids = {item.get("id") for item in documents}
+    document_id_for_path = {item.get("path"): item.get("id") for item in documents}
+    ledgers = data.get("ledgers") or {}
+    specification = ledgers.get("clineflow_specification") or {}
+    verification = ledgers.get("clineflow_verification") or {}
+    goals = ledgers.get("clineflow_goals") or {}
+    session = ledgers.get("clineflow_last_session") or {}
+    events = [normalize_event(item) for item in data.get("events", [])]
+    timeline = [
+        {"lane": "event", "when": item.get("at"), "label": item.get("type") or "event", "title": item.get("title"), "summary": item.get("summary"), "refs": item.get("refs", []), "association": item.get("association")}
+        for item in events
+    ]
+    timeline.extend({
+        "lane": "journal", "when": item.get("generated_at"), "label": "journal", "title": item.get("title"),
+        "summary": item.get("description") or item.get("title"), "source_id": item.get("id"),
+    } for item in documents if item.get("generated_at"))
+    timeline.extend({
+        "lane": "commit", "when": item.get("committed_at"), "label": "git", "title": concise_title(item.get("summary")),
+        "summary": item.get("summary"),
+    } for item in data.get("commits", []))
+    timeline.sort(key=lambda item: str(item.get("when") or ""), reverse=True)
+    latest = next((item for item in timeline if item["lane"] in {"event", "commit"}), None)
+    latest_verification = next((item for item in timeline if item["lane"] == "event" and item["label"] == "verification"), None)
+    unresolved = [
+        {"kind": "Decision needed", "text": observation_text(item), "why": "The specification still leaves this choice open.", "next": "Choose an owner and record the decision.", "source_ids": [document_id_for_path["knowledge/clineflow_specification.yml"]] if document_id_for_path.get("knowledge/clineflow_specification.yml") else []}
+        for item in specification.get("open_questions") or []
+    ] + [
+        {"kind": "Proof gap", "text": observation_text(item), "why": "The implementation has no recorded verification for this point yet.", "next": "Run or record the missing evidence.", "source_ids": [document_id_for_path["knowledge/clineflow_verification.yml"]] if document_id_for_path.get("knowledge/clineflow_verification.yml") else []}
+        for item in verification.get("open_verification") or []
+    ]
+    constraints = [
+        {"kind": "Constraint", "text": observation_text(item), "why": "This boundary shapes the implementation decision.", "next": "Keep the constraint visible while deciding.", "source_ids": [document_id_for_path["knowledge/clineflow_specification.yml"]] if document_id_for_path.get("knowledge/clineflow_specification.yml") else []}
+        for item in specification.get("constraints") or []
+    ]
+    active_goal = observation_text(next(iter(goals.get("active_goals") or []), ""))
+    headline = active_goal or (latest.get("title") if latest else "Build the first durable project record")
+    onboarding = {
+        "empty": not documents,
+        "title": "Start the story with one deliberate record" if not documents else "Strengthen the next useful signal",
+        "text": "Create the five ClineFlow ledgers, then record one goal, one next move, and one timeline event." if not documents else "Add a clear goal, next recommended move, and verification note to turn sparse context into a useful narrative.",
+    }
+    def ledger_source(path: str) -> list[str]:
+        return [document_id_for_path[path]] if document_id_for_path.get(path) else []
+    first_constraint = next(iter(specification.get("constraints") or []), None)
+    first_question = next(iter(specification.get("open_questions") or []), None)
+    first_gap = next(iter(verification.get("open_verification") or []), None)
+    proof_text = observation_text(first_gap) if first_gap else (latest_verification.get("title") if latest_verification else "Record verification evidence for the completed move.")
+    agentic_loop = [
+        {"step": "01", "label": "Aim", "text": active_goal or "Record the active project goal.", "source_ids": ledger_source("knowledge/clineflow_goals.yml")},
+        {"step": "02", "label": "Decide", "text": observation_text(first_question or first_constraint or "No active constraint or open decision is recorded."), "source_ids": ledger_source("knowledge/clineflow_specification.yml")},
+        {"step": "03", "label": "Act", "text": observation_text(session.get("next_recommended_step") or "Choose and record the next deliberate move."), "source_ids": ledger_source("knowledge/clineflow_last_session.yml")},
+        {"step": "04", "label": "Prove", "text": proof_text, "source_ids": ledger_source("knowledge/clineflow_verification.yml")},
+    ]
+    scope_paths = draft_scope or "|".join(sorted(str(item.get("path", "")) for item in documents))
+    return json_safe({
+        "schema": PRESENTATION_SCHEMA,
+        "generated_at": data.get("run_at"),
+        "source": {"snapshot_schema": data.get("schema"), "source_hash": data.get("source_hash"), "observation_schema": observations.get("schema")},
+        "draft_scope": sha256_bytes(scope_paths.encode())[:20],
+        "report": {"run_id": data.get("run_id"), "git": data.get("git") or {}, "retention": data.get("retention")},
+        "now": {
+            "headline": headline,
+            "summary": observations.get("executive_summary") or session.get("latest_change") or onboarding["text"],
+            "intent": active_goal or observation_text(session.get("next_recommended_step") or "No active goal recorded."),
+            "next_move": observation_text(session.get("next_recommended_step") or "Capture the next deliberate move in the knowledge base."),
+            "latest_activity": latest,
+            "latest_verification": latest_verification,
+            "unresolved_count": len(unresolved),
+        },
+        "story": observations.get("project_story") or {},
+        "audiences": observations.get("audiences") or {},
+        "timeline": timeline,
+        "documents": documents,
+        "unresolved": unresolved,
+        "decisions": constraints + unresolved,
+        "onboarding": onboarding,
+        "agentic_loop": agentic_loop,
+        "evidence": [{"text": observation_text(item), "source_ids": []} for item in verification.get("evidence") or verification.get("acceptance_criteria") or []],
+        "metrics": {
+            "documents": len(documents), "events": len(events), "usage": len(data.get("usage") or []),
+            "drift": data.get("drift") or {"added": [], "changed": [], "removed": []},
+            "current_change": data.get("current_change") or {}, "current_footprint": data.get("current_footprint") or {},
+            "commits": data.get("commits") or [],
+        },
+    })
+
+
+def build_page(runtime: Path, data: dict[str, Any], observations: dict[str, Any], presentation: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
     assets, asset_manifest = load_assets(runtime)
     source_dir = Path(__file__).resolve().parent
     custom_css = (source_dir / "visor.css").read_text()
@@ -706,11 +840,34 @@ def build_page(runtime: Path, data: dict[str, Any], observations: dict[str, Any]
 @font-face{{font-family:'IBM Plex Mono';src:url(data:font/woff2;base64,{assets['ibm-plex-mono-500.woff2']}) format('woff2');font-weight:500;font-display:swap}}
 """
     csp = "default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'"
-    page = f"""<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"{csp}\"><title>ClineFlow Knowledge Visor</title><style>{font_css}{custom_css}</style></head><body><a class=\"skip\" href=\"#main\">Skip to knowledge</a><div id=\"app\"></div><script>{assets['echarts.min.js']}</script><script>{assets['gsap.min.js']}</script><script id=\"clineflow-data\" type=\"application/json\">{safe_json_for_script(data)}</script><script id=\"clineflow-observations\" type=\"application/json\">{safe_json_for_script(observations)}</script><script>{custom_js}</script></body></html>"""
+    page = f"""<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"{csp}\"><title>ClineFlow Knowledge Visor</title><style>{font_css}{custom_css}</style></head><body><a class=\"skip\" href=\"#main\">Skip to knowledge</a><div id=\"app\"></div><script>{assets['echarts.min.js']}</script><script>{assets['gsap.min.js']}</script><script id=\"clineflow-data\" type=\"application/json\">{safe_json_for_script(data)}</script><script id=\"clineflow-observations\" type=\"application/json\">{safe_json_for_script(observations)}</script><script id=\"clineflow-presentation\" type=\"application/json\">{safe_json_for_script(presentation)}</script><script>{custom_js}</script></body></html>"""
     return page, asset_manifest
 
 
-def render_report(root: Path, runtime: Path, data: dict[str, Any], observations: dict[str, Any], no_open: bool) -> Path:
+def completed_runs(runs_dir: Path) -> list[Path]:
+    """Return only complete report directories owned by this dashboard schema."""
+    result: list[Path] = []
+    for candidate in runs_dir.iterdir() if runs_dir.is_dir() else []:
+        manifest = candidate / "manifest.json"
+        if not candidate.is_dir() or not manifest.is_file():
+            continue
+        try:
+            payload = json.loads(manifest.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        if payload.get("schema") == SCHEMA and payload.get("run_id") == candidate.name:
+            result.append(candidate)
+    return sorted(result, key=lambda path: path.name, reverse=True)
+
+
+def prune_runs(runs_dir: Path, retention: int | None) -> None:
+    if retention is None:
+        return
+    for run in completed_runs(runs_dir)[retention:]:
+        shutil.rmtree(run)
+
+
+def render_report(root: Path, runtime: Path, data: dict[str, Any], observations: dict[str, Any], no_open: bool, retention: int | None = None) -> Path:
     runs_dir = root / "knowledge" / "dashboard" / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
     run_id = data["run_id"]
@@ -722,7 +879,9 @@ def render_report(root: Path, runtime: Path, data: dict[str, Any], observations:
     temporary = runs_dir / f".{run_dir.name}.tmp-{os.getpid()}"
     temporary.mkdir()
     data["run_id"] = run_dir.name
-    page, asset_manifest = build_page(runtime, data, observations)
+    data["retention"] = retention
+    presentation = build_presentation(data, observations, str(root.resolve()))
+    page, asset_manifest = build_page(runtime, data, observations, presentation)
     report_manifest = {
         "schema": SCHEMA,
         "generator_version": next((line.split("=", 1)[1] for line in (runtime / ".active").read_text().splitlines() if line.startswith("component_version=")), "unknown"),
@@ -730,18 +889,21 @@ def render_report(root: Path, runtime: Path, data: dict[str, Any], observations:
         "source_hash": data["source_hash"], "baseline_run": data.get("baseline_run"),
         "git": data["git"], "assets": asset_manifest,
         "observations": {"schema": observations["schema"], "generator": observations["generator"]},
+        "presentation": {"schema": presentation["schema"]}, "retention": retention,
         "browser_network": "disabled", "warnings": [],
     }
     (temporary / "index.html").write_text(page)
     (temporary / "manifest.json").write_text(json.dumps(report_manifest, indent=2, ensure_ascii=False) + "\n")
     (temporary / "snapshot.json").write_text(json.dumps(json_safe(data), indent=2, ensure_ascii=False) + "\n")
     (temporary / "observations.json").write_text(json.dumps(json_safe(observations), indent=2, ensure_ascii=False) + "\n")
+    (temporary / "presentation.json").write_text(json.dumps(presentation, indent=2, ensure_ascii=False) + "\n")
     for path in temporary.iterdir():
         try:
             path.chmod(0o600)
         except OSError:
             pass
     temporary.rename(run_dir)
+    prune_runs(runs_dir, retention)
     update_launcher(root)
     if not no_open:
         webbrowser.open(run_dir.joinpath("index.html").as_uri())
@@ -785,9 +947,12 @@ def sanitized_export(root: Path, runtime: Path, run: str, output: Path) -> None:
     observations = json.loads(source_observations.read_text()) if source_observations.is_file() else derive_observations(sanitized)
     observations["source"] = {"snapshot_schema": sanitized["schema"], "source_hash": sanitized.get("source_hash")}
     output.mkdir(parents=True, exist_ok=False)
-    page, asset_manifest = build_page(runtime, sanitized, observations)
+    sanitized["retention"] = None
+    presentation = build_presentation(sanitized, observations, "sanitized-export")
+    page, asset_manifest = build_page(runtime, sanitized, observations, presentation)
     output.joinpath("data.json").write_text(json.dumps(sanitized, indent=2, ensure_ascii=False) + "\n")
     output.joinpath("observations.json").write_text(json.dumps(observations, indent=2, ensure_ascii=False) + "\n")
+    output.joinpath("presentation.json").write_text(json.dumps(presentation, indent=2, ensure_ascii=False) + "\n")
     output.joinpath("index.html").write_text(page)
     output.joinpath("manifest.json").write_text(json.dumps({"schema": SCHEMA, "sanitized": True, "assets": asset_manifest, "browser_network": "disabled"}, indent=2) + "\n")
 
@@ -801,6 +966,7 @@ def main() -> int:
     generate.add_argument("--insights", type=Path)
     generate.add_argument("--compare", default="previous")
     generate.add_argument("--no-open", action="store_true")
+    generate.add_argument("--retain")
     collect_parser = sub.add_parser("collect")
     collect_parser.add_argument("--output", type=Path, required=True)
     collect_parser.add_argument("--compare", default="previous")
@@ -813,12 +979,25 @@ def main() -> int:
     render.add_argument("--insights", type=Path)
     render.add_argument("--observations", type=Path)
     render.add_argument("--no-open", action="store_true")
+    render.add_argument("--retain")
+    settings = sub.add_parser("settings")
+    settings.add_argument("--show", action="store_true")
+    settings.add_argument("--retain")
     export = sub.add_parser("export")
     export.add_argument("--run", default="latest")
     export.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     root = args.root.resolve()
     command = args.command or "generate"
+    if command == "settings":
+        if args.retain is not None:
+            retention = write_retention(root, args.retain)
+            print(json.dumps({"retention": retention}))
+            return 0
+        if args.show:
+            print(json.dumps({"retention": read_retention(root)}))
+            return 0
+        parser.error("settings requires --show or --retain")
     if command == "collect":
         args.output.write_text(json.dumps(collect(root, compare=args.compare), indent=2, ensure_ascii=False) + "\n")
         return 0
@@ -829,7 +1008,8 @@ def main() -> int:
     if command == "render":
         data = json.loads(args.facts.read_text())
         observations = validate_observations(args.observations, data) if args.observations else derive_observations(data, args.insights)
-        print(render_report(root, args.runtime, data, observations, args.no_open) / "index.html")
+        retention = parse_retention(args.retain) if args.retain is not None else read_retention(root)
+        print(render_report(root, args.runtime, data, observations, args.no_open, retention) / "index.html")
         return 0
     if command == "export":
         sanitized_export(root, args.runtime, args.run, args.output)
@@ -837,7 +1017,8 @@ def main() -> int:
         return 0
     data = collect(root, args.compare)
     observations = derive_observations(data, args.insights)
-    print(render_report(root, args.runtime, data, observations, args.no_open) / "index.html")
+    retention = parse_retention(args.retain) if args.retain is not None else read_retention(root)
+    print(render_report(root, args.runtime, data, observations, args.no_open, retention) / "index.html")
     return 0
 
 

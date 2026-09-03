@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T12:34:05Z
+updated_at: 2026-09-03T18:09:03Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -326,4 +326,34 @@ events:
       - ../template/optional/dashboard/visor.js
       - ../template/optional/dashboard/visor.css
       - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T17:27:26Z
+    actor: codex
+    type: implementation
+    summary: Added fixture-driven presentation rendering, browser-local agent edit handoffs, and configurable dashboard report retention.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/optional/dashboard/dashboard.py
+      - ../template/optional/dashboard/visor.js
+      - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T17:50:31Z
+    actor: codex
+    type: refinement
+    summary: Added a source-linked Current Agentic Loop and strengthened the dashboard's first-read narrative, decisions, and on-demand audit disclosure.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/optional/dashboard/dashboard.py
+      - ../template/optional/dashboard/visor.js
+      - ../template/optional/dashboard/visor.css
+    git_revision: null
+  - at: 2026-09-03T18:09:03Z
+    actor: codex
+    type: fix
+    summary: Replaced lexicographic updater version ordering with a strict numeric comparator and proved multi-digit patch upgrade and downgrade behavior.
+    refs:
+      - journals/release-version-ordering.md
+      - journals/knowledge-dashboard.md
+      - ../template/.clineflow/bin/update
+      - ../tests/test-update-migrations.sh
     git_revision: null

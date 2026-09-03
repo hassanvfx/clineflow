@@ -1,0 +1,29 @@
+{
+  "schema": "clineflow-dashboard/v1",
+  "run_at": "2026-09-03T14:00:00Z",
+  "run_id": "fixture-comprehensive",
+  "source_hash": "fixture-comprehensive-source",
+  "git": {"head": "abc123", "branch": "main", "dirty": false},
+  "ledgers": {
+    "clineflow_goals": {"active_goals": ["Launch a trusted knowledge dashboard"]},
+    "clineflow_last_session": {"latest_change": "Reframed the visor around a source-bound project story.", "next_recommended_step": "Review the proof surface with the delivery team."},
+    "clineflow_specification": {"open_questions": [{"title": "Which weekly audience needs an export?"}], "constraints": [{"summary": "Reports must remain self-contained for file protocol viewing."}]},
+    "clineflow_verification": {"open_verification": [{"summary": "Check keyboard navigation through edit requests."}], "acceptance_criteria": [{"criterion": "No browser-time network request occurs."}, {"criterion": "Every narrative claim links to a canonical source."}]},
+    "clineflow_timeline": {"events": []}
+  },
+  "documents": [
+    {"id": "goals", "path": "knowledge/clineflow_goals.yml", "title": "Goals", "description": "Current project outcomes.", "kind": "ledger", "structured": {"active_goals": ["Launch a trusted knowledge dashboard"]}, "raw": "active_goals:\n  - Launch a trusted knowledge dashboard\n", "yaml": {"valid": true, "normalized": "active_goals:\n- Launch a trusted knowledge dashboard\n"}},
+    {"id": "session", "path": "knowledge/clineflow_last_session.yml", "title": "Last Session", "description": "Current handoff and next action.", "kind": "ledger", "structured": {"next_recommended_step": "Review the proof surface with the delivery team."}, "raw": "next_recommended_step: Review the proof surface with the delivery team.\n", "yaml": {"valid": true, "normalized": "next_recommended_step: Review the proof surface with the delivery team.\n"}},
+    {"id": "spec", "path": "knowledge/clineflow_specification.yml", "title": "Specification", "description": "Constraints and open questions.", "kind": "ledger", "structured": {"open_questions": [{"title": "Which weekly audience needs an export?"}]}, "raw": "open_questions:\n  - title: Which weekly audience needs an export?\n", "yaml": {"valid": true, "normalized": "open_questions:\n- title: Which weekly audience needs an export?\n"}},
+    {"id": "verify", "path": "knowledge/clineflow_verification.yml", "title": "Verification", "description": "Acceptance and evidence.", "kind": "ledger", "structured": {"acceptance_criteria": [{"criterion": "No browser-time network request occurs."}]}, "raw": "acceptance_criteria:\n  - criterion: No browser-time network request occurs.\n", "yaml": {"valid": true, "normalized": "acceptance_criteria:\n- criterion: No browser-time network request occurs.\n"}},
+    {"id": "timeline", "path": "knowledge/clineflow_timeline.yml", "title": "Timeline", "description": "Recorded project events.", "kind": "ledger", "structured": {"events": []}, "raw": "events: []\n", "yaml": {"valid": true, "normalized": "events: []\n"}},
+    {"id": "journal", "path": "knowledge/journals/dashboard-story.md", "title": "Dashboard Story", "description": "Narrative and interaction decisions.", "kind": "journal", "generated_at": "2026-09-03T13:00:00Z", "raw": "# Dashboard Story\n\nThe source-bound narrative replaced a dense graph.", "html": "<h1>Dashboard Story</h1><p>The source-bound narrative replaced a dense graph.</p>"}
+  ],
+  "events": [
+    {"at": "2026-09-01T09:00:00Z", "type": "planning", "title": "Defined the narrative brief", "summary": "The team agreed to lead with current context before charts.", "refs": ["knowledge/journals/dashboard-story.md"]},
+    {"at": "2026-09-02T16:30:00Z", "type": "implementation", "title": "Built the presentation model", "summary": "Facts and observations now create a formal viewer model before HTML rendering.", "refs": ["knowledge/journals/dashboard-story.md"]},
+    {"at": "2026-09-03T12:00:00Z", "type": "verification", "title": "Verified local-only reports", "summary": "The report embeds its assets and makes no browser-time network request.", "refs": ["knowledge/clineflow_verification.yml"]}
+  ],
+  "commits": [{"committed_at": "2026-09-03T11:00:00Z", "summary": "feat: improve dashboard story", "change": {"insertions": 184, "deletions": 42}, "footprint": {"tracked_bytes": 12000, "knowledge_bytes": 4000}}],
+  "runs": [], "usage": [], "current_change": {"net": 142}, "current_footprint": {"knowledge_bytes": 4000}, "drift": {"added": ["knowledge/journals/dashboard-story.md"], "changed": ["knowledge/clineflow_goals.yml"], "removed": []}, "baseline_run": "git:abc123"
+}

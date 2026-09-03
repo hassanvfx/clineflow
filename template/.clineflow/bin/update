@@ -55,6 +55,29 @@ sha256_file() {
   else echo "ERROR: sha256sum or shasum is required." >&2; return 1; fi
 }
 
+valid_release_version() {
+  [[ "$1" =~ ^20[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]+$ ]]
+}
+
+# Return success when the first YYYY.MM.DD.patch version is numerically older.
+# Bash's string operators are lexicographic, so they must not guard upgrades.
+version_is_older() {
+  local left=$1 right=$2 index
+  local -a left_parts right_parts
+  valid_release_version "$left" && valid_release_version "$right" || return 2
+  IFS=. read -r -a left_parts <<< "$left"
+  IFS=. read -r -a right_parts <<< "$right"
+  for index in 0 1 2 3; do
+    if (( 10#${left_parts[index]} < 10#${right_parts[index]} )); then return 0; fi
+    if (( 10#${left_parts[index]} > 10#${right_parts[index]} )); then return 1; fi
+  done
+  return 1
+}
+
+version_is_newer() {
+  version_is_older "$2" "$1"
+}
+
 valid_relative_path() {
   case "$1" in ''|/*|..|../*|*/../*|*/..) return 1 ;; *) return 0 ;; esac
 }
@@ -361,8 +384,10 @@ case "$RELEASE_SCHEMA" in ''|*[!0-9]*) echo "ERROR: invalid release migration sc
 [ "$CURRENT_SCHEMA" -le "$RELEASE_SCHEMA" ] || { echo "ERROR: this installation uses a newer migration schema." >&2; exit 1; }
 case "$CURRENT_VERSION" in
   20??.??.??.[0-9]*)
-    if [[ "$CURRENT_VERSION" < "$MINIMUM_OKF_VERSION" ]]; then echo "ERROR: automatic migration starts at $MINIMUM_OKF_VERSION; no files were changed." >&2; exit 1; fi
-    if [[ "$CURRENT_VERSION" > "$RELEASE_VERSION" ]]; then echo "ERROR: downgrades are not supported ($CURRENT_VERSION -> $RELEASE_VERSION)." >&2; exit 1; fi
+    valid_release_version "$CURRENT_VERSION" || { echo "ERROR: invalid installed release version: $CURRENT_VERSION" >&2; exit 1; }
+    valid_release_version "$RELEASE_VERSION" || { echo "ERROR: invalid release version: $RELEASE_VERSION" >&2; exit 1; }
+    if version_is_older "$CURRENT_VERSION" "$MINIMUM_OKF_VERSION"; then echo "ERROR: automatic migration starts at $MINIMUM_OKF_VERSION; no files were changed." >&2; exit 1; fi
+    if version_is_newer "$CURRENT_VERSION" "$RELEASE_VERSION"; then echo "ERROR: downgrades are not supported ($CURRENT_VERSION -> $RELEASE_VERSION)." >&2; exit 1; fi
     ;;
 esac
 show_plan

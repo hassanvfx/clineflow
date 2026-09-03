@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T12:34:05Z
+updated_at: 2026-09-03T18:09:03Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -24,8 +24,13 @@ confirmed:
   - Knowledge Explorer parses YAML with the pinned optional PyYAML dependency and offers guided, JSON, raw-source, diagnostic, and copyable normalized-repair views without modifying canonical files.
   - Dashboard facts normalize flexible timeline aliases into canonical event fields while retaining raw records; structured evidence, goals, and constraints render named statements and readable metadata instead of object coercions.
   - Report timeline events carry a short title, compact kind, and full narrative note; the Time Spine displays the title first and reveals formatted detail only on request.
+  - Dashboard rendering creates clineflow-dashboard-presentation/v1 after facts and observations; the browser consumes the presentation model while adjacent and embedded JSON remain exact copies.
+  - Dashboard source edit requests are browser-local drafts that produce copyable agent prompts and never write repository files.
+  - Dashboard report retention defaults to three complete runs and can be configured under knowledge/dashboard/settings.json with null representing unlimited history.
+  - The Current Agentic Loop derives active goal, current decision/constraint, next deliberate action, and verification state exclusively from canonical report facts and links each step to its ledger source.
   - Agent-rule refresh is portable when the managed block begins on the first line or follows user-authored text.
   - The canonical agent update request invokes the permanent remote bootstrap first and never executes a legacy local updater beforehand.
+  - The updater compares valid `YYYY.MM.DD.patch` release versions numerically by all four segments before accepting an upgrade or rejecting a downgrade.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -44,6 +49,8 @@ constraints:
   - Executive activity metrics ignore generated report runs and choose the newest knowledge event or Git commit instead.
   - The report reuses ClineFlow’s public visual principles—deep navy, electric blue, bold editorial hierarchy, and restrained geometry—without copying site media, code, or remote dependencies.
   - The dashboard has no chapter-navigation component; it leads with immediate context, a source-linked Recent Story, a compact Time Spine, and an explicit whole-story expansion.
+  - Dashboard retention pruning removes only complete, schema-owned run directories after a successful replacement report; settings and malformed directories remain preserved.
+  - A malformed recognized installed or release version aborts before any update mutation.
 non_goals: []
 open_questions: []
 journal_refs:
@@ -61,3 +68,4 @@ journal_refs:
   - journals/repair-source-instruction-paths.md
   - journals/knowledge-dashboard.md
   - journals/updater-macos-line-zero.md
+  - journals/release-version-ordering.md

@@ -1,183 +1,100 @@
 (() => {
   "use strict";
-  const data = JSON.parse(document.getElementById("clineflow-data").textContent);
-  const observations = JSON.parse(document.getElementById("clineflow-observations").textContent);
+  const presentation = JSON.parse(document.getElementById("clineflow-presentation").textContent);
   const $ = (selector, root = document) => root.querySelector(selector);
-  const esc = (value = "") => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const compact = new Intl.NumberFormat(undefined, {notation: "compact", maximumFractionDigits: 1});
+  const esc = (value = "") => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   const full = new Intl.NumberFormat();
   const time = value => value ? new Date(value).toLocaleString() : "Not recorded";
-  const eventValue = (event, keys) => keys.map(key=>event?.[key]).find(value=>value!==undefined&&value!==null&&value!=="");
-  const eventTime = event => eventValue(event,["at","timestamp","occurred_at","datetime","date","time"]);
-  const eventType = event => eventValue(event,["type","kind","category","event_type","action"])||"event";
-  const eventSummary = event => eventValue(event,["summary","text","description","message","detail","change","event"]);
-  const compactTitle = value => { const text=String(value||"Recorded event").replace(/\s+/g," ").trim(); const first=text.split(/(?<=[.!?])\s+|\s+\(|\s+—\s+|\s+[-:]\s+/)[0]||text; return first.length<=74?first:`${first.slice(0,75).replace(/\s+\S*$/,"").replace(/[.,;:]$/,"")}…`; };
-  const eventTitle = event => eventValue(event,["short_title","title","label","name"])||compactTitle(eventSummary(event));
-  const eventRefs = event => { const refs=eventValue(event,["refs","references","links","journal_refs","evidence_refs"]); return Array.isArray(refs)?refs:(refs?[refs]:[]); };
-  const timeline = [
-    ...data.events.map(item => ({...item, lane: "event", when: eventTime(item), label: eventType(item), title:eventTitle(item), summary: eventSummary(item)||"Event recorded without a narrative summary."})),
-    ...data.documents.filter(item => item.generated_at).map(item => ({...item, lane: "journal", when: item.generated_at, label: "journal", title:item.title, summary: item.description||item.title})),
-    ...data.commits.map(item => ({...item, lane: "commit", when: item.committed_at, label: "git", title:compactTitle(item.summary), summary:item.summary})),
-    ...(data.runs || []).map(item => ({...item, lane: "run", when: item.generated_at, label: "visor", title:"Dashboard report generated", summary: `Dashboard run ${item.run_id}`}))
-  ].sort((a,b) => new Date(b.when) - new Date(a.when));
-  const latestRecorded = timeline.find(item => item.lane === "event" || item.lane === "commit") || timeline[0];
-  const specification = data.ledgers.clineflow_specification || {};
-  const verification = data.ledgers.clineflow_verification || {};
-  const goals = data.ledgers.clineflow_goals || {};
-  const session = data.ledgers.clineflow_last_session || {};
-  const summary = observations.executive_summary || session.latest_change || "Durable context is ready to explore.";
-  const latestVerification = data.events.filter(item => eventType(item) === "verification").sort((a,b) => new Date(eventTime(b))-new Date(eventTime(a)))[0];
-  const unresolved = (specification.open_questions || []).length + (verification.open_verification || []).length;
-  const currentIntent = (goals.active_goals || [])[0] || session.next_recommended_step || "No active goal recorded.";
-  const nextMove = session.next_recommended_step || "Review the latest durable context.";
-  const phase = latestRecorded?.label ? String(latestRecorded.label).replaceAll("_", " ") : "not recorded";
-  const evidenceCount = (verification.evidence_refs || []).length;
-
-  document.getElementById("app").innerHTML = `<main class="shell" id="main">
-    <header class="topbar"><div class="brand"><span class="brand-mark">CF</span><span>Knowledge Visor / ${esc(data.schema.split("/")[1])}</span></div><div class="toolbar"><span class="pill">${data.git.dirty ? "Working tree · changed" : "Working tree · clean"}</span><button id="time-mode" type="button">Local time</button><span class="pill">${esc(data.git.branch || "detached")}</span></div></header>
-    <section class="hero" id="executive"><article class="hero-main"><div><p class="eyebrow">01 / Executive brief · ${esc(time(data.run_at))}</p><h1>What changed.<br>Why it matters.<br>What comes next.</h1><p class="lede">${esc(summary)}</p></div><div class="audience-switch" id="audience-switch" role="tablist" aria-label="Narrative audience"><button class="active" data-audience="executive" role="tab" aria-selected="true">Executive</button><button data-audience="manager" role="tab" aria-selected="false">Manager</button><button data-audience="engineer" role="tab" aria-selected="false">Engineer</button></div><div class="audience-story" id="audience-story" aria-live="polite"></div><div class="brief-grid"><div><span class="label">Current intent</span><p>${esc(currentIntent)}</p></div><div><span class="label">Latest proof</span><p>${esc(latestVerification?.summary || "No verification event recorded yet.")}</p></div><div><span class="label">Next move</span><p>${esc(nextMove)}</p></div></div><div class="legend"><span><i class="dot" style="background:var(--mint)"></i>Knowledge events</span><span><i class="dot" style="background:var(--cyan)"></i>Git commits</span><span><i class="dot" style="background:var(--violet)"></i>Evidence</span></div></article>
-      <aside class="hero-side"><div class="metric"><span class="label">Latest knowledge activity</span><strong>${esc(latestRecorded?.when ? new Date(latestRecorded.when).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Latest verification</span><strong>${esc(eventTime(latestVerification) ? new Date(eventTime(latestVerification)).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Open questions</span><strong>${full.format(unresolved)}</strong></div><div class="metric"><span class="label">Knowledge footprint</span><strong>${compact.format(data.current_footprint.knowledge_bytes)}B</strong></div><div class="metric"><span class="label">Current net lines</span><strong>${data.current_change.net >= 0 ? "+" : ""}${full.format(data.current_change.net)}</strong></div></aside></section>
-    <div class="grid">
-      <header class="section-intro" id="story"><div><p class="eyebrow">The essential story</p><h2>Where the project stands</h2><p>Read the reasoning first: how the work evolved, what matters now, what needs attention, and the next deliberate move.</p></div></header>
-      <section class="panel wide project-story-panel"><div class="panel-head"><div><h2>Project story</h2><p class="panel-copy">Each claim below is derived from facts and hands off to its canonical record.</p></div><span class="story-badge">Source-bound reasoning</span></div><div id="project-story" class="project-story" aria-live="polite"></div></section>
-      <section class="panel wide recent-story-panel" id="recent"><div class="panel-head"><div><p class="eyebrow">Recent story</p><h2>The moments that got us here</h2><p class="panel-copy">The newest knowledge and engineering events, in plain language.</p></div><span class="story-badge" id="recent-count"></span></div><div id="recent-story" class="recent-story" aria-live="polite"></div></section>
-      <header class="section-intro" id="trajectory"><div><p class="eyebrow">The whole story</p><h2>Chronology and change</h2><p>Follow the full sequence, scope, and growth behind the current phase: <strong>${esc(phase)}</strong>.</p></div></header>
-      <section class="panel wide"><div class="panel-head"><div><h2>Time spine</h2><p class="panel-copy">Exact knowledge and Git chronology remain separate; dashed annotations are inferred.</p></div><button class="text-action" id="timeline-toggle" type="button"></button></div><div class="time-spine" id="time-spine"></div></section>
-      <section class="panel"><div class="panel-head"><div><h2>Change pulse</h2><p class="panel-copy">Committed additions and deletions by moment.</p></div></div><div class="chart" id="change-chart" role="img" aria-label="Git change volume over time"></div></section>
-      <section class="panel"><div class="panel-head"><div><h2>Growth ribbon</h2><p class="panel-copy">Tracked project and canonical knowledge bytes.</p></div></div><div class="chart" id="growth-chart" role="img" aria-label="Project and knowledge growth over time"></div></section>
-      <header class="section-intro" id="proof"><div><p class="eyebrow">What backs it up</p><h2>Proof without a magic score</h2><p>${full.format(evidenceCount)} evidence references, explicit open questions, and source drift remain inspectable.</p></div></header>
-      <section class="panel third"><div class="panel-head"><div><h2>Integrity signals</h2><p class="panel-copy">Transparent facts, never a magic score.</p></div></div><div class="signals" id="signals"></div></section>
-      <section class="panel third"><div class="panel-head"><div><h2>Drift since baseline</h2><p class="panel-copy">Changed canonical sources.</p></div></div><div class="signals" id="drift"></div></section>
-      <section class="panel third"><div class="panel-head"><div><h2>Evidence matrix</h2><p class="panel-copy">Requirements and their available evidence surface.</p></div></div><div class="signals" id="evidence"></div></section>
-      <header class="section-intro" id="source"><div><p class="eyebrow">Source of truth</p><h2>Read the record itself</h2><p>Search the canonical ledgers and engineering journals behind every summary above.</p></div></header>
-      <section class="panel wide explorer-panel"><div class="panel-head"><div><h2>Knowledge Explorer</h2><p class="panel-copy">Understand the model first; inspect YAML or Markdown only when you need it.</p></div><div class="explorer-tools"><div class="document-filters" id="document-filters" role="group" aria-label="Document type"><button class="active" data-filter="all" type="button">All</button><button data-filter="ledger" type="button">Ledgers</button><button data-filter="journal" type="button">Journals</button></div><input class="search" id="search" type="search" placeholder="Search decisions, evidence, journals…" aria-label="Search knowledge"></div></div><div class="documents"><nav class="document-list" id="document-list" aria-label="Knowledge documents"></nav><article class="document-body" id="document-body"></article></div></section>
-    </div><footer class="footer"><span>Generated ${esc(data.run_at)} · ${esc(data.run_id)}</span><span>Private local report · no browser network access</span></footer></main>`;
-
-  const renderAudience = audience => {
-    const story=observations.audiences?.[audience]||{};
-    $("#audience-story").innerHTML=`<div><span class="label">The read</span><strong>${esc(story.headline||summary)}</strong></div><div><span class="label">Why it matters</span><p>${esc(story.why_it_matters||"Open the evidence below to inspect why this matters.")}</p></div><div><span class="label">Recommended move</span><p>${esc(story.next_move||nextMove)}</p></div>`;
-  };
-  $("#audience-switch").querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{$("#audience-switch").querySelectorAll("button").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});renderAudience(button.dataset.audience);}));
-  renderAudience("executive");
-  let utc = false;
-  let showFullTimeline = false;
-  const formatTimelineNote = value => String(value||"").split(/\n\s*\n/).map(paragraph=>`<p>${esc(paragraph.trim())}</p>`).join("");
-  const sourceIdForRef = ref => {
-    const normalized=String(ref||"").replace(/^\.\.\//,"").replace(/^knowledge\//,"");
-    return data.documents.find(doc=>doc.path===normalized||doc.path.endsWith(`/${normalized}`)||doc.path.endsWith(String(ref||"").replace(/^\.\.\//,"")))?.id;
-  };
-  const renderRecentStory = () => {
-    const moments=timeline.filter(item=>item.lane==="event"||item.lane==="commit").slice(0,5);
-    $("#recent-count").textContent= `${moments.length} latest moments`;
-    $("#recent-story").innerHTML=moments.map(item=>{
-      const source=item.lane==="event" ? eventRefs(item).map(sourceIdForRef).find(Boolean) : null;
-      const note=item.summary&&item.summary!==item.title?`<p>${esc(item.summary)}</p>`:"";
-      return `<article class="recent-moment"><time title="${esc(item.when)}">${esc(utc&&item.when?new Date(item.when).toISOString():time(item.when))}</time><span class="lane ${esc(item.lane)}">${esc(item.label)}</span><div><strong>${esc(item.title||item.label)}</strong>${note}</div>${source?`<button type="button" data-recent-source="${esc(source)}">Open source <span aria-hidden="true">↗</span></button>`:""}</article>`;
-    }).join("")||`<div class="empty">No recent knowledge or Git events recorded.</div>`;
-    $("#recent-story").querySelectorAll("[data-recent-source]").forEach(button=>button.addEventListener("click",()=>{selectDocument(button.dataset.recentSource);$("#document-body").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});}));
-  };
-  const renderTimeline = () => {
-    const visible=showFullTimeline?timeline:timeline.slice(0,12);
-    $("#timeline-toggle").textContent=showFullTimeline?"Show recent moments":"Show whole story";
-    $("#time-spine").innerHTML = visible.map(item => {
-      const displayed = utc && item.when ? new Date(item.when).toISOString() : time(item.when);
-      const inferred = item.lane === "event" && item.association?.kind === "inferred" ? `<div class="inferred">┈ likely ${esc(item.association.short_revision)} via ${esc(item.association.matching_refs.join(", "))}</div>` : "";
-      const details=item.summary&&item.summary!==item.title?`<details class="time-details"><summary>Read event note</summary>${formatTimelineNote(item.summary)}</details>`:"";
-      return `<div class="time-row"><time title="${esc(item.when)}">${esc(displayed)}</time><span class="lane ${item.lane}">${esc(item.label)}</span><div class="time-summary"><strong>${esc(item.title||item.label)}</strong>${details}${inferred}</div></div>`;
-    }).join("") || `<div class="empty">No timeline data recorded.</div>`;
-  };
-  $("#time-mode").addEventListener("click", event => { utc = !utc; event.currentTarget.textContent = utc ? "UTC time" : "Local time"; renderRecentStory(); renderTimeline(); });
-  $("#timeline-toggle").addEventListener("click",()=>{showFullTimeline=!showFullTimeline;renderTimeline();});
-  renderRecentStory();
-  renderTimeline();
-
-  const chartBase = {backgroundColor:"transparent", textStyle:{color:"#8db5a9",fontFamily:"IBM Plex Mono"}, grid:{left:50,right:18,top:20,bottom:48}, tooltip:{trigger:"axis",backgroundColor:"#071412",borderColor:"#28534a",textStyle:{color:"#edfff9"}}, xAxis:{type:"category",axisLabel:{color:"#739b90",hideOverlap:true},axisLine:{lineStyle:{color:"#22413b"}}},yAxis:{type:"value",axisLabel:{color:"#739b90"},splitLine:{lineStyle:{color:"rgba(155,255,226,.08)"}}}};
-  const commitLabels = data.commits.map(c => new Date(c.committed_at).toLocaleDateString(undefined,{month:"short",day:"numeric"}));
-  const charts = [];
-  const lazy = (element, initialize) => {
-    if (!("IntersectionObserver" in window)) { initialize(); return; }
-    const observer = new IntersectionObserver(entries => { if(entries.some(entry=>entry.isIntersecting)){ observer.disconnect(); initialize(); } }, {rootMargin:"180px"});
-    observer.observe(element);
-  };
-  lazy($("#change-chart"), () => { const chart=echarts.init($("#change-chart")); charts.push(chart); chart.setOption({...chartBase,xAxis:{...chartBase.xAxis,data:commitLabels},series:[{name:"Added",type:"bar",stack:"change",data:data.commits.map(c=>c.change.insertions),itemStyle:{color:"#65fbd2",borderRadius:[4,4,0,0]}},{name:"Deleted",type:"bar",stack:"change",data:data.commits.map(c=>-c.change.deletions),itemStyle:{color:"#ff7f9f",borderRadius:[0,0,4,4]}}]}); });
-  lazy($("#growth-chart"), () => { const chart=echarts.init($("#growth-chart")); charts.push(chart); chart.setOption({...chartBase,xAxis:{...chartBase.xAxis,data:commitLabels},yAxis:{...chartBase.yAxis,axisLabel:{...chartBase.yAxis.axisLabel,formatter:value=>compact.format(value)}},series:[{name:"Tracked",type:"line",smooth:true,symbolSize:4,data:data.commits.map(c=>c.footprint.tracked_bytes),lineStyle:{color:"#69d9ff",width:2},areaStyle:{color:"rgba(105,217,255,.08)"}},{name:"Knowledge",type:"line",smooth:true,symbolSize:4,data:data.commits.map(c=>c.footprint.knowledge_bytes),lineStyle:{color:"#b29cff",width:2},areaStyle:{color:"rgba(178,156,255,.08)"}}]}); });
-
-  const humanize = value => String(value||"").replace(/^clineflow_/,"").replaceAll("_"," ").replace(/\b\w/g,letter=>letter.toUpperCase());
+  const humanize = value => String(value || "").replace(/^clineflow_/, "").replaceAll("_", " ").replace(/\b\w/g, letter => letter.toUpperCase());
   const statementText = value => {
-    if(value===null||value===undefined) return "Not recorded";
-    if(typeof value!=="object") return String(value);
-    if(Array.isArray(value)) return value.map(statementText).filter(Boolean).join(" · ")||"Not recorded";
-    for(const key of ["text","summary","title","name","criterion","requirement","description","message","label","value"]){
-      if(value[key]!==undefined&&value[key]!==null&&typeof value[key]!=="object") return String(value[key]);
+    if (value === null || value === undefined) return "Not recorded";
+    if (typeof value !== "object") return String(value);
+    if (Array.isArray(value)) return value.map(statementText).filter(Boolean).join(" · ") || "Not recorded";
+    for (const key of ["text", "summary", "title", "name", "criterion", "requirement", "description", "message", "label", "value"]) {
+      if (value[key] !== undefined && value[key] !== null && typeof value[key] !== "object") return String(value[key]);
     }
-    return Object.entries(value).map(([key,item])=>`${humanize(key)}: ${statementText(item)}`).join(" · ")||"Structured record";
+    return Object.entries(value).map(([key, item]) => `${humanize(key)}: ${statementText(item)}`).join(" · ") || "Structured record";
   };
-  const projectStory = observations.project_story||{};
-  const storyCard = (key, tone) => {
-    const card=projectStory[key]||{};
-    const source=(card.source_ids||[])[0];
-    return `<article class="story-card ${esc(tone)}"><p class="eyebrow">${esc(key.replaceAll("_"," "))}</p><h3>${esc(card.title||"Not recorded")}</h3><p>${esc(card.text||"No source-backed observation is available yet.")}</p>${source?`<button type="button" data-story-source="${esc(source)}">Open supporting record <span aria-hidden="true">↗</span></button>`:""}</article>`;
+  const eventTitle = event => String(event?.title || event?.label || "Recorded event");
+  const docs = presentation.documents || [];
+  const docById = new Map(docs.map(item => [item.id, item]));
+  const sourceIdForRef = ref => {
+    const value = String(ref || "").replace(/^\.\.\//, "");
+    return docs.find(doc => doc.path === value || doc.path.endsWith(`/${value.replace(/^knowledge\//, "")}`))?.id;
   };
-  const renderProjectStory = () => {
-    const milestones=(projectStory.milestones||[]).map(item=>`<li><time title="${esc(item.at)}">${esc(time(item.at))}</time><strong>${esc(item.title||"Recorded milestone")}</strong></li>`).join("")||"<li><strong>No chronological milestones are recorded yet.</strong></li>";
-    $("#project-story").innerHTML=`<div class="story-arc">${storyCard("evolution","evolution")}<ol class="story-milestones">${milestones}</ol></div><div class="story-actions">${storyCard("important_now","importance")}${storyCard("urgency","urgency")}${storyCard("next_action","next")}</div>`;
-    $("#project-story").querySelectorAll("[data-story-source]").forEach(button=>button.addEventListener("click",()=>{selectDocument(button.dataset.storySource);$("#document-body").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});}));
-  };
-  renderProjectStory();
+  const storageKey = `clineflow-dashboard-edit-drafts/v1/${presentation.draft_scope}`;
+  let memoryDrafts = {};
+  const readDrafts = () => { try { return JSON.parse(localStorage.getItem(storageKey) || "{}") || {}; } catch (_) { return memoryDrafts; } };
+  const writeDrafts = drafts => { memoryDrafts = drafts; try { localStorage.setItem(storageKey, JSON.stringify(drafts)); } catch (_) { /* file viewers may deny storage */ } };
+  const editPrompt = draft => `Please edit the ClineFlow file \`${draft.path}\`.
 
-  const knowledgeRefs = data.events.flatMap(event=>eventRefs(event)).filter(ref=>/^(?:\.\.\/)?knowledge\/|^journals\//.test(String(ref)));
-  const brokenRefs = knowledgeRefs.filter(ref=>!data.documents.some(doc=>doc.path.endsWith(String(ref).replace(/^\.\.\//,"").replace(/^knowledge\//,""))||doc.path.endsWith(String(ref).replace(/^\.\.\//,""))));
-  const updated = Object.values(data.ledgers).map(item=>item.updated_at).filter(Boolean);
-  const signals = [["Canonical sources",data.documents.length],["Timeline events",data.events.length],["Ledger timestamps",new Set(updated).size===1?"aligned":"differ"],["Unresolved questions",unresolved],["Unresolved references",new Set(brokenRefs).size],["Exact usage records",(data.usage||[]).length]];
-  $("#signals").innerHTML=signals.map(([label,value])=>`<div class="signal"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("");
-  const driftRows=[["Baseline",data.baseline_run||"first run"],["Added",data.drift.added.length],["Changed",data.drift.changed.length],["Removed",data.drift.removed.length]];
-  $("#drift").innerHTML=driftRows.map(([label,value])=>`<div class="signal"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")+`<details><summary>Inspect changed sources</summary><p>${esc([...data.drift.added,...data.drift.changed,...data.drift.removed].slice(0,40).join(" · ")||"No canonical source drift.")}</p></details>`;
-  $("#evidence").innerHTML=[["Requirements recorded",specification.updated_at||"—"],["Evidence reviewed",verification.updated_at||"—"],["Latest verification",latestVerification?.at||"—"],["Acceptance criteria",(verification.acceptance_criteria||[]).length],["Evidence references",(verification.evidence_refs||[]).length],["Open verification",(verification.open_verification||[]).length]].map(([label,value])=>`<div class="signal"><span>${esc(label)}</span><strong title="${esc(value)}">${esc(value)}</strong></div>`).join("");
-  const renderPrimitive = value => value===null||value===undefined ? `<span class="empty-value">Not recorded</span>` : esc(typeof value==="boolean"?(value?"Yes":"No"):statementText(value));
-  const renderObject = value => `<dl class="fact-object">${Object.entries(value||{}).map(([key,item])=>`<div><dt>${esc(humanize(key))}</dt><dd>${typeof item==="object"?`<code>${esc(JSON.stringify(item))}</code>`:renderPrimitive(item)}</dd></div>`).join("")}</dl>`;
-  const renderItems = (items,key) => {
-    if(!items.length)return `<div class="structured-empty">Nothing recorded here.</div>`;
-    if(key==="events")return `<div class="event-stack">${items.slice().reverse().map(item=>{const eventAt=eventTime(item), refs=eventRefs(item); return `<article class="structured-event"><div><span class="lane event">${esc(eventType(item))}</span><time title="${esc(eventAt)}">${esc(time(eventAt))}</time></div><p>${esc(eventSummary(item)||statementText(item)||"No narrative recorded.")}</p>${refs.length?`<div class="reference-row">${refs.map(ref=>`<code>${esc(ref)}</code>`).join("")}</div>`:""}</article>`;}).join("")}</div>`;
-    return `<ol class="fact-list">${items.map((item,index)=>`<li><span>${String(index+1).padStart(2,"0")}</span><div>${typeof item==="object"?renderObject(item):`<p>${renderPrimitive(item)}</p>`}</div></li>`).join("")}</ol>`;
+Requested change:
+${draft.instruction}
+
+This request came from a local dashboard planning report. Make the edit in the repository, preserve the established knowledge contract, then regenerate the ClineFlow dashboard. The current report will not update until it is regenerated.`;
+  const copy = async value => {
+    try { await navigator.clipboard.writeText(value); return true; }
+    catch (_) { const input = document.createElement("textarea"); input.value = value; input.style.position = "fixed"; input.style.opacity = "0"; document.body.append(input); input.select(); const copied = document.execCommand("copy"); input.remove(); return copied; }
   };
-  const renderStructured = doc => {
-    const value=doc.structured;
-    if(!value||typeof value!=="object")return `<div class="yaml-diagnostic error"><strong>YAML could not be modeled</strong><p>${esc(doc.yaml?.error||"The document does not contain a mapping or sequence.")}</p></div>`;
-    if(Array.isArray(value))return renderItems(value,"items");
-    const references=[];
-    const sections=Object.entries(value).filter(([key])=>!['version','updated_at'].includes(key)).map(([key,item])=>{
-      if(key.endsWith("_refs")){references.push(...(Array.isArray(item)?item:[]));return "";}
-      const count=Array.isArray(item)?item.length:null;
-      const content=Array.isArray(item)?renderItems(item,key):(item&&typeof item==="object"?renderObject(item):`<p class="fact-scalar">${renderPrimitive(item)}</p>`);
-      return `<section class="fact-section"><header><div><p class="eyebrow">${esc(doc.title)}</p><h3>${esc(humanize(key))}</h3></div>${count!==null?`<span class="count">${full.format(count)}</span>`:""}</header>${content}</section>`;
-    }).join("");
-    return `${sections}${references.length?`<section class="fact-section references"><header><div><p class="eyebrow">Traceability</p><h3>Linked sources</h3></div><span class="count">${references.length}</span></header><div class="reference-row">${references.map(ref=>`<code>${esc(ref)}</code>`).join("")}</div></section>`:""}`;
+  const draftList = () => Object.values(readDrafts()).sort((a, b) => a.path.localeCompare(b.path));
+  const renderDraftCount = () => { const count = draftList().length; const button = $("#pending-edits"); button.innerHTML = count ? `<span>${count}</span> Pending edit${count === 1 ? "" : "s"}` : "Plan edits"; };
+
+  const now = presentation.now || {};
+  const metrics = presentation.metrics || {};
+  const timeline = presentation.timeline || [];
+  const milestoneCards = (presentation.story?.milestones || []).map(item => `<li><time>${esc(time(item.at))}</time><strong>${esc(item.title || "Recorded milestone")}</strong></li>`).join("") || "<li><strong>Capture the first milestone to begin the story.</strong></li>";
+  document.getElementById("app").innerHTML = `<main class="shell" id="main">
+    <header class="topbar"><div class="brand"><span class="brand-mark">CF</span><span>Knowledge Visor / narrative view</span></div><div class="toolbar"><span class="pill">${presentation.report?.git?.dirty ? "Working tree · changed" : "Working tree · clean"}</span><button id="time-mode" type="button">Local time</button><button id="pending-edits" class="pending-edits" type="button"></button></div></header>
+    <section class="hero"><article class="hero-main"><div><p class="eyebrow">Now / ${esc(time(presentation.generated_at))}</p><h1>${esc(now.headline || "Build the first durable project record")}</h1><p class="lede">${esc(now.summary || "Start by capturing what changed, why it matters, and the next move.")}</p></div>${presentation.onboarding?.empty ? `<aside class="onboarding"><span class="label">First useful capture</span><strong>${esc(presentation.onboarding.title)}</strong><p>${esc(presentation.onboarding.text)}</p></aside>` : ""}<div class="brief-grid"><article><span class="label">Current intent</span><p>${esc(now.intent || "No active goal recorded.")}</p></article><article><span class="label">Latest proof</span><p>${esc(now.latest_verification?.title || "No verification event recorded yet.")}</p></article><article><span class="label">Next move</span><p>${esc(now.next_move || "Capture the next deliberate move.")}</p></article></div></article><aside class="hero-side"><div class="metric"><span class="label">Knowledge sources</span><strong>${full.format(metrics.documents || 0)}</strong></div><div class="metric"><span class="label">Open attention items</span><strong>${full.format(now.unresolved_count || 0)}</strong></div><div class="metric"><span class="label">Latest activity</span><strong>${esc(now.latest_activity?.when ? new Date(now.latest_activity.when).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div></aside></section>
+    <div class="grid">
+      <section class="panel wide agentic-loop-panel"><div class="panel-head"><div><p class="eyebrow">Current Agentic Loop</p><h2>From intent to proof.</h2><p class="panel-copy">The active goal, decision boundary, next action, and evidence state—read as one operating loop.</p></div><span class="story-badge">Live context</span></div><ol id="agentic-loop" class="agentic-loop"></ol></section>
+      <header class="section-intro"><p class="eyebrow">The narrative</p><h2>Understand before you inspect.</h2><p>Move from the current signal to its decisions, proof, and source record—without decoding the entire knowledge base first.</p></header>
+      <section class="panel wide project-story-panel"><div class="panel-head"><div><h2>Project story</h2><p class="panel-copy">The turning points behind today’s decision, with direct source handoffs.</p></div><span class="story-badge">Narrative arc</span></div><div id="story-evolution"></div><div class="story-arc"><div id="story-cards" class="story-actions"></div><ol class="story-milestones">${milestoneCards}</ol></div></section>
+      <section class="panel wide recent-story-panel"><div class="panel-head"><div><p class="eyebrow">Trajectory</p><h2>Recent story</h2><p class="panel-copy">Three meaningful beats first. The audit trail stays out of the way until you need it.</p></div><button class="text-action" id="timeline-toggle" type="button"></button></div><div id="recent-story" class="recent-story recent-beats"></div><div class="time-spine" id="time-spine" hidden></div></section>
+      <header class="section-intro"><p class="eyebrow">Decisions and proof</p><h2>What needs a human decision?</h2><p>Questions and verification are explicit. The visor never invents a productivity or health score.</p></header>
+      <section class="panel"><div class="panel-head"><div><h2>Decision queue</h2><p class="panel-copy">What is open, why it matters, and the next deliberate move.</p></div></div><div class="signals" id="attention"></div></section>
+      <section class="panel"><div class="panel-head"><div><h2>Evidence surface</h2><p class="panel-copy">Inspectable requirements and evidence.</p></div></div><div class="signals" id="evidence"></div></section>
+      <header class="section-intro"><p class="eyebrow">Source</p><h2>Open the record when it matters.</h2><p>Search canonical ledgers, journals, and indexes. Structured YAML is readable before raw source is necessary.</p></header>
+      <section class="panel wide explorer-panel"><div class="panel-head"><div><h2>Knowledge Explorer</h2><p class="panel-copy">Select a source, then choose guided context, JSON, or raw text.</p></div><div class="explorer-tools"><div class="document-filters" id="document-filters"><button class="active" data-filter="all" type="button">All</button><button data-filter="ledger" type="button">Ledgers</button><button data-filter="journal" type="button">Journals</button></div><input class="search" id="search" type="search" placeholder="Search decisions, evidence, journals…" aria-label="Search knowledge"></div></div><div class="documents"><nav class="document-list" id="document-list" aria-label="Knowledge documents"></nav><article class="document-body" id="document-body"></article></div></section>
+    </div><footer class="footer"><span>Generated ${esc(presentation.generated_at)} · ${esc(presentation.report?.run_id)}</span><span>Local report · no browser network access</span></footer></main><dialog id="pending-modal" class="pending-modal"></dialog>`;
+
+  let utc = false, showFullTimeline = false, selectedDocument = null, activeFilter = "all";
+  const formatTime = value => utc && value ? new Date(value).toISOString() : time(value);
+  const openDocument = id => { selectedDocument = id; renderDocuments($("#search").value); renderDocumentPanel(docById.get(id)); };
+  const sourceAction = ids => ids?.find(id => docById.has(id));
+  const loop = presentation.agentic_loop || [];
+  $("#agentic-loop").innerHTML = loop.map(item => { const source = sourceAction(item.source_ids); return `<li><span>${esc(item.step)}</span><div><p class="eyebrow">${esc(item.label)}</p><strong>${esc(item.text)}</strong></div>${source ? `<button class="text-action" data-loop-source="${esc(source)}" type="button">Open record ↗</button>` : ""}</li>`; }).join("");
+  $("#agentic-loop").querySelectorAll("[data-loop-source]").forEach(button => button.addEventListener("click", () => openDocument(button.dataset.loopSource)));
+  const storyCard = (key, tone) => { const card = presentation.story?.[key] || {}; const source = sourceAction(card.source_ids); return `<article class="story-card ${esc(tone)}"><p class="eyebrow">${esc(key.replaceAll("_", " "))}</p><h3>${esc(card.title || "Not recorded")}</h3><p>${esc(card.text || "No source-backed observation is available yet.")}</p>${source ? `<button type="button" data-story-source="${esc(source)}">Open supporting record ↗</button>` : ""}</article>`; };
+  $("#story-evolution").innerHTML = storyCard("evolution", "evolution");
+  $("#story-cards").innerHTML = ["important_now", "urgency", "next_action"].map((key, index) => storyCard(key, ["importance", "urgency", "next"][index])).join("");
+  $(".project-story-panel").querySelectorAll("[data-story-source]").forEach(button => button.addEventListener("click", () => openDocument(button.dataset.storySource)));
+  const renderRecentStory = () => {
+    const moments = timeline.filter(item => item.lane === "event" || item.lane === "commit").slice(0, 3).reverse();
+    $("#recent-story").innerHTML = moments.map(item => { const source = item.source_id || (item.refs || []).map(sourceIdForRef).find(Boolean); return `<article class="recent-moment"><time title="${esc(item.when)}">${esc(formatTime(item.when))}</time><span class="lane ${esc(item.lane)}">${esc(item.label)}</span><strong>${esc(eventTitle(item))}</strong>${item.summary && item.summary !== item.title ? `<p>${esc(item.summary)}</p>` : ""}${source ? `<button type="button" data-recent-source="${esc(source)}">Open source ↗</button>` : ""}</article>`; }).join("") || "<div class=\"empty\">No recent knowledge or Git events recorded. Capture a first timeline event to begin the story.</div>";
+    $("#recent-story").querySelectorAll("[data-recent-source]").forEach(button => button.addEventListener("click", () => openDocument(button.dataset.recentSource)));
   };
-  const copyText = async (value,button) => {
-    try { await navigator.clipboard.writeText(value); }
-    catch { const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.append(area);area.select();document.execCommand("copy");area.remove(); }
-    const prior=button.textContent;button.textContent="Copied";setTimeout(()=>button.textContent=prior,1200);
+  const renderTimeline = () => { const spine = $("#time-spine"); spine.hidden = !showFullTimeline; $("#timeline-toggle").textContent = showFullTimeline ? "Hide audit timeline" : "Open audit timeline"; spine.innerHTML = timeline.map(item => `<div class="time-row"><time title="${esc(item.when)}">${esc(formatTime(item.when))}</time><span class="lane ${esc(item.lane)}">${esc(item.label)}</span><div class="time-summary"><strong>${esc(eventTitle(item))}</strong>${item.summary && item.summary !== item.title ? `<details class="time-details"><summary>Read event note</summary><p>${esc(item.summary)}</p></details>` : ""}</div></div>`).join("") || "<div class=\"empty\">No timeline data recorded.</div>"; };
+  $("#time-mode").addEventListener("click", event => { utc = !utc; event.currentTarget.textContent = utc ? "UTC time" : "Local time"; renderRecentStory(); renderTimeline(); });
+  $("#timeline-toggle").addEventListener("click", () => { showFullTimeline = !showFullTimeline; renderTimeline(); }); renderRecentStory(); renderTimeline();
+  const renderSignalRows = (element, items, empty) => { element.innerHTML = items.map(item => `<article class="decision-row"><span class="label">${esc(item.kind || "Recorded fact")}</span><strong>${esc(statementText(item.text || item))}</strong>${item.why ? `<p><b>Why it matters:</b> ${esc(item.why)}</p>` : ""}${item.next ? `<p><b>Next move:</b> ${esc(item.next)}</p>` : ""}${sourceAction(item.source_ids) ? `<button class="text-action" data-source="${esc(sourceAction(item.source_ids))}" type="button">Open record ↗</button>` : ""}</article>`).join("") || `<div class="empty compact-empty">${esc(empty)}</div>`; element.querySelectorAll("[data-source]").forEach(button => button.addEventListener("click", () => openDocument(button.dataset.source))); };
+  renderSignalRows($("#attention"), presentation.decisions || [], "No unresolved decisions or proof gaps are recorded."); renderSignalRows($("#evidence"), presentation.evidence || [], "No structured verification evidence is recorded yet.");
+  const renderDocuments = query => { const needle = String(query || "").toLowerCase().trim(); const visible = docs.filter(doc => (activeFilter === "all" || doc.kind === activeFilter) && (!needle || `${doc.title} ${doc.description} ${doc.raw}`.toLowerCase().includes(needle))); $("#document-list").innerHTML = visible.map(doc => `<button class="document-button ${doc.id === selectedDocument ? "active" : ""}" data-document="${esc(doc.id)}" type="button"><span class="document-kind">${esc(doc.kind)}</span><strong>${esc(doc.title)}</strong><small>${esc(doc.path)}</small></button>`).join("") || "<div class=\"empty compact-empty\">No matching knowledge source.</div>"; $("#document-list").querySelectorAll("[data-document]").forEach(button => button.addEventListener("click", () => openDocument(button.dataset.document))); };
+  const structuredHtml = value => { if (value === null || value === undefined) return "<p class=\"empty-value\">Not recorded.</p>"; if (Array.isArray(value)) return `<ol class="fact-list">${value.map((item, index) => `<li><span>${index + 1}</span><p>${esc(statementText(item))}</p></li>`).join("")}</ol>`; if (typeof value !== "object") return `<p class="fact-scalar">${esc(value)}</p>`; return `<dl class="fact-object">${Object.entries(value).map(([key, item]) => `<div><dt>${esc(humanize(key))}</dt><dd>${esc(statementText(item))}</dd></div>`).join("")}</dl>`; };
+  const renderDocumentPanel = (doc, view = "guided") => {
+    if (!doc) { $("#document-body").innerHTML = "<div class=\"empty\">Select a source to inspect it.</div>"; return; }
+    const tabs = [["guided", "Guided view"], ["json", "JSON"], ["source", "Source"]].map(([id, label]) => `<button class="${view === id ? "active" : ""}" data-view="${id}" type="button">${label}</button>`).join("");
+    const contribution = doc.kind === "ledger" ? `This ledger contributes ${doc.title.toLowerCase()} to the active project loop.` : doc.kind === "journal" ? "This journal supplies the reasoning and implementation context behind the current narrative." : "This source supplies navigational context for the knowledge bundle.";
+    const content = view === "source" ? `<pre class="source-code">${esc(doc.raw || "")}</pre>` : view === "json" ? `<pre class="source-code">${esc(JSON.stringify(doc.structured || {title: doc.title, description: doc.description}, null, 2))}</pre>` : `<section class="fact-section"><p class="eyebrow">What this contributes</p><h3>${esc(doc.title)}</h3><p class="contribution">${esc(contribution)}</p><p class="panel-copy">${esc(doc.description || "Read the structured source and use an edit request when a change needs an agent.")}</p>${structuredHtml(doc.structured || doc.raw || "No structured content recorded.")}</section>`;
+    const repair = doc.yaml?.valid && doc.yaml.normalized ? `<button class="text-action copy-action" data-copy-normalized type="button">Copy normalized YAML</button>` : "";
+    $("#document-body").innerHTML = `<div class="document-hero"><div><p class="eyebrow">${esc(doc.path)}</p><h2>${esc(doc.title)}</h2><p>Dashboard edits are planning requests only; they never write this file.</p></div><span class="status ${doc.yaml?.valid === false ? "invalid" : "valid"}">${doc.yaml?.valid === false ? "YAML needs repair" : "Source ready"}</span></div><div class="document-tabs">${tabs}${repair}<button class="text-action edit-action" data-edit-request type="button">Request an edit</button></div><div class="document-content">${content}</div>`;
+    $("#document-body").querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => renderDocumentPanel(doc, button.dataset.view)));
+    $("[data-copy-normalized]")?.addEventListener("click", async event => { await copy(doc.yaml.normalized); event.currentTarget.textContent = "Copied normalized YAML"; }); $("[data-edit-request]")?.addEventListener("click", () => renderEditForm(doc));
   };
-  let selectedDocumentId="", documentFilter="all";
-  const renderDocumentPanel = (doc,view="story") => {
-    const isYaml=Boolean(doc.yaml), valid=doc.yaml?.valid;
-    const updated=doc.structured?.updated_at||doc.generated_at;
-    const story=isYaml?renderStructured(doc):doc.html;
-    const content=view==="source"?`<pre class="source-code"><code>${esc(doc.raw)}</code></pre>`:view==="json"?`<pre class="source-code"><code>${esc(JSON.stringify(doc.structured,null,2))}</code></pre>`:story;
-    $("#document-body").innerHTML=`<header class="document-hero"><div><p class="eyebrow">${esc(humanize(doc.kind||"source"))} · ${esc(doc.path)}</p><h2>${esc(doc.title)}</h2>${doc.description?`<p>${esc(doc.description)}</p>`:""}</div><div class="document-badges">${isYaml?`<span class="status ${valid?"valid":"invalid"}">${valid?"Valid YAML":"YAML issue"}</span>`:""}${updated?`<time title="${esc(updated)}">Updated ${esc(utc?updated:time(updated))}</time>`:""}</div></header>${isYaml&&!valid?`<div class="yaml-diagnostic error"><strong>Parser diagnostic</strong><p>${esc(doc.yaml.error)}</p><code>Line ${esc(doc.yaml.line||"?")}, column ${esc(doc.yaml.column||"?")}</code></div>`:isYaml?`<div class="yaml-diagnostic safe"><strong>${doc.yaml.normalization_changed?"Normalized repair available":"YAML structure verified"}</strong><p>Parsed with the pinned optional runtime. Copy a normalized version to repair formatting; the dashboard never changes canonical source files.</p></div>`:""}<div class="document-tabs" role="tablist"><button data-view="story" class="${view==="story"?"active":""}" type="button">Guided view</button>${isYaml?`<button data-view="json" class="${view==="json"?"active":""}" type="button">JSON</button>`:""}<button data-view="source" class="${view==="source"?"active":""}" type="button">Source</button>${isYaml&&valid?`<button class="copy-action" data-copy="yaml" type="button">Copy normalized YAML</button><button class="copy-action" data-copy="json" type="button">Copy JSON</button>`:""}</div><div class="document-content">${content}</div>`;
-    $("#document-body").querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>renderDocumentPanel(doc,button.dataset.view)));
-    $("#document-body").querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",()=>copyText(button.dataset.copy==="yaml"?doc.yaml.normalized:JSON.stringify(doc.structured,null,2),button)));
-  };
-  const renderDocuments = query => {
-    const normalized=query.trim().toLowerCase();
-    const matches=data.documents.filter(doc=>!doc.path.endsWith("TASK_TEMPLATE.md")&&(documentFilter==="all"||doc.kind===documentFilter)&&(!normalized||`${doc.title} ${doc.description} ${doc.path} ${(doc.tags||[]).join(" ")} ${doc.raw}`.toLowerCase().includes(normalized)));
-    $("#document-list").innerHTML=matches.slice(0,150).map(doc=>`<button class="document-button ${doc.id===selectedDocumentId?"active":""}" data-id="${esc(doc.id)}"><span class="document-kind">${esc(humanize(doc.kind||"source"))}</span><strong>${esc(doc.title)}</strong><small>${esc(doc.path)}</small></button>`).join("")||`<div class="empty">No matching knowledge.</div>`;
-    $("#document-list").querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>selectDocument(button.dataset.id)));
-  };
-  function selectDocument(id){ const doc=data.documents.find(item=>item.id===id); if(!doc)return;selectedDocumentId=id;renderDocumentPanel(doc);renderDocuments($("#search").value); }
-  $("#search").addEventListener("input",event=>renderDocuments(event.target.value));
-  $("#document-filters").querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{$("#document-filters").querySelectorAll("button").forEach(item=>item.classList.toggle("active",item===button));documentFilter=button.dataset.filter;renderDocuments($("#search").value);}));
-  renderDocuments(""); const startingDocument=data.documents.find(doc=>doc.path.endsWith("clineflow_last_session.yml"))||data.documents.find(doc=>doc.kind==="ledger")||data.documents[0];if(startingDocument)selectDocument(startingDocument.id);
-  addEventListener("resize",()=>charts.forEach(chart=>chart.resize()));
-  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){gsap.from(".hero-main,.hero-side,.panel",{opacity:0,y:18,duration:.7,stagger:.045,ease:"power2.out"});}
+  const renderEditForm = doc => { const draft = readDrafts()[doc.path]; $("#document-body").insertAdjacentHTML("beforeend", `<section class="edit-request" id="edit-request"><p class="eyebrow">Agent handoff</p><h3>Request an edit to ${esc(doc.path)}</h3><p>This saves a local planning draft only. It will not modify the file or update this report.</p><label for="edit-instruction">What should the agent change?</label><textarea id="edit-instruction" rows="6" placeholder="Describe the specific change, decision, or correction.">${esc(draft?.instruction || "")}</textarea><div><button class="primary-action" id="save-edit-request" type="button">Save local edit request</button><button class="text-action" id="cancel-edit-request" type="button">Cancel</button></div></section>`); $("#save-edit-request").addEventListener("click", async () => { const instruction = $("#edit-instruction").value.trim(); if (!instruction) return; const drafts = readDrafts(); drafts[doc.path] = {path: doc.path, instruction, updated_at: new Date().toISOString()}; writeDrafts(drafts); renderDraftCount(); $("#edit-request").innerHTML = `<p class="eyebrow">Saved locally</p><h3>Ready for your agent</h3><pre class="agent-prompt">${esc(editPrompt(drafts[doc.path]))}</pre><button class="primary-action" id="copy-edit-prompt" type="button">Copy agent prompt</button><p>The report will not update until you regenerate the dashboard after the agent makes the change.</p>`; $("#copy-edit-prompt").addEventListener("click", async event => { await copy(editPrompt(drafts[doc.path])); event.currentTarget.textContent = "Copied"; }); }); $("#cancel-edit-request").addEventListener("click", () => $("#edit-request").remove()); };
+  $("#document-filters").querySelectorAll("button").forEach(button => button.addEventListener("click", () => { activeFilter = button.dataset.filter; $("#document-filters").querySelectorAll("button").forEach(item => item.classList.toggle("active", item === button)); renderDocuments($("#search").value); })); $("#search").addEventListener("input", event => renderDocuments(event.currentTarget.value));
+  const modal = $("#pending-modal");
+  const renderPendingModal = () => { const drafts = draftList(); modal.innerHTML = `<form method="dialog" class="modal-head"><div><p class="eyebrow">Local planning only</p><h2>Pending edits</h2><p>These requests exist only in this browser. Copy them into an agent, then regenerate the dashboard after real edits.</p></div><button class="text-action" aria-label="Close">Close</button></form><div class="pending-list">${drafts.map(draft => `<article><code>${esc(draft.path)}</code><p>${esc(draft.instruction)}</p><div><button class="text-action" data-copy-draft="${esc(draft.path)}" type="button">Copy</button><button class="text-action" data-open-draft="${esc(draft.path)}" type="button">Edit</button><button class="text-action danger" data-remove-draft="${esc(draft.path)}" type="button">Remove</button></div></article>`).join("") || "<div class=\"empty compact-empty\">No pending edits.</div>"}</div>${drafts.length ? "<button class=\"primary-action\" id=\"copy-all-edits\" type=\"button\">Copy all agent instructions</button>" : ""}`; modal.querySelectorAll("[data-copy-draft]").forEach(button => button.addEventListener("click", () => copy(editPrompt(readDrafts()[button.dataset.copyDraft])))); modal.querySelectorAll("[data-open-draft]").forEach(button => button.addEventListener("click", () => { modal.close(); const doc = docs.find(item => item.path === button.dataset.openDraft); if (doc) { openDocument(doc.id); setTimeout(() => renderEditForm(doc), 0); } })); modal.querySelectorAll("[data-remove-draft]").forEach(button => button.addEventListener("click", () => { const drafts = readDrafts(); delete drafts[button.dataset.removeDraft]; writeDrafts(drafts); renderDraftCount(); renderPendingModal(); })); $("#copy-all-edits")?.addEventListener("click", async event => { const prompt = `Please complete these ClineFlow edits in order:\n\n${drafts.map((draft, index) => `--- Edit ${index + 1}: ${draft.path} ---\n${editPrompt(draft)}`).join("\n\n")}\n\nAfter all edits, regenerate the ClineFlow dashboard; this report will not update itself.`; await copy(prompt); event.currentTarget.textContent = "Copied all instructions"; }); };
+  $("#pending-edits").addEventListener("click", () => { renderPendingModal(); modal.showModal(); }); renderDocuments(""); const initial = docs.find(doc => doc.path.endsWith("clineflow_last_session.yml")) || docs[0]; if (initial) openDocument(initial.id); renderDraftCount();
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches && window.gsap) gsap.from(".hero-main,.hero-side,.panel", {opacity: 0, y: 14, duration: .55, stagger: .035, ease: "power2.out"});
 })();

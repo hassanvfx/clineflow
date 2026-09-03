@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T12:34:05Z
-latest_change: Reframed the Knowledge Visor around immediate current context, a source-linked Recent Story, and on-demand full chronology while removing decorative navigation chrome.
+updated_at: 2026-09-03T18:09:03Z
+latest_change: Repaired numeric ordering of date-based updater versions so multi-digit patch upgrades do not trip the downgrade safeguard.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -15,6 +15,11 @@ specification_summary:
   - Prose statements with colon punctuation are quoted as YAML scalars so they remain narrative facts rather than unintended mappings.
   - The dashboard uses ClineFlow-inspired navy and blue visual tokens, lower-radius geometry, and editorial hierarchy without copying hosted site assets or code.
   - The report presents immediate context, Recent Story, full chronology, proof, and sources in reading order without a chapter-navigation component.
+  - The formal presentation JSON is embedded alongside facts and observations; it is the only data model consumed by the browser renderer.
+  - Source edit requests persist only in browser localStorage, create copyable agent prompts, and require report regeneration after real edits.
+  - knowledge/dashboard/settings.json controls retention: default three reports, a positive explicit limit, or null for unlimited history.
+  - Current Agentic Loop summarizes aim, decision boundary, action, and proof from active goals, specification, session, and verification ledgers.
+  - The updater compares all four date-based release-version segments numerically and rejects malformed recognized release versions before mutation.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -30,10 +35,11 @@ verification_summary:
   - The macOS line-one regression and complete lifecycle certification pass after the portable prefix fix.
   - Release validation rejects canonical update guidance that omits the remote bootstrap or permits a stale local updater first.
   - Dashboard boundary tests pass independent collect, observe, and render stages with source-bound observation validation, embedded JSON equality, structured evidence/timeline normalization, and compact Time Spine regressions.
+  - Migration tests prove a `.5` installation updates to a two-digit patch release while a `.10` to `.5` target remains a byte-identical rejection; complete lifecycle certification passes for release 2026.09.03.13.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Regenerate the report after release 2026.09.03.10 and review the immediate Recent Story and whole-story expansion with representative project data.
+next_recommended_step: Publish release 2026.09.03.13, then rerun the authoritative remote updater in the affected downstream project.
 next_step_refs:
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md
@@ -42,6 +48,7 @@ next_step_refs:
   - journals/universal-update-migrations.md
   - ../docs/releasing.md
   - journals/updater-macos-line-zero.md
+  - journals/release-version-ordering.md
 journal_refs:
   - journals/okf-adoption.md
   - journals/add-book-link.md
@@ -57,3 +64,4 @@ journal_refs:
   - journals/repair-source-instruction-paths.md
   - journals/knowledge-dashboard.md
   - journals/updater-macos-line-zero.md
+  - journals/release-version-ordering.md

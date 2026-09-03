@@ -1,0 +1,8 @@
+{
+  "schema": "clineflow-dashboard/v1",
+  "run_at": "2026-09-03T14:00:00Z",
+  "run_id": "fixture-empty",
+  "source_hash": "fixture-empty-source",
+  "git": {"head": null, "branch": null, "dirty": false},
+  "ledgers": {}, "documents": [], "events": [], "commits": [], "runs": [], "usage": [], "current_change": {"net": 0}, "current_footprint": {"knowledge_bytes": 0}, "drift": {"added": [], "changed": [], "removed": []}, "baseline_run": null
+}

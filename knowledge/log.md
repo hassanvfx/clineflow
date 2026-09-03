@@ -2,6 +2,15 @@
 
 ## 2026-09-03
 
+* **Fix**: Replaced lexicographic updater version checks with four-segment numeric ordering; `.5` now upgrades to two-digit patch releases while genuine downgrades remain non-mutating.
+* **Verification**: Added updater regressions for `.5 → .10+` and `.10 → .5`, then passed migration, release-contract, and full lifecycle certification for `2026.09.03.13`.
+
+* **Narrative**: Added a source-linked Current Agentic Loop connecting goal, decision boundary, next action, and verification; restored the evolution arc and made the audit timeline on-demand.
+
+* **Feature**: Added a formal presentation-model JSON stage to Knowledge Visor reports, embedded exactly for local-file viewing and consumed by the narrative UI.
+* **Usability**: Added browser-local source edit requests, a Pending edits modal, individual and multi-file agent-prompt copy actions, and explicit regeneration guidance.
+* **Quality**: Added comprehensive, minimal, and empty dashboard facts fixtures plus report-retention coverage for default, configured, and unlimited history.
+
 * **Usability**: Replaced dashboard chapter navigation with immediate context, Recent Story, compact chronology, on-demand full history, proof, and direct source exploration.
 * **Design**: Restyled Knowledge Visor with ClineFlow’s deep-navy and electric-blue editorial language, restrained geometry, and retained self-contained reports.
 * **Refinement**: Made executive activity represent knowledge or Git work rather than a dashboard report run, and renamed the narrative navigation to Project Story.

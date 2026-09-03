@@ -28,6 +28,8 @@ Commands:
   generate                 Generate and open a new dashboard (default).
   collect --output FILE    Collect normalized facts for agent analysis.
   render --facts FILE      Render previously collected facts.
+  settings --show          Show dashboard report-retention settings.
+  settings --retain VALUE  Set retention (positive integer or unlimited).
   export --output DIR      Export sanitized report data.
   doctor                   Inspect optional dashboard health without activation.
   assets --status          Show asset activation status without activation.

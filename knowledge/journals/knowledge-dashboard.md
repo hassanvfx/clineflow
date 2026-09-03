@@ -5,8 +5,8 @@ description: "Implements an isolated, time-first dashboard for navigating durabl
 tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
-  by: clineflow/2026.09.03.10
-  at: 2026-09-03T12:34:05Z
+  by: clineflow/2026.09.03.13
+  at: 2026-09-03T18:09:03Z
 ---
 
 # Goal
@@ -79,6 +79,20 @@ Reviewed the public ClineFlow landing page as a visual reference. Its deep navy 
 
 Removed the sticky five-part dashboard navigation and numbered chapter framing. The report now reads in the order a new person needs: current state, source-bound Project Story, the five newest knowledge or engineering moments, compact chronology with a deliberate whole-story expansion, proof, then direct source exploration. Recent entries can open their canonical record, so the short list is not a dead summary. This preserves comprehensive access without making the reader operate a navigation widget to understand the project.
 
+## 2026-09-03 17:27 UTC - Fixture-driven narrative and local edit handoffs
+
+Added comprehensive, sparse, and empty normalized-fact fixtures that run through the same observation and rendering stages as a real dashboard. The renderer now creates a formal `clineflow-dashboard-presentation/v1` view model after observations and before HTML, writes it beside every report, and embeds its exact inert copy for local-file viewing. The browser consumes that view model for the narrative, proof, timeline, and explorer, preventing raw structured values from becoming UI labels.
+
+Added non-mutating edit requests for every displayed source. A request is saved only to browser localStorage, surfaced through a Pending edits modal, and can be copied individually or as an ordered multi-file agent prompt. The handoff always states that it is planning-only and the report requires regeneration after the agent edits the repository.
+
+Added ignored `knowledge/dashboard/settings.json` retention configuration. The implicit default keeps the latest three complete dashboard-owned runs; `dashboard settings --retain N|unlimited` persists the project choice and per-run `--retain` options override it without deleting reports until a newly rendered run has completed.
+
+## 2026-09-03 17:50 UTC - Agentic loop and sharper first read
+
+Reworked the initial reading experience around the current project condition rather than a generic dashboard slogan. Added a source-linked Current Agentic Loop that presents the active goal, current decision boundary, next action, and verification state in one compact sequence. The Project Story now leads with its missing evolution arc, Recent Story becomes three chronological narrative beats, and the complete audit timeline stays hidden until deliberately opened.
+
+Decision cards now name why an item matters and the next deliberate move. The explorer introduces each document with what it contributes to the loop, while empty knowledge offers a concrete smallest useful first capture. The Plan edits control is always discoverable and becomes a Pending edits count when local requests exist.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -107,6 +121,12 @@ Removed the sticky five-part dashboard navigation and numbered chapter framing. 
 - Bump release `2026.09.03.9` without a migration for the managed visor style update.
 - Use direct reading order and purpose-specific disclosure instead of a chapter-navigation component. Recent Story is a compact source-linked window into active work; the Time Spine remains the complete audit trail.
 - Bump release `2026.09.03.10` without a migration for the contained usability and rendering update.
+- Keep presentation data as a third, deterministic JSON stage after normalized facts and source-bound observations; HTML embeds it for file-protocol use, while the source snapshot remains independently inspectable.
+- Treat edit requests as browser-local planning state, never a dashboard write path. Agent prompts are explicit about target, requested change, and regeneration.
+- Keep retention settings under the ignored `knowledge/dashboard/` boundary. `null` means unlimited, missing settings default to three completed reports, and malformed directories are never pruned.
+- Bump release `2026.09.03.11` without a migration: this modifies only managed optional dashboard code and dashboard-owned report settings.
+- Derive the Current Agentic Loop only from active goals, specification constraints/questions, last-session next action, and recorded verification state; every step links to its owning canonical source when available.
+- Bump release `2026.09.03.12` without a migration for the contained narrative and agentic-loop viewer refinement.
 
 # Testing
 
@@ -125,6 +145,8 @@ Removed the sticky five-part dashboard navigation and numbered chapter framing. 
 - Dashboard tests assert that the narrative navigation names the Project Story and that executive activity ignores generated report runs.
 - Static CSS review confirms deep navy and electric-blue tokens replace the prior green dashboard palette; focused dashboard boundary tests remain the behavior proof.
 - Dashboard tests verify Recent Story output, on-demand whole timeline, and removal of the old navigation/chapter selectors while retaining dormant and activated boundary coverage.
+- Fixture tests render comprehensive, minimal, and empty facts through `observe` and `render`; they verify exact embedded presentation JSON, empty-state guidance, readable structured records, and local-only report output.
+- Dashboard boundary tests verify default, configured, per-run, and unlimited report retention alongside browser-independent edit-prompt semantics.
 
 # Open Issues
 

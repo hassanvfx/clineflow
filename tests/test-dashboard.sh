@@ -99,11 +99,21 @@ node - "$fixture/source/visor.js" <<'NODE'
 const fs = require("fs");
 const source = fs.readFileSync(process.argv[2], "utf8");
 const start = source.indexOf("  const humanize =");
-const end = source.indexOf("  const projectStory =");
+const end = source.indexOf("  const eventTitle =");
 if (start < 0 || end < 0) throw new Error("Structured statement formatter is missing");
 const helpers = new Function(`${source.slice(start, end)}; return {statementText};`)();
 const evidence = {summary: "Dashboard evidence is structured", command: "./tests/certify-release.sh", status: "passed"};
 if (helpers.statementText(evidence) !== "Dashboard evidence is structured") throw new Error("Explorer did not select a structured evidence summary");
+NODE
+node - "$fixture/source/visor.js" <<'NODE'
+const fs = require("fs");
+const source = fs.readFileSync(process.argv[2], "utf8");
+const start = source.indexOf("  const editPrompt =");
+const end = source.indexOf("  const copy =");
+if (start < 0 || end < 0 || !source.includes("localStorage") || !source.includes("Copy all agent instructions")) throw new Error("Local edit-request controls are missing");
+const helpers = new Function(`${source.slice(start, end)}; return {editPrompt};`)();
+const prompt = helpers.editPrompt({path: "knowledge/clineflow_goals.yml", instruction: "Clarify the active goal."});
+if (!prompt.includes("knowledge/clineflow_goals.yml") || !prompt.includes("Clarify the active goal.") || !prompt.includes("regenerate the ClineFlow dashboard")) throw new Error("Edit prompt does not preserve target, instruction, and regeneration boundary");
 NODE
 PYTHONPATH="$fixture/modules" python3 - "$fixture/source/dashboard.py" <<'PY'
 import importlib.util
@@ -177,33 +187,41 @@ BROWSER=true PYTHONPATH="$fixture/modules" CLINEFLOW_DASHBOARD_TEST_ALLOW_FILE=t
 [ -f .clineflow/optional/dashboard/.active ] || fail "activation omitted active runtime marker"
 [ -x .clineflow/optional/bin/uv ] || fail "activation omitted isolated uv runtime"
 report=$(tail -n 1 "$TEST_ROOT/generated-path")
-[ -f "$report" ] && [ -f "${report%/index.html}/manifest.json" ] && [ -f "${report%/index.html}/snapshot.json" ] && [ -f "${report%/index.html}/observations.json" ] || fail "activation omitted report artifacts"
+[ -f "$report" ] && [ -f "${report%/index.html}/manifest.json" ] && [ -f "${report%/index.html}/snapshot.json" ] && [ -f "${report%/index.html}/observations.json" ] && [ -f "${report%/index.html}/presentation.json" ] || fail "activation omitted report artifacts"
 grep -q "default-src 'none'" "$report" || fail "generated report omitted Content Security Policy"
 grep -q "connect-src 'none'" "$report" || fail "generated report permits browser network access"
 ! grep -Eq "<(script|link|img)[^>]+(src|href)=['\\\"]https?://" "$report" || fail "self-contained report references a remote browser asset"
 grep -q 'data:font/woff2;base64,' "$report" || fail "self-contained report omitted embedded fonts"
 ! grep -q 'About this report' "$report" || fail "dashboard retained the removed asset panel"
-grep -q 'data-audience="manager"' "$report" && grep -q 'data-audience="engineer"' "$report" && grep -q 'Source of truth' "$report" || fail "dashboard omitted its multi-audience story controls"
-grep -q 'Project story' "$report" && grep -q 'Source-bound reasoning' "$report" || fail "dashboard omitted the narrative project-story surface"
-grep -q 'Latest knowledge activity' "$report" || fail "dashboard retained report-run activity as an executive signal"
-grep -q 'Recent story' "$report" && grep -q 'Show whole story' "$report" && grep -q 'const renderRecentStory' "$report" || fail "dashboard omitted immediate recent-story access"
+grep -q 'Understand before you inspect' "$report" && grep -q 'Source' "$report" && grep -q 'Pending edits' "$report" || fail "dashboard omitted its guided narrative controls"
+grep -q 'Project story' "$report" && grep -q 'Narrative arc' "$report" && grep -q 'Current Agentic Loop' "$report" || fail "dashboard omitted the narrative project-story surface"
+grep -q 'Latest activity' "$report" || fail "dashboard omitted current activity context"
+grep -q 'Recent story' "$report" && grep -q 'Open audit timeline' "$report" && grep -q 'const renderRecentStory' "$report" || fail "dashboard omitted immediate recent-story access"
 ! grep -q 'story-nav' "$report" && ! grep -q 'class="chapter"' "$report" || fail "dashboard retained decorative navigation chrome"
 grep -q 'Read event note' "$report" && grep -q 'const eventTitle' "$report" || fail "Time Spine omitted compact titles and expandable notes"
 ! grep -q 'cytoscape.min.js' "$report" && ! grep -q 'decision-graph' "$report" || fail "dashboard retained the removed graph Atlas"
 grep -q 'Guided view' "$report" && grep -q 'Copy normalized YAML' "$report" || fail "Knowledge Explorer omitted YAML interpretation and repair controls"
 grep -q 'data-filter="ledger"' "$report" && grep -q 'data-filter="journal"' "$report" || fail "Knowledge Explorer omitted progressive document filters"
 grep -q 'clineflow-dashboard/v1' "${report%/index.html}/snapshot.json" || fail "snapshot omitted dashboard schema"
-python3 - "$report" "${report%/index.html}/snapshot.json" "${report%/index.html}/observations.json" <<'PY'
+python3 - "$report" "${report%/index.html}/snapshot.json" "${report%/index.html}/observations.json" "${report%/index.html}/presentation.json" <<'PY'
 import json, re, sys
 page = open(sys.argv[1], encoding="utf-8").read()
+snapshot = json.load(open(sys.argv[2], encoding="utf-8"))
 match = re.search(r'<script id="clineflow-data" type="application/json">(.*?)</script>', page, re.S)
-if not match or json.loads(match.group(1)) != json.load(open(sys.argv[2], encoding="utf-8")):
+if not match or json.loads(match.group(1)) != snapshot:
     raise SystemExit("embedded report data differs from adjacent snapshot.json")
 observation_match = re.search(r'<script id="clineflow-observations" type="application/json">(.*?)</script>', page, re.S)
 observations = json.load(open(sys.argv[3], encoding="utf-8"))
 if not observation_match or json.loads(observation_match.group(1)) != observations:
     raise SystemExit("embedded narrative differs from adjacent observations.json")
-snapshot = json.load(open(sys.argv[2], encoding="utf-8"))
+presentation_match = re.search(r'<script id="clineflow-presentation" type="application/json">(.*?)</script>', page, re.S)
+presentation = json.load(open(sys.argv[4], encoding="utf-8"))
+if not presentation_match or json.loads(presentation_match.group(1)) != presentation:
+    raise SystemExit("embedded presentation differs from adjacent presentation.json")
+if presentation.get("schema") != "clineflow-dashboard-presentation/v1":
+    raise SystemExit("presentation omitted its formal schema")
+if presentation.get("source", {}).get("source_hash") != snapshot.get("source_hash"):
+    raise SystemExit("presentation is not bound to its source facts")
 if "insights" in snapshot:
     raise SystemExit("normalized facts contain the separate narrative model")
 if observations.get("schema") != "clineflow-dashboard-observations/v1":
@@ -260,6 +278,45 @@ if observations["source"]["source_hash"] != facts["source_hash"]:
     raise SystemExit("formal observation stage lost its facts binding")
 PY
 pass "facts, observations, and rendering remain independent JSON stages"
+
+for fixture_name in comprehensive minimal empty; do
+  fixture_facts="$ROOT/tests/fixtures/dashboard/$fixture_name/facts.json"
+  fixture_observations="$TEST_ROOT/$fixture_name-observations.json"
+  PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard observe --facts "$fixture_facts" --output "$fixture_observations"
+  fixture_report=$(PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$fixture_facts" --observations "$fixture_observations" --retain unlimited --no-open)
+  [ -f "$fixture_report" ] && [ -f "${fixture_report%/index.html}/presentation.json" ] || fail "$fixture_name fixture did not render a presentation"
+  python3 - "$fixture_report" "${fixture_report%/index.html}/presentation.json" "$fixture_name" <<'PY'
+import json, re, sys
+page = open(sys.argv[1], encoding="utf-8").read()
+model = json.load(open(sys.argv[2], encoding="utf-8"))
+embedded = re.search(r'<script id="clineflow-presentation" type="application/json">(.*?)</script>', page, re.S)
+if not embedded or json.loads(embedded.group(1)) != model:
+    raise SystemExit("fixture presentation is not embedded exactly")
+if "[object Object]" in page:
+    raise SystemExit("fixture rendered object coercion")
+if sys.argv[3] == "empty" and "Capture the first milestone" not in page:
+    raise SystemExit("empty fixture omitted onboarding narrative")
+if sys.argv[3] == "comprehensive" and "Verified local-only reports" not in page:
+    raise SystemExit("comprehensive fixture omitted verification narrative")
+PY
+done
+pass "comprehensive, minimal, and empty fixture facts render through observe and render"
+
+for _ in 1 2 3 4; do
+  PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$ROOT/tests/fixtures/dashboard/minimal/facts.json" --retain 3 --no-open >/dev/null
+done
+[ "$(find knowledge/dashboard/runs -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" -eq 3 ] || fail "default retention did not keep three completed reports"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard settings --retain 5 >/dev/null
+grep -q '"retention": 5' knowledge/dashboard/settings.json || fail "retention settings were not written under the dashboard boundary"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard settings --show | grep -q '"retention": 5' || fail "retention settings could not be inspected"
+for _ in 1 2; do
+  PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$ROOT/tests/fixtures/dashboard/minimal/facts.json" --no-open >/dev/null
+done
+[ "$(find knowledge/dashboard/runs -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" -eq 5 ] || fail "configured retention did not keep five reports"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard settings --retain unlimited >/dev/null
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$ROOT/tests/fixtures/dashboard/empty/facts.json" --no-open >/dev/null
+[ "$(find knowledge/dashboard/runs -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" -eq 6 ] || fail "unlimited retention did not preserve completed reports"
+pass "dashboard retention settings support default, configured, and unlimited history"
 
 rollback_project="$TEST_ROOT/rollback-project"
 mkdir -p "$rollback_project"

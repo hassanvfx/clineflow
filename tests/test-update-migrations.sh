@@ -88,6 +88,36 @@ for placement in line-one prefixed; do
 done
 pass "line-one and prefixed managed rule blocks refresh portably"
 
+# Release patches are numeric: .5 must update to .10+ and a true downgrade must stop before mutation.
+numeric_upgrade="$TEST_ROOT/numeric-upgrade"
+seed_okf "$numeric_upgrade"
+mkdir -p "$numeric_upgrade/.clineflow/bin"
+printf '2026.09.03.5\n' > "$numeric_upgrade/.clineflow/VERSION"
+(cd "$numeric_upgrade" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
+assert_current "$numeric_upgrade"
+
+older_release="$TEST_ROOT/older-release"
+cp -R "$ROOT/template" "$older_release"
+printf '2026.09.03.5\n' > "$older_release/.clineflow/VERSION"
+version_digest=$(shasum -a 256 "$older_release/.clineflow/VERSION" | awk '{print $1}')
+manifest_temp="$older_release/.clineflow/release-manifest.tmp"
+awk -F'|' -v OFS='|' -v digest="$version_digest" '
+  /^release_version=/ {$0="release_version=2026.09.03.5"}
+  $1=="payload" && $4==".clineflow/VERSION" {$6=digest}
+  {print}
+' "$older_release/.clineflow/release-manifest" > "$manifest_temp"
+mv "$manifest_temp" "$older_release/.clineflow/release-manifest"
+
+numeric_downgrade="$TEST_ROOT/numeric-downgrade"
+seed_okf "$numeric_downgrade"
+mkdir -p "$numeric_downgrade/.clineflow/bin"
+printf '2026.09.03.10\n' > "$numeric_downgrade/.clineflow/VERSION"
+before=$(find "$numeric_downgrade" -type f -exec shasum -a 256 {} \; | sort | shasum -a 256 | awk '{print $1}')
+if (cd "$numeric_downgrade" && CLINEFLOW_BASE_URL="file://$older_release" bash "$UPDATER" --yes >/dev/null 2>&1); then fail "numeric downgrade was accepted"; fi
+after=$(find "$numeric_downgrade" -type f -exec shasum -a 256 {} \; | sort | shasum -a 256 | awk '{print $1}')
+[ "$before" = "$after" ] || fail "numeric downgrade mutated the project"
+pass "numeric release versions accept multi-digit upgrades and reject true downgrades"
+
 # Dry-run, malformed markers, and pre-OKF detection are non-mutating.
 dry_project="$TEST_ROOT/dry"
 seed_okf "$dry_project"; printf '2026.08.15.0\n' > "$dry_project/VERSION"; mkdir -p "$dry_project/clineflow"; printf 'legacy\n' > "$dry_project/clineflow/WORKING_WITH_CLINE.md"

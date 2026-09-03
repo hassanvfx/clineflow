@@ -1,0 +1,11 @@
+{
+  "schema": "clineflow-dashboard/v1",
+  "run_at": "2026-09-03T14:00:00Z",
+  "run_id": "fixture-minimal",
+  "source_hash": "fixture-minimal-source",
+  "git": {"head": null, "branch": null, "dirty": true},
+  "ledgers": {"clineflow_goals": {}, "clineflow_last_session": {}, "clineflow_specification": {"open_questions": ["What should be verified first?"]}, "clineflow_verification": {"open_verification": [{"description": "No test command has been recorded."}]}, "clineflow_timeline": {"events": []}},
+  "documents": [{"id": "spec", "path": "knowledge/clineflow_specification.yml", "title": "Specification", "description": "Sparse project context.", "kind": "ledger", "structured": {"open_questions": ["What should be verified first?"]}, "raw": "open_questions:\n  - What should be verified first?\n", "yaml": {"valid": true, "normalized": "open_questions:\n- What should be verified first?\n"}}],
+  "events": [{"at": "2026-09-03T10:00:00Z", "type": "note", "title": "Captured an open question", "summary": "What should be verified first?", "refs": ["knowledge/clineflow_specification.yml"]}],
+  "commits": [], "runs": [], "usage": [], "current_change": {"net": 0}, "current_footprint": {"knowledge_bytes": 120}, "drift": {"added": ["knowledge/clineflow_specification.yml"], "changed": [], "removed": []}, "baseline_run": null
+}
