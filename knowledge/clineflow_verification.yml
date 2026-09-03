@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:48:35Z
+updated_at: 2026-09-03T20:52:43Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -86,7 +86,6 @@ evidence_refs:
   - journals/readme-documentation-redesign.md
   - journals/old-install-update-rescue.md
 open_verification:
-  - Confirm the corrected windows-lifecycle-smoke job passes on GitHub Actions after push.
   - Capture and visually inspect the deferred 1600×1000 fixture-backed Knowledge Visor image before adding it to the README.
 journal_refs:
   - journals/okf-adoption.md

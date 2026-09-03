@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:48:35Z
+updated_at: 2026-09-03T20:52:43Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -476,3 +476,11 @@ events:
       - ../template/.clineflow/bin/uninstall
       - ../tests/test-uninstall-safety.sh
     git_revision: null
+  - at: 2026-09-03T20:52:43Z
+    actor: codex
+    type: verification
+    summary: Confirmed GitHub Actions run 47 passes both Linux certification and the native Windows lifecycle smoke job for release 2026.09.03.23.
+    refs:
+      - journals/old-install-update-rescue.md
+      - ../.github/workflows/test.yml
+    git_revision: 7f684a3

@@ -3,10 +3,10 @@ type: Engineering Journal
 title: "Old-install update rescue path"
 description: "Makes the permanent remote updater discoverable when stale installed instructions cannot interpret the natural-language update request."
 tags: [engineering, documentation, updates]
-status: draft
+status: stable
 generated:
   by: clineflow/2.0.0
-  at: 2026-09-03T20:48:35Z
+  at: 2026-09-03T20:52:43Z
 ---
 
 # Goal
@@ -56,12 +56,11 @@ The third hosted run passed installation, doctor, and native PowerShell update, 
 - `./template/.clineflow/bin/validate-knowledge-sync` — passed at the shared completion timestamp.
 - `./tests/certify-release.sh` — passed the complete installation, dashboard, migration, uninstall, release, OKF, synchronization, and whitespace matrix.
 - `git diff --check` — passed.
-- The hosted Windows workflow passed installation, doctor, and native PowerShell update before exposing the active-uninstaller file lock; release `2026.09.03.23` awaits hosted confirmation of the removal repair.
+- [GitHub Actions run 47](https://github.com/hassanvfx/clineflow/actions/runs/33804710762) — passed both `test` and `windows-lifecycle-smoke` for release `2026.09.03.23` at commit `7f684a3`.
 
 # Open Issues
 
 - The existing deferred Knowledge Visor screenshot remains unrelated and blocked by the local browser capture policy.
-- The badge will remain red until release `2026.09.03.23` is committed, pushed, and completes successfully on GitHub's Windows runner.
 
 # References
 
