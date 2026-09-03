@@ -8,6 +8,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Fixed
+- Executive metrics now use the latest knowledge or Git activity rather than mistaking report generation for project activity.
 - Replaced the remaining Decision Atlas graph with a calmer, source-bound Project Story, eliminating the graph library and its repetitive relationship UI.
 - Decision Atlas and Timeline now normalize structured YAML records and common field aliases before rendering, preventing `[object Object]` evidence labels and empty event summaries.
 - Time Spine now uses a short event title and compact kind label, keeping the full event note in an expandable, paragraph-formatted disclosure.
@@ -30,6 +31,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- Story navigation now names the Project Story directly; the managed Knowledge Visor release is `2026.09.03.8`.
 - Knowledge Visor observations now include a validated `project_story` model for evolution, current importance, urgency, the next deliberate move, and selected milestones.
 - Knowledge Visor now tells one progressive story across executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration; asset provenance remains in `manifest.json` instead of occupying a dashboard panel.
 - Knowledge Explorer now parses YAML through the pinned optional runtime, presents guided structured sections instead of flattened source text, diagnoses malformed YAML, and provides non-mutating normalized YAML and JSON repair output.

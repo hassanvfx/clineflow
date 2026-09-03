@@ -183,6 +183,7 @@ grep -q 'data:font/woff2;base64,' "$report" || fail "self-contained report omitt
 ! grep -q 'About this report' "$report" || fail "dashboard retained the removed asset panel"
 grep -q 'Manager view' "$report" && grep -q 'data-audience="engineer"' "$report" && grep -q 'Source of truth' "$report" || fail "dashboard omitted its multi-audience story chapters"
 grep -q 'Project story' "$report" && grep -q 'Source-bound reasoning' "$report" || fail "dashboard omitted the narrative project-story surface"
+grep -q 'Latest knowledge activity' "$report" && grep -q '>Story</a>' "$report" || fail "dashboard retained report-run activity or stale graph navigation language"
 grep -q 'Read event note' "$report" && grep -q 'const eventTitle' "$report" || fail "Time Spine omitted compact titles and expandable notes"
 ! grep -q 'cytoscape.min.js' "$report" && ! grep -q 'decision-graph' "$report" || fail "dashboard retained the removed graph Atlas"
 grep -q 'Guided view' "$report" && grep -q 'Copy normalized YAML' "$report" || fail "Knowledge Explorer omitted YAML interpretation and repair controls"

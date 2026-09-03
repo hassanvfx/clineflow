@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:49:41Z
+updated_at: 2026-09-03T11:53:33Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -297,5 +297,14 @@ events:
       - ../template/optional/dashboard/dashboard.py
       - ../template/optional/dashboard/visor.js
       - ../template/optional/dashboard/visor.css
+      - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T11:53:33Z
+    actor: codex
+    type: refinement
+    summary: Refined executive activity to exclude generated report runs and aligned navigation with the Project Story.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/optional/dashboard/visor.js
       - ../tests/test-dashboard.sh
     git_revision: null

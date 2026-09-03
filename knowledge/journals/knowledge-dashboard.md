@@ -5,8 +5,8 @@ description: "Implements an isolated, time-first dashboard for navigating durabl
 tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
-  by: clineflow/2026.09.03.7
-  at: 2026-09-03T11:49:41Z
+  by: clineflow/2026.09.03.8
+  at: 2026-09-03T11:53:33Z
 ---
 
 # Goal
@@ -67,6 +67,10 @@ Inspection of the generated fact model caught two prose list entries containing 
 
 Removed the remaining graph-based Decision Atlas after it continued to make the report feel repetitive and less narrative than the underlying durable record. The renderer now derives a formal `project_story` object from normalized facts: evolution, what matters now, attention required, next deliberate move, and a compact milestone arc. The viewer renders those source-linked claims as navigable cards that open their canonical supporting record. Cytoscape is no longer part of the optional asset manifest, release validation, report bytes, or visual system.
 
+## 2026-09-03 11:53 UTC - Executive signal correction
+
+The hero originally derived “latest activity” from the combined display timeline, which includes dashboard reports. That can make the report appear to be the newest project activity. It now selects the newest knowledge event or Git commit and labels the metric accordingly. The sticky chapter navigation calls the third section “Story,” matching the Project Story content rather than the removed graph metaphor.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -90,6 +94,7 @@ Removed the remaining graph-based Decision Atlas after it continued to make the 
 - Replace the graph Atlas rather than repeatedly restyling it. A small narrative surface better matches the decision-making job and avoids accidental relationship semantics from ledger synchronization metadata.
 - Validate every Project Story card and milestone in supplied observations against known canonical document IDs. This keeps the future CLI/LLM observation boundary source-bound.
 - Bump the managed release and optional component to `2026.09.03.7`; no migration is required because this changes only isolated managed runtime and asset behavior, not the OKF persistent schema.
+- Bump release `2026.09.03.8` without a migration: this is a contained narrative-quality correction in managed viewer code.
 
 # Testing
 
@@ -105,6 +110,7 @@ Removed the remaining graph-based Decision Atlas after it continued to make the 
 - Structured-record regressions prove evidence labels never coerce to `[object Object]`, narrative observations choose a human-readable statement, and timeline aliases normalize into time, type, summary, references, and raw provenance.
 - Time Spine regression coverage verifies long `event:` notes derive a concise title, retain the full note, and expose the progressive disclosure control.
 - Dashboard boundary tests pass for release `2026.09.03.7`, including deterministic mock-fact Project Story derivation, embedded story JSON, source-id validation, graph-asset removal, offline reuse, rollback, export, and uninstall preservation.
+- Dashboard tests assert that the narrative navigation names the Project Story and that executive activity ignores generated report runs.
 
 # Open Issues
 

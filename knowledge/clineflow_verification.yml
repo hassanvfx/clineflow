@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T11:49:41Z
+updated_at: 2026-09-03T11:53:33Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -40,6 +40,7 @@ regression_checks:
   - Dense event notes stay collapsed and paragraph-formatted until deliberately expanded.
   - Canonical prose list statements containing colons remain YAML scalars and do not introduce accidental structured values.
   - Provided observations reject missing, malformed, or unlinked Project Story statements.
+  - Executive activity output must not report the dashboard run itself as project activity.
   - User text before and after an existing managed agent block remains byte-preserved during refresh.
 evidence_refs:
   - journals/okf-adoption.md

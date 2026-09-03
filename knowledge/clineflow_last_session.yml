@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T11:49:41Z
-latest_change: Replaced the repeated Decision Atlas graph with a source-bound Project Story and removed the now-unused Cytoscape asset.
+updated_at: 2026-09-03T11:53:33Z
+latest_change: Refined executive storytelling so activity reflects the latest knowledge or Git event, and renamed the chapter navigation for the Project Story.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -31,7 +31,7 @@ verification_summary:
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Regenerate the report after release 2026.09.03.7 and review the Project Story and compact, expandable Time Spine against representative project data.
+next_recommended_step: Regenerate the report after release 2026.09.03.8 and review the Project Story and compact, expandable Time Spine against representative project data.
 next_step_refs:
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md
