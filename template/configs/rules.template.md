@@ -10,6 +10,10 @@ This project keeps persistent engineering context in the `knowledge/` Open Knowl
 
 When the user says “Please update ClineFlow.”, treat that request as authorization to read the current instructions at [the authoritative ClineFlow repository](https://github.com/hassanvfx/clineflow), inspect the installed layout, and run the repository's universal updater with `--yes`. Do not ask for redundant confirmation. Let migration, verification, and automatic rollback finish, then report the resulting version and preserved legacy artifacts. This authorization does not cover unrelated system changes or destructive cleanup, and safety failures must still stop the update.
 
+## Knowledge Visor
+
+Only when the user explicitly asks “Show me the ClineFlow dashboard” or directly requests the Knowledge Visor, run `./.clineflow/bin/dashboard`. The command previews and approval-gates its optional first-use runtime. Never activate or generate the dashboard proactively during ordinary work, installation, validation, or commit preparation.
+
 ## Task knowledge rules
 
 1. Before substantial work, read `docs/durable-development-methodology.md`, all five `knowledge/clineflow_*.yml` indexes, and the journals they reference. Summarize the current contract and next safe step before changing code.

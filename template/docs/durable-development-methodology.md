@@ -66,7 +66,7 @@ A project must move to a new runtime. Goals describe the migration outcome and c
 
 ## Usage and cost ledger
 
-Timeline events may include a `usage` object only when a provider, agent, API, or export explicitly supplies exact values. Record provider, model, input/output/reasoning tokens, cost, currency, source, and capture time. Otherwise set `usage_capture: unavailable` and omit the `usage` object. Never estimate tokens or prices.
+Timeline events may include a `usage` object only when a provider, agent, API, or export explicitly supplies exact values. Record provider, model, input/output/reasoning tokens, cost, currency, source, and capture time. When exact values are unavailable, omit telemetry fields entirely. Existing `usage_capture: unavailable` fields remain valid historical data. Never estimate tokens or prices.
 
 This rule is provider-neutral: Codex, Claude Code, Cline, Cursor, Copilot, Windsurf, and future agents can participate even when they expose different telemetry. Usage data is observational metadata, never proof of completion or a required workflow gate.
 

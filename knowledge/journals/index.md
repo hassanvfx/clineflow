@@ -1,5 +1,7 @@
 # Task Journals
 
+* [ClineFlow Knowledge Visor](knowledge-dashboard.md) - Adds an isolated, time-first dashboard with self-contained reports and structured snapshots.
+* [Repair source instruction paths](repair-source-instruction-paths.md) - Aligns distribution-checkout agent instructions with the actual template runtime layout.
 * [Universal five-ledger synchronization](universal-five-ledger-synchronization.md) - Enforces synchronized durable knowledge for every supported agent and qualifying commit.
 * [Universal update and migration system](universal-update-migrations.md) - Transactional updates, historical layout migration, and future release enforcement.
 * [Canonical agent installation prompt](canonical-agent-installation-prompt.md) - Standardizes the ClineFlow installation request for coding agents.

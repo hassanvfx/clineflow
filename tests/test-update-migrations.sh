@@ -22,6 +22,8 @@ assert_current() {
   [ "$(cat "$project/.clineflow/VERSION")" = "$CURRENT_VERSION" ] || fail "wrong migrated version"
   grep -qx 'migration_schema=1' "$project/.clineflow/state" || fail "missing migration state"
   [ -x "$project/.clineflow/bin/validate-knowledge-sync" ] || fail "missing knowledge synchronization validator"
+  [ -x "$project/.clineflow/bin/dashboard" ] && [ -f "$project/.clineflow/dashboard-component-manifest" ] || fail "missing inert dashboard launcher"
+  [ ! -e "$project/.clineflow/optional" ] && [ ! -e "$project/knowledge/dashboard" ] || fail "update activated the optional dashboard"
   (cd "$project" && ./.clineflow/bin/doctor >/dev/null) || fail "migrated installation is unhealthy"
 }
 

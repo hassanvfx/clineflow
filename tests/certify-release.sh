@@ -26,6 +26,9 @@ else ./template/.clineflow/bin/validate-release; fi
 echo "==> Installation lifecycle"
 ./tests/test-installation-flow.sh
 
+echo "==> Optional dashboard dormant and activated boundaries"
+./tests/test-dashboard.sh
+
 echo "==> Historical update and rollback matrix"
 ./tests/test-update-migrations.sh
 

@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T08:31:56Z
+updated_at: 2026-09-03T09:30:27Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -15,12 +15,15 @@ acceptance_criteria:
   - Working-tree, staged, and base-reference synchronization modes enforce shared timestamps, active-journal references, a current timeline event, and a current log date.
   - Fresh installs and supported updates put the same synchronization rules in every managed agent configuration without replacing user-authored instructions.
   - Release validation rejects CI configurations that omit base-reference knowledge synchronization for pull requests.
+  - Release-contract tests reject missing source-repository guide or validator paths and drift in the legacy Cline compatibility template.
+  - Dashboard tests prove dormant installation, approval gating, exact activated boundaries, transactional rollback, offline reuse, self-contained HTML/JSON equality, sanitized export, and report-preserving removal.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
   - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.
   - Edited agent files retain user text during uninstall; exact managed-only files are removed.
   - Code-only changes do not trigger the knowledge synchronization gate.
   - Legacy docs/journals/ edits are rejected.
+  - Existing lifecycle, doctor, validation, update, and certification flows pass without activating the optional dashboard.
 evidence_refs:
   - journals/okf-adoption.md
   - journals/encapsulate-tooling.md
@@ -31,6 +34,8 @@ evidence_refs:
   - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
   - journals/universal-five-ledger-synchronization.md
+  - journals/repair-source-instruction-paths.md
+  - journals/knowledge-dashboard.md
 open_verification: []
 journal_refs:
   - journals/okf-adoption.md
@@ -44,3 +49,5 @@ journal_refs:
   - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
   - journals/universal-five-ledger-synchronization.md
+  - journals/repair-source-instruction-paths.md
+  - journals/knowledge-dashboard.md

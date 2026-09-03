@@ -50,6 +50,11 @@ printf '%s\n' 'implementation' > app.txt
 ./.clineflow/bin/validate-knowledge-sync
 rm app.txt
 
+mkdir -p knowledge/dashboard/runs/test
+printf '%s\n' '<html>generated report</html>' > knowledge/dashboard/runs/test/index.html
+./.clineflow/bin/validate-knowledge-sync
+rm -rf knowledge/dashboard
+
 printf '%s\n' '# Guide' '' 'Unsynchronized documentation.' > docs/guide.md
 if ./.clineflow/bin/validate-knowledge-sync >/dev/null 2>&1; then
     echo 'expected documentation without ledger updates to fail' >&2

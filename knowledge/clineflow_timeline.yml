@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T08:31:56Z
+updated_at: 2026-09-03T09:30:27Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -162,3 +162,27 @@ events:
       - ../template/.clineflow/release-manifest
     git_revision: null
     usage_capture: unavailable
+  - at: 2026-09-03T08:47:44Z
+    actor: codex
+    type: verification
+    summary: Repaired source-repository agent paths, synchronized the legacy Cline rules template, and passed complete lifecycle certification with regression coverage.
+    refs:
+      - journals/repair-source-instruction-paths.md
+      - ../AGENTS.md
+      - ../.clinerules
+      - ../tests/test-release-contract.sh
+      - ../tests/certify-release.sh
+    git_revision: null
+    usage_capture: unavailable
+  - at: 2026-09-03T09:30:27Z
+    actor: codex
+    type: implementation
+    summary: Implemented and boundary-tested the isolated, time-first Knowledge Visor with verified embedded assets, adjacent structured snapshots, transactional activation, and dormant lifecycle behavior.
+    refs:
+      - journals/knowledge-dashboard.md
+      - journals/repair-source-instruction-paths.md
+      - ../template/.clineflow/bin/dashboard
+      - ../template/optional/dashboard/dashboard.py
+      - ../tests/test-dashboard.sh
+      - ../tests/certify-release.sh
+    git_revision: null

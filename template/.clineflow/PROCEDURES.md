@@ -21,3 +21,9 @@
 2. Reconcile all five ledgers and add a dated entry to `knowledge/log.md`.
 3. Run `./.clineflow/bin/validate-okf` and `./.clineflow/bin/validate-knowledge-sync`.
 4. Stage implementation and knowledge together, run `./.clineflow/bin/validate-knowledge-sync --staged`, and commit only when it passes.
+
+## Generate the optional Knowledge Visor
+
+- Run `./.clineflow/bin/dashboard` only after an explicit user request for the ClineFlow dashboard or Knowledge Visor.
+- First use previews and approval-gates all optional runtime and visual-asset downloads.
+- Generated reports under `knowledge/dashboard/` are local presentation artifacts, not canonical OKF knowledge, and do not require five-ledger synchronization.

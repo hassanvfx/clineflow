@@ -86,6 +86,7 @@ QUALIFYING=false
 LEGACY_CHANGED=false
 while IFS= read -r path; do
   [ -n "$path" ] || continue
+  case "$path" in knowledge/dashboard/*) continue ;; esac
   case "$path" in docs/journals/*) LEGACY_CHANGED=true ;; esac
   is_documentation_or_knowledge "$path" && QUALIFYING=true
 done <<EOF

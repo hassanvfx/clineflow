@@ -36,6 +36,12 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 This prompt authorizes Codex to read the current repository instructions and invoke the universal updater with `--yes` immediately. Codex must wait for verification or rollback to finish and report the outcome; it must still stop on safety failures or requests for unrelated system changes.
 
+**Open the Knowledge Visor**
+
+> Show me the ClineFlow dashboard.
+
+Only this explicit request, a direct Knowledge Visor request, or a direct `./.clineflow/bin/dashboard` command activates the optional dashboard. First use displays and approval-gates every runtime and visual-asset download. Ordinary ClineFlow work never installs or runs the visor.
+
 ## Diagnose the setup
 
 Run `./.clineflow/bin/doctor` after installation or when Codex does not appear to have project context. It checks the shared instructions, required OKF files, Git repository, and structural validation without installing anything.

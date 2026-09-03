@@ -557,6 +557,7 @@ your-project/
 │   ├── WORKING_WITH_CODEX.md      # ChatGPT Codex workflow guide
 │   └── bin/
 │       ├── install                # OS-aware installer and prerequisite plan
+│       ├── dashboard              # Inert launcher for the optional Knowledge Visor
 │       ├── bootstrap.ps1          # Native Windows entrypoint
 │       ├── update.ps1             # Native PowerShell update wrapper
 │       ├── validate-okf           # Dependency-free OKF structural validator
@@ -569,6 +570,16 @@ your-project/
     └── journals/                  # Engineering Journal concepts
         ├── index.md
         └── TASK_TEMPLATE.md
+```
+
+The optional Knowledge Visor is deliberately dormant after installation. ClineFlow does not install Python, visual libraries, fonts, caches, or reports unless you explicitly run `./.clineflow/bin/dashboard` or tell your agent, “Show me the ClineFlow dashboard.” First use displays an approval plan, downloads pinned assets from approved CDNs with a checksum-equivalent fallback, installs the verified runtime under `.clineflow/optional/`, and generates a private report under `knowledge/dashboard/runs/`. Each `index.html` embeds its data, CSS, fonts, and visual libraries; it needs no asset access through the file protocol and makes no browser-time network requests. The matching `snapshot.json` beside it is the inspectable `clineflow-dashboard/v1` structured representation. Generated reports do not participate in the five-ledger synchronization contract.
+
+```bash
+# Inspect the dormant or activated state without installing anything
+./.clineflow/bin/dashboard doctor
+
+# Explicitly activate on first use, then generate a time-first report
+./.clineflow/bin/dashboard
 ```
 
 ---

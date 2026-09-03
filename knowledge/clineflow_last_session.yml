@@ -1,20 +1,26 @@
 version: 1
-updated_at: 2026-09-03T08:31:56Z
-latest_change: Completed, certified, and prepared universal five-ledger synchronization for commit and push as release 2026.09.03.1.
+updated_at: 2026-09-03T09:30:27Z
+latest_change: Implemented and boundary-tested the optional, time-first ClineFlow Knowledge Visor for release 2026.09.03.2.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
   - Journal, documentation, and knowledge-base changes must reconcile all five ledgers, the active journal, and the knowledge log for every supported agent.
+  - The Knowledge Visor stays inert until explicit invocation, then generates self-contained HTML and matching structured snapshots within isolated paths.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
   - The complete lifecycle certification passes, including the knowledge-sync working-tree, staged, base-reference, missing-context, timestamp-mismatch, code-only, and legacy-journal scenarios.
   - Pull-request CI and the release contract require base-reference knowledge synchronization.
+  - Source-repository agent instructions now resolve guides and validators through template/.clineflow, while installed instructions retain .clineflow paths.
+  - Dashboard boundary tests pass for dormancy, decline, activation, offline reuse, rollback, export, and uninstall preservation.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Monitor CI, especially the native Windows lifecycle smoke job, after pushing release 2026.09.03.1.
+next_recommended_step: Review and commit release 2026.09.03.2 with the preserved source-instruction repair and Knowledge Visor implementation.
 next_step_refs:
+  - journals/knowledge-dashboard.md
+  - journals/repair-source-instruction-paths.md
+  - journals/knowledge-dashboard.md
   - journals/universal-five-ledger-synchronization.md
   - journals/universal-update-migrations.md
   - ../docs/releasing.md
@@ -30,3 +36,4 @@ journal_refs:
   - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
   - journals/universal-five-ledger-synchronization.md
+  - journals/repair-source-instruction-paths.md

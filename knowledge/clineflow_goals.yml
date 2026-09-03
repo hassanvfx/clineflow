@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T08:31:56Z
+updated_at: 2026-09-03T09:30:27Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -12,6 +12,9 @@ success_measures:
   - All supported historical layouts converge to the current release and pass validation.
   - Release validation rejects unmanaged payload changes and incomplete migration chains.
   - One CI-required command certifies installer, updater, remover, preservation, and rollback behavior.
+  - Repository-native agent instructions reference files and validators that exist in the distribution checkout.
+  - Dormant ClineFlow performs no optional dashboard installation, network access, caching, report generation, or Git exclusion changes.
+  - Activated dashboard reports embed verified assets, expose adjacent structured snapshots, and remain inside their declared optional boundaries.
 blocked_goals: []
 completed_goals:
   - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.
@@ -20,6 +23,7 @@ completed_goals:
   - Add prerequisite handling and deterministic Git initialization for fresh installations.
   - Add the durable development methodology and master indexes to ClineFlow.
   - Deliver a universal transactional updater for supported OKF-era installations.
+  - Deliver the isolated, time-first ClineFlow Knowledge Visor.
 journal_refs:
   - journals/okf-adoption.md
   - journals/add-book-link.md
@@ -32,3 +36,5 @@ journal_refs:
   - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
   - journals/universal-five-ledger-synchronization.md
+  - journals/repair-source-instruction-paths.md
+  - journals/knowledge-dashboard.md

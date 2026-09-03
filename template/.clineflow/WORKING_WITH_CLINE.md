@@ -17,6 +17,10 @@ Projects may have pre-OKF journals in `docs/journals/`. ClineFlow searches these
 
 Tell your agent: “Please update ClineFlow.” The agent reads the current instructions from the authoritative repository and runs the universal updater with `--yes` without asking again. It reports the installed version and any preserved legacy artifacts after verification or rollback completes.
 
+## Knowledge Visor
+
+Say “Show me the ClineFlow dashboard” to explicitly invoke the optional time-first knowledge visor. The first request previews and approval-gates its isolated runtime and pinned visual assets. ClineFlow does not install, update, or run those optional components during normal operation.
+
 ## Related projects
 
 Keep related codebases as sibling folders beneath one common parent directory. When cross-project context is needed, ask the agent to inspect “sibling project `<foldername>`” (for example, `../backend-api`). This convention needs no ClineFlow configuration, symlinks, or generated workspace file.

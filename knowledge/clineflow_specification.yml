@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T08:31:56Z
+updated_at: 2026-09-03T09:30:27Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -12,6 +12,9 @@ confirmed:
   - Cline, Codex, Claude Code, Cursor, GitHub Copilot, and Windsurf receive one canonical agent-neutral durable knowledge contract.
   - Any Git change set containing a journal, documentation, or knowledge-base edit reconciles all five ledgers, the active Engineering Journal, and knowledge/log.md.
   - All five ledger updated_at values, the active journal generated.at value, and the newest timeline event timestamp match within a synchronized change set.
+  - Distribution-checkout agent instructions use template/.clineflow paths, while installed-project instructions use .clineflow paths.
+  - The Knowledge Visor is activated only by explicit invocation; reports contain embedded verified assets and a matching clineflow-dashboard/v1 snapshot.json.
+  - Dashboard metrics are report-derived Git and knowledge facts; absent provider usage is omitted rather than recorded as unavailable.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -24,6 +27,8 @@ constraints:
   - Pull-request CI runs knowledge synchronization against the pull request base revision.
   - Every ledger references the active journal; a timestamp-only goals, specification, or verification edit means the ledger was reviewed with no semantic change.
   - Changes to docs/journals/ are rejected because it is immutable legacy context.
+  - The optional dashboard may modify only .clineflow/optional/, knowledge/dashboard/, and its exact repository-local Git exclude marker.
+  - Browser-opened reports have no remote runtime dependencies, background process, analytics, iframe, or external connection.
 non_goals: []
 open_questions: []
 journal_refs:
@@ -38,3 +43,5 @@ journal_refs:
   - journals/canonical-agent-installation-prompt.md
   - journals/universal-update-migrations.md
   - journals/universal-five-ledger-synchronization.md
+  - journals/repair-source-instruction-paths.md
+  - journals/knowledge-dashboard.md

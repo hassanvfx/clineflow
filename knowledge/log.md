@@ -2,7 +2,11 @@
 
 ## 2026-09-03
 
+* **Feature**: Added the explicitly invoked, time-first Knowledge Visor with verified embedded visual assets, adjacent structured snapshots, comparisons, exports, and isolated optional tooling.
+* **Verification**: Proved dormant and activated dashboard boundaries, post-verification rollback, offline cache reuse, self-contained report data, and report-preserving uninstall behavior.
+* **Fix**: Repaired source-repository agent guide and validator paths, synchronized legacy Cline rules with the canonical contract, and added regression coverage.
 * **Update**: Added universal five-ledger synchronization for every supported agent and consolidated all current Engineering Journals into the durable indexes.
+* **Verification**: Repaired source-repository workflow paths and passed complete lifecycle certification with regression coverage for instruction-reference drift.
 * **Verification**: Passed lifecycle certification for release 2026.09.03.1, including the knowledge synchronization matrix.
 * **Update**: Required pull-request CI to validate knowledge synchronization against its base revision.
 * **Handoff**: Prepared release 2026.09.03.1 and its synchronized durable context for commit and push.

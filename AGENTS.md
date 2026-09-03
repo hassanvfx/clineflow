@@ -4,11 +4,15 @@ This project keeps persistent engineering context in the `knowledge/` Open Knowl
 
 ## ChatGPT Codex and compatible agents
 
-`AGENTS.md` is the shared instruction entry point for ChatGPT Codex, Cursor, and other compatible coding agents. Read `.clineflow/WORKING_WITH_CODEX.md` for the Codex workflow; the same OKF knowledge contract also applies to Cline, Claude Code, Copilot, and Windsurf.
+`AGENTS.md` is the shared instruction entry point for ChatGPT Codex, Cursor, and other compatible coding agents. In this distribution repository, read `template/.clineflow/WORKING_WITH_CODEX.md` for the Codex workflow; installed projects receive the same guide at `.clineflow/WORKING_WITH_CODEX.md`. The same OKF knowledge contract also applies to Cline, Claude Code, Copilot, and Windsurf.
 
 ## Updating ClineFlow
 
 When the user says “Please update ClineFlow.”, treat that request as authorization to read the current instructions at [the authoritative ClineFlow repository](https://github.com/hassanvfx/clineflow), inspect the installed layout, and run the repository's universal updater with `--yes`. Do not ask for redundant confirmation. Let migration, verification, and automatic rollback finish, then report the resulting version and preserved legacy artifacts. This authorization does not cover unrelated system changes or destructive cleanup, and safety failures must still stop the update.
+
+## Knowledge Visor
+
+Only when the user explicitly requests the ClineFlow dashboard or Knowledge Visor, invoke the installed project's `./.clineflow/bin/dashboard`. Never activate the optional runtime proactively during normal development, installation, validation, or commit preparation.
 
 ## Task knowledge rules
 
@@ -26,8 +30,8 @@ When the user asks to commit:
 
 1. Update the active `knowledge/journals/` concept with the implementation summary, decisions, tests, and next steps.
 2. Reconcile all five `knowledge/clineflow_*.yml` ledgers and update `knowledge/log.md`.
-3. Run `./.clineflow/bin/validate-okf` and `./.clineflow/bin/validate-knowledge-sync`, resolving all failures. When optional PyYAML is available, prefer `./.clineflow/bin/validate-okf --strict`.
-4. Stage the code and knowledge artifacts together, run `./.clineflow/bin/validate-knowledge-sync --staged`, then create a descriptive commit.
+3. Run `./template/.clineflow/bin/validate-okf` and `./template/.clineflow/bin/validate-knowledge-sync`, resolving all failures. When optional PyYAML is available, prefer `./template/.clineflow/bin/validate-okf --strict`.
+4. Stage the code and knowledge artifacts together, run `./template/.clineflow/bin/validate-knowledge-sync --staged`, then create a descriptive commit.
 
 For changes to installed files, persistent formats, ownership, or required behavior, update the ClineFlow release manifest and either add the next migration or record and test that no migration is required. Run `./tests/certify-release.sh` before delivery.
 

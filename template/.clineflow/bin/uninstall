@@ -6,9 +6,12 @@ DRY_RUN=false
 ASSUME_YES=false
 BEGIN='<!-- BEGIN CLINEFLOW OKF RULES -->'
 END='<!-- END CLINEFLOW OKF RULES -->'
+DASHBOARD_BEGIN='# BEGIN CLINEFLOW DASHBOARD GENERATED REPORTS'
+DASHBOARD_END='# END CLINEFLOW DASHBOARD GENERATED REPORTS'
 TRANSACTION_ACTIVE=false
 COMMITTED=false
 TRANSACTION_DIR=''
+DASHBOARD_EXCLUDE=''
 
 usage() {
   cat <<'EOF'
@@ -60,7 +63,7 @@ file_mode() {
 }
 
 preflight() {
-  local entry kind path prior status
+  local entry kind path prior status begins ends
   : > "$entries"
   if [ ! -f "$manifest" ]; then
     echo "WARNING: no ownership manifest found; all agent configurations will be preserved." >&2
@@ -80,6 +83,17 @@ preflight() {
     status=$(block_status "$path")
     [ "$status" = valid ] || { echo "ERROR: malformed or missing ClineFlow markers in $path; no files were changed." >&2; return 1; }
   done < "$manifest"
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    DASHBOARD_EXCLUDE=$(git rev-parse --git-path info/exclude)
+    if [ -f "$DASHBOARD_EXCLUDE" ]; then
+      begins=$(grep -cFx "$DASHBOARD_BEGIN" "$DASHBOARD_EXCLUDE" 2>/dev/null || true)
+      ends=$(grep -cFx "$DASHBOARD_END" "$DASHBOARD_EXCLUDE" 2>/dev/null || true)
+      { [ "$begins" -eq 0 ] && [ "$ends" -eq 0 ]; } || { [ "$begins" -eq 1 ] && [ "$ends" -eq 1 ]; } || {
+        echo "ERROR: malformed ClineFlow dashboard markers in $DASHBOARD_EXCLUDE; no files were changed." >&2
+        return 1
+      }
+    fi
+  fi
 }
 
 show_plan() {
@@ -93,7 +107,8 @@ show_plan() {
     echo "  - preserve every agent configuration (no trusted ownership entries)"
   fi
   echo "  - remove the .clineflow/ managed runtime"
-  echo "  - preserve knowledge/, docs/journals/, user documentation, and unrelated files"
+  [ -n "$DASHBOARD_EXCLUDE" ] && grep -qFx "$DASHBOARD_BEGIN" "$DASHBOARD_EXCLUDE" 2>/dev/null && echo "  - remove the owned dashboard report exclusion from $DASHBOARD_EXCLUDE"
+  echo "  - preserve knowledge/, generated dashboard reports, docs/journals/, user documentation, and unrelated files"
 }
 
 restore_transaction() {
@@ -108,6 +123,7 @@ restore_transaction() {
     done < "$TRANSACTION_DIR/agent-paths"
   fi
   if [ -d "$TRANSACTION_DIR/runtime" ] && [ ! -e .clineflow ]; then mv "$TRANSACTION_DIR/runtime" .clineflow; fi
+  if [ -f "$TRANSACTION_DIR/dashboard-exclude" ] && [ -n "$DASHBOARD_EXCLUDE" ]; then cp -pP "$TRANSACTION_DIR/dashboard-exclude" "$DASHBOARD_EXCLUDE"; fi
   echo "Removal rollback complete." >&2
 }
 
@@ -137,6 +153,7 @@ TRANSACTION_DIR=".clineflow-uninstall-transaction-$(date -u +%Y%m%dT%H%M%SZ)-$$"
 [ ! -e "$TRANSACTION_DIR" ] || { echo "ERROR: transaction path already exists." >&2; exit 1; }
 mkdir -p "$TRANSACTION_DIR/files"
 : > "$TRANSACTION_DIR/agent-paths"
+if [ -n "$DASHBOARD_EXCLUDE" ] && [ -f "$DASHBOARD_EXCLUDE" ]; then cp -pP "$DASHBOARD_EXCLUDE" "$TRANSACTION_DIR/dashboard-exclude"; fi
 while IFS='|' read -r kind path; do
   if [ -e "$path" ]; then
     mkdir -p "$TRANSACTION_DIR/files/$(dirname "$path")"
@@ -149,6 +166,12 @@ done < "$entries"
 
 mv .clineflow "$TRANSACTION_DIR/runtime"
 TRANSACTION_ACTIVE=true
+if [ -n "$DASHBOARD_EXCLUDE" ] && [ -f "$DASHBOARD_EXCLUDE" ] && grep -qFx "$DASHBOARD_BEGIN" "$DASHBOARD_EXCLUDE"; then
+  temp="$DASHBOARD_EXCLUDE.clineflow-uninstall-tmp.$$"
+  awk -v begin="$DASHBOARD_BEGIN" -v end="$DASHBOARD_END" '$0 == begin { skip=1; next } $0 == end { skip=0; next } !skip { print }' "$DASHBOARD_EXCLUDE" > "$temp"
+  mv "$temp" "$DASHBOARD_EXCLUDE"
+  echo "removed ClineFlow dashboard exclusion: $DASHBOARD_EXCLUDE"
+fi
 while IFS='|' read -r kind path; do
   [ -f "$path" ] || continue
   temp="$path.clineflow-uninstall-tmp.$$"
@@ -170,4 +193,4 @@ COMMITTED=true
 rm -rf "$TRANSACTION_DIR"
 TRANSACTION_DIR=''
 echo "removed: .clineflow/"
-echo "knowledge/, docs/journals/, user documentation, and unrelated files were preserved."
+echo "knowledge/, generated dashboard reports, docs/journals/, user documentation, and unrelated files were preserved."
