@@ -2,6 +2,12 @@
 
 ## 2026-09-03
 
+* **Fix**: Corrected the Knowledge Explorer Source ready badge so flex layout cannot stretch or wrap it into a large vertical control.
+
+* **Feature**: Added a Project Pulse for committed change/footprint context and source-bound agent delivery scenarios with transparent planning assumptions.
+* **Safety**: Delivery scenarios are calculated before browser rendering, labeled as estimates, never infer labor from Git history, and are removed from sanitized exports.
+* **Verification**: Added comprehensive estimate fixtures plus malformed-input, calculation, missing-state, and export-redaction coverage; full lifecycle certification passes for release `2026.09.03.14`.
+
 * **Fix**: Replaced lexicographic updater version checks with four-segment numeric ordering; `.5` now upgrades to two-digit patch releases while genuine downgrades remain non-mutating.
 * **Verification**: Added updater regressions for `.5 → .10+` and `.10 → .5`, then passed migration, release-contract, and full lifecycle certification for `2026.09.03.13`.
 

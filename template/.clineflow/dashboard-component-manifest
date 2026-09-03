@@ -1,9 +1,9 @@
-component_version=2026.09.03.12
+component_version=2026.09.03.15
 python_version=3.12
-file|dashboard.py|dashboard.py|973c451e13ab475600e36ec5e9b434136ea8da550353da40f8b61e3ed02d6a86
+file|dashboard.py|dashboard.py|88c3c111148d7bb0ec2c7c7caf93e51285c7ee52174bdcb4b9467a6089b636f5
 file|dashboard.py.lock|dashboard.py.lock|d8718fd36653fb86c6bdbdaea7281f13b1146bdbbbb40df9563fde012a2e9d5d
-file|visor.css|visor.css|578ccd8b74840e45db09cb5abec6b4b7a43317443cd8a84106554365d04dc553
-file|visor.js|visor.js|15c215e3dc10b67eaaad3c312373069b9aadb57fae2850efa84932a0214e70e0
+file|visor.css|visor.css|064698600c6533b86a725dcce8f4205679c84b902c6d23f702bdd9867a5eeb29
+file|visor.js|visor.js|bbb41dd7e3807ee9c15cf04a835ec9844a2a22f83ab846e6714b0cca3d97ff86
 file|THIRD_PARTY_LICENSES.md|THIRD_PARTY_LICENSES.md|07ba401c7add0f5e89afee21cc6a1d076e983baf8e7b5454fadcef0b9b5ad49c
 runtime|darwin-arm64|tar.gz|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-aarch64-apple-darwin.tar.gz|5bb0e5fe008a773c3dbcb97ff79cd89e1241464fe9d2f986d52ad8f1b037bd62
 runtime|darwin-x86_64|tar.gz|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-x86_64-apple-darwin.tar.gz|b3b2137477cf96c9686ebfb71524614cec780c673fd73e59bce099aef02e70e8

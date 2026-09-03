@@ -282,7 +282,11 @@ pass "facts, observations, and rendering remain independent JSON stages"
 for fixture_name in comprehensive minimal empty; do
   fixture_facts="$ROOT/tests/fixtures/dashboard/$fixture_name/facts.json"
   fixture_observations="$TEST_ROOT/$fixture_name-observations.json"
-  PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard observe --facts "$fixture_facts" --output "$fixture_observations"
+  if [ -f "$ROOT/tests/fixtures/dashboard/$fixture_name/insights.json" ]; then
+    PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard observe --facts "$fixture_facts" --output "$fixture_observations" --insights "$ROOT/tests/fixtures/dashboard/$fixture_name/insights.json"
+  else
+    PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard observe --facts "$fixture_facts" --output "$fixture_observations"
+  fi
   fixture_report=$(PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$fixture_facts" --observations "$fixture_observations" --retain unlimited --no-open)
   [ -f "$fixture_report" ] && [ -f "${fixture_report%/index.html}/presentation.json" ] || fail "$fixture_name fixture did not render a presentation"
   python3 - "$fixture_report" "${fixture_report%/index.html}/presentation.json" "$fixture_name" <<'PY'
@@ -298,9 +302,67 @@ if sys.argv[3] == "empty" and "Capture the first milestone" not in page:
     raise SystemExit("empty fixture omitted onboarding narrative")
 if sys.argv[3] == "comprehensive" and "Verified local-only reports" not in page:
     raise SystemExit("comprehensive fixture omitted verification narrative")
+if "Project Pulse" not in page or "Delivery Scenarios" not in page:
+    raise SystemExit("fixture omitted project-pulse or delivery-scenario surfaces")
+estimate = model.get("delivery_estimate")
+if sys.argv[3] == "comprehensive":
+    if not estimate or estimate.get("agent", {}).get("model") != "gpt-5.6-sol":
+        raise SystemExit("comprehensive fixture omitted agent-supplied delivery estimate")
+    current, without_flow, no_ai = estimate["scenarios"]
+    if (current["estimated_cost"], without_flow["estimated_cost"], no_ai["estimated_cost"]) != (1818.0, 2718.0, 4500.0):
+        raise SystemExit("delivery scenario costs were not calculated from constants")
+    if "Estimated planning model" not in page or "How to revise estimate" not in page:
+        raise SystemExit("delivery estimate omitted its safety label or revision guidance")
+elif estimate is not None or "No delivery estimate supplied" not in page:
+    raise SystemExit("sparse fixture fabricated a delivery estimate")
 PY
 done
 pass "comprehensive, minimal, and empty fixture facts render through observe and render"
+
+# Delivery estimates accept explicit agent assumptions only and reject malformed or unsafe inputs.
+invalid_estimate="$TEST_ROOT/invalid-delivery-estimate.json"
+python3 - "$ROOT/tests/fixtures/dashboard/comprehensive/insights.json" "$invalid_estimate" <<'PY'
+import copy, json, sys
+base = json.load(open(sys.argv[1], encoding="utf-8"))
+cases = {
+    "currency": lambda item: item["constants"].update(currency="usd"),
+    "rate": lambda item: item["constants"].update(loaded_hourly_rate=0),
+    "hours": lambda item: item["constants"].update(baseline_hours=-1),
+    "direct_cost": lambda item: item["constants"]["no_ai"].update(direct_cost=-1),
+    "multiplier": lambda item: item["constants"]["ai_without_clineflow"].update(effort_multiplier=0),
+    "source": lambda item: item.update(source_ids=["unknown-document"]),
+    "total": lambda item: item.update(estimated_cost=1),
+}
+json.dump({name: (lambda candidate, mutate=mutate: (mutate(candidate), candidate)[1])(copy.deepcopy(base["delivery_estimate"])) for name, mutate in cases.items()}, open(sys.argv[2], "w", encoding="utf-8"))
+PY
+for invalid_case in currency rate hours direct_cost multiplier source total; do
+  python3 - "$invalid_estimate" "$TEST_ROOT/$invalid_case-insights.json" "$invalid_case" <<'PY'
+import json, sys
+all_cases = json.load(open(sys.argv[1], encoding="utf-8"))
+json.dump({"delivery_estimate": all_cases[sys.argv[3]]}, open(sys.argv[2], "w", encoding="utf-8"))
+PY
+  if PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard observe --facts "$ROOT/tests/fixtures/dashboard/comprehensive/facts.json" --insights "$TEST_ROOT/$invalid_case-insights.json" --output "$TEST_ROOT/$invalid_case-observations.json" >/dev/null 2>&1; then fail "invalid delivery estimate $invalid_case was accepted"; fi
+done
+pass "delivery estimates validate inputs and reject agent-provided totals"
+
+estimate_observations="$TEST_ROOT/estimate-observations.json"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard observe --facts "$ROOT/tests/fixtures/dashboard/comprehensive/facts.json" --insights "$ROOT/tests/fixtures/dashboard/comprehensive/insights.json" --output "$estimate_observations"
+estimate_report=$(PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$ROOT/tests/fixtures/dashboard/comprehensive/facts.json" --observations "$estimate_observations" --retain unlimited --no-open)
+estimate_run=$(basename "$(dirname "$estimate_report")")
+estimate_export="$TEST_ROOT/sanitized-estimate"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard --yes export --run "$estimate_run" --output "$estimate_export" >/dev/null
+python3 - "$estimate_export/observations.json" "$estimate_export/presentation.json" "$estimate_export/index.html" <<'PY'
+import json, sys
+observations = json.load(open(sys.argv[1], encoding="utf-8"))
+presentation = json.load(open(sys.argv[2], encoding="utf-8"))
+page = open(sys.argv[3], encoding="utf-8").read()
+if "delivery_estimate" in observations or "delivery_estimate" in presentation:
+    raise SystemExit("sanitized export retained delivery-estimate data")
+if any(value in page for value in ("gpt-5.6-sol", "2718", "150.0")):
+    raise SystemExit("sanitized export leaked delivery-estimate values")
+PY
+grep -q 'Project Pulse' "$estimate_export/index.html" || fail "sanitized export removed project pulse"
+pass "sanitized exports exclude delivery scenarios and retain project pulse"
 
 for _ in 1 2 3 4; do
   PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$ROOT/tests/fixtures/dashboard/minimal/facts.json" --retain 3 --no-open >/dev/null

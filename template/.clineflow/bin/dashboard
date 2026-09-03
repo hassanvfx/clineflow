@@ -25,8 +25,9 @@ usage() {
 Usage: ./.clineflow/bin/dashboard [--yes] [command] [options]
 
 Commands:
-  generate                 Generate and open a new dashboard (default).
+  generate --insights FILE Generate and open a dashboard with optional agent observations.
   collect --output FILE    Collect normalized facts for agent analysis.
+  observe --facts FILE --insights FILE  Bind optional agent observations to normalized facts.
   render --facts FILE      Render previously collected facts.
   settings --show          Show dashboard report-retention settings.
   settings --retain VALUE  Set retention (positive integer or unlimited).

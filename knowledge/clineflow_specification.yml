@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:09:03Z
+updated_at: 2026-09-03T18:56:24Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -31,6 +31,9 @@ confirmed:
   - Agent-rule refresh is portable when the managed block begins on the first line or follows user-authored text.
   - The canonical agent update request invokes the permanent remote bootstrap first and never executes a legacy local updater beforehand.
   - The updater compares valid `YYYY.MM.DD.patch` release versions numerically by all four segments before accepting an upgrade or rejecting a downgrade.
+  - Project Pulse derives committed change volume and tracked/knowledge footprint only from normalized Git facts, and labels the current working tree separately.
+  - An agent may supply a source-bound `clineflow-dashboard-delivery-estimate/v1` through dashboard insights; the observer validates explicit constants and calculates all scenario time and cost outputs.
+  - Delivery scenarios are planning estimates, not labor telemetry, productivity scores, or realized savings; sanitized exports omit estimates and agent metadata.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -51,6 +54,8 @@ constraints:
   - The dashboard has no chapter-navigation component; it leads with immediate context, a source-linked Recent Story, a compact Time Spine, and an explicit whole-story expansion.
   - Dashboard retention pruning removes only complete, schema-owned run directories after a successful replacement report; settings and malformed directories remain preserved.
   - A malformed recognized installed or release version aborts before any update mutation.
+  - The dashboard does not infer delivery time, cost, model configuration, or counterfactual savings when no explicit agent estimate is supplied.
+  - Knowledge Explorer source-status indicators remain compact, non-growing controls and must not distort document headers.
 non_goals: []
 open_questions: []
 journal_refs:
@@ -69,3 +74,4 @@ journal_refs:
   - journals/knowledge-dashboard.md
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
+  - journals/dashboard-project-pulse.md

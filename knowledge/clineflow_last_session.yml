@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T18:09:03Z
-latest_change: Repaired numeric ordering of date-based updater versions so multi-digit patch upgrades do not trip the downgrade safeguard.
+updated_at: 2026-09-03T18:56:24Z
+latest_change: Corrected the Knowledge Explorer’s Source ready badge so it remains compact and readable at fixture-review viewport sizes.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -20,6 +20,8 @@ specification_summary:
   - knowledge/dashboard/settings.json controls retention: default three reports, a positive explicit limit, or null for unlimited history.
   - Current Agentic Loop summarizes aim, decision boundary, action, and proof from active goals, specification, session, and verification ledgers.
   - The updater compares all four date-based release-version segments numerically and rejects malformed recognized release versions before mutation.
+  - Project Pulse charts committed numstat and tracked/knowledge footprint history, with current working-tree changes kept separate from committed facts.
+  - Optional delivery estimates are validated agent insights with explicit assumptions; Python calculates scenarios and sanitized exports remove them.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -36,10 +38,13 @@ verification_summary:
   - Release validation rejects canonical update guidance that omits the remote bootstrap or permits a stale local updater first.
   - Dashboard boundary tests pass independent collect, observe, and render stages with source-bound observation validation, embedded JSON equality, structured evidence/timeline normalization, and compact Time Spine regressions.
   - Migration tests prove a `.5` installation updates to a two-digit patch release while a `.10` to `.5` target remains a byte-identical rejection; complete lifecycle certification passes for release 2026.09.03.13.
+  - Dashboard fixtures prove valid calculated delivery scenarios, invalid input rejection, missing-estimate guidance, Project Pulse rendering, and sanitized-export redaction.
+  - Complete lifecycle certification passes for release 2026.09.03.14 with dormant and activated dashboard boundaries intact.
+  - The focused dashboard suite passes after the Source ready explorer-status correction.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Publish release 2026.09.03.13, then rerun the authoritative remote updater in the affected downstream project.
+next_recommended_step: Review regenerated canonical fixtures with real embedded chart assets, then complete lifecycle certification for release 2026.09.03.15 before release.
 next_step_refs:
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md
@@ -49,6 +54,7 @@ next_step_refs:
   - ../docs/releasing.md
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
+  - journals/dashboard-project-pulse.md
 journal_refs:
   - journals/okf-adoption.md
   - journals/add-book-link.md
@@ -65,3 +71,4 @@ journal_refs:
   - journals/knowledge-dashboard.md
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
+  - journals/dashboard-project-pulse.md

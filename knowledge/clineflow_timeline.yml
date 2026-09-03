@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:09:03Z
+updated_at: 2026-09-03T18:56:24Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -356,4 +356,23 @@ events:
       - journals/knowledge-dashboard.md
       - ../template/.clineflow/bin/update
       - ../tests/test-update-migrations.sh
+    git_revision: null
+  - at: 2026-09-03T18:45:38Z
+    actor: codex
+    type: implementation
+    summary: Added Project Pulse trajectory visuals and validated agent-authored delivery scenarios with calculated time/cost comparisons and sanitized-export redaction.
+    refs:
+      - journals/dashboard-project-pulse.md
+      - ../template/optional/dashboard/dashboard.py
+      - ../template/optional/dashboard/visor.js
+      - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T18:56:24Z
+    actor: codex
+    type: fix
+    summary: Corrected the Knowledge Explorer source-status badge so it remains a compact, readable header indicator.
+    refs:
+      - journals/dashboard-project-pulse.md
+      - ../template/optional/dashboard/visor.css
+      - ../tests/test-dashboard.sh
     git_revision: null

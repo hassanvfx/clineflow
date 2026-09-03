@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:09:03Z
+updated_at: 2026-09-03T18:56:24Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -26,6 +26,8 @@ success_measures:
   - Dashboard source edit requests remain browser-local, agent-ready handoffs and never mutate canonical files.
   - The dashboard's first read connects active goal, decision boundary, next action, and verification in a source-linked Current Agentic Loop.
   - Date-based updater releases compare numeric version segments so multi-digit patch upgrades remain valid.
+  - Dashboard trajectory makes committed change and tracked knowledge growth inspectable without inferring contributor productivity.
+  - Agent-authored delivery scenarios make time-and-cost assumptions explicit, calculated, source-bound, and clearly estimated.
 blocked_goals: []
 completed_goals:
   - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.
@@ -52,3 +54,4 @@ journal_refs:
   - journals/knowledge-dashboard.md
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
+  - journals/dashboard-project-pulse.md

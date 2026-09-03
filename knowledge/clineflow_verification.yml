@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T18:09:03Z
+updated_at: 2026-09-03T18:56:24Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -31,6 +31,7 @@ acceptance_criteria:
   - Dashboard retention tests cover default three-run pruning, configured limits, unlimited history, and the ignored dashboard settings boundary.
   - Dashboard output exposes a Current Agentic Loop backed by goal, specification, session, and verification facts without browser-time source access.
   - Migration tests prove numeric ordering across date-based release segments, including `.5` to a two-digit patch upgrade and `.10` to `.5` downgrade rejection before mutation.
+  - Dashboard fixtures prove Project Pulse renders committed change and footprint context, while delivery scenarios validate inputs, calculate totals outside the browser, render missing-estimate guidance, and omit estimate data from sanitized exports.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
   - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.
@@ -51,6 +52,8 @@ regression_checks:
   - User text before and after an existing managed agent block remains byte-preserved during refresh.
   - Browser renderer consumes the formal presentation JSON and never serializes a structured record as [object Object].
   - Version-ordering checks reject malformed recognized release versions without weakening manifest checksum verification.
+  - Dashboard delivery estimates reject invalid currency, rate, hours, costs, multipliers, unknown sources, and agent-provided calculated totals.
+  - Dashboard visual regression coverage keeps Knowledge Explorer source-status indicators compact under narrow fixture viewports.
 evidence_refs:
   - journals/okf-adoption.md
   - journals/encapsulate-tooling.md
@@ -65,6 +68,7 @@ evidence_refs:
   - journals/knowledge-dashboard.md
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
+  - journals/dashboard-project-pulse.md
 open_verification: []
 journal_refs:
   - journals/okf-adoption.md
@@ -82,3 +86,4 @@ journal_refs:
   - journals/knowledge-dashboard.md
   - journals/updater-macos-line-zero.md
   - journals/release-version-ordering.md
+  - journals/dashboard-project-pulse.md

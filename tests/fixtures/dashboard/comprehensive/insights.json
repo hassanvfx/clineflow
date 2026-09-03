@@ -1,0 +1,21 @@
+{
+  "delivery_estimate": {
+    "schema": "clineflow-dashboard-delivery-estimate/v1",
+    "agent": {
+      "name": "Codex",
+      "model": "gpt-5.6-sol",
+      "configuration_label": "Interactive implementation with fixture-backed verification"
+    },
+    "constants": {
+      "currency": "USD",
+      "loaded_hourly_rate": 150,
+      "baseline_hours": 12,
+      "current_direct_cost": 18,
+      "ai_without_clineflow": {"effort_multiplier": 1.5, "direct_cost": 18},
+      "no_ai": {"effort_multiplier": 2.5, "direct_cost": 0}
+    },
+    "perspective": "The durable knowledge loop reduces rediscovery and makes verification easier to carry between implementation sessions.",
+    "rationale": "The estimate uses explicit planning assumptions plus the fixture's implementation, verification, and knowledge milestones; it is not measured labor data.",
+    "source_ids": ["goals", "session", "spec", "verify"]
+  }
+}

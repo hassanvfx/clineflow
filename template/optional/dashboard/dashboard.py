@@ -35,6 +35,7 @@ except ImportError as exc:  # pragma: no cover - the bootstrap supplies the lock
 SCHEMA = "clineflow-dashboard/v1"
 OBSERVATION_SCHEMA = "clineflow-dashboard-observations/v1"
 PRESENTATION_SCHEMA = "clineflow-dashboard-presentation/v1"
+DELIVERY_ESTIMATE_SCHEMA = "clineflow-dashboard-delivery-estimate/v1"
 LEDGERS = (
     "clineflow_specification.yml",
     "clineflow_verification.yml",
@@ -483,7 +484,7 @@ def validate_insights(path: Path | None, document_ids: set[str]) -> dict[str, An
 def validate_insights_data(data: Any, document_ids: set[str]) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError("insights must be a JSON object")
-    allowed = {"executive_summary", "project_phases", "notable_changes", "risks", "questions"}
+    allowed = {"executive_summary", "project_phases", "notable_changes", "risks", "questions", "delivery_estimate"}
     if set(data) - allowed:
         raise ValueError("insights contain unsupported fields")
     for key in ("project_phases", "notable_changes", "risks", "questions"):
@@ -493,7 +494,96 @@ def validate_insights_data(data: Any, document_ids: set[str]) -> dict[str, Any]:
             refs = item.get("source_ids", [])
             if not isinstance(refs, list) or not set(refs).issubset(document_ids):
                 raise ValueError(f"{key} contains an unknown source id")
+    if "delivery_estimate" in data:
+        validate_delivery_estimate(data["delivery_estimate"], document_ids)
     return data
+
+
+def finite_number(value: Any, label: str, *, positive: bool = False) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"delivery estimate {label} must be a number")
+    result = float(value)
+    if result != result or result in {float("inf"), float("-inf")}:
+        raise ValueError(f"delivery estimate {label} must be finite")
+    if positive and result <= 0:
+        raise ValueError(f"delivery estimate {label} must be positive")
+    if not positive and result < 0:
+        raise ValueError(f"delivery estimate {label} must not be negative")
+    return result
+
+
+def validate_delivery_estimate(value: Any, document_ids: set[str]) -> dict[str, Any]:
+    """Validate explicit agent planning inputs; calculated totals are never accepted."""
+    if not isinstance(value, dict):
+        raise ValueError("delivery_estimate must be an object")
+    expected = {"schema", "agent", "constants", "perspective", "rationale", "source_ids"}
+    if set(value) != expected or value.get("schema") != DELIVERY_ESTIMATE_SCHEMA:
+        raise ValueError(f"delivery_estimate must use {DELIVERY_ESTIMATE_SCHEMA} with supported fields")
+    agent = value.get("agent")
+    if not isinstance(agent, dict) or set(agent) != {"name", "model", "configuration_label"} or any(
+        not isinstance(agent.get(key), str) or not agent[key].strip() for key in agent
+    ):
+        raise ValueError("delivery estimate agent requires name, model, and configuration_label")
+    constants = value.get("constants")
+    if not isinstance(constants, dict) or set(constants) != {
+        "currency", "loaded_hourly_rate", "baseline_hours", "current_direct_cost",
+        "ai_without_clineflow", "no_ai",
+    }:
+        raise ValueError("delivery estimate constants are incomplete")
+    currency = constants.get("currency")
+    if not isinstance(currency, str) or not re.fullmatch(r"[A-Z]{3}", currency):
+        raise ValueError("delivery estimate currency must be a three-letter uppercase code")
+    finite_number(constants.get("loaded_hourly_rate"), "loaded_hourly_rate", positive=True)
+    finite_number(constants.get("baseline_hours"), "baseline_hours", positive=True)
+    finite_number(constants.get("current_direct_cost"), "current_direct_cost")
+    for scenario in ("ai_without_clineflow", "no_ai"):
+        item = constants.get(scenario)
+        if not isinstance(item, dict) or set(item) != {"effort_multiplier", "direct_cost"}:
+            raise ValueError(f"delivery estimate {scenario} requires effort_multiplier and direct_cost")
+        finite_number(item.get("effort_multiplier"), f"{scenario}.effort_multiplier", positive=True)
+        finite_number(item.get("direct_cost"), f"{scenario}.direct_cost")
+    for text_key in ("perspective", "rationale"):
+        if not isinstance(value.get(text_key), str) or not value[text_key].strip():
+            raise ValueError(f"delivery estimate {text_key} must be non-empty text")
+    source_ids = value.get("source_ids")
+    if not isinstance(source_ids, list) or not source_ids or not all(isinstance(item, str) for item in source_ids) or not set(source_ids).issubset(document_ids):
+        raise ValueError("delivery estimate requires known supporting source_ids")
+    return value
+
+
+def calculate_delivery_estimate(value: dict[str, Any]) -> dict[str, Any]:
+    """Turn validated inputs into transparent scenario outputs before browser rendering."""
+    constants = value["constants"]
+    hourly_rate = finite_number(constants["loaded_hourly_rate"], "loaded_hourly_rate", positive=True)
+    baseline_hours = finite_number(constants["baseline_hours"], "baseline_hours", positive=True)
+    raw_scenarios = (
+        ("current", "Current AI + ClineFlow", 1.0, constants["current_direct_cost"]),
+        ("ai_without_clineflow", "AI without ClineFlow", constants["ai_without_clineflow"]["effort_multiplier"], constants["ai_without_clineflow"]["direct_cost"]),
+        ("no_ai", "No AI", constants["no_ai"]["effort_multiplier"], constants["no_ai"]["direct_cost"]),
+    )
+    scenarios: list[dict[str, Any]] = []
+    for key, label, multiplier, direct_cost in raw_scenarios:
+        hours = baseline_hours * finite_number(multiplier, f"{key}.effort_multiplier", positive=True)
+        direct = finite_number(direct_cost, f"{key}.direct_cost")
+        scenarios.append({
+            "id": key, "label": label, "estimated_hours": round(hours, 2),
+            "direct_cost": round(direct, 2), "estimated_cost": round(hours * hourly_rate + direct, 2),
+        })
+    baseline = scenarios[0]
+    for item in scenarios:
+        item["delta_hours"] = round(item["estimated_hours"] - baseline["estimated_hours"], 2)
+        item["delta_cost"] = round(item["estimated_cost"] - baseline["estimated_cost"], 2)
+    return {
+        "schema": DELIVERY_ESTIMATE_SCHEMA,
+        "disclaimer": "Estimated planning model — not measured labor, productivity, or realized savings.",
+        "agent": value["agent"], "currency": constants["currency"], "perspective": value["perspective"],
+        "rationale": value["rationale"], "source_ids": value["source_ids"], "scenarios": scenarios,
+        "reference_inputs": {
+            "loaded_hourly_rate": round(hourly_rate, 2), "baseline_hours": round(baseline_hours, 2),
+            "current_direct_cost": round(finite_number(constants["current_direct_cost"], "current_direct_cost"), 2),
+            "ai_without_clineflow": constants["ai_without_clineflow"], "no_ai": constants["no_ai"],
+        },
+    }
 
 
 def observation_text(value: Any) -> str:
@@ -690,7 +780,7 @@ def validate_observations(path: Path, snapshot: dict[str, Any]) -> dict[str, Any
         if not isinstance(refs, list) or not set(refs).issubset(document_ids):
             raise ValueError("project story milestone contains an unknown source id")
     validate_insights_payload = {key: data.get(key) for key in (
-        "executive_summary", "project_phases", "notable_changes", "risks", "questions"
+        "executive_summary", "project_phases", "notable_changes", "risks", "questions", "delivery_estimate"
     ) if key in data}
     validate_insights_data(validate_insights_payload, document_ids)
     return data
@@ -796,6 +886,25 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
         {"step": "04", "label": "Prove", "text": proof_text, "source_ids": ledger_source("knowledge/clineflow_verification.yml")},
     ]
     scope_paths = draft_scope or "|".join(sorted(str(item.get("path", "")) for item in documents))
+    commits = data.get("commits") or []
+    project_pulse = {
+        "commits": [{
+            "when": item.get("committed_at"), "summary": concise_title(item.get("summary")),
+            "revision": item.get("short_revision"), "change": item.get("change") or {},
+            "footprint": item.get("footprint") or {},
+        } for item in commits],
+        "working_tree": {
+            "change": data.get("current_change") or {}, "footprint": data.get("current_footprint") or {},
+            "dirty": bool((data.get("git") or {}).get("dirty")),
+        },
+        "summary": (
+            f"{len(commits)} committed change{'s' if len(commits) != 1 else ''} provide the historical pulse; "
+            "the working-tree snapshot is labeled separately."
+            if commits else "No committed Git history is available yet. Generate a first commit to establish the pulse."
+        ),
+    }
+    estimate_input = observations.get("delivery_estimate")
+    delivery_estimate = calculate_delivery_estimate(estimate_input) if estimate_input else None
     return json_safe({
         "schema": PRESENTATION_SCHEMA,
         "generated_at": data.get("run_at"),
@@ -819,6 +928,8 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
         "decisions": constraints + unresolved,
         "onboarding": onboarding,
         "agentic_loop": agentic_loop,
+        "project_pulse": project_pulse,
+        "delivery_estimate": delivery_estimate,
         "evidence": [{"text": observation_text(item), "source_ids": []} for item in verification.get("evidence") or verification.get("acceptance_criteria") or []],
         "metrics": {
             "documents": len(documents), "events": len(events), "usage": len(data.get("usage") or []),
@@ -946,9 +1057,11 @@ def sanitized_export(root: Path, runtime: Path, run: str, output: Path) -> None:
     }
     observations = json.loads(source_observations.read_text()) if source_observations.is_file() else derive_observations(sanitized)
     observations["source"] = {"snapshot_schema": sanitized["schema"], "source_hash": sanitized.get("source_hash")}
+    observations.pop("delivery_estimate", None)
     output.mkdir(parents=True, exist_ok=False)
     sanitized["retention"] = None
     presentation = build_presentation(sanitized, observations, "sanitized-export")
+    presentation.pop("delivery_estimate", None)
     page, asset_manifest = build_page(runtime, sanitized, observations, presentation)
     output.joinpath("data.json").write_text(json.dumps(sanitized, indent=2, ensure_ascii=False) + "\n")
     output.joinpath("observations.json").write_text(json.dumps(observations, indent=2, ensure_ascii=False) + "\n")
