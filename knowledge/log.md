@@ -2,6 +2,7 @@
 
 ## 2026-09-03
 
+* **Design**: Restyled Knowledge Visor with ClineFlow’s deep-navy and electric-blue editorial language, restrained geometry, and retained self-contained reports.
 * **Refinement**: Made executive activity represent knowledge or Git work rather than a dashboard report run, and renamed the narrative navigation to Project Story.
 * **Update**: Replaced the graph-heavy Decision Atlas with a source-bound Project Story covering evolution, present importance, urgency, next action, and selected milestones.
 * **Verification**: Removed Cytoscape from the optional asset set and passed dashboard boundary tests, including Project Story JSON, source-id validation, offline reuse, rollback, export, and uninstall preservation.

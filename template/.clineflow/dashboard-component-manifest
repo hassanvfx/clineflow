@@ -1,8 +1,8 @@
-component_version=2026.09.03.8
+component_version=2026.09.03.9
 python_version=3.12
 file|dashboard.py|dashboard.py|477f995c8354f2c96a0c781dfe751442f8ed95f6c62e4cfe1e8022724a8639d1
 file|dashboard.py.lock|dashboard.py.lock|d8718fd36653fb86c6bdbdaea7281f13b1146bdbbbb40df9563fde012a2e9d5d
-file|visor.css|visor.css|222e449e6414b97a1254280fd250bf4ee8bb8b4032719273ea75c3e259bd9cdc
+file|visor.css|visor.css|b57f937836be0f4e71bde446af65fc60f8a55d418323d91aa45b05647bb5e1c6
 file|visor.js|visor.js|7055eeddccb75b9f3f644dd057f1548af8b57cf72a9471b3c5e7ae438b836e93
 file|THIRD_PARTY_LICENSES.md|THIRD_PARTY_LICENSES.md|07ba401c7add0f5e89afee21cc6a1d076e983baf8e7b5454fadcef0b9b5ad49c
 runtime|darwin-arm64|tar.gz|https://github.com/astral-sh/uv/releases/download/0.12.5/uv-aarch64-apple-darwin.tar.gz|5bb0e5fe008a773c3dbcb97ff79cd89e1241464fe9d2f986d52ad8f1b037bd62

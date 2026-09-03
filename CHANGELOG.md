@@ -31,6 +31,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- Knowledge Visor adopts ClineFlow’s public deep-navy and electric-blue visual language, editorial type scale, restrained geometry, and high-contrast navigation while retaining its offline embedded assets.
 - Story navigation now names the Project Story directly; the managed Knowledge Visor release is `2026.09.03.8`.
 - Knowledge Visor observations now include a validated `project_story` model for evolution, current importance, urgency, the next deliberate move, and selected milestones.
 - Knowledge Visor now tells one progressive story across executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration; asset provenance remains in `manifest.json` instead of occupying a dashboard panel.

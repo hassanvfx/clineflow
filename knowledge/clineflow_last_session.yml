@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T11:53:33Z
-latest_change: Refined executive storytelling so activity reflects the latest knowledge or Git event, and renamed the chapter navigation for the Project Story.
+updated_at: 2026-09-03T12:28:25Z
+latest_change: Restyled the Knowledge Visor with ClineFlow’s deep-navy, electric-blue, editorial visual language while preserving the self-contained optional runtime boundary.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -13,6 +13,7 @@ specification_summary:
   - Timeline aliases normalize into canonical report facts while retaining raw provenance; structured evidence remains readable in the explorer and proof surfaces.
   - Time Spine rows lead with a concise title and reveal full narrative notes only on request.
   - Prose statements with colon punctuation are quoted as YAML scalars so they remain narrative facts rather than unintended mappings.
+  - The dashboard uses ClineFlow-inspired navy and blue visual tokens, lower-radius geometry, and editorial hierarchy without copying hosted site assets or code.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -31,7 +32,7 @@ verification_summary:
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Regenerate the report after release 2026.09.03.8 and review the Project Story and compact, expandable Time Spine against representative project data.
+next_recommended_step: Regenerate the report after release 2026.09.03.9 and review the ClineFlow-aligned navy and blue presentation with representative project data.
 next_step_refs:
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md
