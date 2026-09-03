@@ -1,11 +1,15 @@
 version: 1
-updated_at: 2026-09-03T10:12:33Z
-latest_change: Fixed the macOS line-one updater failure and required agents to invoke the authoritative remote bootstrap before any local updater in release 2026.09.03.3.
+updated_at: 2026-09-03T10:44:24Z
+latest_change: Split Knowledge Visor into normalized facts, source-bound narrative observations, and rendering while rebuilding YAML exploration as a guided, repair-capable experience.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
   - Journal, documentation, and knowledge-base changes must reconcile all five ledgers, the active journal, and the knowledge log for every supported agent.
   - The Knowledge Visor stays inert until explicit invocation, then generates self-contained HTML and matching structured snapshots within isolated paths.
+  - Decision Atlas opens with only the five ledgers and reveals capped goal, constraint, evidence, or journal views with full-text inspection.
+  - The report progresses from executive context through trajectory, decisions, proof, and canonical source inspection.
+  - Every run preserves snapshot.json and observations.json and embeds exact copies for file-protocol viewing; the deterministic observe stage can later be replaced by a CLI/LLM command.
+  - YAML ledgers render as structured guided sections with diagnostics and non-mutating normalized repair output.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -13,13 +17,18 @@ verification_summary:
   - Pull-request CI and the release contract require base-reference knowledge synchronization.
   - Source-repository agent instructions now resolve guides and validators through template/.clineflow, while installed instructions retain .clineflow paths.
   - Dashboard boundary tests pass for dormancy, decline, activation, offline reuse, rollback, export, and uninstall preservation.
+  - The dashboard regression suite passes first activation with `--yes` and no explicit subcommand.
+  - Focused output checks confirm the visible asset panel is absent while report manifests retain complete provenance.
+  - Complete lifecycle certification passes for release 2026.09.03.4 after the default-command repair.
+  - Atlas regression coverage rejects the previous all-document force layout and requires progressive disclosure controls.
   - The updater rollback restored the reported mixed installation after the portability failure.
   - The macOS line-one regression and complete lifecycle certification pass after the portable prefix fix.
   - Release validation rejects canonical update guidance that omits the remote bootstrap or permits a stale local updater first.
+  - Dashboard boundary tests pass independent collect, observe, and render stages with source-bound observation validation and embedded JSON equality.
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Publish release 2026.09.03.3, then rerun the authoritative updater in the affected downstream project.
+next_recommended_step: Generate and visually review the structured, audience-switchable Knowledge Visor, then commit release 2026.09.03.4 when its narrative hierarchy is accepted.
 next_step_refs:
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md

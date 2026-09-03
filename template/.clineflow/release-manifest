@@ -1,13 +1,13 @@
-release_version=2026.09.03.3
+release_version=2026.09.03.4
 migration_schema=1
 payload|managed|0644|.clineflow/JOURNAL_TEMPLATE.md|.clineflow/JOURNAL_TEMPLATE.md|02ee9466736a44116882f475198d37dcce3d43b7604c97f058ccca8e2b271f2b
 payload|managed|0644|.clineflow/PROCEDURES.md|.clineflow/PROCEDURES.md|6881a7ca5a2b774b251d9a238559c58de7628eb7eb6297e2faffe224b03c2795
-payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|ec5bbe55ae979fec101a2dbc94ec053ddd315c743869ae87456c7247c1405220
+payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|6a94fddd005bf29e6ad9e740455bfb4cd4d374a5ccf95db0d6a4a14d63691a07
 payload|managed|0644|.clineflow/WORKING_WITH_CLINE.md|.clineflow/WORKING_WITH_CLINE.md|28dbd580f81455ee35ca6b7e0de0953d84141f3ebc5f8e17278ff47f4216aa49
 payload|managed|0644|.clineflow/WORKING_WITH_CODEX.md|.clineflow/WORKING_WITH_CODEX.md|67c6b2e251ea2d13cb7fab732e44f9072db54ac98e938154f11e16bd9a525e48
-payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|0e4f711e147759c856288dedab927b228d29c9e14505a28940cce61709858b9a
+payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|5bd0b34ffa1a9bffa842526d40bf58e3b8af28918c04a04ec329ede866057006
 payload|managed|0755|.clineflow/bin/bootstrap.ps1|.clineflow/bin/bootstrap.ps1|1692a254c9f910c54aba06e96a81855ab45ed4f3b80e2f5900a412449ebab165
-payload|managed|0755|.clineflow/bin/dashboard|.clineflow/bin/dashboard|9aaba1096aec8531948205992cfb0c79901373768ad1bdc71fe7ca91f92549b0
+payload|managed|0755|.clineflow/bin/dashboard|.clineflow/bin/dashboard|d819e876e51e9ce20a29dc2bcb94640dbf1bf3b479a03e7d0bd805fce9ac6913
 payload|managed|0755|.clineflow/bin/doctor|.clineflow/bin/doctor|9e5b97593d637d10ca6993040b4508c1c390e51314ea0dbae12862e64b47e2ae
 payload|managed|0755|.clineflow/bin/install|.clineflow/bin/install|9eb0777cc82dfa436d04fec66bcd45ab9893e3034246210d8e520012cad470a5
 payload|managed|0755|.clineflow/bin/prereqs|.clineflow/bin/prereqs|1e136b16e308e158aef538e2b03df57c73e483cf305f6d1b48e812139df9faff

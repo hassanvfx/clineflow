@@ -8,11 +8,14 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Fixed
+- Invoking the dashboard without an explicit subcommand now forwards the default `generate` command to the Python engine, preventing missing `argparse` attributes on first use.
+- Decision Atlas now opens as a clean five-ledger system map and progressively reveals capped goal, constraint, evidence, or journal views with readable cards and a full-text details rail instead of an overlapping all-document force graph.
 - Managed agent-rule refresh no longer calls BSD `head` with a zero line count when the ClineFlow block begins on the first line.
 - Source-repository agent instructions now reference the runtime guides and validators under `template/.clineflow/`, and the legacy Cline compatibility template matches the canonical shared rules.
 
 ### Added
 - The optional, time-first ClineFlow Knowledge Visor with an inert bootstrap, approval-gated and checksum-verified assets, self-contained HTML reports plus adjacent JSON snapshots, sanitized exports, and dormant/activated boundary certification.
+- A formal dashboard pipeline that collects normalized facts, derives source-bound narrative observations, and renders both JSON models into file-protocol-safe HTML; the replaceable `observe` stage is ready for a future CLI/LLM implementation.
 - An agent-independent `validate-knowledge-sync` commit gate for journals, documentation, all five durable ledgers, and the knowledge log.
 - A one-command lifecycle certification gate covering installation, historical updates, transactional removal, preservation, and rollback.
 - Universal transactional updates for all OKF-era layouts from `2026.08.15.0` onward.
@@ -24,9 +27,12 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- Knowledge Visor now tells one progressive story across executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration; asset provenance remains in `manifest.json` instead of occupying a dashboard panel.
+- Knowledge Explorer now parses YAML through the pinned optional runtime, presents guided structured sections instead of flattened source text, diagnoses malformed YAML, and provides non-mutating normalized YAML and JSON repair output.
+- Executive, manager, and engineer narrative views now draw from the explicit `clineflow-dashboard-observations/v1` model embedded alongside normalized facts and preserved as `observations.json` in every run.
 - All supported agent configurations now require five-ledger reconciliation for every journal, documentation, or knowledge-base change and a staged synchronization check before commit.
 - Uninstall now requires confirmation (or `--yes`), validates ownership data before mutation, preserves edits to formerly owned agent files, and rolls back failures or handled interruptions.
-- Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.3`, with migration schema `1`.
+- Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.4`, with migration schema `1`.
 - Installation-affecting features must now declare and test their migration impact.
 - New task journals are Engineering Journal concepts in `knowledge/journals/`.
 - Install, update, and uninstall flows preserve both `knowledge/` and legacy `docs/journals/` user content.

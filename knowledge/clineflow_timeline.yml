@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T10:12:33Z
+updated_at: 2026-09-03T10:44:24Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -216,4 +216,45 @@ events:
       - ../tests/test-update-migrations.sh
       - ../tests/test-release-contract.sh
       - ../tests/certify-release.sh
+    git_revision: null
+  - at: 2026-09-03T10:25:58Z
+    actor: codex
+    type: implementation
+    summary: Replaced the overlapping all-document Decision Atlas with deterministic, capped semantic views and a full-text keyboard-accessible details rail.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/optional/dashboard/visor.js
+      - ../template/optional/dashboard/visor.css
+      - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T10:29:16Z
+    actor: codex
+    type: verification
+    summary: Forwarded the dashboard's default generate command to its Python engine and passed complete lifecycle certification for release 2026.09.03.4.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/.clineflow/bin/dashboard
+      - ../tests/test-dashboard.sh
+      - ../tests/certify-release.sh
+    git_revision: null
+  - at: 2026-09-03T10:31:58Z
+    actor: codex
+    type: implementation
+    summary: Reorganized Knowledge Visor into executive, manager, engineering, proof, and source chapters and removed the visible asset inventory while preserving manifest provenance.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/optional/dashboard/visor.js
+      - ../template/optional/dashboard/visor.css
+      - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T10:44:24Z
+    actor: codex
+    type: implementation
+    summary: Separated normalized facts, source-bound audience observations, and rendering while adding structured YAML exploration and non-mutating repair output.
+    refs:
+      - journals/knowledge-dashboard.md
+      - ../template/optional/dashboard/dashboard.py
+      - ../template/optional/dashboard/visor.js
+      - ../template/optional/dashboard/visor.css
+      - ../tests/test-dashboard.sh
     git_revision: null

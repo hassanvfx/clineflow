@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T10:12:33Z
+updated_at: 2026-09-03T10:44:24Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -14,7 +14,14 @@ confirmed:
   - All five ledger updated_at values, the active journal generated.at value, and the newest timeline event timestamp match within a synchronized change set.
   - Distribution-checkout agent instructions use template/.clineflow paths, while installed-project instructions use .clineflow paths.
   - The Knowledge Visor is activated only by explicit invocation; reports contain embedded verified assets and a matching clineflow-dashboard/v1 snapshot.json.
+  - Dashboard invocation without a subcommand forwards `generate` so its parser defaults exist before engine execution.
   - Dashboard metrics are report-derived Git and knowledge facts; absent provider usage is omitted rather than recorded as unavailable.
+  - Decision Atlas uses progressive goal, constraint, evidence, and journal views capped at ten visible nodes with full text in a separate detail surface.
+  - The report follows five linked chapters: executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration.
+  - Asset provenance remains structured in report manifests and is not rendered as a standalone dashboard panel.
+  - Dashboard collection emits normalized facts without narrative interpretation; a separate replaceable observation stage emits clineflow-dashboard-observations/v1 bound to the facts source hash.
+  - Each report stores snapshot.json and observations.json beside index.html and embeds exact inert copies of both so file-protocol viewing performs no fetch.
+  - Knowledge Explorer parses YAML with the pinned optional PyYAML dependency and offers guided, JSON, raw-source, diagnostic, and copyable normalized-repair views without modifying canonical files.
   - Agent-rule refresh is portable when the managed block begins on the first line or follows user-authored text.
   - The canonical agent update request invokes the permanent remote bootstrap first and never executes a legacy local updater beforehand.
 assumptions: []

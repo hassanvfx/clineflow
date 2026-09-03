@@ -2,6 +2,16 @@
 
 ## 2026-09-03
 
+* **Feature**: Split Knowledge Visor into normalized facts, source-bound narrative observations, and rendering; both JSON artifacts are embedded exactly for direct local-file viewing.
+* **Update**: Added audience-switchable executive, manager, and engineer narratives plus structured YAML exploration, parser diagnostics, and non-mutating normalized repair output.
+* **Verification**: Passed the dashboard boundary suite for independent collect, observe, and render stages, embedded JSON equality, source-hash binding, structured YAML, offline reuse, rollback, export, and uninstall.
+* **Update**: Reframed Knowledge Visor as a five-chapter story spanning executive context, manager trajectory, engineering decisions, shared proof, and canonical sources.
+* **Fix**: Removed the visible asset inventory panel while preserving complete asset provenance in report manifests.
+* **Fix**: Forwarded the dashboard's default `generate` command after global-option parsing so first use with `--yes` initializes all generate-subparser attributes.
+* **Verification**: Passed the dashboard boundary suite with the exact no-subcommand first-activation invocation and all explicit-command regressions.
+* **Verification**: Passed complete lifecycle certification for release 2026.09.03.4 after the default-command repair.
+* **Fix**: Rebuilt Decision Atlas around a five-ledger overview and focused, capped goal, constraint, evidence, and journal views with full-text inspection.
+* **Verification**: Added regression checks that reject the former all-document force layout and require progressive Atlas controls.
 * **Fix**: Required all canonical agent update instructions to invoke the permanent remote bootstrap first and never execute a stale local updater beforehand.
 * **Fix**: Made schema-0 agent-rule refresh portable when a managed block starts on line one; the macOS reproduction now passes with user prefix and suffix preservation.
 * **Verification**: Passed the complete lifecycle certification for release 2026.09.03.3 after confirming the pre-fix failure rolled back safely.

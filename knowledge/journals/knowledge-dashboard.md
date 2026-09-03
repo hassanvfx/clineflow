@@ -5,8 +5,8 @@ description: "Implements an isolated, time-first dashboard for navigating durabl
 tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
-  by: clineflow/2026.09.03.2
-  at: 2026-09-03T09:30:27Z
+  by: clineflow/2026.09.03.4
+  at: 2026-09-03T10:44:24Z
 ---
 
 # Goal
@@ -18,6 +18,8 @@ Add an explicitly invoked ClineFlow Knowledge Visor that visualizes OKF knowledg
 - [x] Planned
 - [x] In progress
 - [x] Complete
+- [x] Visual defect reproduced
+- [x] Atlas redesign complete
 
 # Work Log
 
@@ -29,6 +31,26 @@ Recovered the five-ledger contract and the existing source-instruction repair. T
 
 Added the inert command, pinned optional-component manifest, isolated Python renderer, time-first visual shell, structured snapshots, report comparisons, source-linked insights, sanitized export, optional-runtime diagnostics, transactional refresh/removal behavior, and an exact knowledge-dashboard synchronization exemption. Tightened first-use rollback so a failure after activation also returns the project to its dormant boundary.
 
+## 2026-09-03 10:22 UTC - Decision Atlas visual defect reproduced
+
+The initial Atlas put every canonical document and every ledger relationship into one force-directed canvas. Because synchronization intentionally references the same journals from multiple ledgers, the resulting graph was densely connected, its long labels overlapped, and its default view had no useful information hierarchy. The repair will replace the all-at-once graph with focused, capped views and a full-text details rail.
+
+## 2026-09-03 10:25 UTC - Progressive Atlas completed
+
+Replaced the force graph with a deterministic overview centered on ClineFlow and its five ledgers. Goals, constraints, evidence, and journals now open as separate focused views with at most ten visible card nodes, full text in a details rail, keyboard-accessible companion controls, and direct journal navigation into the Knowledge Explorer. Responsive styling keeps the graph and detail surface separate on narrow screens.
+
+## 2026-09-03 10:27 UTC - Default invocation repaired
+
+Reproduced the first-use crash caused by the shell wrapper resolving `generate` only for its own branching while forwarding an empty argument list to the Python engine. The wrapper now backfills the resolved command after global-option parsing, so the `generate` subparser installs its `insights`, `compare`, and `no_open` attributes before execution.
+
+## 2026-09-03 10:31 UTC - Multi-audience story hierarchy added
+
+Removed the visible asset inventory panel while retaining complete asset provenance in each report manifest. Reframed the dashboard as five linked chapters: an executive brief for current intent and next action, manager-facing trajectory and change, engineering decisions, shared verification and risk, and direct canonical source exploration. Added a sticky story navigator, concise executive narrative cards, chapter transitions, and responsive stacking.
+
+## 2026-09-03 10:44 UTC - Structured facts and narrative observation pipeline completed
+
+Rebuilt the Knowledge Explorer around parsed YAML objects, guided sections, chronological event cards, source and JSON tabs, parser diagnostics, and copyable normalized YAML repair output. Split generation into explicit `collect`, `observe`, and `render` stages: `snapshot.json` now contains only normalized facts, `observations.json` contains a source-hash-bound executive/manager/engineer narrative, and the self-contained HTML embeds exact copies of both for `file://` use. The deterministic observer is a formal replaceable boundary for a future CLI/LLM command. Atlas overview cards now lead into their focused decision surfaces instead of ending at static descriptions.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -37,6 +59,14 @@ Added the inert command, pinned optional-component manifest, isolated Python ren
 - Preserve all generated reports during uninstall and exclude only `knowledge/dashboard/**` from knowledge synchronization.
 - Keep the report's verified CDN and font bytes embedded. `manifest.json` records their source URLs and `snapshot.json` mirrors the structured data embedded in `index.html`, avoiding any browser-time dependency fetch.
 - Keep schema `1`; release `2026.09.03.2` changes managed installed files but no persistent OKF structure.
+- Treat ledger-wide journal references as synchronization metadata rather than useful graph edges; progressive semantic views provide the navigable information hierarchy.
+- Bump the managed release and optional component to `2026.09.03.4`; migration schema remains `1` because no persistent format changed.
+- Default the command in the shell wrapper, which owns global-option normalization and forwards arguments to the engine; no migration is required for this managed payload update.
+- Keep asset checksums, versions, source URLs, and licenses in structured manifests, but remove their low-value visual inventory from the main story.
+- Use audience-aware chapters as progressive disclosure without duplicating separate dashboards or hiding canonical evidence.
+- Make `snapshot.json` the renderer's only factual input and keep narrative interpretation in the separately validated `clineflow-dashboard-observations/v1` artifact.
+- Embed both JSON artifacts in inert `application/json` script blocks so direct local-file viewing never requires fetch access; preserve adjacent copies for inspection and automation.
+- Keep YAML repair non-mutating: the pinned PyYAML runtime emits diagnostics and normalized copy output, while canonical source changes remain an explicit user action outside the dashboard boundary.
 
 # Testing
 
@@ -44,6 +74,11 @@ Added the inert command, pinned optional-component manifest, isolated Python ren
 - Release-contract, installation, knowledge-sync, and historical migration suites pass with the optional subsystem dormant.
 - A real first activation downloaded uv, Python 3.12, locked Python packages, JavaScript libraries, and font files; verified every pinned asset; and generated a local report.
 - Static JavaScript, Python, shell, CSP, and whitespace checks pass. The Codex in-app browser rejected direct local-file navigation by policy, so no browser-policy bypass was attempted.
+- Atlas regression coverage requires all five view controls, the ten-node cap, and removal of the old COSE force layout. Focused dashboard boundary tests and the release contract pass for `2026.09.03.4`.
+- `./tests/test-dashboard.sh` passes the exact first-use form `./.clineflow/bin/dashboard --yes`, report generation, explicit subcommands, offline reuse, rollback, export, and removal.
+- `./tests/certify-release.sh` passes the complete release `2026.09.03.4` lifecycle after the wrapper fix, including installation, dashboard boundaries, historical updates, rollback, uninstall safety, release-contract rejection cases, OKF validation, knowledge synchronization, and whitespace checks.
+- Dashboard tests require the executive/manager/engineering/source story markers, absence of the visible asset panel, and retention of complete asset provenance in `manifest.json`.
+- Dashboard boundary tests pass the independent facts → observations → render commands, assert exact embedded/adjacent JSON equality, bind observations to the facts source hash, require all three audience narratives, and verify structured YAML plus normalized repair output.
 
 # Open Issues
 

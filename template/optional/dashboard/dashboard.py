@@ -32,6 +32,7 @@ except ImportError as exc:  # pragma: no cover - the bootstrap supplies the lock
     raise SystemExit(f"dashboard runtime is incomplete: {exc}") from exc
 
 SCHEMA = "clineflow-dashboard/v1"
+OBSERVATION_SCHEMA = "clineflow-dashboard-observations/v1"
 LEDGERS = (
     "clineflow_specification.yml",
     "clineflow_verification.yml",
@@ -65,7 +66,7 @@ def json_safe(value: Any) -> Any:
         return value.isoformat().replace("+00:00", "Z")
     if isinstance(value, dict):
         return {str(key): json_safe(item) for key, item in value.items()}
-    if isinstance(value, list):
+    if isinstance(value, (list, tuple, set)):
         return [json_safe(item) for item in value]
     return value
 
@@ -105,6 +106,32 @@ def parse_frontmatter(text: str) -> tuple[dict[str, Any], str]:
         return {}, text
     parsed = yaml.safe_load(text[4:end]) or {}
     return json_safe(parsed) if isinstance(parsed, dict) else {}, text[end + 5:]
+
+
+def parse_yaml_document(raw: str) -> tuple[Any, dict[str, Any]]:
+    """Parse YAML for presentation without making canonical-source mutations."""
+    try:
+        parsed = json_safe(yaml.safe_load(raw))
+    except yaml.YAMLError as error:
+        mark = getattr(error, "problem_mark", None)
+        return None, {
+            "valid": False,
+            "error": str(error),
+            "line": mark.line + 1 if mark else None,
+            "column": mark.column + 1 if mark else None,
+            "normalized": None,
+        }
+    normalized = yaml.safe_dump(
+        parsed, sort_keys=False, allow_unicode=True, default_flow_style=False
+    )
+    return parsed, {
+        "valid": True,
+        "error": None,
+        "line": None,
+        "column": None,
+        "normalized": normalized,
+        "normalization_changed": normalized.strip() != raw.strip(),
+    }
 
 
 def parse_numstat(text: str) -> dict[str, Any]:
@@ -226,16 +253,27 @@ def collect_knowledge(root: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]
         relative = source.relative_to(root).as_posix()
         raw = source.read_text(encoding="utf-8", errors="replace")
         digest = sha256_bytes(raw.encode())
+        structured = None
+        yaml_status = None
+        kind = "source"
+        if source.suffix.lower() in {".yml", ".yaml"}:
+            structured, yaml_status = parse_yaml_document(raw)
+            kind = "ledger" if source.parent == root / "knowledge" and source.name in LEDGERS else "yaml"
         if source.parent == root / "knowledge" and source.name in LEDGERS:
-            parsed = yaml.safe_load(raw) or {}
-            ledgers[source.stem] = json_safe(parsed)
+            ledgers[source.stem] = structured if isinstance(structured, dict) else {"_parse_error": yaml_status}
         metadata, body = parse_frontmatter(raw)
+        if metadata.get("type") == "Engineering Journal":
+            kind = "journal"
+        elif source.name == "index.md":
+            kind = "index"
         heading = re.search(r"^#\s+(.+)$", body, flags=re.MULTILINE)
+        ledger_title = source.stem.removeprefix("clineflow_").replace("_", " ").title() if kind == "ledger" else None
         documents.append({
             "id": digest[:16], "path": relative,
-            "title": metadata.get("title") or (heading.group(1) if heading else source.name),
+            "title": ledger_title or metadata.get("title") or (heading.group(1) if heading else source.name),
             "description": metadata.get("description", ""), "tags": metadata.get("tags", []),
             "status": metadata.get("status", ""), "generated_at": (metadata.get("generated") or {}).get("at"),
+            "kind": kind, "structured": structured, "yaml": yaml_status,
             "hash": digest, "raw": raw, "html": safe_markdown(renderer, body),
         })
     return ledgers, documents
@@ -395,7 +433,10 @@ def calculate_drift(current: list[dict[str, Any]], prior: dict[str, Any] | None)
 def validate_insights(path: Path | None, document_ids: set[str]) -> dict[str, Any] | None:
     if not path:
         return None
-    data = json.loads(path.read_text())
+    return validate_insights_data(json.loads(path.read_text()), document_ids)
+
+
+def validate_insights_data(data: Any, document_ids: set[str]) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError("insights must be a JSON object")
     allowed = {"executive_summary", "project_phases", "notable_changes", "risks", "questions"}
@@ -411,7 +452,89 @@ def validate_insights(path: Path | None, document_ids: set[str]) -> dict[str, An
     return data
 
 
-def collect(root: Path, insights_path: Path | None = None, compare: str = "previous") -> dict[str, Any]:
+def derive_observations(snapshot: dict[str, Any], insights_path: Path | None = None) -> dict[str, Any]:
+    """Create a source-linked narrative model as a replaceable pipeline stage."""
+    ledgers = snapshot.get("ledgers", {})
+    goals = ledgers.get("clineflow_goals") or {}
+    specification = ledgers.get("clineflow_specification") or {}
+    verification = ledgers.get("clineflow_verification") or {}
+    session = ledgers.get("clineflow_last_session") or {}
+    events = snapshot.get("events", [])
+    documents = snapshot.get("documents", [])
+    document_ids = {item["id"] for item in documents}
+    path_ids = {item["path"]: item["id"] for item in documents}
+    source_ids = [path_ids[path] for path in (
+        "knowledge/clineflow_goals.yml", "knowledge/clineflow_last_session.yml",
+        "knowledge/clineflow_verification.yml", "knowledge/clineflow_specification.yml",
+    ) if path in path_ids]
+    latest_event = max(events, key=lambda item: str(item.get("at", "")), default={})
+    active_goal = next(iter(goals.get("active_goals") or []), None)
+    next_move = session.get("next_recommended_step") or active_goal or "Review the latest durable context."
+    latest_change = session.get("latest_change") or latest_event.get("summary") or "Durable context is ready to explore."
+    open_questions = list(specification.get("open_questions") or [])
+    open_verification = list(verification.get("open_verification") or [])
+    drift = snapshot.get("drift") or {}
+    changed_count = sum(len(drift.get(key) or []) for key in ("added", "changed", "removed"))
+    observations: dict[str, Any] = {
+        "schema": OBSERVATION_SCHEMA,
+        "generated_at": snapshot["run_at"],
+        "generator": {"kind": "deterministic", "name": "clineflow-dashboard-observer", "version": "1"},
+        "source": {"snapshot_schema": snapshot["schema"], "source_hash": snapshot["source_hash"]},
+        "executive_summary": latest_change,
+        "audiences": {
+            "executive": {
+                "headline": active_goal or "Knowledge state is captured and ready for review.",
+                "why_it_matters": f"{changed_count} canonical sources changed since the selected baseline.",
+                "next_move": next_move,
+            },
+            "manager": {
+                "headline": latest_event.get("summary") or latest_change,
+                "why_it_matters": f"{len(open_questions) + len(open_verification)} unresolved questions or verification items remain visible.",
+                "next_move": next_move,
+            },
+            "engineer": {
+                "headline": f"{len(documents)} canonical sources and {len(events)} timeline events are inspectable.",
+                "why_it_matters": "Every observation can be traced back to normalized facts and canonical source documents.",
+                "next_move": next_move,
+            },
+        },
+        "project_phases": [],
+        "notable_changes": ([{"text": latest_change, "source_ids": source_ids}] if latest_change else []),
+        "risks": [{"text": str(item), "source_ids": source_ids} for item in open_verification],
+        "questions": [{"text": str(item), "source_ids": source_ids} for item in open_questions],
+    }
+    supplied = validate_insights(insights_path, document_ids)
+    if supplied:
+        for key, value in supplied.items():
+            observations[key] = value
+        observations["generator"] = {"kind": "provided", "name": "invoking-agent", "version": "1"}
+    return observations
+
+
+def validate_observations(path: Path, snapshot: dict[str, Any]) -> dict[str, Any]:
+    data = json.loads(path.read_text())
+    if not isinstance(data, dict) or data.get("schema") != OBSERVATION_SCHEMA:
+        raise ValueError(f"observations must use {OBSERVATION_SCHEMA}")
+    if data.get("source", {}).get("source_hash") != snapshot.get("source_hash"):
+        raise ValueError("observations do not match the facts source hash")
+    audiences = data.get("audiences")
+    required_audiences = {"executive", "manager", "engineer"}
+    required_story_fields = {"headline", "why_it_matters", "next_move"}
+    if not isinstance(audiences, dict) or set(audiences) != required_audiences:
+        raise ValueError("observations require executive, manager, and engineer narratives")
+    for audience, story in audiences.items():
+        if not isinstance(story, dict) or not required_story_fields.issubset(story) or any(
+            not isinstance(story[field], str) for field in required_story_fields
+        ):
+            raise ValueError(f"{audience} narrative requires text headline, why_it_matters, and next_move")
+    validate_insights_payload = {key: data.get(key) for key in (
+        "executive_summary", "project_phases", "notable_changes", "risks", "questions"
+    ) if key in data}
+    validate_insights_data(validate_insights_payload, {item["id"] for item in snapshot["documents"]})
+    return data
+
+
+def collect(root: Path, compare: str = "previous") -> dict[str, Any]:
     ledgers, documents = collect_knowledge(root)
     commits = collect_commits(root)
     events = list((ledgers.get("clineflow_timeline") or {}).get("events", []))
@@ -430,7 +553,6 @@ def collect(root: Path, insights_path: Path | None = None, compare: str = "previ
         "runs": collect_runs(root), "usage": exact_usage(events),
         "current_change": current_change(root), "current_footprint": tree_footprint(root),
         "drift": calculate_drift(documents, baseline), "baseline_run": baseline_id,
-        "insights": validate_insights(insights_path, {item["id"] for item in documents}),
     }
 
 
@@ -455,9 +577,8 @@ def safe_json_for_script(data: Any) -> str:
     return json.dumps(json_safe(data), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
-def build_page(runtime: Path, data: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
+def build_page(runtime: Path, data: dict[str, Any], observations: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
     assets, asset_manifest = load_assets(runtime)
-    data["asset_manifest"] = asset_manifest
     source_dir = Path(__file__).resolve().parent
     custom_css = (source_dir / "visor.css").read_text()
     custom_js = (source_dir / "visor.js").read_text()
@@ -467,11 +588,11 @@ def build_page(runtime: Path, data: dict[str, Any]) -> tuple[str, list[dict[str,
 @font-face{{font-family:'IBM Plex Mono';src:url(data:font/woff2;base64,{assets['ibm-plex-mono-500.woff2']}) format('woff2');font-weight:500;font-display:swap}}
 """
     csp = "default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'"
-    page = f"""<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"{csp}\"><title>ClineFlow Knowledge Visor</title><style>{font_css}{custom_css}</style></head><body><a class=\"skip\" href=\"#main\">Skip to knowledge</a><div id=\"app\"></div><script>{assets['echarts.min.js']}</script><script>{assets['cytoscape.min.js']}</script><script>{assets['gsap.min.js']}</script><script id=\"clineflow-data\" type=\"application/json\">{safe_json_for_script(data)}</script><script>{custom_js}</script></body></html>"""
+    page = f"""<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"{csp}\"><title>ClineFlow Knowledge Visor</title><style>{font_css}{custom_css}</style></head><body><a class=\"skip\" href=\"#main\">Skip to knowledge</a><div id=\"app\"></div><script>{assets['echarts.min.js']}</script><script>{assets['cytoscape.min.js']}</script><script>{assets['gsap.min.js']}</script><script id=\"clineflow-data\" type=\"application/json\">{safe_json_for_script(data)}</script><script id=\"clineflow-observations\" type=\"application/json\">{safe_json_for_script(observations)}</script><script>{custom_js}</script></body></html>"""
     return page, asset_manifest
 
 
-def render_report(root: Path, runtime: Path, data: dict[str, Any], no_open: bool) -> Path:
+def render_report(root: Path, runtime: Path, data: dict[str, Any], observations: dict[str, Any], no_open: bool) -> Path:
     runs_dir = root / "knowledge" / "dashboard" / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
     run_id = data["run_id"]
@@ -483,19 +604,20 @@ def render_report(root: Path, runtime: Path, data: dict[str, Any], no_open: bool
     temporary = runs_dir / f".{run_dir.name}.tmp-{os.getpid()}"
     temporary.mkdir()
     data["run_id"] = run_dir.name
-    page, asset_manifest = build_page(runtime, data)
+    page, asset_manifest = build_page(runtime, data, observations)
     report_manifest = {
         "schema": SCHEMA,
         "generator_version": next((line.split("=", 1)[1] for line in (runtime / ".active").read_text().splitlines() if line.startswith("component_version=")), "unknown"),
         "run_id": data["run_id"], "generated_at": data["run_at"],
         "source_hash": data["source_hash"], "baseline_run": data.get("baseline_run"),
         "git": data["git"], "assets": asset_manifest,
-        "insights": {"present": data.get("insights") is not None, "source": "invoking-agent" if data.get("insights") else None},
+        "observations": {"schema": observations["schema"], "generator": observations["generator"]},
         "browser_network": "disabled", "warnings": [],
     }
     (temporary / "index.html").write_text(page)
     (temporary / "manifest.json").write_text(json.dumps(report_manifest, indent=2, ensure_ascii=False) + "\n")
     (temporary / "snapshot.json").write_text(json.dumps(json_safe(data), indent=2, ensure_ascii=False) + "\n")
+    (temporary / "observations.json").write_text(json.dumps(json_safe(observations), indent=2, ensure_ascii=False) + "\n")
     for path in temporary.iterdir():
         try:
             path.chmod(0o600)
@@ -528,9 +650,10 @@ def sanitized_export(root: Path, runtime: Path, run: str, output: Path) -> None:
     else:
         source = runs / run
     snapshot = json.loads(source.joinpath("snapshot.json").read_text())
+    source_observations = source / "observations.json"
     clean_ledgers = {name: {key: value for key, value in ledger.items() if not key.endswith("_refs")} for name, ledger in snapshot["ledgers"].items()}
     sanitized = {
-        "schema": SCHEMA, "run_at": snapshot["run_at"],
+        "schema": SCHEMA, "run_at": snapshot["run_at"], "source_hash": "redacted",
         "run_id": "sanitized-export", "git": {"head": None, "branch": None, "dirty": False},
         "ledgers": clean_ledgers,
         "documents": [{**{key: item.get(key) for key in ("id", "title", "description", "tags", "status", "generated_at")}, "path": f"source-{index + 1}", "hash": "redacted", "raw": f"{item.get('title', '')} {item.get('description', '')}", "html": f"<h1>{html.escape(str(item.get('title', 'Knowledge concept')))}</h1><p>{html.escape(str(item.get('description', 'Full content excluded from sanitized export.')))}</p>"} for index, item in enumerate(snapshot["documents"])],
@@ -539,11 +662,14 @@ def sanitized_export(root: Path, runtime: Path, run: str, output: Path) -> None:
         "runs": [{"run_id": "redacted", "generated_at": item.get("generated_at")} for item in snapshot.get("runs", [])],
         "usage": [],
         "current_change": {key: value for key, value in snapshot["current_change"].items() if key != "paths"}, "current_footprint": snapshot["current_footprint"],
-        "drift": snapshot["drift"], "insights": snapshot.get("insights"), "sanitized": True,
+        "drift": snapshot["drift"], "sanitized": True,
     }
+    observations = json.loads(source_observations.read_text()) if source_observations.is_file() else derive_observations(sanitized)
+    observations["source"] = {"snapshot_schema": sanitized["schema"], "source_hash": sanitized.get("source_hash")}
     output.mkdir(parents=True, exist_ok=False)
-    page, asset_manifest = build_page(runtime, sanitized)
+    page, asset_manifest = build_page(runtime, sanitized, observations)
     output.joinpath("data.json").write_text(json.dumps(sanitized, indent=2, ensure_ascii=False) + "\n")
+    output.joinpath("observations.json").write_text(json.dumps(observations, indent=2, ensure_ascii=False) + "\n")
     output.joinpath("index.html").write_text(page)
     output.joinpath("manifest.json").write_text(json.dumps({"schema": SCHEMA, "sanitized": True, "assets": asset_manifest, "browser_network": "disabled"}, indent=2) + "\n")
 
@@ -560,9 +686,14 @@ def main() -> int:
     collect_parser = sub.add_parser("collect")
     collect_parser.add_argument("--output", type=Path, required=True)
     collect_parser.add_argument("--compare", default="previous")
+    observe = sub.add_parser("observe")
+    observe.add_argument("--facts", type=Path, required=True)
+    observe.add_argument("--output", type=Path, required=True)
+    observe.add_argument("--insights", type=Path)
     render = sub.add_parser("render")
     render.add_argument("--facts", type=Path, required=True)
     render.add_argument("--insights", type=Path)
+    render.add_argument("--observations", type=Path)
     render.add_argument("--no-open", action="store_true")
     export = sub.add_parser("export")
     export.add_argument("--run", default="latest")
@@ -573,17 +704,22 @@ def main() -> int:
     if command == "collect":
         args.output.write_text(json.dumps(collect(root, compare=args.compare), indent=2, ensure_ascii=False) + "\n")
         return 0
+    if command == "observe":
+        snapshot = json.loads(args.facts.read_text())
+        args.output.write_text(json.dumps(derive_observations(snapshot, args.insights), indent=2, ensure_ascii=False) + "\n")
+        return 0
     if command == "render":
         data = json.loads(args.facts.read_text())
-        data["insights"] = validate_insights(args.insights, {item["id"] for item in data["documents"]})
-        print(render_report(root, args.runtime, data, args.no_open) / "index.html")
+        observations = validate_observations(args.observations, data) if args.observations else derive_observations(data, args.insights)
+        print(render_report(root, args.runtime, data, observations, args.no_open) / "index.html")
         return 0
     if command == "export":
         sanitized_export(root, args.runtime, args.run, args.output)
         print(args.output / "index.html")
         return 0
-    data = collect(root, args.insights, args.compare)
-    print(render_report(root, args.runtime, data, args.no_open) / "index.html")
+    data = collect(root, args.compare)
+    observations = derive_observations(data, args.insights)
+    print(render_report(root, args.runtime, data, observations, args.no_open) / "index.html")
     return 0
 
 

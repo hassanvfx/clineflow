@@ -90,6 +90,8 @@ def safe_load(text):
         if value.strip(): parent[key]=scalar(value)
         else: parent[key]={}; stack.append((indent,parent[key]))
     return root
+def safe_dump(value, **kwargs):
+    return json.dumps(value, ensure_ascii=False, indent=2) + '\n'
 PY
 
 component="$project/.clineflow/dashboard-component-manifest"
@@ -117,27 +119,60 @@ git add .clineflow/dashboard-component-manifest
 git commit -qm 'test component manifest'
 before_activation=$(snapshot_knowledge)
 index_before=$(git write-tree)
-PYTHONPATH="$fixture/modules" CLINEFLOW_DASHBOARD_TEST_ALLOW_FILE=true CLINEFLOW_DASHBOARD_BASE_URL="file://$fixture/source" ./.clineflow/bin/dashboard --yes generate --no-open > "$TEST_ROOT/generated-path"
+BROWSER=true PYTHONPATH="$fixture/modules" CLINEFLOW_DASHBOARD_TEST_ALLOW_FILE=true CLINEFLOW_DASHBOARD_BASE_URL="file://$fixture/source" ./.clineflow/bin/dashboard --yes > "$TEST_ROOT/generated-path"
 [ -f .clineflow/optional/dashboard/.active ] || fail "activation omitted active runtime marker"
 [ -x .clineflow/optional/bin/uv ] || fail "activation omitted isolated uv runtime"
 report=$(tail -n 1 "$TEST_ROOT/generated-path")
-[ -f "$report" ] && [ -f "${report%/index.html}/manifest.json" ] && [ -f "${report%/index.html}/snapshot.json" ] || fail "activation omitted report artifacts"
+[ -f "$report" ] && [ -f "${report%/index.html}/manifest.json" ] && [ -f "${report%/index.html}/snapshot.json" ] && [ -f "${report%/index.html}/observations.json" ] || fail "activation omitted report artifacts"
 grep -q "default-src 'none'" "$report" || fail "generated report omitted Content Security Policy"
 grep -q "connect-src 'none'" "$report" || fail "generated report permits browser network access"
 ! grep -Eq "<(script|link|img)[^>]+(src|href)=['\\\"]https?://" "$report" || fail "self-contained report references a remote browser asset"
 grep -q 'data:font/woff2;base64,' "$report" || fail "self-contained report omitted embedded fonts"
+! grep -q 'About this report' "$report" || fail "dashboard retained the removed asset panel"
+grep -q 'Manager view' "$report" && grep -q 'Engineering view' "$report" && grep -q 'Source of truth' "$report" || fail "dashboard omitted its multi-audience story chapters"
+grep -q 'data-atlas="overview"' "$report" && grep -q 'data-atlas="journals"' "$report" || fail "Decision Atlas omitted progressive disclosure controls"
+grep -q 'slice(0,10)' "$report" || fail "Decision Atlas omitted its visible-node cap"
+! grep -q 'layout:{name:"cose"' "$report" || fail "Decision Atlas retained the overlapping force layout"
+grep -q 'Guided view' "$report" && grep -q 'Copy normalized YAML' "$report" || fail "Knowledge Explorer omitted YAML interpretation and repair controls"
+grep -q 'data-filter="ledger"' "$report" && grep -q 'data-filter="journal"' "$report" || fail "Knowledge Explorer omitted progressive document filters"
 grep -q 'clineflow-dashboard/v1' "${report%/index.html}/snapshot.json" || fail "snapshot omitted dashboard schema"
-python3 - "$report" "${report%/index.html}/snapshot.json" <<'PY'
+python3 - "$report" "${report%/index.html}/snapshot.json" "${report%/index.html}/observations.json" <<'PY'
 import json, re, sys
 page = open(sys.argv[1], encoding="utf-8").read()
 match = re.search(r'<script id="clineflow-data" type="application/json">(.*?)</script>', page, re.S)
 if not match or json.loads(match.group(1)) != json.load(open(sys.argv[2], encoding="utf-8")):
     raise SystemExit("embedded report data differs from adjacent snapshot.json")
+observation_match = re.search(r'<script id="clineflow-observations" type="application/json">(.*?)</script>', page, re.S)
+observations = json.load(open(sys.argv[3], encoding="utf-8"))
+if not observation_match or json.loads(observation_match.group(1)) != observations:
+    raise SystemExit("embedded narrative differs from adjacent observations.json")
+snapshot = json.load(open(sys.argv[2], encoding="utf-8"))
+if "insights" in snapshot:
+    raise SystemExit("normalized facts contain the separate narrative model")
+if observations.get("schema") != "clineflow-dashboard-observations/v1":
+    raise SystemExit("observations omitted their formal schema")
+if observations.get("source", {}).get("source_hash") != snapshot.get("source_hash"):
+    raise SystemExit("observations are not bound to their source facts")
+if set(observations.get("audiences", {})) != {"executive", "manager", "engineer"}:
+    raise SystemExit("observations omitted an audience narrative")
+ledger = next((doc for doc in snapshot["documents"] if doc.get("kind") == "ledger"), None)
+if not ledger or not ledger.get("yaml", {}).get("valid") or not isinstance(ledger.get("structured"), dict):
+    raise SystemExit("dashboard did not retain a parsed, structured YAML ledger")
+if not ledger["yaml"].get("normalized"):
+    raise SystemExit("dashboard did not retain normalized YAML repair output")
+PY
+python3 - "${report%/index.html}/manifest.json" <<'PY'
+import json, sys
+manifest = json.load(open(sys.argv[1], encoding="utf-8"))
+required = {"name", "version", "sha256", "license", "primary"}
+if not manifest.get("assets") or any(not required.issubset(asset) for asset in manifest["assets"]):
+    raise SystemExit("report manifest lost asset provenance after removing the visible panel")
 PY
 grep -qFx '/.clineflow/optional/' .git/info/exclude && grep -qFx '/knowledge/dashboard/' .git/info/exclude || fail "activation omitted exact Git exclusions"
 [ "$before_activation" = "$(snapshot_knowledge)" ] || fail "activation changed canonical knowledge"
 [ "$index_before" = "$(git write-tree)" ] || fail "activation changed the Git index"
 [ -z "$(git status --porcelain)" ] || fail "activated boundaries leaked into Git status"
+pass "first activation defaults to the generate subcommand"
 ./.clineflow/bin/dashboard doctor >/dev/null
 ./.clineflow/bin/validate-knowledge-sync >/dev/null
 pass "activation changes only isolated, ignored dashboard boundaries"
@@ -152,6 +187,19 @@ chmod +x "$TEST_ROOT/no-network/curl"
 PATH="$TEST_ROOT/no-network:$PATH" PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard generate --no-open >/dev/null
 [ "$(find knowledge/dashboard/runs -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')" -eq 2 ] || fail "offline repeat did not create a second run"
 pass "activated dashboard reuses verified assets without network access"
+
+facts="$TEST_ROOT/facts.json"
+observations="$TEST_ROOT/observations.json"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard collect --output "$facts"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard observe --facts "$facts" --output "$observations"
+PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard render --facts "$facts" --observations "$observations" --no-open >/dev/null
+python3 - "$facts" "$observations" <<'PY'
+import json, sys
+facts, observations = (json.load(open(path, encoding="utf-8")) for path in sys.argv[1:])
+if observations["source"]["source_hash"] != facts["source_hash"]:
+    raise SystemExit("formal observation stage lost its facts binding")
+PY
+pass "facts, observations, and rendering remain independent JSON stages"
 
 rollback_project="$TEST_ROOT/rollback-project"
 mkdir -p "$rollback_project"
@@ -184,7 +232,7 @@ cd "$project"
 
 export_dir="$TEST_ROOT/sanitized"
 PYTHONPATH="$fixture/modules" ./.clineflow/bin/dashboard --yes export --run latest --output "$export_dir" >/dev/null
-[ -f "$export_dir/index.html" ] && [ -f "$export_dir/data.json" ] || fail "sanitized export is incomplete"
+[ -f "$export_dir/index.html" ] && [ -f "$export_dir/data.json" ] && [ -f "$export_dir/observations.json" ] || fail "sanitized export is incomplete"
 ! grep -q '"raw": "#' "$export_dir/data.json" || fail "sanitized export leaked full journal bodies"
 pass "sanitized export embeds the viewer without full knowledge bodies"
 

@@ -255,6 +255,7 @@ for argument in "$@"; do
 done
 set -- ${args[@]+"${args[@]}"}
 command=${1:-generate}
+[ "$#" -gt 0 ] || set -- "$command"
 if [ "$command" = doctor ] || { [ "$command" = assets ] && [ "${2:-status}" = status ]; }; then show_status; exit; fi
 if [ "$command" = assets ] && [ "${2:-}" = refresh ]; then activate true; exit; fi
 if ! is_active; then

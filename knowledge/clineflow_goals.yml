@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T10:12:33Z
+updated_at: 2026-09-03T10:44:24Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -15,6 +15,9 @@ success_measures:
   - Repository-native agent instructions reference files and validators that exist in the distribution checkout.
   - Dormant ClineFlow performs no optional dashboard installation, network access, caching, report generation, or Git exclusion changes.
   - Activated dashboard reports embed verified assets, expose adjacent structured snapshots, and remain inside their declared optional boundaries.
+  - Decision Atlas starts with a legible system overview and reveals focused decision surfaces without overlapping labels.
+  - One progressive report communicates current meaning to executives, trajectory to managers, and inspectable decisions and sources to engineers.
+  - Every dashboard narrative is a validated, source-bound JSON artifact generated after normalized facts and embedded with those facts for offline local viewing.
 blocked_goals: []
 completed_goals:
   - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.
