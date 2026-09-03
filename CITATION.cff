@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use ClineFlow in your work, please cite it using the metadata in this file."
+title: "ClineFlow: Persistent Context and Open Knowledge for AI Coding Agents"
+type: software
+authors:
+  - family-names: Uriostegui
+    given-names: Hassan
+abstract: >-
+  ClineFlow gives AI coding agents durable, portable project context through a
+  Git-versioned Open Knowledge Format bundle, synchronized engineering journals,
+  and agent-neutral development workflows.
+keywords:
+  - AI coding agents
+  - persistent context
+  - Open Knowledge Format
+  - software engineering
+  - knowledge management
+license: MIT
+repository-code: "https://github.com/hassanvfx/clineflow"
+url: "https://github.com/hassanvfx/clineflow"
+version: "2026.09.03.23"
+date-released: "2026-09-03"

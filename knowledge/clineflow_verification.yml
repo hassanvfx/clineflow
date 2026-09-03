@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:52:43Z
+updated_at: 2026-09-03T23:16:14Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -38,6 +38,7 @@ acceptance_criteria:
   - Dashboard title normalization removes ISO timestamps and source-path parentheticals before constructing a concise visual headline.
   - Managed agent guidance requires the dashboard observation pipeline for natural-language requests and preserves direct CLI generation as the no-insights fallback.
   - Release validation requires the README and lifecycle guide to expose the old-install rescue path and the complete non-interactive remote-bootstrap command.
+  - CITATION.cff parses as Citation File Format 1.2.0 metadata with the confirmed author, MIT license, canonical repository URL, and current date-based release version.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
   - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.
@@ -85,6 +86,7 @@ evidence_refs:
   - journals/dashboard-project-pulse.md
   - journals/readme-documentation-redesign.md
   - journals/old-install-update-rescue.md
+  - journals/software-citation-zenodo.md
 open_verification:
   - Capture and visually inspect the deferred 1600×1000 fixture-backed Knowledge Visor image before adding it to the README.
 journal_refs:
@@ -106,3 +108,4 @@ journal_refs:
   - journals/dashboard-project-pulse.md
   - journals/readme-documentation-redesign.md
   - journals/old-install-update-rescue.md
+  - journals/software-citation-zenodo.md

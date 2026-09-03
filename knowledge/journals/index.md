@@ -1,5 +1,6 @@
 # Task Journals
 
+* [Software citation and Zenodo preparation](software-citation-zenodo.md) - Adds canonical citation metadata before ClineFlow's first Zenodo-archived release.
 * [Old-install update rescue](old-install-update-rescue.md) - Documents the authoritative raw bootstrap for installations with stale agent rules or bundled updaters.
 * [Installation-first README and documentation redesign](readme-documentation-redesign.md) - Reframes installation, durable commits, lifecycle prompts, and the Knowledge Visor for new users.
 * [Portable line-one agent rule updates](updater-macos-line-zero.md) - Repairs macOS updates when the managed rules block begins on line one.

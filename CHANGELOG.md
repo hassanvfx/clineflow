@@ -21,6 +21,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Source-repository agent instructions now reference the runtime guides and validators under `template/.clineflow/`, and the legacy Cline compatibility template matches the canonical shared rules.
 
 ### Added
+- Citation File Format 1.2.0 metadata for formal GitHub and Zenodo software citation.
 - A prominent raw rescue-update command for installations whose older agent instructions do not recognize the natural-language update prompt.
 - An installation-first README, focused lifecycle/workflow/Knowledge Visor guides, and a linked 30-minute tutorial with a local preview image.
 - Canonical “Please commit.”, “Please remove ClineFlow.”, and “Please show me the ClineFlow dashboard.” prompts across distributed agent guidance.

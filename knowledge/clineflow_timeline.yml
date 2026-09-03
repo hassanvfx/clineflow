@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:52:43Z
+updated_at: 2026-09-03T23:16:14Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -484,3 +484,21 @@ events:
       - journals/old-install-update-rescue.md
       - ../.github/workflows/test.yml
     git_revision: 7f684a3
+  - at: 2026-09-03T23:13:10Z
+    actor: codex
+    type: documentation
+    summary: Added CFF 1.2.0 citation metadata for Hassan Uriostegui and release 2026.09.03.23 before the first Zenodo-archived GitHub release.
+    refs:
+      - journals/software-citation-zenodo.md
+      - ../CITATION.cff
+      - ../docs/releasing.md
+    git_revision: null
+  - at: 2026-09-03T23:16:14Z
+    actor: codex
+    type: verification
+    summary: Passed complete ClineFlow lifecycle certification with the CFF citation metadata and synchronized Zenodo preparation record.
+    refs:
+      - journals/software-citation-zenodo.md
+      - ../CITATION.cff
+      - ../tests/certify-release.sh
+    git_revision: null

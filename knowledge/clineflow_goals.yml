@@ -1,8 +1,9 @@
 version: 1
-updated_at: 2026-09-03T20:52:43Z
+updated_at: 2026-09-03T23:16:14Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
   - Add a representative fixture-backed Knowledge Visor screenshot when an allowed capture surface is available.
+  - Publish ClineFlow's first Zenodo-archived GitHub release with canonical citation metadata.
 priorities:
   - Prevent journal and documentation changes from leaving any of the five durable ledgers stale.
   - Preserve user-authored project context during every update and migration.
@@ -35,6 +36,7 @@ success_measures:
   - New users can understand installation, journals, ledgers, lifecycle prompts, and the optional dashboard from a concise README and focused references.
   - Users with stale installed agent instructions can recover through a prominent, copyable remote-bootstrap command without invoking an old local updater.
   - The public workflow badge reflects a passing Linux and native Windows lifecycle matrix on main.
+  - GitHub and Zenodo can derive ClineFlow's confirmed author, title, license, repository, and release version from CITATION.cff.
 blocked_goals:
   - The in-app browser security policy blocks local file report capture; the dashboard screenshot requires an allowed capture surface or a user-provided image.
 completed_goals:
@@ -65,3 +67,4 @@ journal_refs:
   - journals/dashboard-project-pulse.md
   - journals/readme-documentation-redesign.md
   - journals/old-install-update-rescue.md
+  - journals/software-citation-zenodo.md

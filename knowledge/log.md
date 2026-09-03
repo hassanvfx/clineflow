@@ -2,6 +2,8 @@
 
 ## 2026-09-03
 
+* **Citation**: Added CFF 1.2.0 metadata for Hassan Uriostegui and release `2026.09.03.23`, intentionally leaving DOI metadata pending Zenodo archival.
+* **Verification**: Passed complete lifecycle certification with the citation metadata and synchronized Zenodo preparation record.
 * **Verification**: GitHub Actions run 47 passed both Linux certification and native Windows lifecycle coverage for release `2026.09.03.23`, restoring the README badge to passing.
 * **Fix**: Avoided the Windows active-uninstaller file lock by re-executing removal from an external temporary copy and prepared release `2026.09.03.23` without a schema migration.
 * **Fix**: Corrected PowerShell payload modes for native Windows lifecycle validation and prepared release `2026.09.03.22` without a schema migration.
