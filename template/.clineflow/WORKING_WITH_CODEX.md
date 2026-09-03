@@ -34,7 +34,7 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 > Please update ClineFlow.
 
-This prompt authorizes Codex to read the current repository instructions and invoke the universal updater with `--yes` immediately. Codex must wait for verification or rollback to finish and report the outcome; it must still stop on safety failures or requests for unrelated system changes.
+This prompt authorizes Codex to read the current repository instructions and immediately invoke `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes`. Do not run any existing local updater first; legacy copies can overwrite themselves. Codex must wait for verification or rollback to finish and report the outcome; it must still stop on safety failures or requests for unrelated system changes.
 
 **Open the Knowledge Visor**
 

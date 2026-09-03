@@ -6,6 +6,10 @@ This project keeps persistent engineering context in the `knowledge/` Open Knowl
 
 This checkout is the ClineFlow distribution repository. Runtime guides and commands live under `template/.clineflow/`; installed projects receive them under `.clineflow/`. Read `template/.clineflow/WORKING_WITH_CLINE.md` for the Cline workflow.
 
+## Updating ClineFlow
+
+When the user says “Please update ClineFlow.”, read the current instructions at the authoritative repository and immediately run `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes`. Do not run any existing local updater first; legacy copies can overwrite themselves. Wait for verification or rollback and report the outcome.
+
 ## Knowledge Visor
 
 Only when the user explicitly requests the ClineFlow dashboard or Knowledge Visor, invoke the installed project's `./.clineflow/bin/dashboard`. Never activate the optional runtime proactively during normal development, installation, validation, or commit preparation.

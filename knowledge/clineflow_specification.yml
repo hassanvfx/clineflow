@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T09:30:27Z
+updated_at: 2026-09-03T10:12:33Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -15,6 +15,8 @@ confirmed:
   - Distribution-checkout agent instructions use template/.clineflow paths, while installed-project instructions use .clineflow paths.
   - The Knowledge Visor is activated only by explicit invocation; reports contain embedded verified assets and a matching clineflow-dashboard/v1 snapshot.json.
   - Dashboard metrics are report-derived Git and knowledge facts; absent provider usage is omitted rather than recorded as unavailable.
+  - Agent-rule refresh is portable when the managed block begins on the first line or follows user-authored text.
+  - The canonical agent update request invokes the permanent remote bootstrap first and never executes a legacy local updater beforehand.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -45,3 +47,4 @@ journal_refs:
   - journals/universal-five-ledger-synchronization.md
   - journals/repair-source-instruction-paths.md
   - journals/knowledge-dashboard.md
+  - journals/updater-macos-line-zero.md

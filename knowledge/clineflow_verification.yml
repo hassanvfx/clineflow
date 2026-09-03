@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T09:30:27Z
+updated_at: 2026-09-03T10:12:33Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -17,6 +17,8 @@ acceptance_criteria:
   - Release validation rejects CI configurations that omit base-reference knowledge synchronization for pull requests.
   - Release-contract tests reject missing source-repository guide or validator paths and drift in the legacy Cline compatibility template.
   - Dashboard tests prove dormant installation, approval gating, exact activated boundaries, transactional rollback, offline reuse, self-contained HTML/JSON equality, sanitized export, and report-preserving removal.
+  - Migration tests reproduce and pass a valid managed agent block beginning on line one under macOS-compatible shell utilities.
+  - Release validation requires canonical agent instructions to name the permanent remote bootstrap and prohibit running local updater copies first.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
   - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.
@@ -24,6 +26,7 @@ regression_checks:
   - Code-only changes do not trigger the knowledge synchronization gate.
   - Legacy docs/journals/ edits are rejected.
   - Existing lifecycle, doctor, validation, update, and certification flows pass without activating the optional dashboard.
+  - User text before and after an existing managed agent block remains byte-preserved during refresh.
 evidence_refs:
   - journals/okf-adoption.md
   - journals/encapsulate-tooling.md
@@ -36,6 +39,7 @@ evidence_refs:
   - journals/universal-five-ledger-synchronization.md
   - journals/repair-source-instruction-paths.md
   - journals/knowledge-dashboard.md
+  - journals/updater-macos-line-zero.md
 open_verification: []
 journal_refs:
   - journals/okf-adoption.md
@@ -51,3 +55,4 @@ journal_refs:
   - journals/universal-five-ledger-synchronization.md
   - journals/repair-source-instruction-paths.md
   - journals/knowledge-dashboard.md
+  - journals/updater-macos-line-zero.md

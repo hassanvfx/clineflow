@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T09:30:27Z
+updated_at: 2026-09-03T10:12:33Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -184,5 +184,36 @@ events:
       - ../template/.clineflow/bin/dashboard
       - ../template/optional/dashboard/dashboard.py
       - ../tests/test-dashboard.sh
+      - ../tests/certify-release.sh
+    git_revision: null
+  - at: 2026-09-03T09:51:10Z
+    actor: codex
+    type: diagnosis
+    summary: Traced a safely rolled-back macOS update failure to BSD head rejecting a zero-line prefix for a managed rules block beginning on line one.
+    refs:
+      - journals/updater-macos-line-zero.md
+      - ../template/.clineflow/bin/update
+      - ../tests/test-update-migrations.sh
+    git_revision: null
+  - at: 2026-09-03T09:54:45Z
+    actor: codex
+    type: verification
+    summary: Released and certified the portable managed-rule refresh fix after reproducing the macOS line-zero failure and confirming rollback.
+    refs:
+      - journals/updater-macos-line-zero.md
+      - ../template/.clineflow/bin/update
+      - ../tests/test-update-migrations.sh
+      - ../tests/certify-release.sh
+    git_revision: null
+  - at: 2026-09-03T10:12:33Z
+    actor: codex
+    type: verification
+    summary: Certified release 2026.09.03.3 with the macOS line-one fix and enforced remote-first agent update instructions that prohibit stale local updaters.
+    refs:
+      - journals/updater-macos-line-zero.md
+      - ../template/.clineflow/bin/update
+      - ../template/configs/rules.template.md
+      - ../tests/test-update-migrations.sh
+      - ../tests/test-release-contract.sh
       - ../tests/certify-release.sh
     git_revision: null

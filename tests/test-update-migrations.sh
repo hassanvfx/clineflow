@@ -67,6 +67,27 @@ for layout in visible hidden; do
 done
 pass "visible and partial hidden OKF layouts converge"
 
+# Valid managed blocks at line one and after user text refresh portably.
+for placement in line-one prefixed; do
+  project="$TEST_ROOT/$placement-block"
+  seed_okf "$project"
+  mkdir -p "$project/.clineflow/bin"
+  printf '%s\n' "$CURRENT_VERSION" > "$project/.clineflow/VERSION"
+  {
+    [ "$placement" = line-one ] || printf 'user prefix\n'
+    printf '%s\n' '<!-- BEGIN CLINEFLOW OKF RULES -->'
+    printf 'stale managed rules\n'
+    printf '%s\n' '<!-- END CLINEFLOW OKF RULES -->'
+    printf 'user suffix\n'
+  } > "$project/AGENTS.md"
+  (cd "$project" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
+  assert_current "$project"
+  [ "$(grep -cFx '<!-- BEGIN CLINEFLOW OKF RULES -->' "$project/AGENTS.md")" -eq 1 ] || fail "$placement block was duplicated"
+  grep -qFx 'user suffix' "$project/AGENTS.md" || fail "$placement block refresh removed trailing user text"
+  if [ "$placement" = prefixed ]; then grep -qFx 'user prefix' "$project/AGENTS.md" || fail "prefixed block refresh removed leading user text"; fi
+done
+pass "line-one and prefixed managed rule blocks refresh portably"
+
 # Dry-run, malformed markers, and pre-OKF detection are non-mutating.
 dry_project="$TEST_ROOT/dry"
 seed_okf "$dry_project"; printf '2026.08.15.0\n' > "$dry_project/VERSION"; mkdir -p "$dry_project/clineflow"; printf 'legacy\n' > "$dry_project/clineflow/WORKING_WITH_CLINE.md"

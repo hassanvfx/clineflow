@@ -15,7 +15,7 @@ Projects may have pre-OKF journals in `docs/journals/`. ClineFlow searches these
 
 ## Update ClineFlow
 
-Tell your agent: “Please update ClineFlow.” The agent reads the current instructions from the authoritative repository and runs the universal updater with `--yes` without asking again. It reports the installed version and any preserved legacy artifacts after verification or rollback completes.
+Tell your agent: “Please update ClineFlow.” The agent reads the current instructions from the authoritative repository and immediately runs `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes` without asking again. Do not run any existing local updater first; legacy copies can overwrite themselves. It reports the installed version and any preserved legacy artifacts after verification or rollback completes.
 
 ## Knowledge Visor
 

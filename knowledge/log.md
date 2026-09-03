@@ -2,6 +2,10 @@
 
 ## 2026-09-03
 
+* **Fix**: Required all canonical agent update instructions to invoke the permanent remote bootstrap first and never execute a stale local updater beforehand.
+* **Fix**: Made schema-0 agent-rule refresh portable when a managed block starts on line one; the macOS reproduction now passes with user prefix and suffix preservation.
+* **Verification**: Passed the complete lifecycle certification for release 2026.09.03.3 after confirming the pre-fix failure rolled back safely.
+* **Diagnosis**: Traced a rolled-back macOS schema-0 update failure to BSD `head` rejecting a zero-line prefix while refreshing a managed rules block at line one.
 * **Feature**: Added the explicitly invoked, time-first Knowledge Visor with verified embedded visual assets, adjacent structured snapshots, comparisons, exports, and isolated optional tooling.
 * **Verification**: Proved dormant and activated dashboard boundaries, post-verification rollback, offline cache reuse, self-contained report data, and report-preserving uninstall behavior.
 * **Fix**: Repaired source-repository agent guide and validator paths, synchronized legacy Cline rules with the canonical contract, and added regression coverage.

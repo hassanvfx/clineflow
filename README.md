@@ -592,7 +592,13 @@ Using an AI coding agent, say:
 
 > Please update ClineFlow.
 
-That request authorizes the agent to read the current instructions from this repository and run the verified updater with `--yes`, without asking for redundant confirmation. The agent will report the installed version and any preserved legacy artifacts after verification or rollback completes.
+That request authorizes the agent to read the current instructions from this repository and immediately run the permanent remote bootstrap with `--yes`, without asking for redundant confirmation:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes
+```
+
+Do not run any existing local updater first; legacy copies can overwrite themselves. The agent will report the installed version and any preserved legacy artifacts after verification or rollback completes.
 
 ### Quick Update
 

@@ -264,7 +264,8 @@ update_agent() {
     temp="$TEMP_ROOT/agent.$$.tmp"
     begin_line=$(grep -nFx "$BEGIN" "$destination" | cut -d: -f1)
     end_line=$(grep -nFx "$END" "$destination" | cut -d: -f1)
-    head -n $((begin_line - 1)) "$destination" > "$temp"
+    if [ "$begin_line" -gt 1 ]; then sed -n "1,$((begin_line - 1))p" "$destination" > "$temp"
+    else : > "$temp"; fi
     write_rules_block >> "$temp"
     tail -n +$((end_line + 1)) "$destination" >> "$temp"
     atomic_install "$temp" "$destination" 0644

@@ -31,6 +31,8 @@ grep -qF '`template/.clineflow/WORKING_WITH_CODEX.md`' "$ROOT/AGENTS.md" || fail
 for source_rules in "$ROOT/AGENTS.md" "$ROOT/.clinerules"; do
   grep -qF './template/.clineflow/bin/validate-okf' "$source_rules" || fail "source agent rules point to a missing OKF validator: $source_rules"
   grep -qF './template/.clineflow/bin/validate-knowledge-sync --staged' "$source_rules" || fail "source agent rules point to a missing staged synchronization validator: $source_rules"
+  grep -qF 'https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh' "$source_rules" || fail "source agent rules omit the authoritative remote updater: $source_rules"
+  grep -qF 'Do not run any existing local updater first' "$source_rules" || fail "source agent rules permit a stale local updater: $source_rules"
 done
 cmp -s "$ROOT/template/.clinerules" "$ROOT/template/configs/rules.template.md" || fail "legacy Cline template drifted from canonical shared rules"
 pass "source and compatibility agent instructions resolve to current workflow files"
@@ -49,7 +51,10 @@ if "$optional_unmanaged/template/.clineflow/bin/validate-release" >/dev/null 2>&
 
 prompt="$TEST_ROOT/prompt"; copy_release "$prompt"; sed 's/Please update ClineFlow\./Update ClineFlow now./g' "$prompt/README.md" > "$prompt/README.tmp"; mv "$prompt/README.tmp" "$prompt/README.md"
 if "$prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical prompt was accepted"; fi
-pass "release validation rejects unmanaged files, stale checksums, and missing prompts"
+
+local_first="$TEST_ROOT/local-first"; copy_release "$local_first"; sed 's/Do not run any existing local updater first/Local updater use is permitted/' "$local_first/README.md" > "$local_first/README.tmp"; mv "$local_first/README.tmp" "$local_first/README.md"
+if "$local_first/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing stale-local-updater warning was accepted"; fi
+pass "release validation rejects unmanaged files, stale checksums, missing prompts, and local-first agent instructions"
 
 chain="$TEST_ROOT/chain"; copy_release "$chain"; sed 's/migrate_0_to_1()/removed_0_to_1()/' "$chain/template/.clineflow/bin/update" > "$chain/update.tmp"; mv "$chain/update.tmp" "$chain/template/.clineflow/bin/update"; chmod +x "$chain/template/.clineflow/bin/update"; refresh_checksum "$chain" .clineflow/bin/update
 if "$chain/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing migration chain was accepted"; fi

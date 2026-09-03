@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T09:30:27Z
+updated_at: 2026-09-03T10:12:33Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -24,6 +24,7 @@ completed_goals:
   - Add the durable development methodology and master indexes to ClineFlow.
   - Deliver a universal transactional updater for supported OKF-era installations.
   - Deliver the isolated, time-first ClineFlow Knowledge Visor.
+  - Restore portable transactional updates for mixed schema-0 installations on macOS.
 journal_refs:
   - journals/okf-adoption.md
   - journals/add-book-link.md
@@ -38,3 +39,4 @@ journal_refs:
   - journals/universal-five-ledger-synchronization.md
   - journals/repair-source-instruction-paths.md
   - journals/knowledge-dashboard.md
+  - journals/updater-macos-line-zero.md

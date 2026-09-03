@@ -8,6 +8,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Fixed
+- Managed agent-rule refresh no longer calls BSD `head` with a zero line count when the ClineFlow block begins on the first line.
 - Source-repository agent instructions now reference the runtime guides and validators under `template/.clineflow/`, and the legacy Cline compatibility template matches the canonical shared rules.
 
 ### Added
@@ -25,7 +26,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ### Changed
 - All supported agent configurations now require five-ledger reconciliation for every journal, documentation, or knowledge-base change and a staged synchronization check before commit.
 - Uninstall now requires confirmation (or `--yes`), validates ownership data before mutation, preserves edits to formerly owned agent files, and rolls back failures or handled interruptions.
-- Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.2`, with migration schema `1`.
+- Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.3`, with migration schema `1`.
 - Installation-affecting features must now declare and test their migration impact.
 - New task journals are Engineering Journal concepts in `knowledge/journals/`.
 - Install, update, and uninstall flows preserve both `knowledge/` and legacy `docs/journals/` user content.

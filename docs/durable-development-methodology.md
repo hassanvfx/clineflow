@@ -48,7 +48,7 @@ Use this exact prompt:
 
 > Please update ClineFlow.
 
-This is explicit authorization for the agent to read the latest update instructions from the authoritative ClineFlow repository and run the universal updater with `--yes` without asking again. The agent waits for migration and verification or rollback to finish, then reports the installed version and preserved legacy artifacts. Safety failures still stop the update, and the authorization does not extend to unrelated system changes or destructive cleanup.
+This is explicit authorization for the agent to read the latest update instructions from the authoritative ClineFlow repository and immediately run `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes` without asking again. Do not run any existing local updater first; legacy copies can overwrite themselves. The agent waits for migration and verification or rollback to finish, then reports the installed version and preserved legacy artifacts. Safety failures still stop the update, and the authorization does not extend to unrelated system changes or destructive cleanup.
 
 ## Evidence-first examples
 
