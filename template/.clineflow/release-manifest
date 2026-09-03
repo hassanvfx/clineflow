@@ -1,11 +1,11 @@
-release_version=2026.09.03.4
+release_version=2026.09.03.5
 migration_schema=1
 payload|managed|0644|.clineflow/JOURNAL_TEMPLATE.md|.clineflow/JOURNAL_TEMPLATE.md|02ee9466736a44116882f475198d37dcce3d43b7604c97f058ccca8e2b271f2b
 payload|managed|0644|.clineflow/PROCEDURES.md|.clineflow/PROCEDURES.md|6881a7ca5a2b774b251d9a238559c58de7628eb7eb6297e2faffe224b03c2795
-payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|6a94fddd005bf29e6ad9e740455bfb4cd4d374a5ccf95db0d6a4a14d63691a07
+payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|3105bd9f02753f02796b57469ee0905ab28f81961b1bcdd971c2d7db5df1a19d
 payload|managed|0644|.clineflow/WORKING_WITH_CLINE.md|.clineflow/WORKING_WITH_CLINE.md|28dbd580f81455ee35ca6b7e0de0953d84141f3ebc5f8e17278ff47f4216aa49
 payload|managed|0644|.clineflow/WORKING_WITH_CODEX.md|.clineflow/WORKING_WITH_CODEX.md|67c6b2e251ea2d13cb7fab732e44f9072db54ac98e938154f11e16bd9a525e48
-payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|5bd0b34ffa1a9bffa842526d40bf58e3b8af28918c04a04ec329ede866057006
+payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|7321a9556d5abe4ed21d4f7ee6e0872aa89cf24b10e23c0fa25e298214c8b4cc
 payload|managed|0755|.clineflow/bin/bootstrap.ps1|.clineflow/bin/bootstrap.ps1|1692a254c9f910c54aba06e96a81855ab45ed4f3b80e2f5900a412449ebab165
 payload|managed|0755|.clineflow/bin/dashboard|.clineflow/bin/dashboard|d819e876e51e9ce20a29dc2bcb94640dbf1bf3b479a03e7d0bd805fce9ac6913
 payload|managed|0755|.clineflow/bin/doctor|.clineflow/bin/doctor|9e5b97593d637d10ca6993040b4508c1c390e51314ea0dbae12862e64b47e2ae

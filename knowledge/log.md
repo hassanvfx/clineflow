@@ -2,6 +2,8 @@
 
 ## 2026-09-03
 
+* **Fix**: Normalized structured Evidence Atlas statements and flexible timeline fields so report labels never coerce objects or lose event summaries.
+* **Verification**: Added regressions for named evidence statements, source-bound observation text, and canonicalized timeline aliases with retained raw provenance.
 * **Feature**: Split Knowledge Visor into normalized facts, source-bound narrative observations, and rendering; both JSON artifacts are embedded exactly for direct local-file viewing.
 * **Update**: Added audience-switchable executive, manager, and engineer narratives plus structured YAML exploration, parser diagnostics, and non-mutating normalized repair output.
 * **Verification**: Passed the dashboard boundary suite for independent collect, observe, and render stages, embedded JSON equality, source-hash binding, structured YAML, offline reuse, rollback, export, and uninstall.

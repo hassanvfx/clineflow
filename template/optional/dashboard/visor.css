@@ -87,7 +87,7 @@ h1 { font-size: clamp(2.7rem, 6vw, 6.4rem); max-width: 950px; line-height: .91; 
 #decision-graph { height: 620px; min-width: 0; border: 1px solid rgba(155,255,226,.08); border-radius: 18px; background: radial-gradient(circle at center, rgba(101,251,210,.055), transparent 58%), rgba(2,10,9,.25); }
 .atlas-detail { border: 1px solid rgba(155,255,226,.1); border-radius: 18px; padding: 22px; background: rgba(2,10,9,.46); overflow: hidden; }
 .atlas-detail h3 { margin: 0 0 12px; font-size: 1.4rem; letter-spacing: -.03em; }
-.atlas-detail > p:not(.eyebrow) { color: #b9d8cf; line-height: 1.55; font-size: .88rem; }
+.atlas-detail > p:not(.eyebrow) { color: #b9d8cf; line-height: 1.55; font-size: .88rem; white-space: pre-line; }
 .atlas-open { margin: 4px 0 16px; color: var(--mint); }
 .atlas-items { display: grid; gap: 6px; max-height: 330px; overflow: auto; padding-right: 4px; }
 .atlas-items button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 10px 11px; border: 1px solid transparent; border-radius: 10px; text-align: left; background: rgba(255,255,255,.025); color: var(--text); }

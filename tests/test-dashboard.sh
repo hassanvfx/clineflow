@@ -94,6 +94,33 @@ def safe_dump(value, **kwargs):
     return json.dumps(value, ensure_ascii=False, indent=2) + '\n'
 PY
 
+node - "$fixture/source/visor.js" <<'NODE'
+const fs = require("fs");
+const source = fs.readFileSync(process.argv[2], "utf8");
+const start = source.indexOf("  const humanize =");
+const end = source.indexOf("  const journalDocs =");
+if (start < 0 || end < 0) throw new Error("Atlas statement formatter is missing");
+const helpers = new Function(`${source.slice(start, end)}; return {statementText, statementDetail, shortLabel};`)();
+const evidence = {summary: "Dashboard evidence is structured", command: "./tests/certify-release.sh", status: "passed"};
+if (helpers.statementText(evidence) !== "Dashboard evidence is structured") throw new Error("Atlas did not select a structured evidence summary");
+if (!helpers.statementDetail(evidence).includes("Command: ./tests/certify-release.sh")) throw new Error("Atlas did not preserve structured evidence metadata");
+if (helpers.shortLabel(evidence).includes("[object Object]")) throw new Error("Atlas still coerces evidence objects");
+NODE
+PYTHONPATH="$fixture/modules" python3 - "$fixture/source/dashboard.py" <<'PY'
+import importlib.util
+import sys
+spec = importlib.util.spec_from_file_location("dashboard", sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+evidence = {"summary": "Dashboard evidence is structured", "command": "./tests/certify-release.sh"}
+assert module.observation_text(evidence) == "Dashboard evidence is structured"
+event = module.normalize_event({"timestamp": "2026-09-03T12:00:00Z", "category": "verification", "description": "Structured timeline event", "references": "journals/example.md"})
+assert event["at"] == "2026-09-03T12:00:00Z"
+assert event["type"] == "verification"
+assert event["summary"] == "Structured timeline event"
+assert event["refs"] == ["journals/example.md"]
+PY
+
 component="$project/.clineflow/dashboard-component-manifest"
 {
   echo 'component_version=test-1'

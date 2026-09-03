@@ -7,8 +7,13 @@
   const compact = new Intl.NumberFormat(undefined, {notation: "compact", maximumFractionDigits: 1});
   const full = new Intl.NumberFormat();
   const time = value => value ? new Date(value).toLocaleString() : "Not recorded";
+  const eventValue = (event, keys) => keys.map(key=>event?.[key]).find(value=>value!==undefined&&value!==null&&value!=="");
+  const eventTime = event => eventValue(event,["at","timestamp","occurred_at","datetime","date","time"]);
+  const eventType = event => eventValue(event,["type","kind","category","event_type","event","action"])||"event";
+  const eventSummary = event => eventValue(event,["summary","text","description","title","message","detail","change"]);
+  const eventRefs = event => { const refs=eventValue(event,["refs","references","links","journal_refs","evidence_refs"]); return Array.isArray(refs)?refs:(refs?[refs]:[]); };
   const timeline = [
-    ...data.events.map(item => ({...item, lane: "event", when: item.at, label: item.type || "event"})),
+    ...data.events.map(item => ({...item, lane: "event", when: eventTime(item), label: eventType(item), summary: eventSummary(item)||"Event recorded without a narrative summary."})),
     ...data.documents.filter(item => item.generated_at).map(item => ({...item, lane: "journal", when: item.generated_at, label: "journal", summary: item.title})),
     ...data.commits.map(item => ({...item, lane: "commit", when: item.committed_at, label: "git"})),
     ...(data.runs || []).map(item => ({...item, lane: "run", when: item.generated_at, label: "visor", summary: `Dashboard run ${item.run_id}`}))
@@ -19,7 +24,7 @@
   const goals = data.ledgers.clineflow_goals || {};
   const session = data.ledgers.clineflow_last_session || {};
   const summary = observations.executive_summary || session.latest_change || "Durable context is ready to explore.";
-  const latestVerification = data.events.filter(item => item.type === "verification").sort((a,b) => new Date(b.at)-new Date(a.at))[0];
+  const latestVerification = data.events.filter(item => eventType(item) === "verification").sort((a,b) => new Date(eventTime(b))-new Date(eventTime(a)))[0];
   const unresolved = (specification.open_questions || []).length + (verification.open_verification || []).length;
   const currentIntent = (goals.active_goals || [])[0] || session.next_recommended_step || "No active goal recorded.";
   const nextMove = session.next_recommended_step || "Review the latest durable context.";
@@ -30,7 +35,7 @@
     <header class="topbar"><div class="brand"><span class="brand-mark">CF</span><span>Knowledge Visor / ${esc(data.schema.split("/")[1])}</span></div><div class="toolbar"><span class="pill">${data.git.dirty ? "Working tree · changed" : "Working tree · clean"}</span><button id="time-mode" type="button">Local time</button><span class="pill">${esc(data.git.branch || "detached")}</span></div></header>
     <nav class="story-nav" aria-label="Dashboard story"><a href="#executive"><span>01</span>Now</a><a href="#trajectory"><span>02</span>Trajectory</a><a href="#decisions"><span>03</span>Decisions</a><a href="#proof"><span>04</span>Proof</a><a href="#source"><span>05</span>Source</a></nav>
     <section class="hero" id="executive"><article class="hero-main"><div><p class="eyebrow">01 / Executive brief · ${esc(time(data.run_at))}</p><h1>What changed.<br>Why it matters.<br>What comes next.</h1><p class="lede">${esc(summary)}</p></div><div class="audience-switch" id="audience-switch" role="tablist" aria-label="Narrative audience"><button class="active" data-audience="executive" role="tab" aria-selected="true">Executive</button><button data-audience="manager" role="tab" aria-selected="false">Manager</button><button data-audience="engineer" role="tab" aria-selected="false">Engineer</button></div><div class="audience-story" id="audience-story" aria-live="polite"></div><div class="brief-grid"><div><span class="label">Current intent</span><p>${esc(currentIntent)}</p></div><div><span class="label">Latest proof</span><p>${esc(latestVerification?.summary || "No verification event recorded yet.")}</p></div><div><span class="label">Next move</span><p>${esc(nextMove)}</p></div></div><div class="legend"><span><i class="dot" style="background:var(--mint)"></i>Knowledge events</span><span><i class="dot" style="background:var(--cyan)"></i>Git commits</span><span><i class="dot" style="background:var(--violet)"></i>Evidence</span></div></article>
-      <aside class="hero-side"><div class="metric"><span class="label">Latest recorded activity</span><strong>${esc(latest ? new Date(latest.when).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Latest verification</span><strong>${esc(latestVerification ? new Date(latestVerification.at).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Open questions</span><strong>${full.format(unresolved)}</strong></div><div class="metric"><span class="label">Knowledge footprint</span><strong>${compact.format(data.current_footprint.knowledge_bytes)}B</strong></div><div class="metric"><span class="label">Current net lines</span><strong>${data.current_change.net >= 0 ? "+" : ""}${full.format(data.current_change.net)}</strong></div></aside></section>
+      <aside class="hero-side"><div class="metric"><span class="label">Latest recorded activity</span><strong>${esc(latest?.when ? new Date(latest.when).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Latest verification</span><strong>${esc(eventTime(latestVerification) ? new Date(eventTime(latestVerification)).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "—")}</strong></div><div class="metric"><span class="label">Open questions</span><strong>${full.format(unresolved)}</strong></div><div class="metric"><span class="label">Knowledge footprint</span><strong>${compact.format(data.current_footprint.knowledge_bytes)}B</strong></div><div class="metric"><span class="label">Current net lines</span><strong>${data.current_change.net >= 0 ? "+" : ""}${full.format(data.current_change.net)}</strong></div></aside></section>
     <div class="grid">
       <header class="chapter" id="trajectory"><span>02</span><div><p class="eyebrow">Manager view</p><h2>Trajectory and change</h2><p>Follow the sequence, scope, and growth behind the current phase: <strong>${esc(phase)}</strong>.</p></div></header>
       <section class="panel wide"><div class="panel-head"><div><h2>Time spine</h2><p class="panel-copy">Exact knowledge and Git chronology remain separate; dashed annotations are inferred.</p></div></div><div class="time-spine" id="time-spine"></div></section>
@@ -55,7 +60,7 @@
   let utc = false;
   const renderTimeline = () => {
     $("#time-spine").innerHTML = timeline.slice(0, 80).map(item => {
-      const displayed = utc ? new Date(item.when).toISOString() : time(item.when);
+      const displayed = utc && item.when ? new Date(item.when).toISOString() : time(item.when);
       const inferred = item.lane === "event" && item.association?.kind === "inferred" ? `<div class="inferred">┈ likely ${esc(item.association.short_revision)} via ${esc(item.association.matching_refs.join(", "))}</div>` : "";
       return `<div class="time-row"><time title="${esc(item.when)}">${esc(displayed)}</time><span class="lane ${item.lane}">${esc(item.label)}</span><div class="time-summary">${esc(item.summary)}${inferred}</div></div>`;
     }).join("") || `<div class="empty">No timeline data recorded.</div>`;
@@ -76,13 +81,29 @@
 
   const ledgerNames = {clineflow_goals:"Goals",clineflow_verification:"Verification",clineflow_timeline:"Timeline",clineflow_specification:"Specification",clineflow_last_session:"Last session"};
   const ledgerDescriptions = {clineflow_goals:"Intent, priorities, and completed outcomes.",clineflow_verification:"Acceptance criteria, evidence, and open verification.",clineflow_timeline:"The durable sequence of implementation and verification events.",clineflow_specification:"Confirmed behavior, assumptions, constraints, and open questions.",clineflow_last_session:"The current handoff and safest next step."};
-  const shortLabel = value => { const text=String(value||""); return text.length>46 ? `${text.slice(0,43)}…` : text; };
+  const humanize = value => String(value||"").replace(/^clineflow_/,"").replaceAll("_"," ").replace(/\b\w/g,letter=>letter.toUpperCase());
+  const statementText = value => {
+    if(value===null||value===undefined) return "Not recorded";
+    if(typeof value!=="object") return String(value);
+    if(Array.isArray(value)) return value.map(statementText).filter(Boolean).join(" · ")||"Not recorded";
+    for(const key of ["text","summary","title","name","criterion","requirement","description","message","label","value"]){
+      if(value[key]!==undefined&&value[key]!==null&&typeof value[key]!=="object") return String(value[key]);
+    }
+    return Object.entries(value).map(([key,item])=>`${humanize(key)}: ${statementText(item)}`).join(" · ")||"Structured record";
+  };
+  const statementDetail = value => {
+    if(!value||typeof value!=="object") return statementText(value);
+    if(Array.isArray(value)) return value.map(statementText).join("\n");
+    return Object.entries(value).map(([key,item])=>`${humanize(key)}: ${statementText(item)}`).join("\n");
+  };
+  const shortLabel = value => { const text=statementText(value); return text.length>46 ? `${text.slice(0,43)}…` : text; };
+  const atlasEntry = (id,value,kind,source) => ({id,label:shortLabel(value),full:statementDetail(value),kind,source,structured:typeof value==="object"&&value!==null});
   const journalDocs = data.documents.filter(doc => /^knowledge\/journals\/.+\.md$/.test(doc.path) && !/(?:index|TASK_TEMPLATE)\.md$/.test(doc.path)).sort((a,b)=>new Date(b.generated_at||0)-new Date(a.generated_at||0));
   const atlasSource = mode => {
     if(mode==="overview") { const routes={clineflow_goals:"goals",clineflow_verification:"evidence",clineflow_timeline:"journals",clineflow_specification:"constraints",clineflow_last_session:"journals"}; return Object.keys(ledgerNames).map(id=>({id:`atlas-${id}`,label:ledgerNames[id],full:ledgerDescriptions[id],kind:"ledger",source:id,targetMode:routes[id]})); }
-    if(mode==="goals") return [...(goals.active_goals||[]).map((full,index)=>({id:`atlas-goal-active-${index}`,label:shortLabel(full),full,kind:"active",source:"clineflow_goals.active_goals"})),...(goals.completed_goals||[]).map((full,index)=>({id:`atlas-goal-done-${index}`,label:shortLabel(full),full,kind:"complete",source:"clineflow_goals.completed_goals"}))];
-    if(mode==="constraints") return (specification.constraints||[]).map((full,index)=>({id:`atlas-constraint-${index}`,label:shortLabel(full),full,kind:"constraint",source:"clineflow_specification.constraints"}));
-    if(mode==="evidence") return [...(verification.acceptance_criteria||[]).map((full,index)=>({id:`atlas-evidence-${index}`,label:shortLabel(full),full,kind:"evidence",source:"clineflow_verification.acceptance_criteria"})),...(verification.open_verification||[]).map((full,index)=>({id:`atlas-open-${index}`,label:shortLabel(full),full,kind:"open",source:"clineflow_verification.open_verification"}))];
+    if(mode==="goals") return [...(goals.active_goals||[]).map((value,index)=>atlasEntry(`atlas-goal-active-${index}`,value,"active","clineflow_goals.active_goals")),...(goals.completed_goals||[]).map((value,index)=>atlasEntry(`atlas-goal-done-${index}`,value,"complete","clineflow_goals.completed_goals"))];
+    if(mode==="constraints") return (specification.constraints||[]).map((value,index)=>atlasEntry(`atlas-constraint-${index}`,value,"constraint","clineflow_specification.constraints"));
+    if(mode==="evidence") return [...(verification.acceptance_criteria||[]).map((value,index)=>atlasEntry(`atlas-evidence-${index}`,value,"evidence","clineflow_verification.acceptance_criteria")),...(verification.open_verification||[]).map((value,index)=>atlasEntry(`atlas-open-${index}`,value,"open","clineflow_verification.open_verification"))];
     return journalDocs.map(doc=>({id:`atlas-doc-${doc.id}`,label:shortLabel(doc.title),full:doc.description||doc.title,kind:"journal",source:doc.path,docId:doc.id}));
   };
   const atlasHeadings = {overview:["System map","Durable knowledge system","Five distinct ledgers keep intent, evidence, chronology, and handoff legible."],goals:["Intent","Goals and outcomes","Active intent and completed outcomes, without turning activity into a score."],constraints:["Decision boundaries","Constraints","The rules that narrow implementation choices and protect system behavior."],evidence:["Proof surface","Verification evidence","Acceptance criteria and unresolved verification shown as inspectable statements."],journals:["Decision history","Recent journals","The newest engineering narratives; open one in the explorer for full context."]};
@@ -110,7 +131,7 @@
   $("#atlas-open").addEventListener("click",event=>{if(event.currentTarget.dataset.targetMode){activateAtlas(event.currentTarget.dataset.targetMode);return;}selectDocument(event.currentTarget.dataset.docId);$("#document-body").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});});
   lazy($("#decision-graph"),()=>drawAtlas("overview"));
 
-  const knowledgeRefs = data.events.flatMap(event=>event.refs||[]).filter(ref=>/^(?:\.\.\/)?knowledge\/|^journals\//.test(String(ref)));
+  const knowledgeRefs = data.events.flatMap(event=>eventRefs(event)).filter(ref=>/^(?:\.\.\/)?knowledge\/|^journals\//.test(String(ref)));
   const brokenRefs = knowledgeRefs.filter(ref=>!data.documents.some(doc=>doc.path.endsWith(String(ref).replace(/^\.\.\//,"").replace(/^knowledge\//,""))||doc.path.endsWith(String(ref).replace(/^\.\.\//,""))));
   const updated = Object.values(data.ledgers).map(item=>item.updated_at).filter(Boolean);
   const signals = [["Canonical sources",data.documents.length],["Timeline events",data.events.length],["Ledger timestamps",new Set(updated).size===1?"aligned":"differ"],["Unresolved questions",unresolved],["Unresolved references",new Set(brokenRefs).size],["Exact usage records",(data.usage||[]).length]];
@@ -118,12 +139,11 @@
   const driftRows=[["Baseline",data.baseline_run||"first run"],["Added",data.drift.added.length],["Changed",data.drift.changed.length],["Removed",data.drift.removed.length]];
   $("#drift").innerHTML=driftRows.map(([label,value])=>`<div class="signal"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")+`<details><summary>Inspect changed sources</summary><p>${esc([...data.drift.added,...data.drift.changed,...data.drift.removed].slice(0,40).join(" · ")||"No canonical source drift.")}</p></details>`;
   $("#evidence").innerHTML=[["Requirements recorded",specification.updated_at||"—"],["Evidence reviewed",verification.updated_at||"—"],["Latest verification",latestVerification?.at||"—"],["Acceptance criteria",(verification.acceptance_criteria||[]).length],["Evidence references",(verification.evidence_refs||[]).length],["Open verification",(verification.open_verification||[]).length]].map(([label,value])=>`<div class="signal"><span>${esc(label)}</span><strong title="${esc(value)}">${esc(value)}</strong></div>`).join("");
-  const humanize = value => String(value||"").replace(/^clineflow_/,"").replaceAll("_"," ").replace(/\b\w/g,letter=>letter.toUpperCase());
-  const renderPrimitive = value => value===null||value===undefined ? `<span class="empty-value">Not recorded</span>` : esc(typeof value==="boolean"?(value?"Yes":"No"):value);
+  const renderPrimitive = value => value===null||value===undefined ? `<span class="empty-value">Not recorded</span>` : esc(typeof value==="boolean"?(value?"Yes":"No"):statementText(value));
   const renderObject = value => `<dl class="fact-object">${Object.entries(value||{}).map(([key,item])=>`<div><dt>${esc(humanize(key))}</dt><dd>${typeof item==="object"?`<code>${esc(JSON.stringify(item))}</code>`:renderPrimitive(item)}</dd></div>`).join("")}</dl>`;
   const renderItems = (items,key) => {
     if(!items.length)return `<div class="structured-empty">Nothing recorded here.</div>`;
-    if(key==="events")return `<div class="event-stack">${items.slice().reverse().map(item=>`<article class="structured-event"><div><span class="lane event">${esc(item.type||"event")}</span><time title="${esc(item.at)}">${esc(time(item.at))}</time></div><p>${esc(item.summary||"No summary recorded.")}</p>${item.refs?.length?`<div class="reference-row">${item.refs.map(ref=>`<code>${esc(ref)}</code>`).join("")}</div>`:""}</article>`).join("")}</div>`;
+    if(key==="events")return `<div class="event-stack">${items.slice().reverse().map(item=>{const eventAt=eventTime(item), refs=eventRefs(item); return `<article class="structured-event"><div><span class="lane event">${esc(eventType(item))}</span><time title="${esc(eventAt)}">${esc(time(eventAt))}</time></div><p>${esc(eventSummary(item)||statementText(item)||"No narrative recorded.")}</p>${refs.length?`<div class="reference-row">${refs.map(ref=>`<code>${esc(ref)}</code>`).join("")}</div>`:""}</article>`;}).join("")}</div>`;
     return `<ol class="fact-list">${items.map((item,index)=>`<li><span>${String(index+1).padStart(2,"0")}</span><div>${typeof item==="object"?renderObject(item):`<p>${renderPrimitive(item)}</p>`}</div></li>`).join("")}</ol>`;
   };
   const renderStructured = doc => {

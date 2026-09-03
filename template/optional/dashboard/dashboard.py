@@ -452,6 +452,52 @@ def validate_insights_data(data: Any, document_ids: set[str]) -> dict[str, Any]:
     return data
 
 
+def observation_text(value: Any) -> str:
+    """Turn a structured ledger statement into a compact human-readable observation."""
+    if value is None:
+        return "Not recorded"
+    if isinstance(value, (str, int, float, bool)):
+        return str(value)
+    if isinstance(value, list):
+        return " · ".join(observation_text(item) for item in value) or "Not recorded"
+    if isinstance(value, dict):
+        for key in ("text", "summary", "title", "name", "criterion", "requirement", "description", "message", "label", "value"):
+            candidate = value.get(key)
+            if candidate is not None and not isinstance(candidate, (dict, list)):
+                return str(candidate)
+        return " · ".join(f"{str(key).replace('_', ' ')}: {observation_text(item)}" for key, item in value.items()) or "Structured record"
+    return str(value)
+
+
+def first_present(value: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        candidate = value.get(key)
+        if candidate not in (None, ""):
+            return candidate
+    return None
+
+
+def normalize_event(value: Any) -> dict[str, Any]:
+    """Normalize flexible timeline records without discarding their source structure."""
+    if not isinstance(value, dict):
+        return {"at": None, "type": "event", "summary": observation_text(value), "refs": [], "raw": value}
+    refs = first_present(value, "refs", "references", "links", "journal_refs", "evidence_refs") or []
+    if not isinstance(refs, list):
+        refs = [refs]
+    normalized = {
+        "at": first_present(value, "at", "timestamp", "occurred_at", "datetime", "date", "time"),
+        "type": first_present(value, "type", "kind", "category", "event_type", "event", "action") or "event",
+        "summary": first_present(value, "summary", "text", "description", "title", "message", "detail", "change"),
+        "refs": [str(item) for item in refs],
+        "raw": value,
+    }
+    normalized["summary"] = observation_text(normalized["summary"] if normalized["summary"] is not None else value)
+    for key in ("actor", "git_revision", "usage", "usage_capture"):
+        if key in value:
+            normalized[key] = value[key]
+    return json_safe(normalized)
+
+
 def derive_observations(snapshot: dict[str, Any], insights_path: Path | None = None) -> dict[str, Any]:
     """Create a source-linked narrative model as a replaceable pipeline stage."""
     ledgers = snapshot.get("ledgers", {})
@@ -500,8 +546,8 @@ def derive_observations(snapshot: dict[str, Any], insights_path: Path | None = N
         },
         "project_phases": [],
         "notable_changes": ([{"text": latest_change, "source_ids": source_ids}] if latest_change else []),
-        "risks": [{"text": str(item), "source_ids": source_ids} for item in open_verification],
-        "questions": [{"text": str(item), "source_ids": source_ids} for item in open_questions],
+        "risks": [{"text": observation_text(item), "source_ids": source_ids} for item in open_verification],
+        "questions": [{"text": observation_text(item), "source_ids": source_ids} for item in open_questions],
     }
     supplied = validate_insights(insights_path, document_ids)
     if supplied:
@@ -537,7 +583,7 @@ def validate_observations(path: Path, snapshot: dict[str, Any]) -> dict[str, Any
 def collect(root: Path, compare: str = "previous") -> dict[str, Any]:
     ledgers, documents = collect_knowledge(root)
     commits = collect_commits(root)
-    events = list((ledgers.get("clineflow_timeline") or {}).get("events", []))
+    events = [normalize_event(item) for item in (ledgers.get("clineflow_timeline") or {}).get("events", [])]
     associate_events(events, commits)
     source_hash = sha256_bytes("".join(item["hash"] for item in documents).encode())
     baseline_id, baseline = select_baseline(root, source_hash, compare)

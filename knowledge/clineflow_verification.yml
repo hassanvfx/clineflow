@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T10:44:24Z
+updated_at: 2026-09-03T11:19:19Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -22,6 +22,7 @@ acceptance_criteria:
   - Dashboard output exposes the five audience-aware story chapters, omits the visible asset panel, and retains complete asset provenance in manifest.json.
   - Dashboard tests assert independent facts, observations, and render commands; exact embedded/adjacent JSON equality; observation source-hash binding; and executive, manager, and engineer narratives.
   - Knowledge Explorer tests require structured YAML facts, normalized repair output, guided/source/JSON controls, and progressive ledger and journal filters.
+  - Dashboard tests prove structured evidence has a readable label and details, structured observation text selects a named statement, and timeline aliases produce canonical time/type/summary/reference facts.
   - Migration tests reproduce and pass a valid managed agent block beginning on line one under macOS-compatible shell utilities.
   - Release validation requires canonical agent instructions to name the permanent remote bootstrap and prohibit running local updater copies first.
 regression_checks:
@@ -35,6 +36,7 @@ regression_checks:
   - Atlas labels remain inside readable card nodes while full values remain available in its keyboard-accessible detail list.
   - Responsive behavior stacks executive narrative cards, chapter headings, the Atlas detail rail, and source explorer without changing content order.
   - Direct file-protocol reports parse embedded facts and observations without browser fetches, servers, or remote connections.
+  - Structured ledger records do not render as JavaScript object coercions or blank timeline summaries.
   - User text before and after an existing managed agent block remains byte-preserved during refresh.
 evidence_refs:
   - journals/okf-adoption.md

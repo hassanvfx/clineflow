@@ -5,8 +5,8 @@ description: "Implements an isolated, time-first dashboard for navigating durabl
 tags: [engineering, knowledge, dashboard, observability, visualization]
 status: stable
 generated:
-  by: clineflow/2026.09.03.4
-  at: 2026-09-03T10:44:24Z
+  by: clineflow/2026.09.03.5
+  at: 2026-09-03T11:19:19Z
 ---
 
 # Goal
@@ -51,6 +51,10 @@ Removed the visible asset inventory panel while retaining complete asset provena
 
 Rebuilt the Knowledge Explorer around parsed YAML objects, guided sections, chronological event cards, source and JSON tabs, parser diagnostics, and copyable normalized YAML repair output. Split generation into explicit `collect`, `observe`, and `render` stages: `snapshot.json` now contains only normalized facts, `observations.json` contains a source-hash-bound executive/manager/engineer narrative, and the self-contained HTML embeds exact copies of both for `file://` use. The deterministic observer is a formal replaceable boundary for a future CLI/LLM command. Atlas overview cards now lead into their focused decision surfaces instead of ending at static descriptions.
 
+## 2026-09-03 11:19 UTC - Structured evidence and timeline normalization repaired
+
+Reproduced `[object Object]` labels in the Evidence Atlas and blank timeline descriptions when projects provide richer YAML records instead of legacy strings. The collector now normalizes timeline aliases (`timestamp`, `occurred_at`, `category`, `description`, `references`, and related forms) into a canonical report event while preserving the raw source record. The viewer now selects meaningful statement fields (`summary`, `text`, `title`, `criterion`, and related forms), shows remaining metadata in the details rail, and retains compatibility with older snapshots. Added direct regressions for structured evidence, structured observation text, and aliased timeline records.
+
 # Decisions
 
 - Keep migration schema `1`; the visor adds managed behavior but does not change the OKF persistent format.
@@ -67,6 +71,8 @@ Rebuilt the Knowledge Explorer around parsed YAML objects, guided sections, chro
 - Make `snapshot.json` the renderer's only factual input and keep narrative interpretation in the separately validated `clineflow-dashboard-observations/v1` artifact.
 - Embed both JSON artifacts in inert `application/json` script blocks so direct local-file viewing never requires fetch access; preserve adjacent copies for inspection and automation.
 - Keep YAML repair non-mutating: the pinned PyYAML runtime emits diagnostics and normalized copy output, while canonical source changes remain an explicit user action outside the dashboard boundary.
+- Normalize flexible timeline records only in report facts, preserving each original object under `raw`; do not impose a new persistent ledger schema.
+- Prefer named statement fields when rendering structured evidence or decisions, and expose all remaining fields in the readable detail surface rather than serializing objects into labels.
 
 # Testing
 
@@ -79,6 +85,7 @@ Rebuilt the Knowledge Explorer around parsed YAML objects, guided sections, chro
 - `./tests/certify-release.sh` passes the complete release `2026.09.03.4` lifecycle after the wrapper fix, including installation, dashboard boundaries, historical updates, rollback, uninstall safety, release-contract rejection cases, OKF validation, knowledge synchronization, and whitespace checks.
 - Dashboard tests require the executive/manager/engineering/source story markers, absence of the visible asset panel, and retention of complete asset provenance in `manifest.json`.
 - Dashboard boundary tests pass the independent facts → observations → render commands, assert exact embedded/adjacent JSON equality, bind observations to the facts source hash, require all three audience narratives, and verify structured YAML plus normalized repair output.
+- Structured-record regressions prove evidence labels never coerce to `[object Object]`, narrative observations choose a human-readable statement, and timeline aliases normalize into time, type, summary, references, and raw provenance.
 
 # Open Issues
 

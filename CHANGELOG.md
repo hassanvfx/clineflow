@@ -8,6 +8,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Fixed
+- Decision Atlas and Timeline now normalize structured YAML records and common field aliases before rendering, preventing `[object Object]` evidence labels and empty event summaries.
 - Invoking the dashboard without an explicit subcommand now forwards the default `generate` command to the Python engine, preventing missing `argparse` attributes on first use.
 - Decision Atlas now opens as a clean five-ledger system map and progressively reveals capped goal, constraint, evidence, or journal views with readable cards and a full-text details rail instead of an overlapping all-document force graph.
 - Managed agent-rule refresh no longer calls BSD `head` with a zero line count when the ClineFlow block begins on the first line.
@@ -30,6 +31,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Knowledge Visor now tells one progressive story across executive context, manager trajectory, engineering decisions, shared proof, and canonical source exploration; asset provenance remains in `manifest.json` instead of occupying a dashboard panel.
 - Knowledge Explorer now parses YAML through the pinned optional runtime, presents guided structured sections instead of flattened source text, diagnoses malformed YAML, and provides non-mutating normalized YAML and JSON repair output.
 - Executive, manager, and engineer narrative views now draw from the explicit `clineflow-dashboard-observations/v1` model embedded alongside normalized facts and preserved as `observations.json` in every run.
+- Updated the managed Knowledge Visor release to `2026.09.03.5` with structured evidence and timeline normalization.
 - All supported agent configurations now require five-ledger reconciliation for every journal, documentation, or knowledge-base change and a staged synchronization check before commit.
 - Uninstall now requires confirmation (or `--yes`), validates ownership data before mutation, preserves edits to formerly owned agent files, and rolls back failures or handled interruptions.
 - Standardized the installer, updater, and installed state on date-based versions, currently `2026.09.03.4`, with migration schema `1`.
