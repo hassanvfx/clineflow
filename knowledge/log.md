@@ -2,6 +2,12 @@
 
 ## 2026-09-03
 
+* **Workflow**: Natural-language dashboard requests now use the formal facts, agent-insights, observations, and render pipeline; direct CLI generation remains a deliberate no-insights fallback.
+
+* **Fix**: Normalized timestamped event prose into concise dashboard hero titles while retaining full source narrative as inspectable detail.
+
+* **Safety**: Strengthened ClineFlow update requests into an execution-only contract with required post-update version evidence, and added Claude Code’s `/update-clineflow` project command.
+
 * **Refinement**: Removed dashboard edit-request controls and moved title, summary, structured-field, and expandable-detail preparation into the self-contained presentation JSON pipeline.
 * **Usability**: Long event and source prose now stays out of hero/proof labels; reports without agent estimate inputs omit Delivery Scenarios rather than showing an inactive state.
 

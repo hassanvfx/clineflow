@@ -5,8 +5,8 @@ description: "Adds commit-and-footprint trajectory context plus agent-authored d
 tags: [engineering, dashboard, observability, planning, estimates]
 status: stable
 generated:
-  by: clineflow/2026.09.03.16
-  at: 2026-09-03T19:16:18Z
+  by: clineflow/2026.09.03.19
+  at: 2026-09-03T19:37:45Z
 ---
 
 # Goal
@@ -36,6 +36,18 @@ The fixture-review browser exposed an over-stretched `Source ready` status badge
 ## 2026-09-03 - Read-only compact presentation refinement
 
 Removed the dashboard's browser-local source edit-request and Pending edits controls. The observer/presentation stage now builds compact titles, summaries, structured field rows, and retained full detail for evidence, decision records, and every structured source document before HTML is rendered. The browser only renders that prepared representation and exposes full source prose through deliberate expansion or raw-source view. Estimate-free reports omit Delivery Scenarios entirely; supplied estimates retain their source-bound, agent-authored model. Release `2026.09.03.16` keeps migration schema `1` and the self-contained `file://` contract.
+
+## 2026-09-03 - Update execution contract
+
+Strengthened the managed agent rule for “Please update ClineFlow.” so it explicitly prohibits release-only checks and requires the permanent remote bootstrap plus post-command `.clineflow/VERSION` evidence. Added the fixture-installed Claude Code command `/update-clineflow` with the same contract. Release `2026.09.03.17` keeps schema `1`.
+
+## 2026-09-03 - Headline normalization
+
+The Agentic Analytics report exposed a raw timestamped event being used as the hero heading. Headline normalization now removes ISO timestamps and `(see path)` metadata before splitting the first supporting clause. The same full event remains available in the report data and disclosure surfaces. Release `2026.09.03.18` keeps schema `1`.
+
+## 2026-09-03 - Agent dashboard pipeline
+
+The natural-language dashboard contract now directs agents through `collect → insights → observe → render`, so agent-authored, source-linked narrative and delivery estimates can enter the report. Direct CLI generation remains intentionally insight-free. A delivery estimate still requires explicit constants rather than inferred labor or cost. Release `2026.09.03.19` keeps schema `1`.
 
 # Decisions
 

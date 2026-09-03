@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T19:16:18Z
+updated_at: 2026-09-03T19:37:45Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -386,4 +386,33 @@ events:
       - ../template/optional/dashboard/visor.js
       - ../template/optional/dashboard/visor.css
       - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T19:29:06Z
+    actor: codex
+    type: refinement
+    summary: Made ClineFlow updates execution-only in managed agent rules and added a Claude Code slash command that runs the permanent remote bootstrap with post-update version evidence.
+    refs:
+      - journals/dashboard-project-pulse.md
+      - ../template/configs/rules.template.md
+      - ../template/.claude/commands/update-clineflow.md
+      - ../template/.clineflow/bin/validate-release
+    git_revision: null
+  - at: 2026-09-03T19:32:20Z
+    actor: codex
+    type: fix
+    summary: Normalized timestamped event prose into concise dashboard headlines while retaining the full narrative as source-linked detail.
+    refs:
+      - journals/dashboard-project-pulse.md
+      - ../template/optional/dashboard/dashboard.py
+      - ../tests/test-dashboard.sh
+    git_revision: null
+  - at: 2026-09-03T19:37:45Z
+    actor: codex
+    type: refinement
+    summary: Routed natural-language dashboard requests through the formal facts, agent-insights, observations, and render stages while preserving bare CLI generation as a no-insights fallback.
+    refs:
+      - journals/dashboard-project-pulse.md
+      - ../template/configs/rules.template.md
+      - ../template/.clineflow/WORKING_WITH_CODEX.md
+      - ../template/.clineflow/WORKING_WITH_CLINE.md
     git_revision: null

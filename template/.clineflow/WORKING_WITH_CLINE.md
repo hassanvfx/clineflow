@@ -19,7 +19,7 @@ Tell your agent: “Please update ClineFlow.” The agent reads the current inst
 
 ## Knowledge Visor
 
-Say “Show me the ClineFlow dashboard” to explicitly invoke the optional time-first knowledge visor. The first request previews and approval-gates its isolated runtime and pinned visual assets. ClineFlow does not install, update, or run those optional components during normal operation.
+Say “Show me the ClineFlow dashboard” to explicitly invoke the optional time-first knowledge visor. An agent handling that request collects facts to temporary storage, reads them, prepares source-linked insights when grounded narrative observations or delivery assumptions are available, then observes and renders the report. A direct CLI invocation remains the no-insights fallback. The first request previews and approval-gates its isolated runtime and pinned visual assets. ClineFlow does not install, update, or run those optional components during normal operation.
 
 ## Related projects
 

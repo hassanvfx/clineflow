@@ -22,6 +22,7 @@ git init -q
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL" >/dev/null
 [ -x .clineflow/bin/dashboard ] || fail "fresh install omitted inert dashboard bootstrap"
 [ -f .clineflow/dashboard-component-manifest ] || fail "fresh install omitted dashboard component manifest"
+[ -f .claude/commands/update-clineflow.md ] || fail "fresh install omitted deterministic Claude update command"
 [ ! -e .clineflow/optional ] && [ ! -e knowledge/dashboard ] || fail "fresh install activated optional dashboard state"
 ! grep -q 'CLINEFLOW DASHBOARD GENERATED REPORTS' .git/info/exclude || fail "fresh install changed Git exclusions"
 ./.clineflow/bin/doctor >/dev/null

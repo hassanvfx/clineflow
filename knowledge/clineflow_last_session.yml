@@ -1,6 +1,6 @@
 version: 1
-updated_at: 2026-09-03T19:16:18Z
-latest_change: Removed dashboard source-edit controls and prepared compact title, summary, field, and expandable-detail representations before browser rendering.
+updated_at: 2026-09-03T19:37:45Z
+latest_change: Routed natural-language dashboard requests through the formal facts, observations, and render pipeline so grounded agent insights can reach the report.
 specification_summary:
   - OKF-era installations from 2026.08.15.0 onward update through one manifest-driven, rollback-safe entrypoint.
   - “Please update ClineFlow” authorizes an agent to consult the repository and execute the updater with --yes.
@@ -22,6 +22,9 @@ specification_summary:
   - The updater compares all four date-based release-version segments numerically and rejects malformed recognized release versions before mutation.
   - Project Pulse charts committed numstat and tracked/knowledge footprint history, with current working-tree changes kept separate from committed facts.
   - Optional delivery estimates are validated agent insights with explicit assumptions; Python calculates scenarios and sanitized exports remove them, while reports without one omit that surface.
+  - ClineFlow update requests must execute the permanent remote bootstrap before any release check and report a final installed version or exact blocker; Claude Code has an equivalent project slash command.
+  - Dashboard headlines strip ISO timestamps and source-path parentheticals before visual rendering; the original narrative remains in summary/detail fields.
+  - Natural-language dashboard requests use the formal collect → insights → observe → render workflow; a direct dashboard CLI invocation intentionally remains estimate-free without insights.
 verification_summary:
   - The single lifecycle gate passes fresh installation, historical migrations, transactional removal, rollback, release-contract rejection cases, OKF validation, and diff checks.
   - Native Windows install, PowerShell update, doctor, and removal smoke coverage is configured in CI and awaits its first hosted run.
@@ -44,7 +47,7 @@ verification_summary:
 goals_summary:
   - Future installation-affecting features must update the release manifest and prove their migration decision.
   - Keep every supported agent's commit workflow synchronized through the canonical shared rules template.
-next_recommended_step: Review regenerated canonical fixtures for compact narrative titles, structured proof records, and source-field disclosure; then complete lifecycle certification for release 2026.09.03.16 before release.
+next_recommended_step: Release ClineFlow 2026.09.03.19, update Agentic Analytics, then regenerate the dashboard through an agent so it can provide a grounded estimate payload when explicit constants are available.
 next_step_refs:
   - journals/knowledge-dashboard.md
   - journals/repair-source-instruction-paths.md

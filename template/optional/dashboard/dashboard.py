@@ -617,11 +617,13 @@ def concise_title(value: Any, limit: int = 74) -> str:
     # Timeline entries are frequently authored as "at: <timestamp> · event: ...".
     # A timestamp is useful metadata, but it is a poor headline.
     text = re.sub(r"^(?:at|on)\s*:\s*", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\b20\d{2}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}Z?)?\b", "", text)
+    text = re.sub(r"\s*\(see\s+[^)]*\)", "", text, flags=re.IGNORECASE)
     text = re.sub(r"^\d{4}-\d{2}-\d{2}(?:[T ][^\s]+)?\s*(?:[·—:-]\s*)?", "", text).strip()
     text = re.sub(r"^(?:event|summary|change)\s*:\s*", "", text, flags=re.IGNORECASE)
     if not text:
         return "Recorded event"
-    natural_breaks = re.split(r"(?<=[.!?])\s+|\s+\(|\s+—\s+|\s+[-:]\s+", text, maxsplit=1)
+    natural_breaks = re.split(r"(?<=[.!?])\s+|\s+\(|\s+—\s+|:\s*", text, maxsplit=1)
     candidate = natural_breaks[0].strip() or text
     if len(candidate) <= limit:
         return candidate
@@ -929,7 +931,7 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
         for item in specification.get("constraints") or []
     ]
     active_goal = observation_text(next(iter(goals.get("active_goals") or []), ""))
-    headline = active_goal or (latest.get("title") if latest else "Build the first durable project record")
+    headline = concise_title(active_goal or (latest.get("title") if latest else "Build the first durable project record"), 68)
     onboarding = {
         "empty": not documents,
         "title": "Start the story with one deliberate record" if not documents else "Strengthen the next useful signal",

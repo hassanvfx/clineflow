@@ -92,6 +92,10 @@ grep -qF './tests/test-knowledge-sync.sh' tests/certify-release.sh || { echo "ER
 grep -qF './tests/test-dashboard.sh' tests/certify-release.sh || { echo "ERROR: release certification omits the optional dashboard boundary" >&2; exit 1; }
 grep -qF 'validate-knowledge-sync --staged' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the staged knowledge synchronization gate" >&2; exit 1; }
 grep -qF 'Show me the ClineFlow dashboard' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the explicit dashboard invocation" >&2; exit 1; }
+grep -qF 'this is an execution request, not a request to check for releases' template/configs/rules.template.md || { echo "ERROR: shared agent rules do not distinguish update execution from release checks" >&2; exit 1; }
+grep -qF 'never claim the installation is up to date' template/configs/rules.template.md || { echo "ERROR: shared agent rules permit unverified update claims" >&2; exit 1; }
+[ -f template/.claude/commands/update-clineflow.md ] || { echo "ERROR: deterministic Claude update command is missing" >&2; exit 1; }
+grep -qF 'curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes' template/.claude/commands/update-clineflow.md || { echo "ERROR: Claude update command omits the remote bootstrap" >&2; exit 1; }
 grep -qF './tests/certify-release.sh' .github/workflows/test.yml || { echo "ERROR: CI does not run lifecycle certification" >&2; exit 1; }
 grep -qF './template/.clineflow/bin/validate-knowledge-sync --against' .github/workflows/test.yml || { echo "ERROR: pull-request CI does not enforce knowledge synchronization" >&2; exit 1; }
 

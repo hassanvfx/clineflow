@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T19:16:18Z
+updated_at: 2026-09-03T19:37:45Z
 active_goals:
   - Maintain an installed, agent-operational durable development workflow with synchronized current context.
 priorities:
@@ -28,6 +28,9 @@ success_measures:
   - Date-based updater releases compare numeric version segments so multi-digit patch upgrades remain valid.
   - Dashboard trajectory makes committed change and tracked knowledge growth inspectable without inferring contributor productivity.
   - Agent-authored delivery scenarios make time-and-cost assumptions explicit, calculated, source-bound, and clearly estimated.
+  - ClineFlow update requests execute the permanent remote bootstrap or report a concrete blocker; they never substitute a stale release check.
+  - Dashboard headings remain concise even when the only available source is a timestamped narrative event.
+  - Natural-language dashboard requests use the source-linked observation pipeline rather than a bare report generation path.
 blocked_goals: []
 completed_goals:
   - Enforce universal five-ledger synchronization for journal, documentation, and knowledge-base changes.

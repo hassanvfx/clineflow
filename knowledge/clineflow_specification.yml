@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T19:16:18Z
+updated_at: 2026-09-03T19:37:45Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -24,6 +24,7 @@ confirmed:
   - Knowledge Explorer parses YAML with the pinned optional PyYAML dependency and offers guided, JSON, raw-source, diagnostic, and copyable normalized-repair views without modifying canonical files.
   - Dashboard facts normalize flexible timeline aliases into canonical event fields while retaining raw records; structured evidence, goals, and constraints render named statements and readable metadata instead of object coercions.
   - Report timeline events carry a short title, compact kind, and full narrative note; the Time Spine displays the title first and reveals formatted detail only on request.
+  - Hero headings remove timestamp/path-only context and split supporting narrative into the prepared summary/detail representation.
   - Dashboard rendering creates clineflow-dashboard-presentation/v1 after facts and observations; the browser consumes the presentation model while adjacent and embedded JSON remain exact copies.
   - Dashboard source records are read-only; the presentation model supplies compact titles, summaries, fields, and expandable detail before browser rendering.
   - Dashboard report retention defaults to three complete runs and can be configured under knowledge/dashboard/settings.json with null representing unlimited history.
@@ -34,6 +35,8 @@ confirmed:
   - Project Pulse derives committed change volume and tracked/knowledge footprint only from normalized Git facts, and labels the current working tree separately.
   - An agent may supply a source-bound `clineflow-dashboard-delivery-estimate/v1` through dashboard insights; the observer validates explicit constants and calculates all scenario time and cost outputs.
   - Delivery scenarios are planning estimates, not labor telemetry, productivity scores, or realized savings; sanitized exports omit estimates and agent metadata.
+  - “Please update ClineFlow.” is an execution request: agents run the permanent remote bootstrap before any release check and report the resulting `.clineflow/VERSION` or an exact blocker.
+  - An agent handling “Show me the ClineFlow dashboard” collects facts, supplies source-linked observations when grounded, then observes and renders; bare CLI generation stays an explicit no-insights fallback.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -56,6 +59,7 @@ constraints:
   - A malformed recognized installed or release version aborts before any update mutation.
   - The dashboard does not infer delivery time, cost, model configuration, or counterfactual savings when no explicit agent estimate is supplied.
   - Estimate-free reports omit the Delivery Scenarios surface rather than displaying an inactive planning card.
+  - Claude Code receives a fixture-installed `/update-clineflow` project command that performs the same remote-bootstrap workflow.
   - Knowledge Explorer source-status indicators remain compact, non-growing controls and must not distort document headers.
 non_goals: []
 open_questions: []

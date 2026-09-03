@@ -40,7 +40,7 @@ This prompt authorizes Codex to read the current repository instructions and imm
 
 > Show me the ClineFlow dashboard.
 
-Only this explicit request, a direct Knowledge Visor request, or a direct `./.clineflow/bin/dashboard` command activates the optional dashboard. First use displays and approval-gates every runtime and visual-asset download. Ordinary ClineFlow work never installs or runs the visor.
+Only this explicit request, a direct Knowledge Visor request, or a direct `./.clineflow/bin/dashboard` command activates the optional dashboard. When responding to the natural-language request, collect facts into temporary storage, read them, author a source-linked insights JSON when grounded observations or delivery assumptions are available, then run `dashboard observe` and `dashboard render`. The direct CLI command remains the intentional no-insights fallback. First use displays and approval-gates every runtime and visual-asset download. Ordinary ClineFlow work never installs or runs the visor.
 
 ## Diagnose the setup
 
