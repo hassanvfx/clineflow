@@ -96,6 +96,22 @@ curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh 
 
 Do not run any existing local updater first; legacy updater copies can overwrite themselves before the current transactional updater takes control.
 
+### Rescue an old installation
+
+An older ClineFlow installation may not recognize the natural-language prompt or may still suggest its bundled updater. In that case, do not follow the stale local instructions. From the project root, run the current remote bootstrap directly:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes
+```
+
+Windows PowerShell:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/update.ps1))) -Yes
+```
+
+The permanent URL is compatibility infrastructure for old installations. The downloaded bootstrap identifies the installed layout before mutation, stages and verifies the target release, and either completes the migration or rolls back. Confirm the final version with `cat .clineflow/VERSION` on macOS/Linux or `Get-Content .clineflow/VERSION` in PowerShell.
+
 For a human-driven update without prior non-interactive authorization:
 
 ```bash
@@ -154,6 +170,9 @@ The remover validates trusted ownership paths and marker structure before mutati
 
 - Run `./.clineflow/bin/doctor` first. It reports missing prerequisites, missing knowledge files, and incomplete agent configuration without installing anything.
 - If installation reports an existing ClineFlow layout, use the permanent remote updater instead of forcing a fresh install.
+- Run the rescue command from the project root. Starting it from another directory can target the wrong project or report that no supported installation exists.
+- If `curl` is unavailable, use the PowerShell command on Windows or install a supported downloader before retrying; do not fall back to a stale local updater.
+- If the remote host cannot be reached, leave the installation unchanged and retry after network or proxy access is restored. Do not copy an unverified updater from another source.
 - If an update fails, read the reported rollback result. Recovery evidence is retained under `.clineflow/backups/` when available.
 - If removal rejects malformed markers or unsafe ownership data, restore a valid managed block or inspect `.clineflow/.owned-agent-files`, then preview again.
 - The optional dashboard has its own diagnostic: `./.clineflow/bin/dashboard doctor`.

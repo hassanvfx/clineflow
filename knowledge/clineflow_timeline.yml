@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:16:12Z
+updated_at: 2026-09-03T20:30:05Z
 events:
   - at: 2026-08-15T00:00:00Z
     actor: codex
@@ -427,4 +427,23 @@ events:
       - ../docs/how-clineflow-works.md
       - ../docs/knowledge-visor.md
       - ../docs/okf-knowledge-workflow.md
+    git_revision: null
+  - at: 2026-09-03T20:22:22Z
+    actor: codex
+    type: documentation
+    summary: Added the permanent raw remote bootstrap as the explicit rescue path for old installations whose agent rules cannot recognize or correctly execute the natural-language update request.
+    refs:
+      - journals/old-install-update-rescue.md
+      - ../README.md
+      - ../docs/installation-and-lifecycle.md
+      - ../template/docs/durable-development-methodology.md
+    git_revision: null
+  - at: 2026-09-03T20:30:05Z
+    actor: codex
+    type: fix
+    summary: Diagnosed the red README badge as a real Windows lifecycle failure, isolated the smoke installation under RUNNER_TEMP with normalized cross-shell paths, and pointed the badge at the canonical main-branch workflow.
+    refs:
+      - journals/old-install-update-rescue.md
+      - ../.github/workflows/test.yml
+      - ../README.md
     git_revision: null

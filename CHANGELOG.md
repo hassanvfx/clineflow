@@ -8,6 +8,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Fixed
+- Windows lifecycle CI now installs in the runner's temporary workspace through normalized Git Bash paths, allowing installer-owned Git initialization before PowerShell update and removal checks.
 - Executive metrics now use the latest knowledge or Git activity rather than mistaking report generation for project activity.
 - Replaced the remaining Decision Atlas graph with a calmer, source-bound Project Story, eliminating the graph library and its repetitive relationship UI.
 - Decision Atlas and Timeline now normalize structured YAML records and common field aliases before rendering, preventing `[object Object]` evidence labels and empty event summaries.
@@ -18,6 +19,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Source-repository agent instructions now reference the runtime guides and validators under `template/.clineflow/`, and the legacy Cline compatibility template matches the canonical shared rules.
 
 ### Added
+- A prominent raw rescue-update command for installations whose older agent instructions do not recognize the natural-language update prompt.
 - An installation-first README, focused lifecycle/workflow/Knowledge Visor guides, and a linked 30-minute tutorial with a local preview image.
 - Canonical “Please commit.”, “Please remove ClineFlow.”, and “Please show me the ClineFlow dashboard.” prompts across distributed agent guidance.
 - The optional, time-first ClineFlow Knowledge Visor with an inert bootstrap, approval-gated and checksum-verified assets, self-contained HTML reports plus adjacent JSON snapshots, sanitized exports, and dormant/activated boundary certification.
@@ -33,6 +35,7 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Read-only legacy discovery for pre-OKF `docs/journals/` histories.
 
 ### Changed
+- Release `2026.09.03.21` documents the permanent remote bootstrap as the old-install compatibility escape hatch; migration schema `1` remains valid because no persistent format changes.
 - Release `2026.09.03.20` makes removal preview-first and confirmation-gated at the agent-instruction layer while preserving the existing transactional remover and schema `1`.
 - Public documentation now explains the hidden runtime, OKF knowledge base, five ledgers, self-documenting commit loop, and dormant dashboard without duplicating implementation detail in the README.
 - Knowledge Visor now leads with a source-linked Recent Story, defaults the Time Spine to useful recent moments, and exposes the whole chronology on demand; decorative chapter navigation has been removed.

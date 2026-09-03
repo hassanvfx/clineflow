@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:16:12Z
+updated_at: 2026-09-03T20:30:05Z
 acceptance_criteria:
   - Fresh installation creates the five ClineFlow master indexes and the methodology manual when absent.
   - Shared agent instructions require index-first durable development work.
@@ -37,6 +37,7 @@ acceptance_criteria:
   - Fresh installation proves the Claude `/update-clineflow` command is present; release validation rejects update rules that allow an unexecuted release check to be reported as current.
   - Dashboard title normalization removes ISO timestamps and source-path parentheticals before constructing a concise visual headline.
   - Managed agent guidance requires the dashboard observation pipeline for natural-language requests and preserves direct CLI generation as the no-insights fallback.
+  - Release validation requires the README and lifecycle guide to expose the old-install rescue path and the complete non-interactive remote-bootstrap command.
 regression_checks:
   - Existing installation, ownership, prerequisite, and validator tests remain green.
   - Knowledge, legacy journals, authored documentation, and retired reference artifacts remain unchanged during updates.
@@ -61,6 +62,9 @@ regression_checks:
   - Dashboard visual regression coverage keeps Knowledge Explorer source-status indicators compact under narrow fixture viewports.
   - Installation and release-contract tests reject missing lifecycle prompts or removal guidance that bypasses the dry-run preview.
   - Complete lifecycle certification passes for release 2026.09.03.20 with the redesigned documentation and synchronized OKF knowledge state.
+  - Release-contract tests reject a missing old-install heading or a rescue command that drops non-interactive authorization.
+  - Complete lifecycle certification passes for release 2026.09.03.21 with old-install rescue guidance and migration schema 1.
+  - GitHub workflow evidence must show both the Linux certification job and windows-lifecycle-smoke passing before the badge repair is complete.
 evidence_refs:
   - journals/okf-adoption.md
   - journals/encapsulate-tooling.md
@@ -77,7 +81,9 @@ evidence_refs:
   - journals/release-version-ordering.md
   - journals/dashboard-project-pulse.md
   - journals/readme-documentation-redesign.md
+  - journals/old-install-update-rescue.md
 open_verification:
+  - Confirm the corrected windows-lifecycle-smoke job passes on GitHub Actions after push.
   - Capture and visually inspect the deferred 1600×1000 fixture-backed Knowledge Visor image before adding it to the README.
 journal_refs:
   - journals/okf-adoption.md
@@ -97,3 +103,4 @@ journal_refs:
   - journals/release-version-ordering.md
   - journals/dashboard-project-pulse.md
   - journals/readme-documentation-redesign.md
+  - journals/old-install-update-rescue.md

@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-09-03T20:16:12Z
+updated_at: 2026-09-03T20:30:05Z
 confirmed:
   - ClineFlow stores durable engineering context in its versioned OKF knowledge bundle.
   - Engineering Journals remain the detailed canonical record for substantial work.
@@ -41,6 +41,8 @@ confirmed:
   - “Please update ClineFlow.” is an execution request: agents run the permanent remote bootstrap before any release check and report the resulting `.clineflow/VERSION` or an exact blocker.
   - An agent handling “Show me the ClineFlow dashboard” collects facts, supplies source-linked observations when grounded, then observes and renders; bare CLI generation stays an explicit no-insights fallback.
   - The public README is installation-first and delegates lifecycle, workflow, OKF, and Knowledge Visor detail to focused Markdown references.
+  - The public README exposes the permanent remote bootstrap as a direct old-install rescue path when stale agent instructions do not recognize the update prompt.
+  - The README test badge targets the canonical test.yml workflow on main, whose Windows smoke project is isolated in RUNNER_TEMP and shared across Bash and PowerShell through normalized paths.
 assumptions: []
 constraints:
   - ClineFlow-owned runtime files remain under .clineflow/.
@@ -66,6 +68,7 @@ constraints:
   - Claude Code receives a fixture-installed `/update-clineflow` project command that performs the same remote-bootstrap workflow.
   - Knowledge Explorer source-status indicators remain compact, non-growing controls and must not distort document headers.
   - Public documentation must not reference a dashboard image unless that local asset exists and has been visually verified.
+  - Old-install rescue guidance runs from the intended project root, never prefers a bundled legacy updater, and verifies the final .clineflow/VERSION.
 non_goals: []
 open_questions: []
 journal_refs:
@@ -86,3 +89,4 @@ journal_refs:
   - journals/release-version-ordering.md
   - journals/dashboard-project-pulse.md
   - journals/readme-documentation-redesign.md
+  - journals/old-install-update-rescue.md

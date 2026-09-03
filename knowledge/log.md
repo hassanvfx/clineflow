@@ -2,6 +2,8 @@
 
 ## 2026-09-03
 
+* **Fix**: Repaired the Windows lifecycle smoke path handling behind the failing README badge and targeted the canonical main-branch workflow badge URL.
+* **Update**: Added the raw remote-bootstrap rescue path for old installations, its recovery boundaries, release-contract enforcement, and release `2026.09.03.21` context.
 * **Documentation**: Replaced the sprawling README with an installation-first guide and added focused lifecycle, workflow, Knowledge Visor, and expanded OKF references.
 * **Workflow**: Standardized “Please commit,” “Please update ClineFlow,” preview-before-removal, and explicit dashboard prompts across supported agent guidance for release `2026.09.03.20`.
 * **Media**: Added the verified local Vimeo tutorial poster; deferred the fixture-backed dashboard screenshot because local browser capture was blocked, leaving no broken README image reference.

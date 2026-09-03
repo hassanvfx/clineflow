@@ -11,6 +11,8 @@ copy_release() {
   mkdir -p "$destination"
   cp "$ROOT/README.md" "$destination/README.md"
   cp -R "$ROOT/template" "$destination/template"
+  mkdir -p "$destination/docs"
+  cp "$ROOT/docs/installation-and-lifecycle.md" "$destination/docs/installation-and-lifecycle.md"
   mkdir -p "$destination/.github"
   cp -R "$ROOT/.github/workflows" "$destination/.github/workflows"
   cp -R "$ROOT/tests" "$destination/tests"
@@ -26,6 +28,9 @@ refresh_checksum() {
 
 "$ROOT/template/.clineflow/bin/validate-release" >/dev/null
 pass "current release contract is valid"
+
+portable="$TEST_ROOT/portable"; copy_release "$portable"
+"$portable/template/.clineflow/bin/validate-release" >/dev/null || fail "copied release fixture is incomplete"
 
 grep -qF '`template/.clineflow/WORKING_WITH_CODEX.md`' "$ROOT/AGENTS.md" || fail "source AGENTS.md points to a missing Codex guide"
 for source_rules in "$ROOT/AGENTS.md" "$ROOT/.clinerules"; do
@@ -55,6 +60,12 @@ if "$prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail
 local_first="$TEST_ROOT/local-first"; copy_release "$local_first"; sed 's/Do not run any existing local updater first/Local updater use is permitted/' "$local_first/README.md" > "$local_first/README.tmp"; mv "$local_first/README.tmp" "$local_first/README.md"
 if "$local_first/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing stale-local-updater warning was accepted"; fi
 
+rescue="$TEST_ROOT/rescue"; copy_release "$rescue"; sed 's/Old install or prompt not recognized?/Update details/' "$rescue/README.md" > "$rescue/README.tmp"; mv "$rescue/README.tmp" "$rescue/README.md"
+if "$rescue/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing old-install rescue path was accepted"; fi
+
+rescue_command="$TEST_ROOT/rescue-command"; copy_release "$rescue_command"; sed 's/bash -s -- --yes/bash/' "$rescue_command/README.md" > "$rescue_command/README.tmp"; mv "$rescue_command/README.tmp" "$rescue_command/README.md"
+if "$rescue_command/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "incomplete rescue command was accepted"; fi
+
 removal="$TEST_ROOT/removal"; copy_release "$removal"; sed 's/Please remove ClineFlow\./Remove the tool./g' "$removal/README.md" > "$removal/README.tmp"; mv "$removal/README.tmp" "$removal/README.md"
 if "$removal/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical removal prompt was accepted"; fi
 
@@ -66,7 +77,7 @@ if "$commit_prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; th
 
 dashboard_prompt="$TEST_ROOT/dashboard-prompt"; copy_release "$dashboard_prompt"; sed 's/Please show me the ClineFlow dashboard\./Open the dashboard./g' "$dashboard_prompt/README.md" > "$dashboard_prompt/README.tmp"; mv "$dashboard_prompt/README.tmp" "$dashboard_prompt/README.md"
 if "$dashboard_prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical dashboard prompt was accepted"; fi
-pass "release validation rejects missing lifecycle prompts, unsafe removal guidance, and local-first updates"
+pass "release validation rejects missing lifecycle prompts, rescue guidance, unsafe removal guidance, and local-first updates"
 
 chain="$TEST_ROOT/chain"; copy_release "$chain"; sed 's/migrate_0_to_1()/removed_0_to_1()/' "$chain/template/.clineflow/bin/update" > "$chain/update.tmp"; mv "$chain/update.tmp" "$chain/template/.clineflow/bin/update"; chmod +x "$chain/template/.clineflow/bin/update"; refresh_checksum "$chain" .clineflow/bin/update
 if "$chain/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing migration chain was accepted"; fi

@@ -58,6 +58,8 @@ Use this exact prompt:
 
 This is explicit authorization for the agent to read the latest update instructions from the authoritative ClineFlow repository and immediately run `curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes` without asking again. Do not run any existing local updater first; legacy copies can overwrite themselves. The agent waits for migration and verification or rollback to finish, then reports the installed version and preserved legacy artifacts. Safety failures still stop the update, and the authorization does not extend to unrelated system changes or destructive cleanup.
 
+If an old installation does not recognize the prompt, run that exact remote-bootstrap command directly from the project root. It is the compatibility escape hatch and must take precedence over any updater bundled in the old installation.
+
 ## Removing ClineFlow through an agent
 
 Use this exact prompt:

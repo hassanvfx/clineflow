@@ -12,7 +12,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       
@@ -38,22 +38,24 @@ jobs:
 
     steps:
       - name: Checkout code with release byte normalization
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install through Git Bash
         shell: bash
         run: |
-          mkdir windows-smoke
-          cd windows-smoke
-          git init -q
+          workspace_dir=$(cygpath -u "$GITHUB_WORKSPACE")
+          smoke_dir=$(cygpath -u "$RUNNER_TEMP")/clineflow-windows-smoke
+          mkdir -p "$smoke_dir"
+          cd "$smoke_dir"
           export CLINEFLOW_BASE_URL="file:///$(cygpath -m "$GITHUB_WORKSPACE")/template"
-          bash "$GITHUB_WORKSPACE/template/.clineflow/bin/install" --yes
+          bash "$workspace_dir/template/.clineflow/bin/install" --yes
           ./.clineflow/bin/doctor
+          printf 'CLINEFLOW_SMOKE_DIR=%s\n' "$(cygpath -w "$smoke_dir")" >> "$GITHUB_ENV"
 
       - name: Exercise the native PowerShell update wrapper
         shell: pwsh
         run: |
-          Set-Location "$env:GITHUB_WORKSPACE/windows-smoke"
+          Set-Location "$env:CLINEFLOW_SMOKE_DIR"
           $templatePath = (Resolve-Path "$env:GITHUB_WORKSPACE/template").Path -replace '\\', '/'
           $workspaceUri = ('file:///' + $templatePath.TrimStart('/')).TrimEnd('/')
           $env:CLINEFLOW_BASE_URL = $workspaceUri
@@ -63,7 +65,7 @@ jobs:
       - name: Exercise transactional removal through Git Bash
         shell: bash
         run: |
-          cd windows-smoke
+          cd "$(cygpath -u "$CLINEFLOW_SMOKE_DIR")"
           ./.clineflow/bin/uninstall --yes
           test ! -e .clineflow
           test -d knowledge

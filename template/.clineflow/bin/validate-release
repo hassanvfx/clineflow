@@ -86,6 +86,9 @@ for required in README.md template/configs/rules.template.md template/docs/durab
   grep -q 'Please commit\.' "$required" || { echo "ERROR: canonical commit prompt missing from $required" >&2; exit 1; }
   grep -q 'Please show me the ClineFlow dashboard\.' "$required" || { echo "ERROR: canonical dashboard prompt missing from $required" >&2; exit 1; }
 done
+grep -qF 'Old install or prompt not recognized?' README.md || { echo "ERROR: README omits the old-install rescue path" >&2; exit 1; }
+grep -qF 'curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes' README.md || { echo "ERROR: README rescue command is incomplete" >&2; exit 1; }
+grep -qF 'Rescue an old installation' docs/installation-and-lifecycle.md || { echo "ERROR: lifecycle guide omits the old-install rescue path" >&2; exit 1; }
 for required_test in tests/certify-release.sh tests/test-dashboard.sh tests/test-installation-flow.sh tests/test-update-migrations.sh tests/test-uninstall-safety.sh tests/test-release-contract.sh tests/test-okf-validator.sh tests/test-knowledge-sync.sh; do
   [ -x "$required_test" ] || { echo "ERROR: missing executable lifecycle check $required_test" >&2; exit 1; }
 done

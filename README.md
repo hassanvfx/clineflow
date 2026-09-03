@@ -4,7 +4,7 @@
 
 ClineFlow gives coding agents durable, Git-native project context. Decisions, goals, verification, and handoffs live beside the code in an open knowledge bundle—not inside one temporary chat or proprietary memory service.
 
-[![Test Status](https://github.com/hassanvfx/clineflow/workflows/Test%20ClineFlow/badge.svg)](https://github.com/hassanvfx/clineflow/actions)
+[![Test ClineFlow](https://github.com/hassanvfx/clineflow/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/hassanvfx/clineflow/actions/workflows/test.yml?query=branch%3Amain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![OKF v0.2](https://img.shields.io/badge/OKF-v0.2-1e9fff)](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
 [![Agent Agnostic](https://img.shields.io/badge/agents-Cline%20%7C%20Codex%20%7C%20Claude%20Code%20%7C%20Cursor%20%7C%20Copilot%20%7C%20Windsurf-1e9fff)](#works-with-your-agent)
@@ -144,9 +144,21 @@ Please update ClineFlow.
 
 That request authorizes the agent to consult this authoritative repository and immediately run the permanent remote updater with `--yes`. **Do not run any existing local updater first**; legacy copies can overwrite themselves. Updates are manifest-verified, preserve user-authored knowledge and instructions, and roll back automatically on failure.
 
+### Old install or prompt not recognized?
+
+Run this rescue command yourself from the project root. It bypasses stale installed instructions and downloads the current transactional updater directly from the authoritative repository:
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes
 ```
+
+On Windows PowerShell:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clineflow/bin/update.ps1))) -Yes
+```
+
+After it finishes, verify the result with `cat .clineflow/VERSION` or `Get-Content .clineflow/VERSION`. If the updater cannot safely identify or migrate the installation, it stops before mutation or restores the prior installation instead of forcing an upgrade.
 
 To remove:
 
