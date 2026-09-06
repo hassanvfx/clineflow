@@ -1,0 +1,53 @@
+{
+  "schema": 3,
+  "id": "f52da8ff-fd55-40da-a321-b228ca41d96c",
+  "at": "2026-09-06T05:43:46Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "cornerstone-workflow-values",
+  "stream": "bde3c831-9857-48a5-8252-d89a4112e398",
+  "journal": {
+    "path": "knowledge/journals/cornerstone-workflow-values/bde3c831-9857-48a5-8252-d89a4112e398--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "078da80c2a28e4a0fbe1e13366cc263c93fd4911a39960aecfc2294ff20e538f",
+    "snapshot": "knowledge/updates/cornerstone-workflow-values/snapshots/f52da8ff-fd55-40da-a321-b228ca41d96c.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "goals",
+      "id": "cornerstone-workflow-values",
+      "statement": "Make the five workflow values operational across ClineFlow projects."
+    },
+    {
+      "ledger": "specification",
+      "id": "cornerstone-workflow-values",
+      "statement": "Managed procedures and shared rules define explicit task boundaries, deterministic proof, and established-solution review without changing persistent formats."
+    },
+    {
+      "ledger": "verification",
+      "id": "cornerstone-workflow-values",
+      "statement": "Lifecycle certification passed for release 2026.09.05.1, including installation, migration, tenant-journal, and release-contract coverage."
+    },
+    {
+      "ledger": "last_session",
+      "id": "cornerstone-workflow-values",
+      "statement": "The release is complete; commit the synchronized code and knowledge artifacts when requested."
+    }
+  ],
+  "timeline": {
+    "summary": "Released managed workflow guidance, revised journal starters, and lifecycle evidence for the five operational values."
+  },
+  "log": {
+    "summary": "Operationalized the five workflow values in ClineFlow release 2026.09.05.1."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

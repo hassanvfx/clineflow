@@ -23,6 +23,8 @@ assert_current() {
   grep -qx 'migration_schema=2' "$project/.clineflow/state" || fail "missing migration state"
   [ -x "$project/.clineflow/bin/knowledge" ] || fail "missing tenant knowledge command"
   [ -x "$project/.clineflow/bin/validate-knowledge-sync" ] || fail "missing knowledge synchronization validator"
+  grep -q 'Autonomy operates within explicit boundaries' "$project/.clineflow/PROCEDURES.md" || fail "managed autonomy workflow was not updated"
+  grep -q 'Choose reversible details inside the authorized contract' "$project/AGENTS.md" || fail "updated agent rules omit the reversible-choice boundary"
   [ -x "$project/.clineflow/bin/dashboard" ] && [ -f "$project/.clineflow/dashboard-component-manifest" ] || fail "missing inert dashboard launcher"
   [ ! -e "$project/.clineflow/optional" ] && [ ! -e "$project/knowledge/dashboard" ] || fail "update activated the optional dashboard"
   (cd "$project" && ./.clineflow/bin/doctor >/dev/null) || fail "migrated installation is unhealthy"
@@ -37,6 +39,7 @@ printf 'custom legacy runtime\n' > "$root_project/clineflow/WORKING_WITH_CLINE.m
 cp "$ROOT/tests/fixtures/okf-2026.08.15-agent-rules.md" "$root_project/AGENTS.md"
 printf 'user knowledge\n' >> "$root_project/knowledge/log.md"
 printf 'retired but user controlled\n' > "$root_project/setup-refs.sh"
+printf '\n<!-- user methodology preservation -->\n' >> "$root_project/docs/durable-development-methodology.md"
 knowledge_hash=$(shasum -a 256 "$root_project/knowledge/log.md" | awk '{print $1}')
 legacy_hash=$(shasum -a 256 "$root_project/docs/journals/legacy.md" | awk '{print $1}')
 refs_hash=$(shasum -a 256 "$root_project/setup-refs.sh" | awk '{print $1}')
@@ -49,6 +52,7 @@ find "$root_project/knowledge/updates/migration" -name '*--t-0000000000000000000
 grep -qx 'file:AGENTS.md' "$root_project/.clineflow/.owned-agent-files" || fail "stock agent rules were not adopted"
 grep -q 'validate-knowledge-sync --staged' "$root_project/AGENTS.md" || fail "updated agent rules omit staged knowledge synchronization"
 grep -qFx 'custom legacy runtime' "$root_project/clineflow/WORKING_WITH_CLINE.md" || fail "custom legacy runtime was removed"
+grep -q 'user methodology preservation' "$root_project/docs/durable-development-methodology.md" || fail "update replaced user methodology"
 before_second=$(find "$root_project/.clineflow/backups" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 (cd "$root_project" && CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update --yes >/dev/null)
 after_second=$(find "$root_project/.clineflow/backups" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')

@@ -25,6 +25,9 @@ for tool in update.ps1 bootstrap.ps1; do [ -f ".clineflow/bin/$tool" ] || fail "
 [ -f docs/durable-development-methodology.md ] || fail "missing durable development methodology fixture"
 for index in clineflow_specification.yml clineflow_verification.yml clineflow_goals.yml clineflow_last_session.yml clineflow_timeline.yml; do [ -f "knowledge/$index" ] || fail "missing knowledge/$index"; done
 grep -q 'durable-development-methodology.md' AGENTS.md || fail "agent rules do not require the durable loop"
+grep -q 'Autonomy operates within explicit boundaries' .clineflow/PROCEDURES.md || fail "managed procedures omit autonomy boundaries"
+grep -q 'Routine reversible choice' .clineflow/PROCEDURES.md || fail "managed procedures omit boundary examples"
+grep -q 'Choose reversible details inside the authorized contract' AGENTS.md || fail "agent rules omit the approved reversible-choice boundary"
 grep -q 'Please update ClineFlow\.' AGENTS.md || fail "agent rules do not include the canonical update prompt"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do
   grep -q 'immutable.*update record' "$file" && grep -q 'validate-knowledge-sync --staged' "$file" || fail "agent rules do not enforce tenant knowledge synchronization in $file"

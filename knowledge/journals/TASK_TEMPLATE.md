@@ -19,6 +19,31 @@ generated:
 
 Describe the outcome and success criteria.
 
+# Task Contract
+
+- Intended outcome:
+- Observable success criteria:
+- Constraints and non-goals:
+- Open questions and assumptions:
+
+# Execution Boundaries
+
+- Authorized scope and exclusions:
+- Affected interfaces, owners, and relevant side effects:
+- Escalate before changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria:
+- Delegation integrator and remaining integration checks, when applicable:
+
+# Existing Approaches
+
+- Relevant project patterns or established approaches considered:
+- Why the selected approach fits, or why a novel approach is necessary:
+
+# Planned Proof
+
+- Deterministic checks to run and the rules they enforce:
+- Integration checks to run:
+- Remaining judgment or coverage limits:
+
 # Status
 
 - [ ] Planned
@@ -35,9 +60,9 @@ Record what changed, why, affected files, verification, and next steps.
 
 Document material choices, rationale, and alternatives.
 
-# Testing
+# Verification Results
 
-Record commands run and their outcomes.
+Record commands run and their factual outcomes separately from planned proof, including failures and gaps.
 
 # Open Issues
 

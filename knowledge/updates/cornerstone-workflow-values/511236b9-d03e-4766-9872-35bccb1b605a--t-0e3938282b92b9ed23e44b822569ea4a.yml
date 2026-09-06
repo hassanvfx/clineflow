@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "511236b9-d03e-4766-9872-35bccb1b605a",
+  "at": "2026-09-06T05:46:25Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "cornerstone-workflow-values",
+  "stream": "bde3c831-9857-48a5-8252-d89a4112e398",
+  "journal": {
+    "path": "knowledge/journals/cornerstone-workflow-values/bde3c831-9857-48a5-8252-d89a4112e398--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "3f4edb277be4898d35a81231d0d4d87ce3dd25764c6e5083b185134d7b861888",
+    "snapshot": "knowledge/updates/cornerstone-workflow-values/snapshots/511236b9-d03e-4766-9872-35bccb1b605a.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "cornerstone-boundary-examples",
+      "statement": "Managed procedures include examples for reversible choices, contract changes, delegated integration, and failed experiments."
+    },
+    {
+      "ledger": "verification",
+      "id": "cornerstone-boundary-examples",
+      "statement": "Full lifecycle certification passed after the examples and installer assertion were added."
+    },
+    {
+      "ledger": "last_session",
+      "id": "cornerstone-boundary-examples",
+      "statement": "Operational workflow release is complete and ready to commit with its synchronized knowledge artifacts."
+    }
+  ],
+  "timeline": {
+    "summary": "Added concrete autonomy-boundary examples and verified the final ClineFlow release lifecycle."
+  },
+  "log": {
+    "summary": "Added boundary examples and final lifecycle evidence for the operational workflow release."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

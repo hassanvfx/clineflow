@@ -208,7 +208,11 @@ def frontmatter(title: str, description: str, author: dict[str, Any], topic: str
         "---", "type: Engineering Journal", f"title: {json.dumps(title)}", f"description: {json.dumps(description)}",
         "tags: [engineering]", "status: draft", *author_lines, "clineflow:", f"  schema: {SCHEMA}", f"  topic: {topic}", f"  stream: {stream}",
         "generated:", "  by: clineflow/3", f"  at: {now()}", "---", "", "# Goal", "", "Describe the outcome and success criteria.", "",
-        "# Status", "", "- [ ] Planned", "- [ ] In progress", "- [ ] Complete", "", "# Work Log", "", "# Decisions", "", "# Testing", "", "# Open Issues", "", "# References", "",
+        "# Task Contract", "", "- Intended outcome:", "- Observable success criteria:", "- Constraints and non-goals:", "- Open questions and assumptions:", "",
+        "# Execution Boundaries", "", "- Authorized scope and exclusions:", "- Affected interfaces, owners, and relevant side effects:", "- Escalate before changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria:", "- Delegation integrator and remaining integration checks, when applicable:", "",
+        "# Existing Approaches", "", "- Relevant project patterns or established approaches considered:", "- Why the selected approach fits, or why a novel approach is necessary:", "",
+        "# Planned Proof", "", "- Deterministic checks to run and the rules they enforce:", "- Integration checks to run:", "- Remaining judgment or coverage limits:", "",
+        "# Status", "", "- [ ] Planned", "- [ ] In progress", "- [ ] Complete", "", "# Work Log", "", "# Decisions", "", "# Verification Results", "", "Record commands run and their factual outcomes separately from planned proof, including failures and gaps.", "", "# Open Issues", "", "# References", "",
     ])
 
 

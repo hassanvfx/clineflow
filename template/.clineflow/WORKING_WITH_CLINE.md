@@ -1,13 +1,15 @@
 # Working with ClineFlow
 
-ClineFlow stores new persistent context as an [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2 bundle in `knowledge/`.
+ClineFlow stores new persistent context as an [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2 bundle in `knowledge/`. Read `.clineflow/PROCEDURES.md` as the operational workflow.
 
 ## Daily workflow
 
-1. Ask the agent to run `./.clineflow/bin/knowledge sync`, then inspect `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five generated ledger views before starting work.
+1. Ask the agent to run `./.clineflow/bin/knowledge sync`, then inspect `.clineflow/PROCEDURES.md`, `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five generated ledger views before starting work.
 2. For a substantial task, create a tenant-scoped stream with `knowledge journal new` or explicitly resume a known stream.
 3. Keep decisions, testing evidence, progress, and next steps in that concept. Publish immutable update records that explicitly review all five ledgers, then rebuild local views with `knowledge sync`.
 4. When the user says “Please commit.” or otherwise asks to commit, update `knowledge/log.md`, run `./.clineflow/bin/validate-okf` and `./.clineflow/bin/validate-knowledge-sync`, stage code plus knowledge together, and require `./.clineflow/bin/validate-knowledge-sync --staged` to pass before committing.
+
+For a substantial slice, have the agent record the task contract, execution boundary, existing approaches considered, and planned proof before implementation. The agent may choose reversible details within the authorized contract, but must ask before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria. Deterministic checks provide evidence for encoded rules; integration checks and remaining judgment stay explicit.
 
 ## Legacy journal discovery
 

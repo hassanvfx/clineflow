@@ -39,11 +39,13 @@ portable="$TEST_ROOT/portable"; copy_release "$portable"
 "$portable/template/.clineflow/bin/validate-release" >/dev/null || fail "copied release fixture is incomplete"
 
 grep -qF '`template/.clineflow/WORKING_WITH_CODEX.md`' "$ROOT/AGENTS.md" || fail "source AGENTS.md points to a missing Codex guide"
+grep -qF '`template/.clineflow/PROCEDURES.md`' "$ROOT/AGENTS.md" || fail "source AGENTS.md omits the operational procedures"
 for source_rules in "$ROOT/AGENTS.md" "$ROOT/.clinerules"; do
   grep -qF './template/.clineflow/bin/validate-okf' "$source_rules" || fail "source agent rules point to a missing OKF validator: $source_rules"
   grep -qF './template/.clineflow/bin/validate-knowledge-sync --staged' "$source_rules" || fail "source agent rules point to a missing staged synchronization validator: $source_rules"
   grep -qF 'https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh' "$source_rules" || fail "source agent rules omit the authoritative remote updater: $source_rules"
   grep -qF 'Do not run any existing local updater first' "$source_rules" || fail "source agent rules permit a stale local updater: $source_rules"
+  grep -qF 'Choose reversible details inside the authorized contract' "$source_rules" || fail "source agent rules omit the reversible-choice boundary: $source_rules"
 done
 cmp -s "$ROOT/template/.clinerules" "$ROOT/template/configs/rules.template.md" || fail "legacy Cline template drifted from canonical shared rules"
 pass "source and compatibility agent instructions resolve to current workflow files"

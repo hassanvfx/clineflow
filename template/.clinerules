@@ -4,7 +4,7 @@ This project keeps persistent engineering context in the `knowledge/` Open Knowl
 
 ## ChatGPT Codex and compatible agents
 
-`AGENTS.md` is the shared instruction entry point for ChatGPT Codex, Cursor, and other compatible coding agents. Read `.clineflow/WORKING_WITH_CODEX.md` for the Codex workflow; the same OKF knowledge contract also applies to Cline, Copilot, and Windsurf.
+`AGENTS.md` is the shared instruction entry point for ChatGPT Codex, Cursor, and other compatible coding agents. Read `.clineflow/PROCEDURES.md` as the operational workflow and `.clineflow/WORKING_WITH_CODEX.md` for the Codex workflow; the same OKF knowledge contract also applies to Cline, Copilot, and Windsurf.
 
 ## Updating ClineFlow
 
@@ -27,6 +27,7 @@ Only when the user explicitly says “Please show me the ClineFlow dashboard.”
 5. Use `status: draft` while work is active and `status: stable` when it is complete. Do not add `verified` or `sources` unless they are factual.
 6. Before starting or resuming work, search `knowledge/` first. If `docs/journals/` exists, search it too as read-only legacy context. Never create or update new work there.
 7. Link related concepts with normal Markdown links. The generated `knowledge/log.md` is refreshed by `knowledge sync`.
+8. Follow `.clineflow/PROCEDURES.md`: state the task contract, execution boundary, relevant existing approaches, and planned proof before a substantial slice. Choose reversible details inside the authorized contract; ask before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria. Record evidence and remaining judgment separately from planned proof.
 
 ## Commit workflow
 

@@ -4,7 +4,7 @@ This project keeps persistent engineering context in the `knowledge/` Open Knowl
 
 ## Source repository workflow
 
-This checkout is the ClineFlow distribution repository. Runtime guides and commands live under `template/.clineflow/`; installed projects receive them under `.clineflow/`. Read `template/.clineflow/WORKING_WITH_CLINE.md` for the Cline workflow.
+This checkout is the ClineFlow distribution repository. Runtime guides and commands live under `template/.clineflow/`; installed projects receive them under `.clineflow/`. Read `template/.clineflow/PROCEDURES.md` as the operational workflow and `template/.clineflow/WORKING_WITH_CLINE.md` for the Cline workflow.
 
 ## Updating ClineFlow
 
@@ -27,6 +27,7 @@ Only when the user explicitly says “Please show me the ClineFlow dashboard.”
 5. Use `status: draft` while work is active and `status: stable` when it is complete. Do not add `verified` or `sources` unless they are factual.
 6. Before starting or resuming work, search `knowledge/` first. If `docs/journals/` exists, search it too as read-only legacy context. Never create or update new work there.
 7. Link related concepts with normal Markdown links. Update `knowledge/log.md` for material knowledge changes.
+8. Follow the operating principles in `template/.clineflow/PROCEDURES.md`: state the task contract, execution boundary, relevant existing approaches, and planned proof before a substantial slice. Choose reversible details inside the authorized contract; ask before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria. Record evidence and remaining judgment separately from planned proof.
 
 ## Commit workflow
 

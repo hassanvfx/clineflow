@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "2b195595-6cff-49a0-a169-cd47afb1d64a",
+  "at": "2026-09-06T13:43:25Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "cornerstone-workflow-values",
+  "stream": "bde3c831-9857-48a5-8252-d89a4112e398",
+  "journal": {
+    "path": "knowledge/journals/cornerstone-workflow-values/bde3c831-9857-48a5-8252-d89a4112e398--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "e51271773f16399c9c8601dd64f40e96beb5aab939b80742f51b705326d0ba3c",
+    "snapshot": "knowledge/updates/cornerstone-workflow-values/snapshots/2b195595-6cff-49a0-a169-cd47afb1d64a.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "cornerstone-commit-handoff",
+      "statement": "OKF, synchronization, tenant knowledge, release contract, whitespace, and full lifecycle certification passed before commit."
+    },
+    {
+      "ledger": "last_session",
+      "id": "cornerstone-commit-handoff",
+      "statement": "Commit and push the synchronized release 2026.09.05.1 artifacts."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed the durable handoff for the operational workflow release and prepared its synchronized commit."
+  },
+  "log": {
+    "summary": "Prepared the verified operational workflow release for commit and push."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}
