@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "fd046d2c-fe01-4095-96ba-e788e216fb17",
+  "at": "2026-09-06T23:34:29Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "github-submissions",
+  "stream": "3bc08373-bfed-4491-af5f-727d4c3c3893",
+  "journal": {
+    "path": "knowledge/journals/github-submissions/3bc08373-bfed-4491-af5f-727d4c3c3893--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "d4a5f2f16eb7112b32314cdb5ec2bbc43c962eaa804dd2fc6664672a73eecf6b",
+    "snapshot": "knowledge/updates/github-submissions/snapshots/fd046d2c-fe01-4095-96ba-e788e216fb17.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "github-discovery-submissions",
+      "statement": "E2B CLA check identifies @aeonfluxor as the unsigned committer for PR #353."
+    },
+    {
+      "ledger": "last_session",
+      "id": "github-discovery-submissions",
+      "statement": "Sign the E2B CLA as @aeonfluxor, then recheck PR #353."
+    },
+    {
+      "ledger": "timeline",
+      "id": "github-submissions-cla",
+      "statement": "Recorded the signer-specific E2B CLA blocker for the active listing PR."
+    }
+  ],
+  "timeline": {
+    "summary": "Corrected GitHub-submission journal metadata and identified the E2B CLA signer."
+  },
+  "log": {
+    "summary": "Corrected the campaign journal metadata and recorded the specific E2B CLA signer required for PR #353."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

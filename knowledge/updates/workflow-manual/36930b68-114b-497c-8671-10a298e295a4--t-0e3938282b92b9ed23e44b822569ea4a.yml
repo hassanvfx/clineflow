@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "36930b68-114b-497c-8671-10a298e295a4",
+  "at": "2026-09-06T22:35:54Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "workflow-manual",
+  "stream": "7e88a9f3-92d4-461e-87a4-16ab4f09288d",
+  "journal": {
+    "path": "knowledge/journals/workflow-manual/7e88a9f3-92d4-461e-87a4-16ab4f09288d--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "62e9996bd46bc17eace11bbddb560504c79d9bb3a7ac2c4c7992901abeb179c1",
+    "snapshot": "knowledge/updates/workflow-manual/snapshots/36930b68-114b-497c-8671-10a298e295a4.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "workflow-manual",
+      "statement": "Manual review, Markdown whitespace checks, OKF validation, and knowledge synchronization passed; no installed payload changed."
+    },
+    {
+      "ledger": "last_session",
+      "id": "workflow-manual",
+      "statement": "The comprehensive workflow manual is complete and ready for review or commit."
+    }
+  ],
+  "timeline": {
+    "summary": "Documented ClineFlow’s end-to-end user flows, including milestone handoffs and durable knowledge operations."
+  },
+  "log": {
+    "summary": "Added a comprehensive ClineFlow workflow manual and refreshed the concise workflow overview."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

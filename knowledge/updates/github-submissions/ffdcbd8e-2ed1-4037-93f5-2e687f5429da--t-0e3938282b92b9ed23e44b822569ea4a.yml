@@ -1,0 +1,53 @@
+{
+  "schema": 3,
+  "id": "ffdcbd8e-2ed1-4037-93f5-2e687f5429da",
+  "at": "2026-09-06T23:33:23Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "github-submissions",
+  "stream": "3bc08373-bfed-4491-af5f-727d4c3c3893",
+  "journal": {
+    "path": "knowledge/journals/github-submissions/3bc08373-bfed-4491-af5f-727d4c3c3893--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "70db6b501e41f6f7fa413f79453f41bd59cbe8824770947193f07d3e4b7413cf",
+    "snapshot": "knowledge/updates/github-submissions/snapshots/ffdcbd8e-2ed1-4037-93f5-2e687f5429da.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "goals",
+      "id": "github-discovery-submissions",
+      "statement": "Increase ClineFlow discovery through factual GitHub directory listings."
+    },
+    {
+      "ledger": "verification",
+      "id": "github-discovery-submissions",
+      "statement": "Awesome AI Agent Tools merged PR #32; E2B PR #353 awaits a CLA; aloth issue #60 is open."
+    },
+    {
+      "ledger": "last_session",
+      "id": "github-discovery-submissions",
+      "statement": "Complete the E2B CLA and monitor the E2B PR and aloth inquiry."
+    },
+    {
+      "ledger": "timeline",
+      "id": "github-discovery-submissions",
+      "statement": "Submitted ClineFlow to GitHub discovery lists and verified the initial outcomes."
+    }
+  ],
+  "timeline": {
+    "summary": "Published first GitHub discovery-list campaign and recorded its verified outcomes."
+  },
+  "log": {
+    "summary": "Published ClineFlow discovery-list submissions; Agent Tools merged, E2B awaits CLA, and aloth eligibility inquiry is open."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

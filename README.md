@@ -60,6 +60,8 @@ The next chat begins from what the project already knows.
 
 [See how the self-documenting loop works →](docs/how-clineflow-works.md)
 
+[Read the complete workflow manual →](docs/workflow-manual.md)
+
 ## Quick tutorial
 
 [![Watch the ClineFlow 30-minute tutorial](assets/clineflow-tutorial-thumbnail.jpg)](https://vimeo.com/1220645170?fl=pl&fe=cm)
@@ -190,6 +192,7 @@ No Codex plugin, proprietary service, or always-running ClineFlow process is req
 
 - [Installation and lifecycle](docs/installation-and-lifecycle.md)
 - [How ClineFlow works](docs/how-clineflow-works.md)
+- [Workflow manual](docs/workflow-manual.md)
 - [OKF knowledge workflow](docs/okf-knowledge-workflow.md)
 - [Knowledge Visor](docs/knowledge-visor.md)
 - [Durable development methodology](docs/durable-development-methodology.md)
