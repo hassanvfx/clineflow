@@ -12,7 +12,7 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 ## Work and deliver
 
 - Keep the active tenant Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps. Publish one immutable update record per knowledge change and rebuild projections with `knowledge sync`.
-- Before a substantial slice, record its contract, boundary, relevant existing approaches, and planned proof. Choose reversible details within the authorized contract; ask before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria.
+- Before a substantial slice, record its contract, boundary, handoff topology, relevant existing approaches, and planned proof. Use one handoff only for one cohesive, independently verifiable slice; otherwise use linked milestone streams with explicit boundaries, local proof, dependencies, and a named integrator responsible for composition and final end-to-end proof. Choose reversible details within the authorized contract; ask before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria.
 - Treat deterministic commands as evidence for the rules they encode, not proof that the contract is complete. Record integration checks and any remaining judgment with their factual outcomes.
 - Never edit or delete a published update record; publish a corrective record that references it.
 - Before delivery, run `./.clineflow/bin/validate-okf`, `./.clineflow/bin/validate-knowledge-sync`, the relevant project tests, and `git diff --check`.

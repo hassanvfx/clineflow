@@ -33,6 +33,12 @@ Describe the outcome and success criteria.
 - Escalate before changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria:
 - Delegation integrator and remaining integration checks, when applicable:
 
+# Handoff Topology
+
+- Selection: single handoff or milestone chain, and why:
+- Parent integrator and final end-to-end acceptance, when applicable:
+- Milestones: for each independently testable boundary, record its owner and exclusions, entry condition, inputs and outputs, local acceptance proof, downstream consumer, dependencies, contributor, integrator, and escalation or rollback condition:
+
 # Existing Approaches
 
 - Relevant project patterns or established approaches considered:

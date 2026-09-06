@@ -22,9 +22,11 @@ printf '%s\n' "$identity" | grep -Eq '"id": "t-[0-9a-f]{32}"'
 journal_one=$(./.clineflow/bin/knowledge journal new --topic tenant-knowledge --title 'First stream')
 journal_two=$(./.clineflow/bin/knowledge journal new --topic tenant-knowledge --title 'Second stream')
 [ "$journal_one" != "$journal_two" ] || { echo 'independent streams collided' >&2; exit 1; }
-for heading in 'Task Contract' 'Execution Boundaries' 'Existing Approaches' 'Planned Proof' 'Verification Results'; do
+for heading in 'Task Contract' 'Execution Boundaries' 'Handoff Topology' 'Existing Approaches' 'Planned Proof' 'Verification Results'; do
   grep -q "# $heading" "$journal_one" || { echo "generated journal omitted $heading" >&2; exit 1; }
 done
+grep -q 'Selection: single handoff or milestone chain' "$journal_one" || { echo 'generated journal omitted handoff selection prompt' >&2; exit 1; }
+grep -q 'local acceptance proof' "$journal_one" || { echo 'generated journal omitted milestone proof prompt' >&2; exit 1; }
 stream_one=$(sed -n 's/^  stream: //p' "$journal_one")
 stream_two=$(sed -n 's/^  stream: //p' "$journal_two")
 tenant=$(sed -n 's/^  id: //p' "$journal_one")

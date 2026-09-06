@@ -1,0 +1,53 @@
+{
+  "schema": 3,
+  "id": "833b250f-84a7-4a40-b26a-cceee5bea909",
+  "at": "2026-09-06T20:57:25Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "modular-handoff-planning",
+  "stream": "28262b20-493d-498a-9685-59c8982a3fe5",
+  "journal": {
+    "path": "knowledge/journals/modular-handoff-planning/28262b20-493d-498a-9685-59c8982a3fe5--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "ccba7ab34939ec2ada0b10efb8191ba94238d5b471c169d3e9922efa38eef226",
+    "snapshot": "knowledge/updates/modular-handoff-planning/snapshots/833b250f-84a7-4a40-b26a-cceee5bea909.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "goals",
+      "id": "modular-handoff-planning",
+      "statement": "Make substantial ClineFlow plans choose a cohesive single handoff or a dependency-aware milestone chain."
+    },
+    {
+      "ledger": "specification",
+      "id": "modular-handoff-planning",
+      "statement": "Managed procedures, agent rules, and new journals require handoff topology, solid milestone boundaries, local proof, and one final integrator without changing schema 2."
+    },
+    {
+      "ledger": "verification",
+      "id": "modular-handoff-planning",
+      "statement": "Generated-journal, installation, update, release-contract, and full lifecycle certification passed for release 2026.09.06.0."
+    },
+    {
+      "ledger": "last_session",
+      "id": "modular-handoff-planning",
+      "statement": "The modular handoff workflow release is complete and ready to commit with synchronized knowledge artifacts."
+    }
+  ],
+  "timeline": {
+    "summary": "Released guidance for modular milestone handoffs, tested composition ownership, and completed lifecycle certification."
+  },
+  "log": {
+    "summary": "Released modular handoff topology planning and milestone execution guidance in ClineFlow 2026.09.06.0."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

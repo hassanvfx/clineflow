@@ -46,6 +46,7 @@ for source_rules in "$ROOT/AGENTS.md" "$ROOT/.clinerules"; do
   grep -qF 'https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh' "$source_rules" || fail "source agent rules omit the authoritative remote updater: $source_rules"
   grep -qF 'Do not run any existing local updater first' "$source_rules" || fail "source agent rules permit a stale local updater: $source_rules"
   grep -qF 'Choose reversible details inside the authorized contract' "$source_rules" || fail "source agent rules omit the reversible-choice boundary: $source_rules"
+  grep -qF 'single handoff only for one cohesive' "$source_rules" || fail "source agent rules omit the handoff topology boundary: $source_rules"
 done
 cmp -s "$ROOT/template/.clinerules" "$ROOT/template/configs/rules.template.md" || fail "legacy Cline template drifted from canonical shared rules"
 pass "source and compatibility agent instructions resolve to current workflow files"
@@ -64,6 +65,9 @@ if "$optional_unmanaged/template/.clineflow/bin/validate-release" >/dev/null 2>&
 
 prompt="$TEST_ROOT/prompt"; copy_release "$prompt"; sed 's/Please update ClineFlow\./Update ClineFlow now./g' "$prompt/README.md" > "$prompt/README.tmp"; mv "$prompt/README.tmp" "$prompt/README.md"
 if "$prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical prompt was accepted"; fi
+
+topology="$TEST_ROOT/topology"; copy_release "$topology"; sed 's/Every substantial plan must choose either a single handoff or a milestone chain before execution\./Handoff choice is optional./' "$topology/template/.clineflow/PROCEDURES.md" > "$topology/PROCEDURES.tmp"; mv "$topology/PROCEDURES.tmp" "$topology/template/.clineflow/PROCEDURES.md"; refresh_checksum "$topology" .clineflow/PROCEDURES.md
+if "$topology/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing handoff topology rule was accepted"; fi
 
 local_first="$TEST_ROOT/local-first"; copy_release "$local_first"; sed 's/Do not run any existing local updater first/Local updater use is permitted/' "$local_first/README.md" > "$local_first/README.tmp"; mv "$local_first/README.tmp" "$local_first/README.md"
 if "$local_first/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing stale-local-updater warning was accepted"; fi

@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "b64d7ca0-8df5-4345-9563-52802d7230b3",
+  "at": "2026-09-06T20:37:19Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "modular-handoff-planning",
+  "stream": "28262b20-493d-498a-9685-59c8982a3fe5",
+  "journal": {
+    "path": "knowledge/journals/modular-handoff-planning/28262b20-493d-498a-9685-59c8982a3fe5--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "e7873e3c340c364a0877075a6cb8ec15d1f661e593496a6152a2bcaa9c97d458",
+    "snapshot": "knowledge/updates/modular-handoff-planning/snapshots/b64d7ca0-8df5-4345-9563-52802d7230b3.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "last_session",
+      "id": "modular-handoff-planning",
+      "statement": "Guidance-first implementation plan is ready; await approval before changing the managed workflow."
+    },
+    {
+      "ledger": "verification",
+      "id": "modular-handoff-planning",
+      "statement": "Plan inventory confirms a release patch and checksum refresh are required, with schema 2 migration unchanged."
+    }
+  ],
+  "timeline": {
+    "summary": "Prepared the managed-payload plan for selecting and executing modular milestone handoffs."
+  },
+  "log": {
+    "summary": "Prepared a guidance-first implementation plan for modular milestone handoffs."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

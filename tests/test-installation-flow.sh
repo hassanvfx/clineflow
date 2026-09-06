@@ -27,7 +27,10 @@ for index in clineflow_specification.yml clineflow_verification.yml clineflow_go
 grep -q 'durable-development-methodology.md' AGENTS.md || fail "agent rules do not require the durable loop"
 grep -q 'Autonomy operates within explicit boundaries' .clineflow/PROCEDURES.md || fail "managed procedures omit autonomy boundaries"
 grep -q 'Routine reversible choice' .clineflow/PROCEDURES.md || fail "managed procedures omit boundary examples"
+grep -q 'Plan handoff topology before execution' .clineflow/PROCEDURES.md || fail "managed procedures omit handoff topology planning"
+grep -q 'Handoff Topology' knowledge/journals/TASK_TEMPLATE.md || fail "journal template omits handoff topology"
 grep -q 'Choose reversible details inside the authorized contract' AGENTS.md || fail "agent rules omit the approved reversible-choice boundary"
+grep -q 'single handoff only for one cohesive' AGENTS.md || fail "agent rules omit the handoff topology boundary"
 grep -q 'Please update ClineFlow\.' AGENTS.md || fail "agent rules do not include the canonical update prompt"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do
   grep -q 'immutable.*update record' "$file" && grep -q 'validate-knowledge-sync --staged' "$file" || fail "agent rules do not enforce tenant knowledge synchronization in $file"

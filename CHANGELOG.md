@@ -11,10 +11,12 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - ClineFlow 3 tenant-scoped journals, opaque pinned tenant identity, separate work streams, immutable additive update records, and deterministic local ledger projections.
 - Schema-2 migration that preserves schema-1 ledger views byte-for-byte under `knowledge/baseline/schema-1/` before rebuilding ClineFlow 3 projections.
 - Five operational workflow principles covering accountable generated code, durable evidence, explicit autonomy boundaries, deterministic checks, and established engineering approaches. New journals now separate the task contract and planned proof from verification results.
+- Handoff-topology planning that distinguishes a cohesive single handoff from a milestone chain with solid boundaries, local proof, dependency-aware composition, and one accountable integrator.
 
 ### Changed
 - Release `2026.09.05.0` advances migration schema to `2` while retaining date-based release ordering and the permanent updater entrypoint.
 - Release `2026.09.05.1` refreshes managed procedures, shared agent rules, and journal generation without a migration; schema `2` remains valid because persistent formats are unchanged.
+- Release `2026.09.06.0` adds managed milestone-handoff guidance and journal prompts without a migration; schema `2` remains valid because persistent formats are unchanged.
 
 ### Fixed
 - Windows removal now re-executes the uninstaller from a temporary external copy before moving `.clineflow/`, avoiding NTFS denial when the active script lives inside the runtime being transacted.

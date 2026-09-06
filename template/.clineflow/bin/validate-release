@@ -101,6 +101,9 @@ grep -qF './tests/test-knowledge-sync.sh' tests/certify-release.sh || { echo "ER
 grep -qF './tests/test-tenant-knowledge.sh' tests/certify-release.sh || { echo "ERROR: release certification omits tenant knowledge coverage" >&2; exit 1; }
 grep -qF './tests/test-dashboard.sh' tests/certify-release.sh || { echo "ERROR: release certification omits the optional dashboard boundary" >&2; exit 1; }
 grep -qF 'validate-knowledge-sync --staged' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the staged knowledge synchronization gate" >&2; exit 1; }
+grep -qF 'single handoff only for one cohesive, independently verifiable slice' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the handoff topology boundary" >&2; exit 1; }
+grep -qF 'Every substantial plan must choose either a single handoff or a milestone chain before execution.' template/.clineflow/PROCEDURES.md || { echo "ERROR: managed procedures omit the handoff topology rule" >&2; exit 1; }
+grep -qF '# Handoff Topology' template/knowledge/journals/TASK_TEMPLATE.md || { echo "ERROR: generated journal template omits handoff topology" >&2; exit 1; }
 grep -qF 'Please show me the ClineFlow dashboard.' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the explicit dashboard invocation" >&2; exit 1; }
 grep -qF 'this is an execution request, not a request to check for releases' template/configs/rules.template.md || { echo "ERROR: shared agent rules do not distinguish update execution from release checks" >&2; exit 1; }
 grep -qF 'never claim the installation is up to date' template/configs/rules.template.md || { echo "ERROR: shared agent rules permit unverified update claims" >&2; exit 1; }
