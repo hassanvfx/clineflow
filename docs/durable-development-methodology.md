@@ -4,8 +4,8 @@ Durable development keeps the decisions, evidence, and next action needed to con
 
 ## The durable development loop
 
-1. **Recover context.** Read this manual, the five `knowledge/clineflow_*.yml` indexes, and their relevant journal links before proposing or changing work.
-2. **Ground intent.** Create or resume an Engineering Journal. Distinguish confirmed requirements from assumptions, constraints, non-goals, edge cases, and unanswered questions. Do not turn an unanswered question into an implementation choice.
+1. **Recover context.** Run `./.clineflow/bin/knowledge sync`, then read this manual, the five generated `knowledge/clineflow_*.yml` views, and relevant journal links before proposing or changing work.
+2. **Ground intent.** Inspect topics and create or explicitly resume a tenant-scoped Engineering Journal stream. Distinguish confirmed requirements from assumptions, constraints, non-goals, edge cases, and unanswered questions. Do not turn an unanswered question into an implementation choice.
 3. **Define proof.** State observable success criteria and regression checks before implementation. A claim that something “works” is not evidence.
 4. **Execute the approved slice.** Implement only what the current contract supports. Capture material decisions, discoveries, failures, and changes in the journal.
 5. **Verify and record evidence.** Run the agreed checks. Record factual outcomes, including failures and gaps, and link the evidence from the verification index.
@@ -30,7 +30,7 @@ Use repository-relative paths in `journal_refs`, `evidence_refs`, `next_step_ref
 
 Before substantial work, an agent must read the indexes and linked journals, summarize the current contract and next safe step, and identify ambiguity. During work it updates the active journal first, then reconciles all five ledgers. At handoff it updates `clineflow_last_session.yml` and appends a timeline event. At commit it updates the journal, all five ledgers, and `knowledge/log.md`, validates the bundle and synchronization, and commits the code and durable context together.
 
-For every qualifying change set, use one timestamp for all five ledger `updated_at` fields and the active journal's `generated.at`, reference that journal from every ledger, append a timeline event at the same timestamp, and refresh the last-session handoff. Goals, specification, and verification must still be reviewed when their meaning does not change; updating only `updated_at` explicitly records that review. Before committing, run `./.clineflow/bin/validate-knowledge-sync`, stage code and knowledge together, and rerun it with `--staged`.
+For every qualifying knowledge change, create an immutable tenant update record that names its journal and stream, explicitly marks all five ledger reviews as changed or unchanged, and carries its timeline and log entry. Run `./.clineflow/bin/knowledge sync` to project the current ledger, handoff, log, and navigation views locally. Published records are never edited or deleted; a correction references the prior record. Before committing, run `./.clineflow/bin/validate-knowledge-sync`, stage code, journals, and update records together, and rerun it with `--staged`.
 
 If a requested decision is not covered by the specification, the agent stops implementation and asks for direction. It may document options, but it must not silently promote an assumption into an approved requirement.
 

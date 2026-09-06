@@ -47,6 +47,9 @@ echo "==> Knowledge synchronization matrix"
 if [ -n "$AGAINST" ]; then ./template/.clineflow/bin/validate-knowledge-sync --against "$AGAINST"
 else ./template/.clineflow/bin/validate-knowledge-sync; fi
 
+echo "==> Tenant knowledge matrix"
+./tests/test-tenant-knowledge.sh
+
 echo "==> Whitespace integrity"
 git diff --check
 

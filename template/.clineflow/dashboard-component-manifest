@@ -1,6 +1,6 @@
 component_version=2026.09.03.18
 python_version=3.12
-file|dashboard.py|dashboard.py|5f76516a3e5abac2b1f7e88972b5d093c65cbfbefda5a4959d075f9117a3d24d
+file|dashboard.py|dashboard.py|cd91fb83edee408b49064565c7e59502652fcfa43b2ffa6df88dba78e1c9a0c6
 file|dashboard.py.lock|dashboard.py.lock|d8718fd36653fb86c6bdbdaea7281f13b1146bdbbbb40df9563fde012a2e9d5d
 file|visor.css|visor.css|3cc76ae59cfc15135e8d5f5d79a02455372cd9ba719bd250a0b6a8620f10fe82
 file|visor.js|visor.js|1340ab5f66dd7ff5a7d07b1dc9b333b78b064d20738c3c02184fe49d7befaed6

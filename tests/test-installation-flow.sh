@@ -27,7 +27,7 @@ for index in clineflow_specification.yml clineflow_verification.yml clineflow_go
 grep -q 'durable-development-methodology.md' AGENTS.md || fail "agent rules do not require the durable loop"
 grep -q 'Please update ClineFlow\.' AGENTS.md || fail "agent rules do not include the canonical update prompt"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do
-  grep -q 'all five.*ledgers' "$file" && grep -q 'validate-knowledge-sync --staged' "$file" || fail "agent rules do not enforce ledger synchronization in $file"
+  grep -q 'immutable.*update record' "$file" && grep -q 'validate-knowledge-sync --staged' "$file" || fail "agent rules do not enforce tenant knowledge synchronization in $file"
   grep -q 'Please commit\.' "$file" || fail "agent rules omit the canonical commit prompt in $file"
   grep -q 'Please update ClineFlow\.' "$file" || fail "agent rules omit the canonical update prompt in $file"
   grep -q 'Please remove ClineFlow\.' "$file" && grep -qF './.clineflow/bin/uninstall --dry-run' "$file" || fail "agent rules omit preview-before-removal in $file"

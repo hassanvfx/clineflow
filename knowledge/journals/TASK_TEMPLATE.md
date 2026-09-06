@@ -4,8 +4,14 @@ title: "[Task title]"
 description: "Persistent context for [task title]."
 tags: [engineering]
 status: draft
+author:
+  id: t-<32-lowercase-hex>
+clineflow:
+  schema: 3
+  topic: <lowercase-topic-slug>
+  stream: <uuid>
 generated:
-  by: clineflow/2.0.0
+  by: clineflow/3
   at: YYYY-MM-DDTHH:MM:SSZ
 ---
 

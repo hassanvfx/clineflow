@@ -2,10 +2,10 @@
 
 ## Start or resume work
 
-1. Read `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five `knowledge/clineflow_*.yml` master indexes.
+1. Run `./.clineflow/bin/knowledge sync`, then read `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five generated `knowledge/clineflow_*.yml` views.
 2. Follow relevant master-index references, then search `knowledge/` for related task journals, decisions, and references.
 3. When present, search `docs/journals/` for relevant legacy context. Treat these files as read-only historical material.
-4. Create or resume `knowledge/journals/<task-name>.md` from `knowledge/journals/TASK_TEMPLATE.md` for substantial work.
+4. Inspect `./.clineflow/bin/knowledge topics`, then create a topic-scoped journal with `knowledge journal new`; resume only a named stream that belongs to the pinned tenant.
 
 ## Maintain OKF knowledge
 
@@ -13,14 +13,13 @@
 - Reserve `index.md` for navigation and `log.md` for dated change history.
 - Use Markdown links for relationships; broken links are acceptable when knowledge is not written yet.
 - Record only factual provenance, verification, and lifecycle fields.
-- For every journal, documentation, or knowledge-base change, reconcile all five master indexes with one timestamp, reference the active journal from each, append a matching timeline event, refresh the handoff, and update `knowledge/log.md`. A timestamp-only update means the ledger was reviewed with no semantic change.
+- Create one immutable `knowledge/updates/<topic>/<uuid>--<tenant>.yml` record for each published update. Every record explicitly reviews all five ledgers; unchanged ledgers are recorded as `unchanged` rather than rewritten. Run `knowledge sync` to rebuild local views.
 
 ## Commit
 
-1. Update the active Engineering Journal with outcomes, decisions, tests, and follow-up work.
-2. Reconcile all five ledgers and add a dated entry to `knowledge/log.md`.
-3. Run `./.clineflow/bin/validate-okf` and `./.clineflow/bin/validate-knowledge-sync`.
-4. Stage implementation and knowledge together, run `./.clineflow/bin/validate-knowledge-sync --staged`, and commit only when it passes.
+1. Update the active tenant journal and create an immutable update record.
+2. Run `./.clineflow/bin/knowledge sync`, `./.clineflow/bin/validate-okf`, and `./.clineflow/bin/validate-knowledge-sync`.
+3. Stage implementation, journals, and update records together, then run `./.clineflow/bin/validate-knowledge-sync --staged` before committing.
 
 ## Generate the optional Knowledge Visor
 

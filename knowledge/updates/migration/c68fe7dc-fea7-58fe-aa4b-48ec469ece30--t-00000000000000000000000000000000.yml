@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "c68fe7dc-fea7-58fe-aa4b-48ec469ece30",
+  "at": "2026-09-06T04:51:18Z",
+  "author": {
+    "id": "t-00000000000000000000000000000000"
+  },
+  "topic": "migration",
+  "stream": "c68fe7dc-fea7-58fe-aa4b-48ec469ece30",
+  "legacy": true,
+  "journal": {
+    "path": "knowledge/baseline/schema-1/log.md",
+    "sha256": "e184deddac9e26783088a2d0ad677132489aea8efe8b9f5fb2856154170355d4"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Migrated schema-1 ledger views to additive records."
+  },
+  "log": {
+    "summary": "Preserved schema-1 knowledge as a baseline archive."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

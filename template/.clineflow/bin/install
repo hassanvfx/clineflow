@@ -6,6 +6,7 @@ BASE_URL="${CLINEFLOW_BASE_URL:-https://raw.githubusercontent.com/hassanvfx/clin
 FORCE=false
 DRY_RUN=false
 ASSUME_YES=false
+KNOWLEDGE_LOG_EXISTED=false
 BEGIN='<!-- BEGIN CLINEFLOW OKF RULES -->'
 END='<!-- END CLINEFLOW OKF RULES -->'
 
@@ -31,6 +32,8 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
+
+[ -e knowledge/log.md ] && KNOWLEDGE_LOG_EXISTED=true
 
 fetch() {
   local source=$1 destination=$2
@@ -152,6 +155,12 @@ install_agent() {
   echo "refreshed ClineFlow rules in: $destination"
 }
 for agent_file in .clinerules AGENTS.md CLAUDE.md .github/copilot-instructions.md .windsurf/rules/clineflow.md; do install_agent "$agent_file"; done
+
+if [ "$KNOWLEDGE_LOG_EXISTED" = true ]; then
+  echo "preserved existing knowledge projections; run the schema-2 migration before rebuilding them"
+else
+  ".clineflow/bin/knowledge" --root . sync
+fi
 
 atomic_copy "$manifest" .clineflow/release-manifest 0644
 printf 'release_version=%s\nmigration_schema=%s\n' "$release_version" "$release_schema" > "$temporary/state"

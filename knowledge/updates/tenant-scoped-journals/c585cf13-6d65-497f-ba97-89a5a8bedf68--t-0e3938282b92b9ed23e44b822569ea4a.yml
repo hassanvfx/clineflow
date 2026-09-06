@@ -1,0 +1,57 @@
+{
+  "schema": 3,
+  "id": "c585cf13-6d65-497f-ba97-89a5a8bedf68",
+  "at": "2026-09-06T04:51:52Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "tenant-scoped-journals",
+  "stream": "30f7386d-d6a2-4945-9da6-395b872618d6",
+  "journal": {
+    "path": "knowledge/journals/tenant-scoped-journals/30f7386d-d6a2-4945-9da6-395b872618d6--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "6fde8f9d80ee2f083bb75ebfa5f3a3d5f346623a0243f3bc796d3b5696a15146"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "tenant-journals",
+      "statement": "ClineFlow 3 uses tenant-scoped journals and immutable additive update records."
+    },
+    {
+      "ledger": "verification",
+      "id": "tenant-journals",
+      "statement": "Tenant identity, streams, immutable records, staging, migration, and lifecycle tests are covered."
+    },
+    {
+      "ledger": "goals",
+      "id": "tenant-journals",
+      "statement": "Allow concurrent contributors to preserve independent knowledge updates without shared-ledger collisions."
+    },
+    {
+      "ledger": "last_session",
+      "id": "tenant-journals",
+      "statement": "Run the full lifecycle certification and review the schema-2 migration output."
+    },
+    {
+      "ledger": "timeline",
+      "id": "tenant-journals",
+      "statement": "Implemented ClineFlow 3 tenant-scoped knowledge workflow."
+    }
+  ],
+  "timeline": {
+    "summary": "Implemented ClineFlow 3 tenant-scoped journals, immutable additive records, generated ledger views, and schema-2 migration."
+  },
+  "log": {
+    "summary": "Implemented ClineFlow 3 tenant-scoped journals, immutable additive records, generated ledger views, and schema-2 migration."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

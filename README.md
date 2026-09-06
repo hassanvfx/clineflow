@@ -46,7 +46,7 @@ Paste the installation prompt. ClineFlow adds a small hidden runtime, an open kn
 
 ### 2. Describe the outcome
 
-Ask for a feature, fix, investigation, or refactor as usual. For substantial work, the agent recovers current project context and creates or resumes an Engineering Journal.
+Ask for a feature, fix, investigation, or refactor as usual. For substantial work, the agent recovers current project context and creates a tenant-scoped Engineering Journal stream. A stable opaque tenant ID comes from explicit Git author identity when available, then a local machine fallback; raw identity values never enter the repository.
 
 ### 3. Say “please commit”
 
@@ -54,7 +54,7 @@ Ask for a feature, fix, investigation, or refactor as usual. For substantial wor
 Please commit.
 ```
 
-The agent updates the task journal, reconciles the five knowledge ledgers, records verification and the next safe step, validates the complete change set, and commits code plus context together.
+The agent updates the task journal, publishes an immutable additive update record, rebuilds the five local ledger views, validates the complete change set, and commits code plus context together. Concurrent tenants write separate journals and update records, so their work does not collide in shared ledger files.
 
 The next chat begins from what the project already knows.
 
@@ -82,12 +82,10 @@ your-project/
 │   └── WORKING_WITH_CODEX.md           # Codex guide
 ├── knowledge/                          # Your Git-native OKF knowledge base
 │   ├── index.md                        # Progressive-disclosure entry point
-│   ├── clineflow_goals.yml             # Outcomes and priorities
-│   ├── clineflow_specification.yml     # Requirements and constraints
-│   ├── clineflow_verification.yml      # Acceptance criteria and evidence
-│   ├── clineflow_last_session.yml      # Current handoff and next step
-│   ├── clineflow_timeline.yml          # Project events and decisions
-│   ├── log.md                          # Knowledge change history
+│   ├── updates/<topic>/                # Immutable tenant update records
+│   ├── journals/<topic>/               # Tenant journal work streams
+│   ├── clineflow_*.yml                 # Rebuilt local ledger views
+│   └── log.md                          # Rebuilt local knowledge history
 │   └── journals/                       # Detailed Engineering Journals
 ├── docs/
 │   └── durable-development-methodology.md

@@ -77,6 +77,8 @@ grep -Eq '^asset\|[^|]+\|[^|]+\|[^|]+\|https://[^|]+\|[^|]+\|[0-9a-f]{64}\|' "$D
 grep -qiE '(^|[|/@])latest([|/]|$)' "$DASHBOARD_MANIFEST" && { echo "ERROR: dashboard manifest uses a mutable latest alias" >&2; exit 1; }
 
 grep -q "migrate_0_to_1()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 0 -> 1" >&2; exit 1; }
+grep -q "migrate_1_to_2()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 1 -> 2" >&2; exit 1; }
+grep -qF '.clineflow/bin/knowledge' template/.clineflow/bin/install || { echo "ERROR: fresh installation does not initialize tenant knowledge projections" >&2; exit 1; }
 for required in README.md template/configs/rules.template.md template/docs/durable-development-methodology.md template/.clineflow/WORKING_WITH_CODEX.md template/.clineflow/WORKING_WITH_CLINE.md; do
   grep -q 'Please update ClineFlow\.' "$required" || { echo "ERROR: canonical update prompt missing from $required" >&2; exit 1; }
   grep -qF 'https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh' "$required" || { echo "ERROR: authoritative remote update entrypoint missing from $required" >&2; exit 1; }
@@ -89,13 +91,14 @@ done
 grep -qF 'Old install or prompt not recognized?' README.md || { echo "ERROR: README omits the old-install rescue path" >&2; exit 1; }
 grep -qF 'curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash -s -- --yes' README.md || { echo "ERROR: README rescue command is incomplete" >&2; exit 1; }
 grep -qF 'Rescue an old installation' docs/installation-and-lifecycle.md || { echo "ERROR: lifecycle guide omits the old-install rescue path" >&2; exit 1; }
-for required_test in tests/certify-release.sh tests/test-dashboard.sh tests/test-installation-flow.sh tests/test-update-migrations.sh tests/test-uninstall-safety.sh tests/test-release-contract.sh tests/test-okf-validator.sh tests/test-knowledge-sync.sh; do
+for required_test in tests/certify-release.sh tests/test-dashboard.sh tests/test-installation-flow.sh tests/test-update-migrations.sh tests/test-uninstall-safety.sh tests/test-release-contract.sh tests/test-okf-validator.sh tests/test-knowledge-sync.sh tests/test-tenant-knowledge.sh; do
   [ -x "$required_test" ] || { echo "ERROR: missing executable lifecycle check $required_test" >&2; exit 1; }
 done
 grep -qF './tests/test-uninstall-safety.sh' tests/certify-release.sh || { echo "ERROR: release certification omits uninstall safety" >&2; exit 1; }
 grep -qF './tests/test-installation-flow.sh' tests/certify-release.sh || { echo "ERROR: release certification omits installation" >&2; exit 1; }
 grep -qF './tests/test-update-migrations.sh' tests/certify-release.sh || { echo "ERROR: release certification omits updates" >&2; exit 1; }
 grep -qF './tests/test-knowledge-sync.sh' tests/certify-release.sh || { echo "ERROR: release certification omits knowledge synchronization" >&2; exit 1; }
+grep -qF './tests/test-tenant-knowledge.sh' tests/certify-release.sh || { echo "ERROR: release certification omits tenant knowledge coverage" >&2; exit 1; }
 grep -qF './tests/test-dashboard.sh' tests/certify-release.sh || { echo "ERROR: release certification omits the optional dashboard boundary" >&2; exit 1; }
 grep -qF 'validate-knowledge-sync --staged' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the staged knowledge synchronization gate" >&2; exit 1; }
 grep -qF 'Please show me the ClineFlow dashboard.' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the explicit dashboard invocation" >&2; exit 1; }

@@ -78,11 +78,18 @@ def canonical_sources(root: Path) -> list[Path]:
     knowledge = root / "knowledge"
     if not knowledge.is_dir():
         raise RuntimeError("knowledge/ does not exist")
+    additive = (knowledge / "updates").is_dir()
     return sorted(
         path for path in knowledge.rglob("*")
         if path.is_file()
         and path.suffix.lower() in SOURCE_SUFFIXES
         and "dashboard" not in path.relative_to(knowledge).parts
+        and not (additive and (
+            path.name in LEDGERS
+            or path == knowledge / "log.md"
+            or path == knowledge / "journals" / "index.md"
+            or "topics" in path.relative_to(knowledge).parts
+        ))
     )
 
 
@@ -276,6 +283,7 @@ def collect_knowledge(root: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]
             "title": ledger_title or metadata.get("title") or (heading.group(1) if heading else source.name),
             "description": metadata.get("description", ""), "tags": metadata.get("tags", []),
             "status": metadata.get("status", ""), "generated_at": (metadata.get("generated") or {}).get("at"),
+            "author": metadata.get("author", {}), "clineflow": metadata.get("clineflow", {}),
             "kind": kind, "structured": structured, "yaml": yaml_status,
             "hash": digest, "raw": raw, "html": safe_markdown(renderer, body),
         })

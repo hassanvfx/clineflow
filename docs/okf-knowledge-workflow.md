@@ -35,7 +35,10 @@ The ledgers are discovery and coordination indexes, not replacements for Enginee
 
 ## Engineering Journal concepts
 
-Every substantial task creates or resumes `knowledge/journals/<task-name>.md`. A journal uses YAML frontmatter like:
+Every substantial task creates or explicitly resumes a stream under
+`knowledge/journals/<topic>/<stream-uuid>--<tenant-id>.md`. The local tenant
+ID is resolved from explicit Git author identity, then machine identity, and is
+opaque in committed metadata. A journal uses YAML frontmatter like:
 
 ```yaml
 ---
@@ -44,8 +47,10 @@ title: "Task title"
 description: "Persistent context for the task."
 tags: [engineering]
 status: draft
+author: { id: t-<32-lowercase-hex> }
+clineflow: { schema: 3, topic: <topic>, stream: <uuid> }
 generated:
-  by: clineflow/<version>
+  by: clineflow/3
   at: YYYY-MM-DDTHH:MM:SSZ
 ---
 ```
@@ -54,7 +59,10 @@ The Markdown body records the goal, status, chronological work log, decisions, t
 
 ## The synchronization contract
 
-Any Git change set that edits a journal, documentation, or the knowledge base must reconcile:
+Each published knowledge update creates an immutable source record in
+`knowledge/updates/<topic>/`. It records its journal digest, tenant, stream,
+review status for every ledger, timeline entry, and log summary. `knowledge
+sync` rebuilds these local views:
 
 - The active Engineering Journal
 - All five `knowledge/clineflow_*.yml` ledgers

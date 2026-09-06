@@ -233,7 +233,8 @@ record_path() {
   if [ -e "$destination" ] || [ -L "$destination" ]; then
     copy="$BACKUP_DIR/files/$destination"
     mkdir -p "$(dirname "$copy")"
-    cp -pP "$destination" "$copy"
+    if [ -d "$destination" ] && [ ! -L "$destination" ]; then cp -pPR "$destination" "$copy"
+    else cp -pP "$destination" "$copy"; fi
     printf 'existing|%s\n' "$destination" >> "$ledger"
   else
     printf 'created|%s\n' "$destination" >> "$ledger"
@@ -320,10 +321,26 @@ migrate_0_to_1() {
   rmdir clineflow 2>/dev/null || true
 }
 
+migrate_1_to_2() {
+  local path
+  # The Python migration preserves every prior projection byte-for-byte in the
+  # baseline archive. Record all replaced views so an updater failure restores
+  # them; new source files are removed by the normal rollback ledger.
+  record_path knowledge
+  for path in knowledge/clineflow_specification.yml knowledge/clineflow_verification.yml knowledge/clineflow_goals.yml knowledge/clineflow_last_session.yml knowledge/clineflow_timeline.yml knowledge/log.md knowledge/journals/index.md; do
+    record_path "$path"
+  done
+  "$STAGE/.clineflow/bin/knowledge" --root . migrate
+}
+
 run_migrations() {
   local schema=$CURRENT_SCHEMA
   while [ "$schema" -lt "$RELEASE_SCHEMA" ]; do
-    case "$schema" in 0) migrate_0_to_1; schema=1 ;; *) echo "ERROR: no migration is available from schema $schema." >&2; return 1 ;; esac
+    case "$schema" in
+      0) migrate_0_to_1; schema=1 ;;
+      1) migrate_1_to_2; schema=2 ;;
+      *) echo "ERROR: no migration is available from schema $schema." >&2; return 1 ;;
+    esac
   done
   [ "$schema" -eq "$RELEASE_SCHEMA" ] || { echo "ERROR: installed schema is newer than this updater." >&2; return 1; }
 }
@@ -358,7 +375,12 @@ rollback() {
   echo "Update failed; restoring the previous installation." >&2
   while IFS='|' read -r kind destination; do
     case "$kind" in
-      existing) source="$BACKUP_DIR/files/$destination"; mkdir -p "$(dirname "$destination")"; cp -pP "$source" "$destination" ;;
+      existing)
+        source="$BACKUP_DIR/files/$destination"
+        mkdir -p "$(dirname "$destination")"
+        if [ -d "$source" ] && [ ! -L "$source" ]; then rm -rf "$destination"; cp -pPR "$source" "$destination"
+        else cp -pP "$source" "$destination"; fi
+        ;;
       created) rm -f "$destination" ;;
     esac
   done < "$ledger"

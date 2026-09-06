@@ -4,15 +4,15 @@ ClineFlow gives ChatGPT Codex persistent project context through the repository'
 
 ## Start or resume a task
 
-1. Read `AGENTS.md`, `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five `knowledge/clineflow_*.yml` indexes.
+1. Run `./.clineflow/bin/knowledge sync`, then read `AGENTS.md`, `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five generated `knowledge/clineflow_*.yml` views.
 2. Follow the indexes' relevant journal references, then search `knowledge/` for related concepts. When present, search `docs/journals/` as read-only legacy context too.
 3. Summarize the relevant context before changing code. For a substantial change, propose a concise implementation plan first.
-4. Create or resume `knowledge/journals/<task-name>.md` from `knowledge/journals/TASK_TEMPLATE.md`.
+4. Inspect topics, then create a tenant-scoped stream or explicitly resume a known stream with `./.clineflow/bin/knowledge journal`.
 
 ## Work and deliver
 
-- Keep the active Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps. For every journal, documentation, or knowledge-base change, reconcile all five ledgers with the journal and one shared timestamp, even when a ledger has no semantic change.
-- Link the active journal from every ledger and update `knowledge/log.md`.
+- Keep the active tenant Engineering Journal current with decisions, implementation notes, verification evidence, issues, and next steps. Publish one immutable update record per knowledge change and rebuild projections with `knowledge sync`.
+- Never edit or delete a published update record; publish a corrective record that references it.
 - Before delivery, run `./.clineflow/bin/validate-okf`, `./.clineflow/bin/validate-knowledge-sync`, the relevant project tests, and `git diff --check`.
 - When the user says “Please commit.” or otherwise asks to commit, stage code and knowledge together, require `./.clineflow/bin/validate-knowledge-sync --staged` to pass, then commit.
 

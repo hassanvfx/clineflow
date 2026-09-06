@@ -7,6 +7,13 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 
 ## [Unreleased]
 
+### Added
+- ClineFlow 3 tenant-scoped journals, opaque pinned tenant identity, separate work streams, immutable additive update records, and deterministic local ledger projections.
+- Schema-2 migration that preserves schema-1 ledger views byte-for-byte under `knowledge/baseline/schema-1/` before rebuilding ClineFlow 3 projections.
+
+### Changed
+- Release `2026.09.05.0` advances migration schema to `2` while retaining date-based release ordering and the permanent updater entrypoint.
+
 ### Fixed
 - Windows removal now re-executes the uninstaller from a temporary external copy before moving `.clineflow/`, avoiding NTFS denial when the active script lives inside the runtime being transacted.
 - PowerShell bootstrap and updater payloads now use regular-file mode instead of requiring POSIX executable semantics that Git Bash cannot represent for `.ps1` files on Windows.

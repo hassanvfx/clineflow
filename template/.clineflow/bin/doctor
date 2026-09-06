@@ -63,6 +63,8 @@ check knowledge/journals/index.md "journal index"
 check knowledge/journals/TASK_TEMPLATE.md "Engineering Journal template"
 check .clineflow/bin/validate-okf "OKF validator"
 check .clineflow/bin/validate-knowledge-sync "knowledge synchronization validator"
+check .clineflow/bin/knowledge "tenant knowledge command"
+check .clineflow/lib/knowledge.py "tenant knowledge core"
 if [ -x .clineflow/bin/validate-okf ]; then .clineflow/bin/validate-okf ${STRICT:+"$STRICT"} || errors=$((errors+1)); fi
 [ "$errors" -eq 0 ] || exit 1
 echo "ClineFlow doctor: healthy."

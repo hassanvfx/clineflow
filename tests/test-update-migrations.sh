@@ -20,7 +20,8 @@ seed_okf() {
 assert_current() {
   local project=$1
   [ "$(cat "$project/.clineflow/VERSION")" = "$CURRENT_VERSION" ] || fail "wrong migrated version"
-  grep -qx 'migration_schema=1' "$project/.clineflow/state" || fail "missing migration state"
+  grep -qx 'migration_schema=2' "$project/.clineflow/state" || fail "missing migration state"
+  [ -x "$project/.clineflow/bin/knowledge" ] || fail "missing tenant knowledge command"
   [ -x "$project/.clineflow/bin/validate-knowledge-sync" ] || fail "missing knowledge synchronization validator"
   [ -x "$project/.clineflow/bin/dashboard" ] && [ -f "$project/.clineflow/dashboard-component-manifest" ] || fail "missing inert dashboard launcher"
   [ ! -e "$project/.clineflow/optional" ] && [ ! -e "$project/knowledge/dashboard" ] || fail "update activated the optional dashboard"
@@ -41,7 +42,8 @@ legacy_hash=$(shasum -a 256 "$root_project/docs/journals/legacy.md" | awk '{prin
 refs_hash=$(shasum -a 256 "$root_project/setup-refs.sh" | awk '{print $1}')
 (cd "$root_project" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
 assert_current "$root_project"
-[ "$knowledge_hash" = "$(shasum -a 256 "$root_project/knowledge/log.md" | awk '{print $1}')" ] || fail "user knowledge changed"
+[ "$knowledge_hash" = "$(shasum -a 256 "$root_project/knowledge/baseline/schema-1/log.md" | awk '{print $1}')" ] || fail "user knowledge baseline was not preserved byte-for-byte"
+find "$root_project/knowledge/updates/migration" -name '*--t-00000000000000000000000000000000.yml' | grep -q . || fail "migration record is missing"
 [ "$legacy_hash" = "$(shasum -a 256 "$root_project/docs/journals/legacy.md" | awk '{print $1}')" ] || fail "legacy journal changed"
 [ "$refs_hash" = "$(shasum -a 256 "$root_project/setup-refs.sh" | awk '{print $1}')" ] || fail "retired reference artifact changed"
 grep -qx 'file:AGENTS.md' "$root_project/.clineflow/.owned-agent-files" || fail "stock agent rules were not adopted"

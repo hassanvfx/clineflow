@@ -20,21 +20,20 @@ Only when the user explicitly says “Please show me the ClineFlow dashboard.”
 
 ## Task knowledge rules
 
-1. Before substantial work, read `docs/durable-development-methodology.md`, all five `knowledge/clineflow_*.yml` indexes, and the journals they reference. Summarize the current contract and next safe step before changing code.
-2. For each substantial task, create or resume `knowledge/journals/<task-name>.md` using `knowledge/journals/TASK_TEMPLATE.md`.
+1. Before substantial work, run `./.clineflow/bin/knowledge sync`, then read `docs/durable-development-methodology.md`, all five generated `knowledge/clineflow_*.yml` views, and the journals they reference. Summarize the current contract and next safe step before changing code.
+2. For each substantial task, inspect `./.clineflow/bin/knowledge topics`, then create a topic-scoped stream with `./.clineflow/bin/knowledge journal new` or explicitly resume a known stream.
 3. Every task journal is an OKF concept. Keep its YAML frontmatter valid, retain `type: Engineering Journal`, and update `generated.at` after meaningful changes.
-4. Every change set that edits a journal, documentation, or the knowledge base must reconcile all five `knowledge/clineflow_*.yml` ledgers with one shared `updated_at` timestamp, update the active journal's `generated.at` to that timestamp, reference the active journal from every ledger, append a matching timeline event, refresh last-session context, and update `knowledge/log.md`. A timestamp-only goals, specification, or verification edit explicitly records that the ledger was reviewed and had no semantic change.
+4. Every published knowledge change creates an immutable `knowledge/updates/<topic>/<uuid>--<tenant>.yml` record. It must name the tenant journal, review every ledger explicitly, and record unchanged ledgers as `unchanged`; run `knowledge sync` to rebuild local views. Never modify or delete a published update record.
 5. Use `status: draft` while work is active and `status: stable` when it is complete. Do not add `verified` or `sources` unless they are factual.
 6. Before starting or resuming work, search `knowledge/` first. If `docs/journals/` exists, search it too as read-only legacy context. Never create or update new work there.
-7. Link related concepts with normal Markdown links. Update `knowledge/log.md` for material knowledge changes.
+7. Link related concepts with normal Markdown links. The generated `knowledge/log.md` is refreshed by `knowledge sync`.
 
 ## Commit workflow
 
 When the user says “Please commit.” or otherwise asks to commit:
 
-1. Update the active `knowledge/journals/` concept with the implementation summary, decisions, tests, and next steps.
-2. Reconcile all five `knowledge/clineflow_*.yml` ledgers and update `knowledge/log.md`.
-3. Run `./.clineflow/bin/validate-okf` and `./.clineflow/bin/validate-knowledge-sync`, resolving all failures. When optional PyYAML is available, prefer `./.clineflow/bin/validate-okf --strict`.
+1. Update the active tenant journal with the implementation summary, decisions, tests, and next steps, then create an immutable update record.
+2. Run `./.clineflow/bin/knowledge sync`, `./.clineflow/bin/validate-okf`, and `./.clineflow/bin/validate-knowledge-sync`, resolving all failures.
 4. Stage the code and knowledge artifacts together, run `./.clineflow/bin/validate-knowledge-sync --staged`, then create a descriptive commit.
 
 ## Knowledge navigation

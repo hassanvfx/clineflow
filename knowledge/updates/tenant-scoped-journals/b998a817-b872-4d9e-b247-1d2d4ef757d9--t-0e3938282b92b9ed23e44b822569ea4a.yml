@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "b998a817-b872-4d9e-b247-1d2d4ef757d9",
+  "at": "2026-09-06T04:59:42Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "tenant-scoped-journals",
+  "stream": "30f7386d-d6a2-4945-9da6-395b872618d6",
+  "journal": {
+    "path": "knowledge/journals/tenant-scoped-journals/30f7386d-d6a2-4945-9da6-395b872618d6--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "fe4042b5ec05022b74f014a17066a765b8eaa3b192ff3f916e8ca4d5e372bbde",
+    "snapshot": "knowledge/updates/tenant-scoped-journals/snapshots/b998a817-b872-4d9e-b247-1d2d4ef757d9.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Documented ClineFlow 3 and completed focused release, migration, dashboard, tenant, synchronization, and uninstall verification."
+  },
+  "log": {
+    "summary": "Documented ClineFlow 3 and completed focused release, migration, dashboard, tenant, synchronization, and uninstall verification."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

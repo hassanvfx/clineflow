@@ -4,9 +4,9 @@ ClineFlow stores new persistent context as an [Open Knowledge Format](https://gi
 
 ## Daily workflow
 
-1. Ask the agent to inspect `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five `knowledge/clineflow_*.yml` indexes before starting work.
-2. For a substantial task, create `knowledge/journals/<task-name>.md` from `knowledge/journals/TASK_TEMPLATE.md`.
-3. Keep decisions, testing evidence, progress, and next steps in that concept. Any journal, documentation, or knowledge-base change must reconcile all five ledgers, link the active journal from each, and use one shared timestamp even when a ledger has no semantic change.
+1. Ask the agent to run `./.clineflow/bin/knowledge sync`, then inspect `docs/durable-development-methodology.md`, `knowledge/index.md`, and all five generated ledger views before starting work.
+2. For a substantial task, create a tenant-scoped stream with `knowledge journal new` or explicitly resume a known stream.
+3. Keep decisions, testing evidence, progress, and next steps in that concept. Publish immutable update records that explicitly review all five ledgers, then rebuild local views with `knowledge sync`.
 4. When the user says “Please commit.” or otherwise asks to commit, update `knowledge/log.md`, run `./.clineflow/bin/validate-okf` and `./.clineflow/bin/validate-knowledge-sync`, stage code plus knowledge together, and require `./.clineflow/bin/validate-knowledge-sync --staged` to pass before committing.
 
 ## Legacy journal discovery
