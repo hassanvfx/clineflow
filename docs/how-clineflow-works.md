@@ -77,7 +77,7 @@ Normal Markdown links connect these indexes to journals and evidence. There is n
 
 ClineFlow does not treat a chat transcript as documentation and does not allow an unanswered question to silently become a requirement. The agent records concise decisions and factual test outcomes, keeps unresolved issues visible, and asks the user when a choice would materially change the contract.
 
-The synchronization validator applies when a change set edits a journal, documentation, or the knowledge base. Code-only changes do not manufacture a knowledge update. Optional dashboard reports are generated views and do not participate in the five-ledger synchronization gate.
+The synchronization validator applies when a change set edits a journal, documentation, or the knowledge base. Code-only changes do not manufacture a knowledge update. Optional MCP dashboard reports are generated views and do not participate in the five-ledger synchronization gate.
 
 For day-to-day instructions and handoff examples, read the [Workflow
 Manual](workflow-manual.md). For field-level details, legacy compatibility,

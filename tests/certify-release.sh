@@ -17,7 +17,7 @@ elif [ "$#" -gt 0 ]; then
 fi
 
 echo "==> Shell syntax"
-bash -n update.sh template/.clineflow/bin/doctor template/.clineflow/bin/install template/.clineflow/bin/prereqs template/.clineflow/bin/uninstall template/.clineflow/bin/update template/.clineflow/bin/validate-knowledge-sync template/.clineflow/bin/validate-okf template/.clineflow/bin/validate-release tests/*.sh
+bash -n update.sh template/.clineflow/bin/doctor template/.clineflow/bin/install template/.clineflow/bin/prereqs template/.clineflow/bin/uninstall template/.clineflow/bin/update template/.clineflow/bin/validate-knowledge-sync template/.clineflow/bin/validate-okf template/.clineflow/bin/validate-release tests/*.sh mcp-server/install.sh mcp-server/uninstall.sh mcp-server/tests/test-install.sh mcp-server/tests/test-release-manifest.sh
 
 echo "==> Release contract"
 if [ -n "$AGAINST" ]; then ./template/.clineflow/bin/validate-release --against "$AGAINST"
@@ -28,6 +28,12 @@ echo "==> Installation lifecycle"
 
 echo "==> Optional dashboard dormant and activated boundaries"
 ./tests/test-dashboard.sh
+
+echo "==> Global MCP launcher and client-registration boundary"
+./mcp-server/tests/test-install.sh
+
+echo "==> MCP immutable release-artifact boundary"
+./mcp-server/tests/test-release-manifest.sh
 
 echo "==> Historical update and rollback matrix"
 ./tests/test-update-migrations.sh

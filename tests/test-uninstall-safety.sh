@@ -5,6 +5,12 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 INSTALL="$ROOT/template/.clineflow/bin/install"
 TEST_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/clineflow-uninstall-test-XXXXXX")
 trap 'rm -rf "$TEST_ROOT"' EXIT
+export HOME="$TEST_ROOT/home"
+export UV_TOOL_DIR="$TEST_ROOT/uv-tools"
+export UV_TOOL_BIN_DIR="$TEST_ROOT/uv-bin"
+export CLINEFLOW_MCP_HOME="$TEST_ROOT/mcp-state"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-/private/tmp/clineflow-mcp-uv-cache}"
+export UV_OFFLINE="${UV_OFFLINE:-1}"
 pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1" >&2; exit 1; }
 

@@ -1,0 +1,56 @@
+name: Publish ClineFlow MCP
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type publish-mcp to build, verify, and publish the manifest-declared MCP wheel."
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.event.inputs.confirm == 'publish-mcp'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the accepted release source
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Certify the Linux release candidate
+        run: ./tests/certify-release.sh
+
+      - name: Build and verify the immutable MCP wheel
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_version=$(sed -n 's/^release_version=//p' mcp-server/release-manifest)
+          artifact_url=$(sed -n 's/^artifact_url=//p' mcp-server/release-manifest)
+          expected_sha256=$(sed -n 's/^artifact_sha256=//p' mcp-server/release-manifest)
+          artifact_name=$(basename "$artifact_url")
+          test "$artifact_name" = "clineflow_mcp-${release_version}-py3-none-any.whl"
+          uv build --directory mcp-server --out-dir dist/mcp
+          actual_sha256=$(sha256sum "dist/mcp/$artifact_name" | awk '{print $1}')
+          test "$actual_sha256" = "$expected_sha256"
+
+      - name: Create the immutable GitHub release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_version=$(sed -n 's/^release_version=//p' mcp-server/release-manifest)
+          artifact_url=$(sed -n 's/^artifact_url=//p' mcp-server/release-manifest)
+          artifact_name=$(basename "$artifact_url")
+          tag="mcp-v${release_version}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Refusing to overwrite existing release $tag." >&2
+            exit 1
+          fi
+          gh release create "$tag" "dist/mcp/$artifact_name" --title "ClineFlow MCP ${release_version}" --generate-notes

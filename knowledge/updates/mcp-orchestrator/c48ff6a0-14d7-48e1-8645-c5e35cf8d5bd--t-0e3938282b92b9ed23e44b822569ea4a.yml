@@ -1,0 +1,58 @@
+{
+  "schema": 3,
+  "id": "c48ff6a0-14d7-48e1-8645-c5e35cf8d5bd",
+  "at": "2026-09-07T16:56:32Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "mcp-orchestrator",
+  "stream": "b1f1a764-b6ab-4968-a4cf-5d81d3bbc094",
+  "journal": {
+    "path": "knowledge/journals/mcp-orchestrator/b1f1a764-b6ab-4968-a4cf-5d81d3bbc094--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "6dcc32be856c5079b12390568b27e77188c1964d15fbde313f5d457201f0bdae",
+    "snapshot": "knowledge/updates/mcp-orchestrator/snapshots/c48ff6a0-14d7-48e1-8645-c5e35cf8d5bd.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "mcp-orchestrator",
+      "statement": "Downloaded MCP installer scripts always use the manifest-declared HTTPS wheel; source-install behavior requires a complete adjacent mcp-server package tree."
+    },
+    {
+      "ledger": "verification",
+      "id": "mcp-orchestrator",
+      "statement": "The isolated install/removal fixture proves a piped script in an unrelated pyproject project requests the published MCP 0.1.7 wheel URL."
+    },
+    {
+      "ledger": "goals",
+      "id": "mcp-orchestrator",
+      "statement": "Publish the checksum-declared MCP 0.1.7 wheel only after accepted Linux and Windows CI evidence."
+    },
+    {
+      "ledger": "last_session",
+      "id": "mcp-orchestrator",
+      "statement": "Push the accepted mcp-server branch, verify hosted CI, then dispatch the confirmation-gated MCP 0.1.7 publication workflow."
+    },
+    {
+      "ledger": "timeline",
+      "id": "mcp-orchestrator",
+      "statement": "Completed the standalone installer source-boundary correction and recorded MCP 0.1.7 release evidence."
+    }
+  ],
+  "timeline": {
+    "summary": "Corrected the piped global-installer boundary and advanced the declared MCP artifact to 0.1.7."
+  },
+  "log": {
+    "summary": "Corrected standalone MCP installer source detection and documented global post-install lifecycle commands."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

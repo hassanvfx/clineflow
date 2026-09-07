@@ -25,7 +25,7 @@ Tell your agent: “Please remove ClineFlow.” The agent first runs `./.clinefl
 
 ## Knowledge Visor
 
-Say “Please show me the ClineFlow dashboard.” to explicitly invoke the optional time-first knowledge visor. An agent handling that request collects facts to temporary storage, reads them, prepares source-linked insights when grounded narrative observations or delivery assumptions are available, then observes and renders the report. A direct CLI invocation remains the no-insights fallback. The first request previews and approval-gates its isolated runtime and pinned visual assets. ClineFlow does not install, update, or run those optional components during normal operation.
+Say “Please show me the ClineFlow dashboard.” to explicitly invoke the optional time-first knowledge visor. An agent handling that request calls `clineflow_dashboard_generate` through the opt-in MCP server with the explicit project root and passes source-linked insights only when grounded. The tool stores runtime state and reports in `.clineflow-mcp/` and never opens a browser. ClineFlow does not generate dashboard output during normal operation.
 
 ## Related projects
 

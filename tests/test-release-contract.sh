@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-TEST_ROOT=$(mktemp -d /tmp/clineflow-release-XXXXXX)
+TEST_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/clineflow-release-XXXXXX")
 trap 'rm -rf "$TEST_ROOT"' EXIT
 pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1" >&2; exit 1; }
@@ -11,6 +11,10 @@ copy_release() {
   mkdir -p "$destination"
   cp "$ROOT/README.md" "$destination/README.md"
   cp -R "$ROOT/template" "$destination/template"
+  mkdir -p "$destination/mcp-server"
+  # Do not multiply the local editable environment into every release fixture.
+  (cd "$ROOT/mcp-server" && tar --exclude='.venv' --exclude='.pytest_cache' --exclude='__pycache__' -cf - .) |
+    (cd "$destination/mcp-server" && tar -xf -)
   mkdir -p "$destination/docs"
   cp "$ROOT/docs/installation-and-lifecycle.md" "$destination/docs/installation-and-lifecycle.md"
   mkdir -p "$destination/.github"
@@ -29,7 +33,7 @@ refresh_checksum() {
 "$ROOT/template/.clineflow/bin/validate-release" >/dev/null
 pass "current release contract is valid"
 
-for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' '*.lock text eol=lf' 'template/.clineflow/dashboard-component-manifest text eol=lf'; do
+for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' '*.lock text eol=lf'; do
   grep -qF "$pattern" "$ROOT/.gitattributes" || fail "release payload line endings are not pinned: $pattern"
 done
 grep -qF 'payload|managed|0644|.clineflow/bin/bootstrap.ps1|' "$ROOT/template/.clineflow/release-manifest" || fail "PowerShell bootstrap incorrectly requires POSIX executable mode"
@@ -49,6 +53,7 @@ for source_rules in "$ROOT/AGENTS.md" "$ROOT/.clinerules"; do
   grep -qF 'single handoff only for one cohesive' "$source_rules" || fail "source agent rules omit the handoff topology boundary: $source_rules"
 done
 cmp -s "$ROOT/template/.clinerules" "$ROOT/template/configs/rules.template.md" || fail "legacy Cline template drifted from canonical shared rules"
+grep -qF 'astral-sh/setup-uv@v6' "$ROOT/.github/workflows/test.yml" || fail "Linux CI does not provision the MCP runtime manager"
 pass "source and compatibility agent instructions resolve to current workflow files"
 
 unmanaged="$TEST_ROOT/unmanaged"; copy_release "$unmanaged"; printf 'extra\n' > "$unmanaged/template/.clineflow/extra"
@@ -57,11 +62,8 @@ if "$unmanaged/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then f
 stale="$TEST_ROOT/stale"; copy_release "$stale"; printf '\nchanged\n' >> "$stale/template/.clineflow/PROCEDURES.md"
 if "$stale/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "stale checksum was accepted"; fi
 
-optional="$TEST_ROOT/optional"; copy_release "$optional"; printf '\nchanged\n' >> "$optional/template/optional/dashboard/visor.css"
-if "$optional/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "stale optional dashboard checksum was accepted"; fi
-
-optional_unmanaged="$TEST_ROOT/optional-unmanaged"; copy_release "$optional_unmanaged"; printf 'extra\n' > "$optional_unmanaged/template/optional/dashboard/extra.js"
-if "$optional_unmanaged/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "unmanaged optional dashboard source was accepted"; fi
+mcp_missing="$TEST_ROOT/mcp-missing"; copy_release "$mcp_missing"; rm "$mcp_missing/mcp-server/release-manifest"
+if "$mcp_missing/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing MCP release contract was accepted"; fi
 
 prompt="$TEST_ROOT/prompt"; copy_release "$prompt"; sed 's/Please update ClineFlow\./Update ClineFlow now./g' "$prompt/README.md" > "$prompt/README.tmp"; mv "$prompt/README.tmp" "$prompt/README.md"
 if "$prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing canonical prompt was accepted"; fi
@@ -108,6 +110,15 @@ dashboard_certification="$TEST_ROOT/dashboard-certification"; copy_release "$das
 sed '/test-dashboard.sh/d' "$dashboard_certification/tests/certify-release.sh" > "$dashboard_certification/certify.tmp"
 mv "$dashboard_certification/certify.tmp" "$dashboard_certification/tests/certify-release.sh"; chmod +x "$dashboard_certification/tests/certify-release.sh"
 if "$dashboard_certification/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "certification without dashboard boundaries was accepted"; fi
+
+mcp_artifact_certification="$TEST_ROOT/mcp-artifact-certification"; copy_release "$mcp_artifact_certification"
+sed '/mcp-server\/tests\/test-release-manifest.sh/d' "$mcp_artifact_certification/tests/certify-release.sh" > "$mcp_artifact_certification/certify.tmp"
+mv "$mcp_artifact_certification/certify.tmp" "$mcp_artifact_certification/tests/certify-release.sh"; chmod +x "$mcp_artifact_certification/tests/certify-release.sh"
+if "$mcp_artifact_certification/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "certification without MCP artifact verification was accepted"; fi
+
+mcp_publication_workflow="$TEST_ROOT/mcp-publication-workflow"; copy_release "$mcp_publication_workflow"
+rm "$mcp_publication_workflow/.github/workflows/mcp-release.yml"
+if "$mcp_publication_workflow/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "release without manual MCP publication workflow was accepted"; fi
 
 knowledge_sync_certification="$TEST_ROOT/knowledge-sync-certification"; copy_release "$knowledge_sync_certification"
 sed '/\.clineflow\/bin\/knowledge sync/d' "$knowledge_sync_certification/tests/certify-release.sh" > "$knowledge_sync_certification/certify.tmp"

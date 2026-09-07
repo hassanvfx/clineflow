@@ -22,7 +22,7 @@ When the user says “Please remove ClineFlow.”, first run `./.clineflow/bin/u
 
 ## Knowledge Visor
 
-Only when the user explicitly says “Please show me the ClineFlow dashboard.” or otherwise directly requests the ClineFlow dashboard or Knowledge Visor, invoke the installed project's `./.clineflow/bin/dashboard`. Never activate the optional runtime proactively during normal development, installation, validation, or commit preparation.
+Only when the user explicitly says “Please show me the ClineFlow dashboard.” or otherwise directly requests the ClineFlow dashboard or Knowledge Visor, call the opt-in `clineflow_dashboard_generate` MCP tool with the explicit project root. Reports and settings belong only in `.clineflow-mcp/`; never activate or generate a dashboard proactively during normal development, installation, validation, or commit preparation.
 
 ## Task knowledge rules
 

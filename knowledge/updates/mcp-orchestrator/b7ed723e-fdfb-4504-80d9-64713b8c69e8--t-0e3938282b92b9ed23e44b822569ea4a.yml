@@ -1,0 +1,58 @@
+{
+  "schema": 3,
+  "id": "b7ed723e-fdfb-4504-80d9-64713b8c69e8",
+  "at": "2026-09-07T16:30:40Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "mcp-orchestrator",
+  "stream": "b1f1a764-b6ab-4968-a4cf-5d81d3bbc094",
+  "journal": {
+    "path": "knowledge/journals/mcp-orchestrator/b1f1a764-b6ab-4968-a4cf-5d81d3bbc094--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "7509af9f1e12a349922c8de2b03d82edbac03b220cdad454fb82344aa6bc94c1",
+    "snapshot": "knowledge/updates/mcp-orchestrator/snapshots/b7ed723e-fdfb-4504-80d9-64713b8c69e8.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "mcp-orchestrator",
+      "statement": "The opt-in Python stdio MCP orchestrator owns global registration and target-local .clineflow-mcp dashboard state."
+    },
+    {
+      "ledger": "verification",
+      "id": "mcp-orchestrator",
+      "statement": "Local lifecycle, MCP, dashboard, migration, removal, release-manifest, OKF, and synchronization checks passed; hosted certification remains external."
+    },
+    {
+      "ledger": "goals",
+      "id": "mcp-orchestrator",
+      "statement": "Publish the checksum-declared MCP 0.1.2 wheel only after accepted Linux and Windows CI evidence."
+    },
+    {
+      "ledger": "last_session",
+      "id": "mcp-orchestrator",
+      "statement": "Push the accepted release, verify hosted CI, then dispatch the confirmation-gated MCP publication workflow."
+    },
+    {
+      "ledger": "timeline",
+      "id": "mcp-orchestrator",
+      "statement": "Completed the local ClineFlow MCP orchestrator implementation and release handoff."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed local MCP orchestration implementation, certification, and immutable-release publication handoff."
+  },
+  "log": {
+    "summary": "Prepared the ClineFlow MCP orchestration release for external publication and hosted certification."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

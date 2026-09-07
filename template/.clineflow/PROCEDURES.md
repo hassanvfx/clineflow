@@ -60,6 +60,6 @@ Do not infer that generated code needs less accountability, isolated checks prov
 
 ## Generate the optional Knowledge Visor
 
-- Run `./.clineflow/bin/dashboard` only after an explicit user request for the ClineFlow dashboard or Knowledge Visor.
+- Call `clineflow_dashboard_generate` through the opt-in MCP server, with the explicit project root, only after an explicit user request for the ClineFlow dashboard or Knowledge Visor.
 - First use previews and approval-gates all optional runtime and visual-asset downloads.
-- Generated reports under `knowledge/dashboard/` are local presentation artifacts, not canonical OKF knowledge, and do not require five-ledger synchronization.
+- Generated reports under `.clineflow-mcp/dashboard/` are local presentation artifacts, not canonical OKF knowledge, and do not require five-ledger synchronization.

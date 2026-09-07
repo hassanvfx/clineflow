@@ -1,0 +1,58 @@
+{
+  "schema": 3,
+  "id": "cf266f3a-d799-4e21-ba48-ad2cb0284bb7",
+  "at": "2026-09-07T16:35:36Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "mcp-orchestrator",
+  "stream": "b1f1a764-b6ab-4968-a4cf-5d81d3bbc094",
+  "journal": {
+    "path": "knowledge/journals/mcp-orchestrator/b1f1a764-b6ab-4968-a4cf-5d81d3bbc094--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "eacabbc438b1350f1b47188e981b9515d1faf7d95c1593f9a6514727e634ab10",
+    "snapshot": "knowledge/updates/mcp-orchestrator/snapshots/cf266f3a-d799-4e21-ba48-ad2cb0284bb7.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "mcp-orchestrator",
+      "statement": "The public MCP contract now supplies a consumable OKF v0.2 schema resource with explicit knowledge and workspace ownership boundaries."
+    },
+    {
+      "ledger": "verification",
+      "id": "mcp-orchestrator",
+      "statement": "The MCP package suite (21 tests), isolated install/removal, and reproducible release-manifest wheel/hash verification passed for 0.1.3."
+    },
+    {
+      "ledger": "goals",
+      "id": "mcp-orchestrator",
+      "statement": "Publish the checksum-declared MCP 0.1.3 wheel only after accepted Linux and Windows CI evidence."
+    },
+    {
+      "ledger": "last_session",
+      "id": "mcp-orchestrator",
+      "statement": "Push the accepted changes, verify hosted CI, then dispatch the confirmation-gated MCP 0.1.3 publication workflow."
+    },
+    {
+      "ledger": "timeline",
+      "id": "mcp-orchestrator",
+      "statement": "Completed local 0.1.3 contract evidence; external publication and hosted certification remain pending."
+    }
+  ],
+  "timeline": {
+    "summary": "Added the complete OKF schema resource and locally certified MCP package 0.1.3."
+  },
+  "log": {
+    "summary": "Completed the MCP 0.1.3 OKF schema contract increment and refreshed its publication handoff."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

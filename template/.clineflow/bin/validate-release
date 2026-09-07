@@ -6,7 +6,6 @@ if repository_root=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel 2>/dev/null)
 else ROOT=$(cd "$SCRIPT_DIR/../../.." && pwd); fi
 cd "$ROOT"
 MANIFEST=template/.clineflow/release-manifest
-DASHBOARD_MANIFEST=template/.clineflow/dashboard-component-manifest
 AGAINST=''
 [ "${1:-}" = "--against" ] && { AGAINST="${2:-}"; [ -n "$AGAINST" ] || { echo "Usage: $0 [--against GIT_REF]" >&2; exit 2; }; }
 [ "${1:-}" = "--help" ] && { echo "Usage: $0 [--against GIT_REF]"; exit 0; }
@@ -52,32 +51,18 @@ for required_source in configs/rules.template.md docs/durable-development-method
   printf '%s\n' "$sources" | grep -qxF "$required_source" || { echo "ERROR: unmanaged required source $required_source" >&2; exit 1; }
 done
 
-[ -f "$DASHBOARD_MANIFEST" ] || { echo "ERROR: missing optional dashboard manifest" >&2; exit 1; }
-for required_dashboard_source in .clineflow/bin/dashboard .clineflow/dashboard-component-manifest; do
-  printf '%s\n' "$sources" | grep -qxF "$required_dashboard_source" || { echo "ERROR: unmanaged dashboard bootstrap source $required_dashboard_source" >&2; exit 1; }
-done
-dashboard_sources=$(sed -n 's/^file|\([^|]*\)|.*$/\1/p' "$DASHBOARD_MANIFEST" | sort)
-while IFS='|' read -r record source target expected; do
-  [ "$record" = file ] || continue
-  valid_relative_path "$source" && valid_relative_path "$target" || { echo "ERROR: unsafe optional dashboard path" >&2; exit 1; }
-  [ -f "template/optional/dashboard/$source" ] || { echo "ERROR: missing optional dashboard source $source" >&2; exit 1; }
-  [ "$(sha256_file "template/optional/dashboard/$source")" = "$expected" ] || { echo "ERROR: stale optional dashboard checksum for $source" >&2; exit 1; }
-done < "$DASHBOARD_MANIFEST"
-while IFS= read -r optional_source; do
-  relative=${optional_source#template/optional/dashboard/}
-  printf '%s\n' "$dashboard_sources" | grep -qxF "$relative" || { echo "ERROR: unmanaged optional dashboard source $relative" >&2; exit 1; }
-done < <(find template/optional/dashboard -type f | sort)
-grep -q '^runtime|darwin-arm64|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits macOS arm64 runtime" >&2; exit 1; }
-grep -q '^runtime|linux-x86_64-gnu|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits Linux x86-64 runtime" >&2; exit 1; }
-grep -q '^runtime|windows-x86_64|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits Windows x86-64 runtime" >&2; exit 1; }
-grep -q '^asset|javascript|echarts.min.js|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits ECharts" >&2; exit 1; }
-grep -q '^asset|javascript|gsap.min.js|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits GSAP" >&2; exit 1; }
-grep -q '^asset|font|space-grotesk.woff2|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard omits Space Grotesk" >&2; exit 1; }
-grep -Eq '^asset\|[^|]+\|[^|]+\|[^|]+\|https://[^|]+\|[^|]+\|[0-9a-f]{64}\|' "$DASHBOARD_MANIFEST" || { echo "ERROR: dashboard assets are not pinned" >&2; exit 1; }
-grep -qiE '(^|[|/@])latest([|/]|$)' "$DASHBOARD_MANIFEST" && { echo "ERROR: dashboard manifest uses a mutable latest alias" >&2; exit 1; }
+test -f mcp-server/pyproject.toml || { echo "ERROR: missing MCP package" >&2; exit 1; }
+test -f mcp-server/release-manifest || { echo "ERROR: missing MCP release artifact manifest" >&2; exit 1; }
+grep -q '^artifact_sha256=[0-9a-f]\{64\}$' mcp-server/release-manifest || { echo "ERROR: MCP artifact digest is invalid" >&2; exit 1; }
+[ -x mcp-server/tests/test-release-manifest.sh ] || { echo "ERROR: missing executable MCP release-manifest test" >&2; exit 1; }
+[ -f .github/workflows/mcp-release.yml ] || { echo "ERROR: missing manual MCP publication workflow" >&2; exit 1; }
+grep -qF 'workflow_dispatch:' .github/workflows/mcp-release.yml || { echo "ERROR: MCP publication workflow is not manual" >&2; exit 1; }
+grep -qF "confirm == 'publish-mcp'" .github/workflows/mcp-release.yml || { echo "ERROR: MCP publication workflow lacks explicit confirmation" >&2; exit 1; }
+grep -qF 'gh release create' .github/workflows/mcp-release.yml || { echo "ERROR: MCP publication workflow cannot publish its artifact" >&2; exit 1; }
 
 grep -q "migrate_0_to_1()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 0 -> 1" >&2; exit 1; }
 grep -q "migrate_1_to_2()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 1 -> 2" >&2; exit 1; }
+grep -q "migrate_2_to_3()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 2 -> 3" >&2; exit 1; }
 grep -qF '.clineflow/bin/knowledge' template/.clineflow/bin/install || { echo "ERROR: fresh installation does not initialize tenant knowledge projections" >&2; exit 1; }
 for required in README.md template/configs/rules.template.md template/docs/durable-development-methodology.md template/.clineflow/WORKING_WITH_CODEX.md template/.clineflow/WORKING_WITH_CLINE.md; do
   grep -q 'Please update ClineFlow\.' "$required" || { echo "ERROR: canonical update prompt missing from $required" >&2; exit 1; }
@@ -100,6 +85,8 @@ grep -qF './tests/test-update-migrations.sh' tests/certify-release.sh || { echo 
 grep -qF './tests/test-knowledge-sync.sh' tests/certify-release.sh || { echo "ERROR: release certification omits knowledge synchronization" >&2; exit 1; }
 grep -qF './tests/test-tenant-knowledge.sh' tests/certify-release.sh || { echo "ERROR: release certification omits tenant knowledge coverage" >&2; exit 1; }
 grep -qF './tests/test-dashboard.sh' tests/certify-release.sh || { echo "ERROR: release certification omits the optional dashboard boundary" >&2; exit 1; }
+grep -qF './mcp-server/tests/test-install.sh' tests/certify-release.sh || { echo "ERROR: release certification omits global MCP installation" >&2; exit 1; }
+grep -qF './mcp-server/tests/test-release-manifest.sh' tests/certify-release.sh || { echo "ERROR: release certification omits MCP artifact verification" >&2; exit 1; }
 grep -qF './template/.clineflow/bin/knowledge sync' tests/certify-release.sh || { echo "ERROR: release certification does not rebuild generated knowledge projections" >&2; exit 1; }
 grep -qF 'validate-knowledge-sync --staged' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the staged knowledge synchronization gate" >&2; exit 1; }
 grep -qF 'single handoff only for one cohesive, independently verifiable slice' template/configs/rules.template.md || { echo "ERROR: shared agent rules omit the handoff topology boundary" >&2; exit 1; }

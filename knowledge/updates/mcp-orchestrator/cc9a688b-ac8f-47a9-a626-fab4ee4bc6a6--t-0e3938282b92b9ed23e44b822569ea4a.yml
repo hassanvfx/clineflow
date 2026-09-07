@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "cc9a688b-ac8f-47a9-a626-fab4ee4bc6a6",
+  "at": "2026-09-07T16:38:22Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "mcp-orchestrator",
+  "stream": "b1f1a764-b6ab-4968-a4cf-5d81d3bbc094",
+  "journal": {
+    "path": "knowledge/journals/mcp-orchestrator/b1f1a764-b6ab-4968-a4cf-5d81d3bbc094--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "bc05a0da99600f4f16a38b61ab31d9ec9df44c63270f1ecf318a978841687422",
+    "snapshot": "knowledge/updates/mcp-orchestrator/snapshots/cc9a688b-ac8f-47a9-a626-fab4ee4bc6a6.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "mcp-orchestrator",
+      "statement": "The complete local lifecycle certification passed after the 0.1.3 artifact checksum alignment, including MCP, migration, removal, release, OKF, and synchronization boundaries."
+    },
+    {
+      "ledger": "timeline",
+      "id": "mcp-orchestrator",
+      "statement": "Completed the final local composed-certification gate; only external hosted certification and publication remain."
+    }
+  ],
+  "timeline": {
+    "summary": "The full macOS local release certification passed for the MCP 0.1.3 handoff."
+  },
+  "log": {
+    "summary": "Completed the composed local release certification for the MCP 0.1.3 artifact handoff."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

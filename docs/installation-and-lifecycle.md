@@ -28,6 +28,41 @@ irm https://raw.githubusercontent.com/hassanvfx/clineflow/main/template/.clinefl
 
 The installer stages the release manifest, downloads every declared payload, verifies its checksum, and only then writes project files.
 
+## Optional MCP orchestration
+
+The normal ClineFlow installer also performs a preflight for the opt-in, user-global `clineflow-mcp` stdio server after staging the core release and before it commits project files. It installs the server only when it is absent, reuses a healthy server, and stops with explicit update or repair guidance when the global runtime is outdated or corrupt. A published server wheel is checksum verified before installation.
+
+Detected writable Codex, Claude Code, Copilot, Cline, Cursor, Windsurf, and Continue configurations receive only the credential-free, owned `clineflow` entry that points to the stable absolute `clineflow-mcp-server` launcher. A malformed, conflicting, or user-managed entry is left untouched and causes the composite installation to stop before project mutation. No detected client is still a successful installation: the result provides exact manual setup guidance.
+
+Cline is configured only through its detected visible runtime settings (for the
+supported Code, Code Insiders, Cursor, Windsurf, or native Cline locations); a
+legacy `.cline/mcp.json` is never created. Continue uses its detected YAML
+configuration and an exact marker-delimited owned block, and refuses an
+existing user-managed `mcpServers` section. Restart Cline or reload its editor
+window after a successful Cline registration.
+
+The server is never registered automatically outside an explicit ClineFlow or global-MCP setup. Every MCP project operation requires an existing, absolute, non-symlink project root; server state is stored only in `.clineflow-mcp/` at that root.
+
+For a standalone client-setup check, use `clineflow-mcp setup --status`. To
+inspect the global runtime without a source checkout, run the authoritative
+standalone installer in status mode:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/mcp-server/install.sh | bash -s -- --status
+```
+
+It reports `absent`, `healthy`, `outdated`, or `corrupt` without mutation.
+Global removal is separately previewed with the authoritative standalone
+remover, then applied only after explicit authorization:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/mcp-server/uninstall.sh | bash
+curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/mcp-server/uninstall.sh | bash -s -- --yes
+```
+
+The remover affects only the global runtime and exact owned client entries; it
+never removes a project workspace.
+
 ## Prerequisites and Git initialization
 
 ClineFlow requires Git and either `curl` or `wget`. The installer prints an operating-system-specific prerequisite plan before installing missing tools. Automated prerequisite installation requires interactive approval or a previously authorized `--yes` invocation.
@@ -53,7 +88,7 @@ The ownership record at `.clineflow/.owned-agent-files` tells the remover whethe
 | `./.clineflow/bin/uninstall` | Preview or transactionally remove managed tooling. |
 | `./.clineflow/bin/validate-okf` | Validate the structural OKF bundle. |
 | `./.clineflow/bin/validate-knowledge-sync` | Validate journal and five-ledger synchronization. |
-| `./.clineflow/bin/dashboard` | Inspect or explicitly activate the optional Knowledge Visor. |
+| `clineflow_dashboard_generate` MCP tool | Explicitly generate the optional Knowledge Visor for an absolute project root. |
 
 `validate-release` and installer/bootstrap helpers are also distributed for release and platform workflows.
 
@@ -151,7 +186,8 @@ The agent explains the plan and asks for explicit confirmation. After confirmati
 
 Removal deletes the `.clineflow/` runtime and removes the managed ClineFlow block from supported agent files. An agent file is deleted only when no user-authored content remains. Removal preserves:
 
-- `knowledge/`, including generated dashboard reports
+- `knowledge/`, including legacy generated dashboard reports
+- `.clineflow-mcp/`, including MCP dashboard reports, exports, and receipts
 - `docs/journals/` legacy history
 - User-authored documentation
 - Text outside managed instruction markers
@@ -175,6 +211,6 @@ The remover validates trusted ownership paths and marker structure before mutati
 - If the remote host cannot be reached, leave the installation unchanged and retry after network or proxy access is restored. Do not copy an unverified updater from another source.
 - If an update fails, read the reported rollback result. Recovery evidence is retained under `.clineflow/backups/` when available.
 - If removal rejects malformed markers or unsafe ownership data, restore a valid managed block or inspect `.clineflow/.owned-agent-files`, then preview again.
-- The optional dashboard has its own diagnostic: `./.clineflow/bin/dashboard doctor`.
+- The optional dashboard is diagnosed through `clineflow_healthcheck` and generated through `clineflow_dashboard_generate`.
 
 See [How ClineFlow works](how-clineflow-works.md), the [OKF knowledge workflow](okf-knowledge-workflow.md), and the [release process](releasing.md) for the contracts behind these commands.

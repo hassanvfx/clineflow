@@ -5,6 +5,12 @@ UPDATER="$ROOT/update.sh"
 CURRENT_VERSION=$(sed -n 's/^release_version=//p' "$ROOT/template/.clineflow/release-manifest")
 TEST_ROOT=$(mktemp -d /tmp/clineflow-migrations-XXXXXX)
 trap 'rm -rf "$TEST_ROOT"' EXIT
+export HOME="$TEST_ROOT/home"
+export UV_TOOL_DIR="$TEST_ROOT/uv-tools"
+export UV_TOOL_BIN_DIR="$TEST_ROOT/uv-bin"
+export CLINEFLOW_MCP_HOME="$TEST_ROOT/mcp-state"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-/private/tmp/clineflow-mcp-uv-cache}"
+export UV_OFFLINE="${UV_OFFLINE:-1}"
 pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1" >&2; exit 1; }
 
@@ -20,7 +26,7 @@ seed_okf() {
 assert_current() {
   local project=$1
   [ "$(cat "$project/.clineflow/VERSION")" = "$CURRENT_VERSION" ] || fail "wrong migrated version"
-  grep -qx 'migration_schema=2' "$project/.clineflow/state" || fail "missing migration state"
+  grep -qx 'migration_schema=3' "$project/.clineflow/state" || fail "missing migration state"
   [ -x "$project/.clineflow/bin/knowledge" ] || fail "missing tenant knowledge command"
   [ -x "$project/.clineflow/bin/validate-knowledge-sync" ] || fail "missing knowledge synchronization validator"
   grep -q 'Autonomy operates within explicit boundaries' "$project/.clineflow/PROCEDURES.md" || fail "managed autonomy workflow was not updated"
@@ -28,8 +34,9 @@ assert_current() {
   grep -q 'Handoff Topology' "$project/knowledge/journals/TASK_TEMPLATE.md" || fail "updated journal template omits handoff topology"
   grep -q 'Choose reversible details inside the authorized contract' "$project/AGENTS.md" || fail "updated agent rules omit the reversible-choice boundary"
   grep -q 'single handoff only for one cohesive' "$project/AGENTS.md" || fail "updated agent rules omit the handoff topology boundary"
-  [ -x "$project/.clineflow/bin/dashboard" ] && [ -f "$project/.clineflow/dashboard-component-manifest" ] || fail "missing inert dashboard launcher"
-  [ ! -e "$project/.clineflow/optional" ] && [ ! -e "$project/knowledge/dashboard" ] || fail "update activated the optional dashboard"
+  [ ! -e "$project/.clineflow/bin/dashboard" ] && [ ! -e "$project/.clineflow/dashboard-component-manifest" ] || fail "legacy project-local dashboard launcher survived migration"
+  [ ! -e "$project/.clineflow/optional/dashboard" ] || fail "update retained the legacy dashboard runtime"
+  [ -x "$UV_TOOL_BIN_DIR/clineflow-mcp-server" ] || fail "update did not activate the global MCP launcher"
   (cd "$project" && ./.clineflow/bin/doctor >/dev/null) || fail "migrated installation is unhealthy"
 }
 
@@ -75,6 +82,28 @@ for layout in visible hidden; do
   grep -q 'BEGIN CLINEFLOW OKF RULES' "$project/AGENTS.md" || fail "$layout migration omitted current rules"
 done
 pass "visible and partial hidden OKF layouts converge"
+
+# Schema 2 owned dashboard payload is retired without touching historical
+# reports or the new MCP workspace. The fixture deliberately omits optional
+# downloaded assets, which must therefore remain rather than being guessed at.
+schema_two="$TEST_ROOT/schema-two"
+seed_okf "$schema_two"
+mkdir -p "$schema_two/.clineflow/bin" "$schema_two/knowledge/dashboard/runs/legacy" "$schema_two/.clineflow-mcp"
+git -C "$ROOT" show HEAD:template/.clineflow/release-manifest > "$schema_two/.clineflow/release-manifest"
+git -C "$ROOT" show HEAD:template/.clineflow/bin/dashboard > "$schema_two/.clineflow/bin/dashboard"
+chmod +x "$schema_two/.clineflow/bin/dashboard"
+git -C "$ROOT" show HEAD:template/.clineflow/dashboard-component-manifest > "$schema_two/.clineflow/dashboard-component-manifest"
+printf 'release_version=2026.09.03.18\nmigration_schema=2\n' > "$schema_two/.clineflow/state"
+printf 'legacy dashboard report\n' > "$schema_two/knowledge/dashboard/runs/legacy/index.html"
+printf 'preserve MCP workspace\n' > "$schema_two/.clineflow-mcp/user-state.txt"
+legacy_report_hash=$(shasum -a 256 "$schema_two/knowledge/dashboard/runs/legacy/index.html" | awk '{print $1}')
+mcp_workspace_hash=$(shasum -a 256 "$schema_two/.clineflow-mcp/user-state.txt" | awk '{print $1}')
+(cd "$schema_two" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
+assert_current "$schema_two"
+[ ! -e "$schema_two/.clineflow/bin/dashboard" ] && [ ! -e "$schema_two/.clineflow/dashboard-component-manifest" ] || fail "schema 2 dashboard payload was not retired"
+[ "$legacy_report_hash" = "$(shasum -a 256 "$schema_two/knowledge/dashboard/runs/legacy/index.html" | awk '{print $1}')" ] || fail "schema migration changed legacy dashboard reports"
+[ "$mcp_workspace_hash" = "$(shasum -a 256 "$schema_two/.clineflow-mcp/user-state.txt" | awk '{print $1}')" ] || fail "schema migration changed MCP workspace"
+pass "schema 2 dashboard migration preserves reports and MCP workspace"
 
 # Valid managed blocks at line one and after user text refresh portably.
 for placement in line-one prefixed; do

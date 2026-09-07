@@ -8,12 +8,26 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 ## [Unreleased]
 
 ### Added
+- ClineFlow MCP `0.1.0`: an opt-in, checksum-addressable global Python stdio
+  server with explicit-root lifecycle, consultation, health, plan-first repair,
+  dashboard, export, and contract resources.
+- Safe detected-client setup and exact cleanup for Codex, Claude Code, Copilot,
+  Cline, Cursor, Windsurf, and Continue, plus global installation/removal
+  preview and an offline-certifiable protocol smoke test.
 - ClineFlow 3 tenant-scoped journals, opaque pinned tenant identity, separate work streams, immutable additive update records, and deterministic local ledger projections.
 - Schema-2 migration that preserves schema-1 ledger views byte-for-byte under `knowledge/baseline/schema-1/` before rebuilding ClineFlow 3 projections.
 - Five operational workflow principles covering accountable generated code, durable evidence, explicit autonomy boundaries, deterministic checks, and established engineering approaches. New journals now separate the task contract and planned proof from verification results.
 - Handoff-topology planning that distinguishes a cohesive single handoff from a milestone chain with solid boundaries, local proof, dependency-aware composition, and one accountable integrator.
 
 ### Changed
+- Release `2026.09.07.2` adds a no-migration MCP publication contract: the
+  separately versioned wheel is rebuilt and checksum-verified before a
+  confirmation-gated, non-overwriting GitHub release upload; Linux and Windows
+  certification both explicitly provision the isolated runtime manager.
+- Release `2026.09.07.1` advances to migration schema `3`: dashboard rendering
+  and assets move to the MCP package, new output is confined to
+  `.clineflow-mcp/`, and schema 2→3 preserves legacy `knowledge/dashboard/`
+  reports while retiring only verified project-local dashboard payload.
 - Release `2026.09.07.0` rebuilds ignored ClineFlow 3 knowledge projections
   before root validation and pins shipped lockfiles to LF for Windows;
   migration schema `2` remains valid because persistent formats are unchanged.

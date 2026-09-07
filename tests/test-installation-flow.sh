@@ -5,6 +5,12 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 INSTALL="$ROOT/template/.clineflow/bin/install"
 TEST_DIR=$(mktemp -d /tmp/clineflow-test-XXXXXX)
 trap 'rm -rf "$TEST_DIR"' EXIT
+export HOME="$TEST_DIR/home"
+export UV_TOOL_DIR="$TEST_DIR/uv-tools"
+export UV_TOOL_BIN_DIR="$TEST_DIR/uv-bin"
+export CLINEFLOW_MCP_HOME="$TEST_DIR/mcp-state"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-/private/tmp/clineflow-mcp-uv-cache}"
+export UV_OFFLINE="${UV_OFFLINE:-1}"
 pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1" >&2; exit 1; }
 
@@ -17,11 +23,12 @@ for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .win
 shasum -a 256 knowledge/log.md > before.hashes
 [ ! -d clineflow ] || fail "fresh test project unexpectedly has legacy runtime"
 CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL"
-for tool in install dashboard update uninstall validate-knowledge-sync validate-okf validate-release doctor prereqs; do [ -x ".clineflow/bin/$tool" ] || fail "missing executable .clineflow/bin/$tool"; done
+for tool in install update uninstall validate-knowledge-sync validate-okf validate-release doctor prereqs; do [ -x ".clineflow/bin/$tool" ] || fail "missing executable .clineflow/bin/$tool"; done
 for tool in update.ps1 bootstrap.ps1; do [ -f ".clineflow/bin/$tool" ] || fail "missing PowerShell command .clineflow/bin/$tool"; done
-[ -f .clineflow/dashboard-component-manifest ] || fail "missing inert dashboard component manifest"
-[ ! -e .clineflow/optional ] && [ ! -e knowledge/dashboard ] || fail "installation activated the optional dashboard"
-! grep -q 'CLINEFLOW DASHBOARD GENERATED REPORTS' .git/info/exclude || fail "installation changed dashboard exclusions"
+[ ! -e .clineflow/dashboard-component-manifest ] && [ ! -e .clineflow/bin/dashboard ] || fail "installation retained project-local dashboard runtime"
+[ ! -e .clineflow/optional ] && [ ! -e knowledge/dashboard ] || fail "installation activated legacy dashboard state"
+[ -x "$UV_TOOL_BIN_DIR/clineflow-mcp-server" ] || fail "installation did not activate the global MCP launcher"
+[ -f "$CLINEFLOW_MCP_HOME/state" ] || fail "installation did not record the MCP runtime state"
 [ -f docs/durable-development-methodology.md ] || fail "missing durable development methodology fixture"
 for index in clineflow_specification.yml clineflow_verification.yml clineflow_goals.yml clineflow_last_session.yml clineflow_timeline.yml; do [ -f "knowledge/$index" ] || fail "missing knowledge/$index"; done
 grep -q 'durable-development-methodology.md' AGENTS.md || fail "agent rules do not require the durable loop"
@@ -72,6 +79,13 @@ output=$(CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL" --dry-run)
 grep -q 'Would initialize a Git repository' <<<"$output" || fail "dry-run did not report Git initialization"
 [ ! -e .git ] || fail "dry-run initialized Git"
 pass "dry-run reports but does not initialize Git"
+
+printf '%s\n' '#!/usr/bin/env bash' 'exit 1' > "$TEST_DIR/mcp-activation-failure.sh"
+chmod +x "$TEST_DIR/mcp-activation-failure.sh"
+mkdir "$TEST_DIR/mcp-activation-failure"; cd "$TEST_DIR/mcp-activation-failure"
+if CLINEFLOW_BASE_URL="file://$ROOT/template" CLINEFLOW_MCP_INSTALL_URL="file://$TEST_DIR/mcp-activation-failure.sh" bash "$INSTALL" >/dev/null 2>&1; then fail "MCP activation failure unexpectedly installed ClineFlow"; fi
+[ ! -e .clineflow ] && [ ! -e .git ] || fail "MCP activation failure mutated the project before core commit"
+pass "MCP activation failure leaves the project untouched"
 
 mkdir "$TEST_DIR/init-failure" "$TEST_DIR/init-failure-bin"; cd "$TEST_DIR/init-failure"
 cat > "$TEST_DIR/init-failure-bin/git" <<'EOF'

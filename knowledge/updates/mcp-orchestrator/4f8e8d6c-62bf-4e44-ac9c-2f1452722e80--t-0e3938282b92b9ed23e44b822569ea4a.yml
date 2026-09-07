@@ -1,0 +1,58 @@
+{
+  "schema": 3,
+  "id": "4f8e8d6c-62bf-4e44-ac9c-2f1452722e80",
+  "at": "2026-09-07T16:48:32Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "mcp-orchestrator",
+  "stream": "b1f1a764-b6ab-4968-a4cf-5d81d3bbc094",
+  "journal": {
+    "path": "knowledge/journals/mcp-orchestrator/b1f1a764-b6ab-4968-a4cf-5d81d3bbc094--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "821b66509d29c88c4c8d2f1b3e083d741f17fcfb1a1b173ee18765784f909703",
+    "snapshot": "knowledge/updates/mcp-orchestrator/snapshots/4f8e8d6c-62bf-4e44-ac9c-2f1452722e80.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "mcp-orchestrator",
+      "statement": "Concurrent dashboard requests are serialized around the renderer destination binding, and configured client launchers must prove their installed MCP version before registration."
+    },
+    {
+      "ledger": "verification",
+      "id": "mcp-orchestrator",
+      "statement": "The MCP package suite (25 tests), isolated wheel install/removal, release-manifest verification, and complete local lifecycle certification passed for 0.1.6."
+    },
+    {
+      "ledger": "goals",
+      "id": "mcp-orchestrator",
+      "statement": "Publish the checksum-declared MCP 0.1.6 wheel only after accepted Linux and Windows CI evidence."
+    },
+    {
+      "ledger": "last_session",
+      "id": "mcp-orchestrator",
+      "statement": "Push the accepted changes, verify hosted CI, then dispatch the confirmation-gated MCP 0.1.6 publication workflow."
+    },
+    {
+      "ledger": "timeline",
+      "id": "mcp-orchestrator",
+      "statement": "Completed local 0.1.6 isolation and launcher-verification hardening; external hosted certification and publication remain pending."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed the final local 0.1.6 audit and certification; hosted certification and publication remain external."
+  },
+  "log": {
+    "summary": "Hardened MCP root isolation and launcher verification, then completed local 0.1.6 certification."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

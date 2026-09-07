@@ -95,7 +95,7 @@
     new ResizeObserver(() => chart.resize()).observe($("#pulse-chart"));
   };
   const estimateExample = {delivery_estimate: {schema: "clineflow-dashboard-delivery-estimate/v1", agent: {name: "Agent", model: "model-id", configuration_label: "Safe configuration summary"}, constants: {currency: "USD", loaded_hourly_rate: 0, baseline_hours: 0, current_direct_cost: 0, ai_without_clineflow: {effort_multiplier: 1, direct_cost: 0}, no_ai: {effort_multiplier: 1, direct_cost: 0}}, perspective: "Estimated planning perspective.", rationale: "Why these assumptions fit the source facts.", source_ids: ["canonical-document-id"]}};
-  const estimateInstruction = `Add a delivery_estimate object to the agent insights JSON, then regenerate with:\n\n./.clineflow/bin/dashboard generate --insights <insights.json>\n\nRequired shape:\n${JSON.stringify(estimateExample, null, 2)}`;
+  const estimateInstruction = `Add a delivery_estimate object to the agent insights JSON, then ask an MCP client to call clineflow_dashboard_generate with the explicit project root and the insights payload.\n\nRequired shape:\n${JSON.stringify(estimateExample, null, 2)}`;
   const renderDeliveryEstimate = () => {
     const target = $("#delivery-estimate");
     if (!estimate || !target) return;

@@ -129,9 +129,9 @@ Ask your agent:
 Please show me the ClineFlow dashboard.
 ```
 
-The Knowledge Visor stays dormant until explicitly requested. On first use it shows an approval plan for its optional pinned runtime and visual assets, then generates a private, self-contained report from local OKF knowledge and Git history. The report does not edit canonical knowledge or make browser-time network requests.
+The Knowledge Visor stays dormant until explicitly requested. The opt-in local MCP server generates a private, self-contained report from an explicit project root, local OKF knowledge, and Git history. The report does not edit canonical knowledge, open a browser, or make browser-time network requests.
 
-Generated reports remain in `knowledge/dashboard/` even if ClineFlow tooling is later removed.
+New reports remain in `.clineflow-mcp/dashboard/runs/` even if ClineFlow tooling is later removed. Existing legacy reports in `knowledge/dashboard/` are also preserved.
 
 [See the Knowledge Visor's report surfaces, activation, privacy, retention, and export workflow →](docs/knowledge-visor.md)
 

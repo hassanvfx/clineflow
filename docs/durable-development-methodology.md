@@ -77,7 +77,7 @@ Use this exact prompt:
 
 > Please show me the ClineFlow dashboard.
 
-This explicitly authorizes dashboard generation, but first use still previews and approval-gates the optional pinned runtime and visual assets. Normal development and commit preparation never activate the visor proactively.
+This explicitly authorizes dashboard generation through the opt-in MCP server. The server receives an explicit project root, never opens a browser, and writes only to `.clineflow-mcp/`. Normal development and commit preparation never activate the visor proactively.
 
 ## Evidence-first examples
 

@@ -70,7 +70,7 @@ sync` rebuilds these local views:
 
 Use one timestamp for every ledger's `updated_at`, the active journal's `generated.at`, and the newest timeline event. Every ledger must reference the active journal. Refresh the last-session handoff and append a matching timeline event. If goals, specification, or verification have no semantic change, updating only their timestamp records that the ledger was reviewed.
 
-This is a change-set rule, not a requirement to rewrite every ledger after each file save. Generated files below `knowledge/dashboard/` are explicitly outside this synchronization contract.
+This is a change-set rule, not a requirement to rewrite every ledger after each file save. Generated MCP dashboard files below `.clineflow-mcp/dashboard/` and preserved legacy files below `knowledge/dashboard/` are outside this synchronization contract.
 
 ## Validation
 

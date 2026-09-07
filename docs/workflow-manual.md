@@ -153,9 +153,9 @@ To inspect the optional local report, say:
 Please show me the ClineFlow dashboard.
 ```
 
-The Knowledge Visor is dormant until this explicit request. Its first use
-shows its optional runtime and asset plan before any download or report
-generation.
+The Knowledge Visor is dormant until this explicit request. The opt-in MCP
+server generates it without opening a browser, uses an explicit project root,
+and writes only below `.clineflow-mcp/`.
 
 ## The durable knowledge model
 
@@ -229,7 +229,7 @@ covered. Record both the evidence and the remaining judgment.
 | Validate OKF structure | `./.clineflow/bin/validate-okf` |
 | Validate knowledge synchronization | `./.clineflow/bin/validate-knowledge-sync` |
 | Preview removal | `./.clineflow/bin/uninstall --dry-run` |
-| Inspect dashboard state | `./.clineflow/bin/dashboard doctor` |
+| Inspect dashboard state | `clineflow_healthcheck` MCP tool with an explicit root |
 
 ## What ClineFlow does not do
 

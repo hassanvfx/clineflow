@@ -36,6 +36,7 @@ SCHEMA = "clineflow-dashboard/v1"
 OBSERVATION_SCHEMA = "clineflow-dashboard-observations/v1"
 PRESENTATION_SCHEMA = "clineflow-dashboard-presentation/v1"
 DELIVERY_ESTIMATE_SCHEMA = "clineflow-dashboard-delivery-estimate/v1"
+DASHBOARD_ROOT: Path | None = None
 LEDGERS = (
     "clineflow_specification.yml",
     "clineflow_verification.yml",
@@ -49,6 +50,11 @@ ALLOWED_TAGS = {
     "hr", "li", "ol", "p", "pre", "strong", "table", "tbody", "td", "th",
     "thead", "tr", "ul",
 }
+
+
+def dashboard_root(root: Path) -> Path:
+    """Return the MCP-owned report boundary, never canonical knowledge."""
+    return DASHBOARD_ROOT if DASHBOARD_ROOT is not None else root / "knowledge" / "dashboard"
 
 
 def run_git(root: Path, *args: str, check: bool = False) -> str:
@@ -154,7 +160,7 @@ def parse_numstat(text: str) -> dict[str, Any]:
         if len(parts) != 3:
             continue
         added, deleted, path = parts
-        if path.startswith("knowledge/dashboard/"):
+        if path.startswith("knowledge/dashboard/") or path.startswith(".clineflow-mcp/dashboard/"):
             continue
         area = classify_path(path)
         bucket = result["areas"].setdefault(
@@ -197,7 +203,7 @@ def tree_footprint(root: Path, revision: str | None = None) -> dict[str, int]:
             if not match or match.group(1) == "-":
                 continue
             size, path = int(match.group(1)), match.group(2)
-            if path.startswith("knowledge/dashboard/"):
+            if path.startswith("knowledge/dashboard/") or path.startswith(".clineflow-mcp/dashboard/"):
                 continue
             tracked_files += 1
             tracked_bytes += size
@@ -212,7 +218,7 @@ def tree_footprint(root: Path, revision: str | None = None) -> dict[str, int]:
     files = [line for line in run_git(root, "ls-files").splitlines() if line]
     tracked_files = tracked_bytes = knowledge_files = knowledge_bytes = 0
     for relative in files:
-        if relative.startswith("knowledge/dashboard/"):
+        if relative.startswith("knowledge/dashboard/") or relative.startswith(".clineflow-mcp/dashboard/"):
             continue
         path = root / relative
         if not path.is_file():
@@ -342,7 +348,7 @@ def current_change(root: Path) -> dict[str, Any]:
 
 def collect_runs(root: Path) -> list[dict[str, Any]]:
     """Collect prior report timestamps without recursively reading report content."""
-    runs = root / "knowledge" / "dashboard" / "runs"
+    runs = dashboard_root(root) / "runs"
     result: list[dict[str, Any]] = []
     if not runs.is_dir():
         return result
@@ -358,7 +364,7 @@ def collect_runs(root: Path) -> list[dict[str, Any]]:
 
 
 def dashboard_settings_path(root: Path) -> Path:
-    return root / "knowledge" / "dashboard" / "settings.json"
+    return dashboard_root(root) / "settings.json"
 
 
 def parse_retention(value: Any) -> int | None:
@@ -416,7 +422,7 @@ def exact_usage(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def previous_snapshot(root: Path, source_hash: str) -> tuple[str | None, dict[str, Any] | None]:
-    runs = root / "knowledge" / "dashboard" / "runs"
+    runs = dashboard_root(root) / "runs"
     if not runs.is_dir():
         return None, None
     for snapshot in sorted(runs.glob("*/snapshot.json"), reverse=True):
@@ -464,7 +470,7 @@ def select_baseline(root: Path, source_hash: str, selector: str) -> tuple[str | 
         return snapshot["run_id"], snapshot
     if selector.startswith("run:"):
         run_id = selector[4:]
-        path = root / "knowledge" / "dashboard" / "runs" / run_id / "snapshot.json"
+        path = dashboard_root(root) / "runs" / run_id / "snapshot.json"
         if not path.is_file():
             raise ValueError(f"comparison run does not exist: {run_id}")
         return run_id, json.loads(path.read_text())
@@ -1049,7 +1055,7 @@ def prune_runs(runs_dir: Path, retention: int | None) -> None:
 
 
 def render_report(root: Path, runtime: Path, data: dict[str, Any], observations: dict[str, Any], no_open: bool, retention: int | None = None) -> Path:
-    runs_dir = root / "knowledge" / "dashboard" / "runs"
+    runs_dir = dashboard_root(root) / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
     run_id = data["run_id"]
     run_dir = runs_dir / run_id
@@ -1092,7 +1098,7 @@ def render_report(root: Path, runtime: Path, data: dict[str, Any], observations:
 
 
 def update_launcher(root: Path) -> None:
-    dashboard = root / "knowledge" / "dashboard"
+    dashboard = dashboard_root(root)
     links = []
     for run in sorted(dashboard.glob("runs/*/index.html"), reverse=True):
         run_id = run.parent.name
@@ -1102,7 +1108,7 @@ def update_launcher(root: Path) -> None:
 
 
 def sanitized_export(root: Path, runtime: Path, run: str, output: Path) -> None:
-    runs = root / "knowledge" / "dashboard" / "runs"
+    runs = dashboard_root(root) / "runs"
     if run == "latest":
         choices = sorted(path for path in runs.iterdir() if path.is_dir()) if runs.is_dir() else []
         if not choices:

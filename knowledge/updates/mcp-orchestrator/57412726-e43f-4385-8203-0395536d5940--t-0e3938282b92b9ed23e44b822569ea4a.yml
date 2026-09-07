@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "57412726-e43f-4385-8203-0395536d5940",
+  "at": "2026-09-07T16:49:38Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "mcp-orchestrator",
+  "stream": "b1f1a764-b6ab-4968-a4cf-5d81d3bbc094",
+  "journal": {
+    "path": "knowledge/journals/mcp-orchestrator/b1f1a764-b6ab-4968-a4cf-5d81d3bbc094--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "6fbdc426ffce8d78148edec1f1774e167a9114160b0056e2af64e738e2d2a6a9",
+    "snapshot": "knowledge/updates/mcp-orchestrator/snapshots/57412726-e43f-4385-8203-0395536d5940.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "mcp-orchestrator",
+      "statement": "The declared MCP 0.1.6 wheel URL returned HTTP 404; local certification is complete but the immutable artifact and hosted CI evidence are absent."
+    },
+    {
+      "ledger": "timeline",
+      "id": "mcp-orchestrator",
+      "statement": "External publication and GitHub-hosted Linux/Windows certification are the remaining release gates."
+    }
+  ],
+  "timeline": {
+    "summary": "Confirmed the MCP 0.1.6 release URL is unavailable pending authorized publication and hosted certification."
+  },
+  "log": {
+    "summary": "Verified that the declared MCP 0.1.6 artifact is not yet published; external release evidence remains pending."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

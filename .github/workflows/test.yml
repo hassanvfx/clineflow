@@ -15,6 +15,9 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - name: Install the isolated MCP runtime manager
+        uses: astral-sh/setup-uv@v6
       
       - name: Run test suite
         run: ./tests/certify-release.sh
@@ -40,6 +43,10 @@ jobs:
       - name: Checkout code with release byte normalization
         uses: actions/checkout@v5
 
+      - name: Install the isolated MCP runtime manager
+        shell: pwsh
+        run: python -m pip install --disable-pip-version-check uv
+
       - name: Install through Git Bash
         shell: bash
         run: |
@@ -50,6 +57,8 @@ jobs:
           export CLINEFLOW_BASE_URL="file:///$(cygpath -m "$GITHUB_WORKSPACE")/template"
           bash "$workspace_dir/template/.clineflow/bin/install" --yes
           ./.clineflow/bin/doctor
+          mcp_bin=$(cygpath -u "$(uv tool dir --bin)")
+          "$mcp_bin/clineflow-mcp" --version
           printf 'CLINEFLOW_SMOKE_DIR=%s\n' "$(cygpath -w "$smoke_dir")" >> "$GITHUB_ENV"
 
       - name: Exercise the native PowerShell update wrapper

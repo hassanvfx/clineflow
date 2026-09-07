@@ -124,7 +124,7 @@ show_plan() {
   fi
   echo "  - remove the .clineflow/ managed runtime"
   [ -n "$DASHBOARD_EXCLUDE" ] && grep -qFx "$DASHBOARD_BEGIN" "$DASHBOARD_EXCLUDE" 2>/dev/null && echo "  - remove the owned dashboard report exclusion from $DASHBOARD_EXCLUDE"
-  echo "  - preserve knowledge/, generated dashboard reports, docs/journals/, user documentation, and unrelated files"
+  echo "  - preserve knowledge/, legacy reports, .clineflow-mcp/, docs/journals/, user documentation, and unrelated files"
 }
 
 restore_transaction() {
@@ -209,4 +209,4 @@ COMMITTED=true
 rm -rf "$TRANSACTION_DIR"
 TRANSACTION_DIR=''
 echo "removed: .clineflow/"
-echo "knowledge/, generated dashboard reports, docs/journals/, user documentation, and unrelated files were preserved."
+echo "knowledge/, legacy reports, .clineflow-mcp/, docs/journals/, user documentation, and unrelated files were preserved."

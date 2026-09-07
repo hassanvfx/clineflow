@@ -22,6 +22,33 @@ Options:
 EOF
 }
 
+mcp_installer_url() {
+  if [ -n "${CLINEFLOW_MCP_INSTALL_URL:-}" ]; then printf '%s\n' "$CLINEFLOW_MCP_INSTALL_URL"; return; fi
+  case "$BASE_URL" in
+    file://*) printf 'file://%s/mcp-server/install.sh\n' "$(dirname "${BASE_URL#file://}")" ;;
+    *) printf '%s\n' 'https://raw.githubusercontent.com/hassanvfx/clineflow/main/mcp-server/install.sh' ;;
+  esac
+}
+
+bootstrap_mcp() {
+  local url mcp_temp
+  url=$(mcp_installer_url)
+  echo "ClineFlow MCP preflight: $url"
+  if [ "$DRY_RUN" = true ]; then
+    echo "Would verify or install the optional global ClineFlow MCP server and configure detected clients."
+    return
+  fi
+  case "$url" in
+    file://*) bash "${url#file://}" ;;
+    *)
+      mcp_temp=$(mktemp "${TMPDIR:-/tmp}/clineflow-mcp-bootstrap-XXXXXX")
+      curl -fsSL "$url" -o "$mcp_temp"
+      bash "$mcp_temp"
+      rm -f "$mcp_temp"
+      ;;
+  esac
+}
+
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --dry-run) DRY_RUN=true ;;
@@ -52,7 +79,7 @@ read_value() { sed -n "s/^$1=//p" "$2" | head -n 1; }
 valid_relative_path() { case "$1" in ''|/*|..|../*|*/../*|*/..) return 1 ;; *) return 0 ;; esac; }
 
 temporary=$(mktemp -d "${TMPDIR:-/tmp}/clineflow-install-XXXXXX")
-cleanup() { rm -rf "$temporary"; }
+cleanup() { rm -rf "${temporary:-}"; }
 trap cleanup EXIT
 trap 'exit 130' HUP INT TERM
 manifest="$temporary/release-manifest"
@@ -88,11 +115,11 @@ ensure_git_repository() {
   if git init -q && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then echo "Initialized Git repository in: $(pwd)"
   else echo "WARNING: repository initialization failed; ClineFlow installation will continue." >&2; fi
 }
-ensure_git_repository
-
 if [ "$DRY_RUN" = true ]; then
+  ensure_git_repository
   echo "Would install ClineFlow $release_version from the verified release manifest."
   echo "Would create missing user fixtures and merge one managed rules block into agent configurations."
+  bootstrap_mcp
   echo "Existing knowledge, documentation, and content outside ClineFlow markers would be preserved."
   exit 0
 fi
@@ -102,6 +129,12 @@ if { [ -d clineflow/bin ] || [ -f VERSION ] || [ -f validate-okf ]; } && [ "$FOR
   echo "curl -fsSL https://raw.githubusercontent.com/hassanvfx/clineflow/main/update.sh | bash" >&2
   exit 1
 fi
+
+# The core release is fully staged and verified at this point. Global MCP
+# activation happens before any project state is committed, so a failed client
+# setup cannot leave a new project without its dashboard capability.
+bootstrap_mcp
+ensure_git_repository
 
 atomic_copy() {
   local source=$1 destination=$2 mode=$3 temp

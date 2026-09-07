@@ -48,7 +48,7 @@ Codex first runs `./.clineflow/bin/uninstall --dry-run`, explains what will be r
 
 > Please show me the ClineFlow dashboard.
 
-Only this explicit request, a direct Knowledge Visor request, or a direct `./.clineflow/bin/dashboard` command activates the optional dashboard. When responding to the natural-language request, collect facts into temporary storage, read them, author a source-linked insights JSON when grounded observations or delivery assumptions are available, then run `dashboard observe` and `dashboard render`. The direct CLI command remains the intentional no-insights fallback. First use displays and approval-gates every runtime and visual-asset download. Ordinary ClineFlow work never installs or runs the visor.
+Only this explicit request or a direct Knowledge Visor request authorizes the dashboard. Use the opt-in `clineflow_dashboard_generate` MCP tool with the explicit project root, passing source-linked insights only when they are grounded. The tool never opens a browser and keeps all report state below `.clineflow-mcp/dashboard/`. Ordinary ClineFlow work never installs or runs the visor.
 
 ## Diagnose the setup
 
