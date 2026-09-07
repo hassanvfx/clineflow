@@ -29,7 +29,7 @@ refresh_checksum() {
 "$ROOT/template/.clineflow/bin/validate-release" >/dev/null
 pass "current release contract is valid"
 
-for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' 'template/.clineflow/dashboard-component-manifest text eol=lf'; do
+for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' '*.lock text eol=lf' 'template/.clineflow/dashboard-component-manifest text eol=lf'; do
   grep -qF "$pattern" "$ROOT/.gitattributes" || fail "release payload line endings are not pinned: $pattern"
 done
 grep -qF 'payload|managed|0644|.clineflow/bin/bootstrap.ps1|' "$ROOT/template/.clineflow/release-manifest" || fail "PowerShell bootstrap incorrectly requires POSIX executable mode"
@@ -108,6 +108,11 @@ dashboard_certification="$TEST_ROOT/dashboard-certification"; copy_release "$das
 sed '/test-dashboard.sh/d' "$dashboard_certification/tests/certify-release.sh" > "$dashboard_certification/certify.tmp"
 mv "$dashboard_certification/certify.tmp" "$dashboard_certification/tests/certify-release.sh"; chmod +x "$dashboard_certification/tests/certify-release.sh"
 if "$dashboard_certification/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "certification without dashboard boundaries was accepted"; fi
+
+knowledge_sync_certification="$TEST_ROOT/knowledge-sync-certification"; copy_release "$knowledge_sync_certification"
+sed '/\.clineflow\/bin\/knowledge sync/d' "$knowledge_sync_certification/tests/certify-release.sh" > "$knowledge_sync_certification/certify.tmp"
+mv "$knowledge_sync_certification/certify.tmp" "$knowledge_sync_certification/tests/certify-release.sh"; chmod +x "$knowledge_sync_certification/tests/certify-release.sh"
+if "$knowledge_sync_certification/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "certification without knowledge projection rebuild was accepted"; fi
 
 ci="$TEST_ROOT/ci"; copy_release "$ci"
 sed 's#./tests/certify-release.sh#./tests/test-okf-validator.sh#' "$ci/.github/workflows/test.yml" > "$ci/ci.tmp"

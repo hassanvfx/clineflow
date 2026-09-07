@@ -14,6 +14,9 @@ and this project uses date-based versioning: `YYYY.MM.DD.patch`
 - Handoff-topology planning that distinguishes a cohesive single handoff from a milestone chain with solid boundaries, local proof, dependency-aware composition, and one accountable integrator.
 
 ### Changed
+- Release `2026.09.07.0` rebuilds ignored ClineFlow 3 knowledge projections
+  before root validation and pins shipped lockfiles to LF for Windows;
+  migration schema `2` remains valid because persistent formats are unchanged.
 - Release `2026.09.05.0` advances migration schema to `2` while retaining date-based release ordering and the permanent updater entrypoint.
 - Release `2026.09.05.1` refreshes managed procedures, shared agent rules, and journal generation without a migration; schema `2` remains valid because persistent formats are unchanged.
 - Release `2026.09.06.0` adds managed milestone-handoff guidance and journal prompts without a migration; schema `2` remains valid because persistent formats are unchanged.

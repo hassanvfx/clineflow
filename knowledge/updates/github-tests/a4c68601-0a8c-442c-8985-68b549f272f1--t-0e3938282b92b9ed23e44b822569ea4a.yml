@@ -1,0 +1,40 @@
+{
+  "schema": 3,
+  "id": "a4c68601-0a8c-442c-8985-68b549f272f1",
+  "at": "2026-09-07T02:09:46Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "github-tests",
+  "stream": "2e94ee70-85ce-4c6d-ac28-fc2076c5f574",
+  "journal": {
+    "path": "knowledge/journals/github-tests/2e94ee70-85ce-4c6d-ac28-fc2076c5f574--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "933e7fdfa7aa0f6616184d4f26ae6d0ecd778e7fba03fd3c9b363974e390dd59",
+    "snapshot": "knowledge/updates/github-tests/snapshots/a4c68601-0a8c-442c-8985-68b549f272f1.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "last_session",
+      "id": "github-tests",
+      "statement": "GitHub Actions repair is complete locally at release 2026.09.07.0; commit and push, then verify the hosted Windows run."
+    }
+  ],
+  "timeline": {
+    "summary": "Closed the GitHub Actions repair through an immutable stable correction record."
+  },
+  "log": {
+    "summary": "Published a stable closure for the GitHub Actions repair record."
+  },
+  "revises": [
+    "463094b5-d19d-4c09-b337-19222502f48f"
+  ],
+  "retracts": [],
+  "resolves": []
+}

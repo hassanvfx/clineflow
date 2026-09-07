@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "cde7b722-7c0d-4386-99a3-fb36f5ff6220",
+  "at": "2026-09-07T02:15:01Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "github-tests",
+  "stream": "1913bb17-ef62-4166-9b25-4a40b4b59eab",
+  "journal": {
+    "path": "knowledge/journals/github-tests/1913bb17-ef62-4166-9b25-4a40b4b59eab--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "9aadf560d04392b9de708a8bf8e603153120d0362937075306d9e017dc8b7f36",
+    "snapshot": "knowledge/updates/github-tests/snapshots/cde7b722-7c0d-4386-99a3-fb36f5ff6220.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "github-tests",
+      "statement": "Release contract, lifecycle matrices, OKF, and working-tree knowledge synchronization passed before staged validation."
+    },
+    {
+      "ledger": "last_session",
+      "id": "github-tests",
+      "statement": "Stage the 2026.09.07.0 repair with its knowledge records, validate staged synchronization, commit, push, and verify GitHub Actions."
+    }
+  ],
+  "timeline": {
+    "summary": "Prepared the GitHub Actions repair release handoff for commit and push."
+  },
+  "log": {
+    "summary": "Prepared the verified GitHub Actions repair for commit and push."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

@@ -1,8 +1,8 @@
-release_version=2026.09.06.0
+release_version=2026.09.07.0
 migration_schema=2
 payload|managed|0644|.clineflow/JOURNAL_TEMPLATE.md|.clineflow/JOURNAL_TEMPLATE.md|55c6078125e9e8adba341bc7f6e8826fd822fa0a36153c584758af7dd4d14732
 payload|managed|0644|.clineflow/PROCEDURES.md|.clineflow/PROCEDURES.md|447223a04fba8e4c86a829014068f8cd619382ab5a33757b4a7a317f2b27c601
-payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|26274e448c893a73d5d583924773a92ab7c8500ba092fad73ab3596c5bb2427d
+payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|54038d8a9aa318b0fe4ff3f9c285bd836db78d28e323a4f8ab7dea288e6d75a0
 payload|managed|0644|.clineflow/WORKING_WITH_CLINE.md|.clineflow/WORKING_WITH_CLINE.md|35ee52bdbd576cda7cac0886defcd31449712d2838fd18bebb846e57e6ee00b2
 payload|managed|0644|.clineflow/WORKING_WITH_CODEX.md|.clineflow/WORKING_WITH_CODEX.md|137685cc8b8081e52b81a83f63b24b6deb69ea5299953426e53ab1967887465c
 payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|b590742eb5322e1e2826bd57793d96eb1bc4d620833ead75ffa2a3ab9bbb2c5d
@@ -19,7 +19,7 @@ payload|managed|0755|.clineflow/bin/validate-knowledge-sync|.clineflow/bin/valid
 payload|managed|0755|.clineflow/bin/validate-okf|.clineflow/bin/validate-okf|e607c1375e0d964e02f1d9b1f65e190c689b4e05ff579258e7612a8f1608855a
 payload|managed|0644|.clineflow/core-requirements.lock|.clineflow/core-requirements.lock|2b6aecd7fb7004f971ad0f0a78928b4fdbc57064544caa732d385d440196441a
 payload|managed|0644|.clineflow/lib/knowledge.py|.clineflow/lib/knowledge.py|15eb392d14c18aa9019aed59715df4c0360b9cea49cce3bba2eb124724693d29
-payload|managed|0755|.clineflow/bin/validate-release|.clineflow/bin/validate-release|956ec384111b53c06c1d9c6d4198041f7350a8c954f4b20cc5f4fe1ff7ea45de
+payload|managed|0755|.clineflow/bin/validate-release|.clineflow/bin/validate-release|9ab21a1b498e9b9b68db18b3a279e9cb648124ca128446d6f6f37cd2a3874669
 payload|agent|0644|configs/rules.template.md|configs/rules.template.md|986133b990c0648f0b00f778dfd6f50108a49fb3857cea1314cb40428a163d65
 payload|fixture|0644|.claude/commands/update-clineflow.md|.claude/commands/update-clineflow.md|dfe26d4d24193f4e771e37b1d1a0669e20b5ee8dd23a3dac6fba165a453c0cab
 payload|fixture|0644|docs/durable-development-methodology.md|docs/durable-development-methodology.md|a1598f1a8a7d504b7860a27cd8510e2b8515f1ea8bce15e90fba9f88085a2e9c

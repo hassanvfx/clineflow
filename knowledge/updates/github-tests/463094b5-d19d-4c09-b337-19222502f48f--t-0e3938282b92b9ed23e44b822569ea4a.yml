@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "463094b5-d19d-4c09-b337-19222502f48f",
+  "at": "2026-09-07T02:08:40Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "github-tests",
+  "stream": "90affc15-995b-4d1d-bdf7-2afda27a4d79",
+  "journal": {
+    "path": "knowledge/journals/github-tests/90affc15-995b-4d1d-bdf7-2afda27a4d79--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "e5bb5060d5da9f0be6ae77208765b12d8ca91b29fabc71c114e32fd26bffa507",
+    "snapshot": "knowledge/updates/github-tests/snapshots/463094b5-d19d-4c09-b337-19222502f48f.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "github-tests",
+      "statement": "Release, lifecycle, migration, uninstall, OKF, synchronization, and tenant-knowledge checks passed; hosted Windows remains pending the next run."
+    },
+    {
+      "ledger": "last_session",
+      "id": "github-tests",
+      "statement": "CI repair is ready to commit and push; review the next GitHub Actions run for final Windows confirmation."
+    }
+  ],
+  "timeline": {
+    "summary": "Restored GitHub Actions clean-checkout validation for release 2026.09.07.0."
+  },
+  "log": {
+    "summary": "Repaired clean-checkout GitHub Actions certification and Windows lockfile integrity."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

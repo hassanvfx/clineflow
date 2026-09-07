@@ -40,6 +40,7 @@ echo "==> Release-contract rejection matrix"
 
 echo "==> OKF validator matrix"
 ./tests/test-okf-validator.sh
+./template/.clineflow/bin/knowledge sync
 ./template/.clineflow/bin/validate-okf
 
 echo "==> Knowledge synchronization matrix"
