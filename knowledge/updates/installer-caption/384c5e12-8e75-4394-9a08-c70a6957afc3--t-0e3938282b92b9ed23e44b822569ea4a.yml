@@ -1,0 +1,43 @@
+{
+  "schema": 3,
+  "id": "384c5e12-8e75-4394-9a08-c70a6957afc3",
+  "at": "2026-09-07T01:53:49Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "installer-caption",
+  "stream": "0f2a3768-0051-4fab-bc12-8fe0ba56beb0",
+  "journal": {
+    "path": "knowledge/journals/installer-caption/0f2a3768-0051-4fab-bc12-8fe0ba56beb0--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "c9f796b05898c3d372792cf8485f5f4502c2b8ed76e0f9b71c6b529f4ffb9bf9",
+    "snapshot": "knowledge/updates/installer-caption/snapshots/384c5e12-8e75-4394-9a08-c70a6957afc3.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "installer-caption",
+      "statement": "README diff review, whitespace, OKF, and knowledge synchronization checks passed after the caption edit."
+    },
+    {
+      "ledger": "last_session",
+      "id": "installer-caption",
+      "statement": "Caption edit complete; validate the published knowledge record, commit, and push origin/main."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed the agentic installer caption copy edit and prepared its durable commit context."
+  },
+  "log": {
+    "summary": "Clarified the README installer caption to name the project folder and preferred AI agent."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

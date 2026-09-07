@@ -14,7 +14,7 @@ ClineFlow gives coding agents durable, Git-native project context. Decisions, go
 
 ## Install ClineFlow
 
-Open your project in a coding agent and paste:
+Run this command from your project folder in your favorite AI agent:
 
 ```text
 Please install ClineFlow by following the instructions provided at https://github.com/hassanvfx/clineflow
