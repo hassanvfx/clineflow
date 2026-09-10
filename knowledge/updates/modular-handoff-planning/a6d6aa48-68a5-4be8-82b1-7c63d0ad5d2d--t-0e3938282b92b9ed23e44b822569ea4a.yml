@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "a6d6aa48-68a5-4be8-82b1-7c63d0ad5d2d",
+  "at": "2026-09-10T04:56:58Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "modular-handoff-planning",
+  "stream": "8115489d-548f-4cba-a3ce-232e31938ad6",
+  "journal": {
+    "path": "knowledge/journals/modular-handoff-planning/8115489d-548f-4cba-a3ce-232e31938ad6--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "b6559d9e8a98708de083938b0ba0cd08143fe9b991b644cec66b035dab462213",
+    "snapshot": "knowledge/updates/modular-handoff-planning/snapshots/a6d6aa48-68a5-4be8-82b1-7c63d0ad5d2d.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Pinned .gitignore files to LF so Windows Git Bash installs match release-manifest checksums."
+  },
+  "log": {
+    "summary": "Fixed Windows release-byte normalization for .gitignore fixtures."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

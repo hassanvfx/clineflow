@@ -29,7 +29,7 @@ refresh_checksum() {
 "$ROOT/template/.clineflow/bin/validate-release" >/dev/null
 pass "current release contract is valid"
 
-for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' '*.lock text eol=lf' 'template/.clineflow/dashboard-component-manifest text eol=lf'; do
+for pattern in '*.md text eol=lf' '*.yml text eol=lf' '*.ps1 text eol=lf' '*.gitignore text eol=lf' '*.lock text eol=lf' 'template/.clineflow/dashboard-component-manifest text eol=lf'; do
   grep -qF "$pattern" "$ROOT/.gitattributes" || fail "release payload line endings are not pinned: $pattern"
 done
 grep -qF 'payload|managed|0644|.clineflow/bin/bootstrap.ps1|' "$ROOT/template/.clineflow/release-manifest" || fail "PowerShell bootstrap incorrectly requires POSIX executable mode"
