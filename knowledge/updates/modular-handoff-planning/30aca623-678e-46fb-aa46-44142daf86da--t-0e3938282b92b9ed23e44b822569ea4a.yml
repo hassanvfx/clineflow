@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "30aca623-678e-46fb-aa46-44142daf86da",
+  "at": "2026-09-10T04:52:38Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "modular-handoff-planning",
+  "stream": "8115489d-548f-4cba-a3ce-232e31938ad6",
+  "journal": {
+    "path": "knowledge/journals/modular-handoff-planning/8115489d-548f-4cba-a3ce-232e31938ad6--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "c5c6f5fa16eb402194ce2da01c67a4abded1d55a540e92b5889cb831aad17136",
+    "snapshot": "knowledge/updates/modular-handoff-planning/snapshots/30aca623-678e-46fb-aa46-44142daf86da.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Verified generated journals inherit Pending Decisions and schema 3 refreshes every known historical stock template."
+  },
+  "log": {
+    "summary": "Completed adaptive planning contract, compatibility coverage, and release certification."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

@@ -200,20 +200,30 @@ def topic_path(root: Path, topic: str) -> Path:
     return root / "knowledge" / "journals" / topic
 
 
-def frontmatter(title: str, description: str, author: dict[str, Any], topic: str, stream: str) -> str:
+def journal_template_body(root: Path) -> str:
+    template = root / "knowledge" / "journals" / "TASK_TEMPLATE.md"
+    try:
+        parts = template.read_text().split("---", 2)
+    except OSError as error:
+        fail(f"cannot read journal template: {error}")
+    if len(parts) != 3 or parts[0]:
+        fail("journal template must begin with YAML frontmatter")
+    body = parts[2].lstrip("\n")
+    if not body.startswith("# Goal"):
+        fail("journal template must contain a Goal section")
+    return body
+
+
+def journal_text(root: Path, title: str, description: str, author: dict[str, Any], topic: str, stream: str) -> str:
     author_lines = ["author:", f"  id: {author['id']}"]
     if author.get("name"):
         author_lines.append(f"  name: {json.dumps(author['name'])}")
-    return "\n".join([
+    header = "\n".join([
         "---", "type: Engineering Journal", f"title: {json.dumps(title)}", f"description: {json.dumps(description)}",
         "tags: [engineering]", "status: draft", *author_lines, "clineflow:", f"  schema: {SCHEMA}", f"  topic: {topic}", f"  stream: {stream}",
-        "generated:", "  by: clineflow/3", f"  at: {now()}", "---", "", "# Goal", "", "Describe the outcome and success criteria.", "",
-        "# Task Contract", "", "- Intended outcome:", "- Observable success criteria:", "- Constraints and non-goals:", "- Open questions and assumptions:", "",
-        "# Execution Boundaries", "", "- Authorized scope and exclusions:", "- Affected interfaces, owners, and relevant side effects:", "- Escalate before changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria:", "- Delegation integrator and remaining integration checks, when applicable:", "", "# Handoff Topology", "", "- Selection: single handoff or milestone chain, and why:", "- Parent integrator and final end-to-end acceptance, when applicable:", "- Milestones: for each independently testable boundary, record its owner and exclusions, entry condition, inputs and outputs, local acceptance proof, downstream consumer, dependencies, contributor, integrator, and escalation or rollback condition:", "",
-        "# Existing Approaches", "", "- Relevant project patterns or established approaches considered:", "- Why the selected approach fits, or why a novel approach is necessary:", "",
-        "# Planned Proof", "", "- Deterministic checks to run and the rules they enforce:", "- Integration checks to run:", "- Remaining judgment or coverage limits:", "",
-        "# Status", "", "- [ ] Planned", "- [ ] In progress", "- [ ] Complete", "", "# Work Log", "", "# Decisions", "", "# Verification Results", "", "Record commands run and their factual outcomes separately from planned proof, including failures and gaps.", "", "# Open Issues", "", "# References", "",
+        "generated:", "  by: clineflow/3", f"  at: {now()}", "---", "",
     ])
+    return header + journal_template_body(root)
 
 
 def cmd_identity(args: argparse.Namespace) -> None:
@@ -258,7 +268,7 @@ def cmd_journal(args: argparse.Namespace) -> None:
     if path.exists():
         fail("generated journal path already exists")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(frontmatter(args.title, args.description or f"Tenant journal for {args.topic}.", pinned, args.topic, stream))
+    path.write_text(journal_text(root, args.title, args.description or f"Tenant journal for {args.topic}.", pinned, args.topic, stream))
     print(path.relative_to(root).as_posix())
 
 

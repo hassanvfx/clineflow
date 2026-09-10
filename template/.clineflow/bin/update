@@ -333,12 +333,30 @@ migrate_1_to_2() {
   "$STAGE/.clineflow/bin/knowledge" --root . migrate
 }
 
+migrate_2_to_3() {
+  local target=knowledge/journals/TASK_TEMPLATE.md digest
+  [ -e "$target" ] || return
+  [ -f "$target" ] || { echo "preserved non-file journal template: $target"; return; }
+  digest=$(sha256_file "$target")
+  case "$digest" in
+    2795fd002f0dade3ed3d30225ca5d06b53e802a75fbd700bc549118a45a2c7c6|\
+    524c3246c91fdee5c9eea6803b83428e0fddcbe653b12827a1c33e91952cf82c|\
+    14ffce3183d424f5e8a7a909ebff55c8fe46010dcaab0a192bc487b197aa9434|\
+    ed1b1737e5feea46e1f2265613dee14a88590945e6e8a4f094f606be79d6968f)
+      atomic_install "$STAGE/knowledge/journals/TASK_TEMPLATE.md" "$target" 0644
+      echo "refreshed stock journal template: $target"
+      ;;
+    *) echo "preserved customized journal template: $target" ;;
+  esac
+}
+
 run_migrations() {
   local schema=$CURRENT_SCHEMA
   while [ "$schema" -lt "$RELEASE_SCHEMA" ]; do
     case "$schema" in
       0) migrate_0_to_1; schema=1 ;;
       1) migrate_1_to_2; schema=2 ;;
+      2) migrate_2_to_3; schema=3 ;;
       *) echo "ERROR: no migration is available from schema $schema." >&2; return 1 ;;
     esac
   done

@@ -6,7 +6,7 @@ Durable development keeps the decisions, evidence, and next action needed to con
 
 1. **Recover context.** Run `./.clineflow/bin/knowledge sync`, then read this manual, the five generated `knowledge/clineflow_*.yml` views, and their relevant journal links before proposing or changing work.
 2. **Ground intent.** Inspect topics and create or explicitly resume a tenant-scoped Engineering Journal stream. Distinguish confirmed requirements from assumptions, constraints, non-goals, edge cases, and unanswered questions. Choose reversible implementation details within the authorized contract; ask before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria.
-3. **Plan handoff topology.** Choose one handoff only for one cohesive, independently verifiable slice. Otherwise define linked milestones with solid ownership boundaries, local proof, dependencies, and one integrator who owns composition and final end-to-end proof.
+3. **Plan handoff topology.** Use `.clineflow/PLANNING.md` to choose one handoff only for one cohesive, independently verifiable slice. Otherwise define linked milestones with solid ownership boundaries, local proof, dependencies, and one integrator who owns composition and final end-to-end proof. Expand the plan only where added context prevents a material implementation or handoff mistake.
 4. **Define proof.** State observable success criteria and regression checks before implementation. A claim that something “works” is not evidence.
 5. **Execute the approved slice.** Implement only what the current contract supports. Capture material decisions, discoveries, failures, and changes in the journal.
 6. **Verify and record evidence.** Run the agreed checks. Record factual outcomes, including failures and gaps, and link the evidence from the verification index.
@@ -36,6 +36,23 @@ The operational details live in `.clineflow/PROCEDURES.md`. Agents may generate 
 For every qualifying knowledge change, create an immutable tenant update record that names its journal and stream, explicitly marks all five ledger reviews as changed or unchanged, and carries its timeline and log entry. Run `./.clineflow/bin/knowledge sync` to project the current ledger, handoff, log, and navigation views locally. Published records are never edited or deleted; a correction references the prior record. Before committing, run `./.clineflow/bin/validate-knowledge-sync`, stage code, journals, and update records together, and rerun it with `--staged`.
 
 Agents choose reversible implementation details within the authorized contract. They ask for direction before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria. They may document options, but must not silently promote an assumption into an approved requirement.
+
+## Decision gates and adaptive plan depth
+
+Resolve repository facts before treating them as decisions. When a remaining
+choice would change the authorized contract or block a dependent handoff, record
+it as a Pending Decision with its owner, impact, options, evidence, blocking
+status, and next action. A delegated agent may investigate or recommend only
+within its authorization; delegation does not approve the choice. Continue
+independent authorized work, but stop the affected handoff until its owner
+resolves the gate.
+
+The Engineering Journal is the canonical plan for substantial work. Its core is
+goal and contract, boundaries, handoff topology, existing approaches, planned
+proof, decisions, pending decisions, verification results, open issues, and
+references. Add context, architecture, stage cards, dependency graphs, rollout
+guides, or budgets only when their absence would make the work unsafe or
+ambiguous. Keep planned proof separate from factual verification results.
 
 ## Installing ClineFlow through an agent
 

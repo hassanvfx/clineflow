@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "eedc62c6-7024-4244-ad5c-379b272b7c2e",
+  "at": "2026-09-10T02:14:40Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "modular-handoff-planning",
+  "stream": "8115489d-548f-4cba-a3ce-232e31938ad6",
+  "journal": {
+    "path": "knowledge/journals/modular-handoff-planning/8115489d-548f-4cba-a3ce-232e31938ad6--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "20ff46e2df63c58af448a1a1c3990a6ee1aa6465b4306afbb2004985eb721aff",
+    "snapshot": "knowledge/updates/modular-handoff-planning/snapshots/eedc62c6-7024-4244-ad5c-379b272b7c2e.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Released the adaptive planning and Pending Decisions contract for fresh and updated installations."
+  },
+  "log": {
+    "summary": "Added the adaptive planning guide and decision-gate contract to managed ClineFlow templates."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

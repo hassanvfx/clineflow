@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "59b2d90d-b707-4985-9997-64b43655ea67",
+  "at": "2026-09-10T02:20:08Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "modular-handoff-planning",
+  "stream": "8115489d-548f-4cba-a3ce-232e31938ad6",
+  "journal": {
+    "path": "knowledge/journals/modular-handoff-planning/8115489d-548f-4cba-a3ce-232e31938ad6--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "bf9e8559a83035775ab6f32a9f48104dd2717ad7481097ecf90b35f8aff6d2e9",
+    "snapshot": "knowledge/updates/modular-handoff-planning/snapshots/59b2d90d-b707-4985-9997-64b43655ea67.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Verified schema-3 stock-template migration and completed ClineFlow release certification."
+  },
+  "log": {
+    "summary": "Added a schema-3 migration that refreshes only the known stock journal template."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

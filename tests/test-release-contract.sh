@@ -40,6 +40,7 @@ portable="$TEST_ROOT/portable"; copy_release "$portable"
 
 grep -qF '`template/.clineflow/WORKING_WITH_CODEX.md`' "$ROOT/AGENTS.md" || fail "source AGENTS.md points to a missing Codex guide"
 grep -qF '`template/.clineflow/PROCEDURES.md`' "$ROOT/AGENTS.md" || fail "source AGENTS.md omits the operational procedures"
+grep -qF '`template/.clineflow/PLANNING.md`' "$ROOT/AGENTS.md" || fail "source AGENTS.md omits the planning guide"
 for source_rules in "$ROOT/AGENTS.md" "$ROOT/.clinerules"; do
   grep -qF './template/.clineflow/bin/validate-okf' "$source_rules" || fail "source agent rules point to a missing OKF validator: $source_rules"
   grep -qF './template/.clineflow/bin/validate-knowledge-sync --staged' "$source_rules" || fail "source agent rules point to a missing staged synchronization validator: $source_rules"
@@ -47,6 +48,7 @@ for source_rules in "$ROOT/AGENTS.md" "$ROOT/.clinerules"; do
   grep -qF 'Do not run any existing local updater first' "$source_rules" || fail "source agent rules permit a stale local updater: $source_rules"
   grep -qF 'Choose reversible details inside the authorized contract' "$source_rules" || fail "source agent rules omit the reversible-choice boundary: $source_rules"
   grep -qF 'single handoff only for one cohesive' "$source_rules" || fail "source agent rules omit the handoff topology boundary: $source_rules"
+  grep -qF 'Pending Decision' "$source_rules" || fail "source agent rules omit decision-gate guidance: $source_rules"
 done
 cmp -s "$ROOT/template/.clinerules" "$ROOT/template/configs/rules.template.md" || fail "legacy Cline template drifted from canonical shared rules"
 pass "source and compatibility agent instructions resolve to current workflow files"
@@ -68,6 +70,9 @@ if "$prompt/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail
 
 topology="$TEST_ROOT/topology"; copy_release "$topology"; sed 's/Every substantial plan must choose either a single handoff or a milestone chain before execution\./Handoff choice is optional./' "$topology/template/.clineflow/PROCEDURES.md" > "$topology/PROCEDURES.tmp"; mv "$topology/PROCEDURES.tmp" "$topology/template/.clineflow/PROCEDURES.md"; refresh_checksum "$topology" .clineflow/PROCEDURES.md
 if "$topology/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing handoff topology rule was accepted"; fi
+
+decision_gate="$TEST_ROOT/decision-gate"; copy_release "$decision_gate"; sed 's/Make material uncertainty a decision gate\./Decision gates are optional./' "$decision_gate/template/.clineflow/PROCEDURES.md" > "$decision_gate/PROCEDURES.tmp"; mv "$decision_gate/PROCEDURES.tmp" "$decision_gate/template/.clineflow/PROCEDURES.md"; refresh_checksum "$decision_gate" .clineflow/PROCEDURES.md
+if "$decision_gate/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing decision-gate rule was accepted"; fi
 
 local_first="$TEST_ROOT/local-first"; copy_release "$local_first"; sed 's/Do not run any existing local updater first/Local updater use is permitted/' "$local_first/README.md" > "$local_first/README.tmp"; mv "$local_first/README.tmp" "$local_first/README.md"
 if "$local_first/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing stale-local-updater warning was accepted"; fi
@@ -93,6 +98,9 @@ pass "release validation rejects missing lifecycle prompts, rescue guidance, uns
 
 chain="$TEST_ROOT/chain"; copy_release "$chain"; sed 's/migrate_0_to_1()/removed_0_to_1()/' "$chain/template/.clineflow/bin/update" > "$chain/update.tmp"; mv "$chain/update.tmp" "$chain/template/.clineflow/bin/update"; chmod +x "$chain/template/.clineflow/bin/update"; refresh_checksum "$chain" .clineflow/bin/update
 if "$chain/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing migration chain was accepted"; fi
+
+decision_migration="$TEST_ROOT/decision-migration"; copy_release "$decision_migration"; sed 's/migrate_2_to_3()/removed_2_to_3()/' "$decision_migration/template/.clineflow/bin/update" > "$decision_migration/update.tmp"; mv "$decision_migration/update.tmp" "$decision_migration/template/.clineflow/bin/update"; chmod +x "$decision_migration/template/.clineflow/bin/update"; refresh_checksum "$decision_migration" .clineflow/bin/update
+if "$decision_migration/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing decision-template migration was accepted"; fi
 
 version="$TEST_ROOT/version"; copy_release "$version"; (cd "$version" && git init -q && git config user.name Test && git config user.email test@example.com && git add . && git commit -qm baseline)
 printf '\nmanaged change\n' >> "$version/template/.clineflow/PROCEDURES.md"; refresh_checksum "$version" .clineflow/PROCEDURES.md

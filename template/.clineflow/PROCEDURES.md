@@ -10,6 +10,7 @@ Use this loop for substantial work: recover context, specify the contract, defin
 4. **Minimize decisions entrusted to probabilistic reasoning.** Use agents for ambiguity and judgment; prefer established parsers, validators, calculations, permission controls, and execution commands for repeatable operations. State which checks are enforced and which conclusions still require judgment.
 5. **Prefer established solutions when they fit.** For material architecture or dependency choices, investigate relevant project patterns and established approaches first. Record the option considered, why it fits or fails, and why a novel approach is warranted when chosen.
 6. **Plan handoff topology before execution.** Every substantial plan must choose either a single handoff or a milestone chain before execution. Choose a single handoff only for one cohesive, independently verifiable slice with one owner and integration boundary. Choose a milestone chain when slices have distinct contracts, consumers, proofs, ordering dependencies, or composition risk. Do not split work merely by file count, task size, or number of agents.
+7. **Make material uncertainty a decision gate.** Resolve discoverable facts first. For a choice that changes the authorized contract or blocks a dependent handoff, record a Pending Decision with its owner, impact, options, evidence, and next action; do not invent approval. Continue only independent authorized work while the gate remains open.
 
 Choose reversible implementation details within the authorized contract. Ask before materially changing requirements, external behavior, authority, ownership, dependencies, or acceptance criteria; continue independent authorized work while awaiting direction.
 
@@ -39,8 +40,8 @@ Do not infer that generated code needs less accountability, isolated checks prov
 
 ## Specify, prove, and execute
 
-1. In the active journal, state the intended outcome, success criteria, constraints, open questions, execution boundary, handoff topology, relevant existing approaches, and planned proof.
-2. Work only within the authorized boundary. Keep material decisions, discoveries, failures, and integration gaps current in the journal.
+1. Read `.clineflow/PLANNING.md`, then state the intended outcome, success criteria, constraints, open questions, execution boundary, handoff topology, relevant existing approaches, and planned proof in the active journal. Use only the detail that makes the plan safe to implement.
+2. Work only within the authorized boundary. Keep resolved decisions, Pending Decisions, discoveries, failures, and integration gaps current in the journal.
 3. Run the agreed deterministic checks and any required integration checks. Record factual outcomes separately from the planned proof, including failures and gaps.
 4. Before handoff, make the next safe action, remaining judgment, and any escalation condition discoverable from the journal and five ledgers.
 

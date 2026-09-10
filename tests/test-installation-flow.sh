@@ -29,8 +29,12 @@ grep -q 'Autonomy operates within explicit boundaries' .clineflow/PROCEDURES.md 
 grep -q 'Routine reversible choice' .clineflow/PROCEDURES.md || fail "managed procedures omit boundary examples"
 grep -q 'Plan handoff topology before execution' .clineflow/PROCEDURES.md || fail "managed procedures omit handoff topology planning"
 grep -q 'Handoff Topology' knowledge/journals/TASK_TEMPLATE.md || fail "journal template omits handoff topology"
+grep -q 'Make material uncertainty a decision gate' .clineflow/PROCEDURES.md || fail "managed procedures omit decision-gate planning"
+grep -q 'Plan at the smallest useful depth' .clineflow/PLANNING.md || fail "missing adaptive planning guide"
+grep -q 'Pending Decisions' knowledge/journals/TASK_TEMPLATE.md || fail "journal template omits pending decisions"
 grep -q 'Choose reversible details inside the authorized contract' AGENTS.md || fail "agent rules omit the approved reversible-choice boundary"
 grep -q 'single handoff only for one cohesive' AGENTS.md || fail "agent rules omit the handoff topology boundary"
+grep -q '.clineflow/PLANNING.md' AGENTS.md || fail "agent rules omit the planning guide"
 grep -q 'Please update ClineFlow\.' AGENTS.md || fail "agent rules do not include the canonical update prompt"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do
   grep -q 'immutable.*update record' "$file" && grep -q 'validate-knowledge-sync --staged' "$file" || fail "agent rules do not enforce tenant knowledge synchronization in $file"
@@ -40,11 +44,15 @@ for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .win
   grep -q 'Please show me the ClineFlow dashboard\.' "$file" || fail "agent rules omit the canonical dashboard prompt in $file"
 done
 [ -f .clineflow/VERSION ] && [ ! -e validate-okf ] && [ ! -e clineflow-doctor ] || fail "root tooling layout is incorrect"
+journal=$(./.clineflow/bin/knowledge journal new --topic planning-contract --title 'Planning contract')
+grep -q 'Pending Decisions' "$journal" || fail "new journals must include Pending Decisions"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do grep -qFx "$(cat "$file.user")" "$file" && grep -q 'BEGIN CLINEFLOW' "$file" || fail "install did not safely merge $file"; done
 shasum -a 256 knowledge/log.md > after.hashes; cmp before.hashes after.hashes || fail "install replaced user knowledge"
 printf '%s\n' '# user index preservation' >> knowledge/clineflow_goals.yml
 printf '%s\n' '<!-- user manual preservation -->' >> docs/durable-development-methodology.md
-CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL" --force
+force_output=$(CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$INSTALL" --force)
+release_schema=$(sed -n 's/^migration_schema=//p' "$ROOT/template/.clineflow/release-manifest")
+grep -q "run the schema-$release_schema migration" <<<"$force_output" || fail "force install must report the current migration schema"
 for file in AGENTS.md CLAUDE.md .clinerules .github/copilot-instructions.md .windsurf/rules/clineflow.md; do [ "$(grep -c 'BEGIN CLINEFLOW' "$file")" -eq 1 ] || fail "force duplicated block in $file"; done
 shasum -a 256 knowledge/log.md > force.hashes; cmp before.hashes force.hashes || fail "force replaced user knowledge"
 grep -q 'user index preservation' knowledge/clineflow_goals.yml || fail "force replaced user index"

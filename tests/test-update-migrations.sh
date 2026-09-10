@@ -18,16 +18,22 @@ seed_okf() {
 }
 
 assert_current() {
-  local project=$1
+  local project=$1 template_mode=${2:-stock}
   [ "$(cat "$project/.clineflow/VERSION")" = "$CURRENT_VERSION" ] || fail "wrong migrated version"
-  grep -qx 'migration_schema=2' "$project/.clineflow/state" || fail "missing migration state"
+  grep -qx 'migration_schema=3' "$project/.clineflow/state" || fail "missing migration state"
   [ -x "$project/.clineflow/bin/knowledge" ] || fail "missing tenant knowledge command"
   [ -x "$project/.clineflow/bin/validate-knowledge-sync" ] || fail "missing knowledge synchronization validator"
   grep -q 'Autonomy operates within explicit boundaries' "$project/.clineflow/PROCEDURES.md" || fail "managed autonomy workflow was not updated"
   grep -q 'Plan handoff topology before execution' "$project/.clineflow/PROCEDURES.md" || fail "managed handoff topology workflow was not updated"
   grep -q 'Handoff Topology' "$project/knowledge/journals/TASK_TEMPLATE.md" || fail "updated journal template omits handoff topology"
+  grep -q 'Make material uncertainty a decision gate' "$project/.clineflow/PROCEDURES.md" || fail "managed decision-gate workflow was not updated"
+  grep -q 'Plan at the smallest useful depth' "$project/.clineflow/PLANNING.md" || fail "updated installation is missing the planning guide"
+  if [ "$template_mode" = stock ]; then
+    grep -q 'Pending Decisions' "$project/knowledge/journals/TASK_TEMPLATE.md" || fail "updated journal template omits pending decisions"
+  fi
   grep -q 'Choose reversible details inside the authorized contract' "$project/AGENTS.md" || fail "updated agent rules omit the reversible-choice boundary"
   grep -q 'single handoff only for one cohesive' "$project/AGENTS.md" || fail "updated agent rules omit the handoff topology boundary"
+  grep -q '.clineflow/PLANNING.md' "$project/AGENTS.md" || fail "updated agent rules omit the planning guide"
   [ -x "$project/.clineflow/bin/dashboard" ] && [ -f "$project/.clineflow/dashboard-component-manifest" ] || fail "missing inert dashboard launcher"
   [ ! -e "$project/.clineflow/optional" ] && [ ! -e "$project/knowledge/dashboard" ] || fail "update activated the optional dashboard"
   (cd "$project" && ./.clineflow/bin/doctor >/dev/null) || fail "migrated installation is unhealthy"
@@ -61,6 +67,50 @@ before_second=$(find "$root_project/.clineflow/backups" -mindepth 1 -maxdepth 1 
 after_second=$(find "$root_project/.clineflow/backups" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 [ "$before_second" = "$after_second" ] || fail "idempotent update created another transaction"
 pass "root OKF migration preserves authored and retired content and is idempotent"
+
+# Schema 3 refreshes the known stock journal template but never overwrites a
+# customized template that may contain project-specific planning conventions.
+stock_template="$TEST_ROOT/stock-template"
+seed_okf "$stock_template"
+cp "$ROOT/tests/fixtures/task-template-schema-2.md" "$stock_template/knowledge/journals/TASK_TEMPLATE.md"
+[ "$(shasum -a 256 "$stock_template/knowledge/journals/TASK_TEMPLATE.md" | awk '{print $1}')" = 'ed1b1737e5feea46e1f2265613dee14a88590945e6e8a4f094f606be79d6968f' ] || fail "schema-2 journal fixture digest drifted"
+mkdir -p "$stock_template/.clineflow/bin"
+printf '2026.09.07.0\n' > "$stock_template/.clineflow/VERSION"
+printf 'release_version=2026.09.07.0\nmigration_schema=2\n' > "$stock_template/.clineflow/state"
+(cd "$stock_template" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
+assert_current "$stock_template"
+grep -q 'Pending Decisions' "$stock_template/knowledge/journals/TASK_TEMPLATE.md" || fail "stock journal template did not receive the decision-gate update"
+
+custom_template="$TEST_ROOT/custom-template"
+seed_okf "$custom_template"
+cp "$ROOT/tests/fixtures/task-template-schema-2.md" "$custom_template/knowledge/journals/TASK_TEMPLATE.md"
+sed 's/Describe the outcome and success criteria\./Project-specific planning outcome./' "$custom_template/knowledge/journals/TASK_TEMPLATE.md" > "$custom_template/TASK_TEMPLATE.tmp"
+mv "$custom_template/TASK_TEMPLATE.tmp" "$custom_template/knowledge/journals/TASK_TEMPLATE.md"
+mkdir -p "$custom_template/.clineflow/bin"
+printf '2026.09.07.0\n' > "$custom_template/.clineflow/VERSION"
+printf 'release_version=2026.09.07.0\nmigration_schema=2\n' > "$custom_template/.clineflow/state"
+(cd "$custom_template" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
+assert_current "$custom_template" custom
+grep -q 'Project-specific planning outcome.' "$custom_template/knowledge/journals/TASK_TEMPLATE.md" || fail "schema-3 migration replaced a customized journal template"
+pass "schema-3 migration refreshes only the known stock journal template"
+
+for fixture_and_digest in \
+  task-template-schema-2-no-handoff.md:2795fd002f0dade3ed3d30225ca5d06b53e802a75fbd700bc549118a45a2c7c6 \
+  task-template-schema-1.md:524c3246c91fdee5c9eea6803b83428e0fddcbe653b12827a1c33e91952cf82c \
+  task-template-schema-0.md:14ffce3183d424f5e8a7a909ebff55c8fe46010dcaab0a192bc487b197aa9434; do
+  fixture=${fixture_and_digest%%:*}
+  expected_digest=${fixture_and_digest#*:}
+  project="$TEST_ROOT/historical-$fixture"
+  seed_okf "$project"
+  cp "$ROOT/tests/fixtures/$fixture" "$project/knowledge/journals/TASK_TEMPLATE.md"
+  [ "$(shasum -a 256 "$project/knowledge/journals/TASK_TEMPLATE.md" | awk '{print $1}')" = "$expected_digest" ] || fail "fixture $fixture has an unexpected digest"
+  mkdir -p "$project/.clineflow/bin"
+  printf '2026.09.07.0\n' > "$project/.clineflow/VERSION"
+  printf 'release_version=2026.09.07.0\nmigration_schema=2\n' > "$project/.clineflow/state"
+  (cd "$project" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
+  assert_current "$project"
+done
+pass "schema-3 migration refreshes every known historical stock journal template"
 
 # Visible and partial hidden layouts converge through the same entrypoint.
 for layout in visible hidden; do

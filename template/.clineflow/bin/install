@@ -157,7 +157,7 @@ install_agent() {
 for agent_file in .clinerules AGENTS.md CLAUDE.md .github/copilot-instructions.md .windsurf/rules/clineflow.md; do install_agent "$agent_file"; done
 
 if [ "$KNOWLEDGE_LOG_EXISTED" = true ]; then
-  echo "preserved existing knowledge projections; run the schema-2 migration before rebuilding them"
+  echo "preserved existing knowledge projections; run the schema-${release_schema} migration before rebuilding them"
 else
   ".clineflow/bin/knowledge" --root . sync
 fi

@@ -66,27 +66,13 @@ Record what changed, why, affected files, verification, and next steps.
 
 Document material choices, rationale, and alternatives.
 
-# Pending Decisions
-
-For every unresolved material choice, record:
-
-| ID | Decision needed | Why it matters / affected handoff | Owner | Options and evidence | Blocking status / next action |
-| --- | --- | --- | --- | --- | --- |
-| PD-1 | | | | | |
-
-Resolve discoverable facts before adding a decision gate. Do not convert a
-recommendation, assumption, or delegated research result into an approved
-requirement. Keep resolved choices in **Decisions** and factual blockers or
-risks in **Open Issues**.
-
 # Verification Results
 
 Record commands run and their factual outcomes separately from planned proof, including failures and gaps.
 
 # Open Issues
 
-List factual blockers, risks, failures, and follow-up work. Link a Pending
-Decision instead of recording an unresolved approval here.
+List blockers, risks, and follow-up work.
 
 # References
 
