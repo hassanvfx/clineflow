@@ -350,6 +350,15 @@ migrate_2_to_3() {
   esac
 }
 
+migrate_3_to_4() {
+  # Schema 3 accepted journals written before tenant-scoped frontmatter was
+  # introduced. Preserve those Markdown files and create one immutable,
+  # source-bound activity record for each instead of silently dropping their
+  # historical dates from the projected timeline.
+  record_path knowledge
+  "$STAGE/.clineflow/bin/knowledge" --root . import-legacy-journals
+}
+
 run_migrations() {
   local schema=$CURRENT_SCHEMA
   while [ "$schema" -lt "$RELEASE_SCHEMA" ]; do
@@ -357,6 +366,7 @@ run_migrations() {
       0) migrate_0_to_1; schema=1 ;;
       1) migrate_1_to_2; schema=2 ;;
       2) migrate_2_to_3; schema=3 ;;
+      3) migrate_3_to_4; schema=4 ;;
       *) echo "ERROR: no migration is available from schema $schema." >&2; return 1 ;;
     esac
   done

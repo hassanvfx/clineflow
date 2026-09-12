@@ -311,6 +311,19 @@ def collect_knowledge(root: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]
     return ledgers, documents
 
 
+def journal_workstream(document: dict[str, Any]) -> str:
+    """Group a journal by explicit topic, then by a safe source tag."""
+    topic = (document.get("clineflow") or {}).get("topic")
+    if isinstance(topic, str) and re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", topic):
+        return topic
+    tags = document.get("tags") or []
+    if isinstance(tags, list):
+        for tag in tags:
+            if isinstance(tag, str) and re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", tag) and tag not in {"engineering", "journal", "reference"}:
+                return tag
+    return "unclassified"
+
+
 def dated_values(data: list[dict[str, Any]], key: str) -> list[str]:
     """Return parseable ISO-like timestamps without claiming missing coverage."""
     values: list[str] = []
@@ -1743,7 +1756,7 @@ def build_presentation(data: dict[str, Any], observations: dict[str, Any], draft
     for document in documents:
         if document.get("kind") != "journal":
             continue
-        topic = str((document.get("clineflow") or {}).get("topic") or "unclassified")
+        topic = journal_workstream(document)
         journals_by_topic.setdefault(topic, []).append({
             "id": document.get("id"), "title": document.get("title"),
             "description": document.get("description"), "status": document.get("status"),

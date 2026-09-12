@@ -148,6 +148,9 @@ assert event["type"] == "verification"
 assert event["summary"] == "Built and verified a reusable validation harness (analytics/tools/validation)"
 assert event["title"] == "Built and verified a reusable validation harness"
 assert event["refs"] == ["journals/example.md"]
+assert module.journal_workstream({"clineflow": {}, "tags": ["engineering", "platform"]}) == "platform"
+assert module.journal_workstream({"clineflow": {"topic": "release-work"}, "tags": ["platform"]}) == "release-work"
+assert module.journal_workstream({"clineflow": {}, "tags": ["engineering"]}) == "unclassified"
 journal = {
     "kind": "journal",
     "raw": "---\ntype: Engineering Journal\n---\n# Goal\n\n- [x] Keep **source fidelity**.\n- Use `safe_markdown`.\n\n# Decisions\n\n1. Render *Markdown* before raw source.\n",

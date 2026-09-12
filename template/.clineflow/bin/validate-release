@@ -79,6 +79,7 @@ grep -qiE '(^|[|/@])latest([|/]|$)' "$DASHBOARD_MANIFEST" && { echo "ERROR: dash
 grep -q "migrate_0_to_1()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 0 -> 1" >&2; exit 1; }
 grep -q "migrate_1_to_2()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 1 -> 2" >&2; exit 1; }
 grep -q "migrate_2_to_3()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 2 -> 3" >&2; exit 1; }
+grep -q "migrate_3_to_4()" template/.clineflow/bin/update || { echo "ERROR: migration chain does not include schema 3 -> 4" >&2; exit 1; }
 grep -qF 'schema-${release_schema} migration' template/.clineflow/bin/install || { echo "ERROR: installer does not report the current migration schema" >&2; exit 1; }
 grep -qF '.clineflow/bin/knowledge' template/.clineflow/bin/install || { echo "ERROR: fresh installation does not initialize tenant knowledge projections" >&2; exit 1; }
 for required in README.md template/configs/rules.template.md template/docs/durable-development-methodology.md template/.clineflow/WORKING_WITH_CODEX.md template/.clineflow/WORKING_WITH_CLINE.md; do

@@ -15,8 +15,9 @@ git config user.email sync@example.com
 ./.clineflow/bin/knowledge sync >/dev/null
 journal=$(./.clineflow/bin/knowledge journal new --topic synchronization --title 'Synchronization test')
 stream=$(sed -n 's/^  stream: //p' "$journal")
-record=$(./.clineflow/bin/knowledge record --topic synchronization --stream "$stream" --journal "$journal" --summary 'Validated source records.' --review specification=changed)
+record=$(./.clineflow/bin/knowledge record --topic synchronization --stream "$stream" --journal "$journal" --summary 'Validated ClineFlow’s source records.' --review specification=changed)
 ./.clineflow/bin/knowledge sync >/dev/null
+./.clineflow/bin/knowledge sync --check
 ./.clineflow/bin/validate-knowledge-sync
 
 git add knowledge .clineflow

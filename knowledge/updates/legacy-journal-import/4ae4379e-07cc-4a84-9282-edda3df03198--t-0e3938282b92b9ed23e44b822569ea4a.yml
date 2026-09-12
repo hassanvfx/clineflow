@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "4ae4379e-07cc-4a84-9282-edda3df03198",
+  "at": "2026-09-12T07:45:10Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "legacy-journal-import",
+  "stream": "ef5a9866-bca5-4ddf-924c-03b299413d62",
+  "journal": {
+    "path": "knowledge/journals/legacy-journal-import/ef5a9866-bca5-4ddf-924c-03b299413d62--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "6b5d6622a7cc72c92ebae01373411df6149fc1a4d4a5495694015f063c41ca9f",
+    "snapshot": "knowledge/updates/legacy-journal-import/snapshots/4ae4379e-07cc-4a84-9282-edda3df03198.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Completed schema-4 source-preserving legacy journal import migration."
+  },
+  "log": {
+    "summary": "Released schema-4 legacy journal import migration with source-preserving dated activity records."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

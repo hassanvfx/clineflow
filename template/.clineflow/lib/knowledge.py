@@ -194,6 +194,130 @@ def journals(root: Path) -> list[Path]:
     return sorted(path for path in (root / "knowledge" / "journals").glob("*/*.md") if path.name != "index.md")
 
 
+def plain_yaml_scalar(value: str) -> str:
+    """Read the small scalar subset used by historic journal headers."""
+    value = value.strip()
+    if value.startswith('"') and value.endswith('"'):
+        with contextlib.suppress(json.JSONDecodeError):
+            decoded = json.loads(value)
+            if isinstance(decoded, str):
+                return decoded
+    if value.startswith("'") and value.endswith("'"):
+        return value[1:-1].replace("''", "'")
+    return value
+
+
+def plain_journal_frontmatter(header: str) -> dict[str, Any]:
+    """Dependency-free fallback for legacy headers, never their prose body."""
+    result: dict[str, Any] = {}
+    generated: dict[str, Any] = {}
+    clineflow: dict[str, Any] = {}
+    tags: list[str] = []
+    reading_tags = False
+    section: str | None = None
+    for line in header.splitlines():
+        if line.startswith("  - ") and reading_tags:
+            tags.append(plain_yaml_scalar(line[4:]))
+            continue
+        reading_tags = False
+        nested = re.match(r"^  ([a-z_]+):\s*(.*)$", line)
+        if nested and section in {"generated", "clineflow"}:
+            key, value = nested.groups()
+            if section == "generated" and key == "at":
+                generated[key] = plain_yaml_scalar(value)
+            elif section == "clineflow" and key == "schema":
+                clineflow[key] = plain_yaml_scalar(value)
+            continue
+        match = re.match(r"^([a-z_]+):\s*(.*)$", line)
+        if match:
+            key, value = match.groups()
+            section = key if value == "" else None
+            if key == "tags":
+                reading_tags = value == ""
+                if value.startswith("[") and value.endswith("]"):
+                    tags = [plain_yaml_scalar(item) for item in value[1:-1].split(",") if item.strip()]
+                continue
+            if key in {"generated", "clineflow"}:
+                continue
+            if key in {"type", "title", "description", "status"}:
+                result[key] = plain_yaml_scalar(value)
+            continue
+    if tags:
+        result["tags"] = tags
+    if generated:
+        result["generated"] = generated
+    if clineflow:
+        result["clineflow"] = clineflow
+    return result
+
+
+def journal_frontmatter(path: Path) -> dict[str, Any]:
+    """Read a Markdown journal header without interpreting its body."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as error:
+        fail(f"{path}: cannot read journal: {error}")
+    if not text.startswith("---\n"):
+        return {}
+    end = text.find("\n---\n", 4)
+    if end < 0:
+        return {}
+    header = text[4:end]
+    try:
+        import yaml  # type: ignore[import-not-found]
+    except ImportError:
+        return plain_journal_frontmatter(header)
+    try:
+        value = yaml.safe_load(header) or {}
+    except yaml.YAMLError:
+        return plain_journal_frontmatter(header)
+    return value if isinstance(value, dict) else plain_journal_frontmatter(header)
+
+
+def legacy_journals(root: Path) -> list[Path]:
+    """Return pre-schema-3 Engineering Journals that still need import."""
+    directory = root / "knowledge" / "journals"
+    if not directory.is_dir():
+        return []
+    result: list[Path] = []
+    for path in sorted(directory.rglob("*.md")):
+        if path.name in {"TASK_TEMPLATE.md", "index.md"}:
+            continue
+        metadata = journal_frontmatter(path)
+        if metadata.get("type") != "Engineering Journal":
+            continue
+        if isinstance(metadata.get("clineflow"), dict) and str(metadata["clineflow"].get("schema")) == str(SCHEMA):
+            continue
+        result.append(path)
+    return result
+
+
+def normalized_timestamp(value: Any) -> str | None:
+    """Normalize explicit source timestamps; never infer a historical date."""
+    if isinstance(value, datetime):
+        parsed = value
+    elif isinstance(value, str):
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    else:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def legacy_import_topic(metadata: dict[str, Any]) -> str:
+    """Use an explicit, safe tag as a grouping hint; fall back to migration."""
+    tags = metadata.get("tags")
+    if isinstance(tags, list):
+        for tag in tags:
+            if isinstance(tag, str) and TOPIC_RE.fullmatch(tag) and tag not in {"engineering", "journal", "reference"}:
+                return tag
+    return "legacy-journal-import"
+
+
 def topic_path(root: Path, topic: str) -> Path:
     if not TOPIC_RE.fullmatch(topic):
         fail("topic must be a lowercase hyphenated slug")
@@ -408,7 +532,7 @@ def projection(root: Path, all_records: list[tuple[Path, dict[str, Any]]]) -> di
         elif ledger == "goals": data.update({"active_goals": [], "priorities": [], "success_measures": [], "blocked_goals": [], "completed_goals": [], "journal_refs": []})
         elif ledger == "last_session": data.update({"latest_change": ordered[-1]["log"]["summary"] if ordered else None, "specification_summary": [], "verification_summary": [], "goals_summary": [], "next_recommended_step": None, "next_step_refs": [], "journal_refs": []})
         else: data["events"] = [{"at": r["at"], "actor": r["author"]["id"], "summary": r["timeline"]["summary"], "refs": [r["journal"]["path"]]} for r in ordered]
-        files[f"clineflow_{ledger}.yml"] = json.dumps(data, indent=2) + "\n"
+        files[f"clineflow_{ledger}.yml"] = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
     log = ["# Knowledge Update Log", ""]
     for record in reversed(ordered): log.extend([f"## {record['at'][:10]}", "", f"* **{record['author']['id']}**: {record['log']['summary']}", ""])
     files["log.md"] = "\n".join(log)
@@ -516,6 +640,74 @@ def cmd_migrate(args: argparse.Namespace) -> None:
     print("Migration preserved schema-1 views in knowledge/baseline/schema-1/. Stage only the reported migration files when ready.")
 
 
+def cmd_import_legacy_journals(args: argparse.Namespace) -> None:
+    """Create dated immutable references for pre-schema-3 journals.
+
+    The original Markdown files remain the canonical source.  This importer
+    intentionally carries only explicit header fields, so a historical prose
+    journal never becomes an asserted goal, decision, or verification result.
+    """
+    root = root_from(args.root)
+    knowledge = root / "knowledge"
+    destination = knowledge / "updates" / "legacy-journal-import"
+    existing_paths: set[str] = set()
+    for _, record in records(root):
+        legacy = record.get("legacy_import")
+        if isinstance(legacy, dict) and isinstance(legacy.get("source_path"), str):
+            existing_paths.add(legacy["source_path"])
+    imported = 0
+    fallback_timestamp = now()
+    with lock(root):
+        for journal in legacy_journals(root):
+            relative = journal.relative_to(root).as_posix()
+            if relative in existing_paths:
+                continue
+            metadata = journal_frontmatter(journal)
+            content = journal.read_bytes()
+            digest = digest_bytes(content)
+            identifier = str(uuid.uuid5(uuid.NAMESPACE_URL, f"clineflow-legacy-journal-v1:{relative}:{digest}"))
+            record_path = destination / f"{identifier}--t-{'0' * 32}.yml"
+            if record_path.exists():
+                continue
+            generated = metadata.get("generated") if isinstance(metadata.get("generated"), dict) else {}
+            source_timestamp = normalized_timestamp(generated.get("at"))
+            title = str(metadata.get("title") or journal.stem.replace("-", " "))
+            description = str(metadata.get("description") or "")
+            tags = [str(tag) for tag in metadata.get("tags", []) if isinstance(tag, (str, int, float))] if isinstance(metadata.get("tags"), list) else []
+            snapshot_relative = f"knowledge/updates/legacy-journal-import/snapshots/{identifier}.md"
+            snapshot = root / snapshot_relative
+            snapshot.parent.mkdir(parents=True, exist_ok=True)
+            snapshot.write_bytes(content)
+            record = {
+                "schema": SCHEMA,
+                "id": identifier,
+                "at": source_timestamp or fallback_timestamp,
+                "author": {"id": "t-" + "0" * 32},
+                "topic": legacy_import_topic(metadata),
+                "stream": str(uuid.uuid5(uuid.NAMESPACE_URL, f"clineflow-legacy-journal-stream-v1:{relative}")),
+                "journal": {"path": relative, "sha256": digest, "snapshot": snapshot_relative},
+                "reviews": {ledger: "unchanged" for ledger in LEDGERS},
+                "ledger_changes": [],
+                "timeline": {"summary": f"Legacy journal recorded: {title}"},
+                "log": {"summary": f"Imported legacy journal: {title}"},
+                "revises": [], "retracts": [], "resolves": [],
+                "legacy_import": {
+                    "source_path": relative,
+                    "title": title,
+                    "description": description,
+                    "status": str(metadata.get("status") or ""),
+                    "tags": tags,
+                    "source_generated_at": source_timestamp,
+                    "timestamp_origin": "journal.generated.at" if source_timestamp else "migration.at",
+                },
+            }
+            write_json_atomic(record_path, record)
+            existing_paths.add(relative)
+            imported += 1
+    cmd_sync(argparse.Namespace(root=str(root), check=False))
+    print(f"Imported {imported} legacy Engineering Journal record(s); original journal files were not modified.")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="knowledge")
     parser.add_argument("--root", default=".")
@@ -531,8 +723,9 @@ def main() -> None:
     sync = sub.add_parser("sync"); sync.add_argument("--check", action="store_true")
     validate = sub.add_parser("validate"); validate.add_argument("--mode", choices=("working", "staged"), default="working")
     sub.add_parser("migrate")
+    sub.add_parser("import-legacy-journals")
     args = parser.parse_args()
-    {"identity": cmd_identity, "topics": cmd_topics, "journal": cmd_journal, "record": cmd_record, "sync": cmd_sync, "validate": cmd_validate, "migrate": cmd_migrate}[args.command](args)
+    {"identity": cmd_identity, "topics": cmd_topics, "journal": cmd_journal, "record": cmd_record, "sync": cmd_sync, "validate": cmd_validate, "migrate": cmd_migrate, "import-legacy-journals": cmd_import_legacy_journals}[args.command](args)
 
 
 if __name__ == "__main__":

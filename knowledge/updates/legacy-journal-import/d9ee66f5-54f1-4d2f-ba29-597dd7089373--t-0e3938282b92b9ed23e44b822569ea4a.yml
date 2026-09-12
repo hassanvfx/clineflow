@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "d9ee66f5-54f1-4d2f-ba29-597dd7089373",
+  "at": "2026-09-12T07:46:50Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "legacy-journal-import",
+  "stream": "ef5a9866-bca5-4ddf-924c-03b299413d62",
+  "journal": {
+    "path": "knowledge/journals/legacy-journal-import/ef5a9866-bca5-4ddf-924c-03b299413d62--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "7428f9a32c63914ccb2836ef443bbf54131258575b55231bf0595f3a7f07e969",
+    "snapshot": "knowledge/updates/legacy-journal-import/snapshots/d9ee66f5-54f1-4d2f-ba29-597dd7089373.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Verified UTF-8-safe knowledge projection checks."
+  },
+  "log": {
+    "summary": "Corrected UTF-8 projection consistency for reliable knowledge sync checks."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

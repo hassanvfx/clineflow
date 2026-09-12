@@ -102,6 +102,9 @@ if "$chain/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail 
 decision_migration="$TEST_ROOT/decision-migration"; copy_release "$decision_migration"; sed 's/migrate_2_to_3()/removed_2_to_3()/' "$decision_migration/template/.clineflow/bin/update" > "$decision_migration/update.tmp"; mv "$decision_migration/update.tmp" "$decision_migration/template/.clineflow/bin/update"; chmod +x "$decision_migration/template/.clineflow/bin/update"; refresh_checksum "$decision_migration" .clineflow/bin/update
 if "$decision_migration/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing decision-template migration was accepted"; fi
 
+legacy_journal_migration="$TEST_ROOT/legacy-journal-migration"; copy_release "$legacy_journal_migration"; sed 's/migrate_3_to_4()/removed_3_to_4()/' "$legacy_journal_migration/template/.clineflow/bin/update" > "$legacy_journal_migration/update.tmp"; mv "$legacy_journal_migration/update.tmp" "$legacy_journal_migration/template/.clineflow/bin/update"; chmod +x "$legacy_journal_migration/template/.clineflow/bin/update"; refresh_checksum "$legacy_journal_migration" .clineflow/bin/update
+if "$legacy_journal_migration/template/.clineflow/bin/validate-release" >/dev/null 2>&1; then fail "missing legacy-journal migration was accepted"; fi
+
 version="$TEST_ROOT/version"; copy_release "$version"; (cd "$version" && git init -q && git config user.name Test && git config user.email test@example.com && git add . && git commit -qm baseline)
 printf '\nmanaged change\n' >> "$version/template/.clineflow/PROCEDURES.md"; refresh_checksum "$version" .clineflow/PROCEDURES.md
 if (cd "$version" && ./template/.clineflow/bin/validate-release --against HEAD >/dev/null 2>&1); then fail "managed change without a version bump was accepted"; fi

@@ -20,7 +20,7 @@ seed_okf() {
 assert_current() {
   local project=$1 template_mode=${2:-stock}
   [ "$(cat "$project/.clineflow/VERSION")" = "$CURRENT_VERSION" ] || fail "wrong migrated version"
-  grep -qx 'migration_schema=3' "$project/.clineflow/state" || fail "missing migration state"
+  grep -qx 'migration_schema=4' "$project/.clineflow/state" || fail "missing migration state"
   [ -x "$project/.clineflow/bin/knowledge" ] || fail "missing tenant knowledge command"
   [ -x "$project/.clineflow/bin/validate-knowledge-sync" ] || fail "missing knowledge synchronization validator"
   grep -q 'Autonomy operates within explicit boundaries' "$project/.clineflow/PROCEDURES.md" || fail "managed autonomy workflow was not updated"
@@ -111,6 +111,33 @@ for fixture_and_digest in \
   assert_current "$project"
 done
 pass "schema-3 migration refreshes every known historical stock journal template"
+
+# Schema 4 converts pre-tenant Engineering Journal headers into dated
+# immutable activity records. The journals themselves are source material,
+# not generated output, so their bytes must remain untouched and rerunning
+# the updater must not duplicate the imported history.
+legacy_journals="$TEST_ROOT/legacy-journals"
+seed_okf "$legacy_journals"
+mkdir -p "$legacy_journals/knowledge/journals" "$legacy_journals/.clineflow/bin"
+cp "$ROOT/tests/fixtures/legacy-journals/foundation.md" "$legacy_journals/knowledge/journals/foundation.md"
+cp "$ROOT/tests/fixtures/legacy-journals/review.md" "$legacy_journals/knowledge/journals/review.md"
+foundation_hash=$(shasum -a 256 "$legacy_journals/knowledge/journals/foundation.md" | awk '{print $1}')
+review_hash=$(shasum -a 256 "$legacy_journals/knowledge/journals/review.md" | awk '{print $1}')
+printf '2026.09.11.32\n' > "$legacy_journals/.clineflow/VERSION"
+printf 'release_version=2026.09.11.32\nmigration_schema=3\n' > "$legacy_journals/.clineflow/state"
+(cd "$legacy_journals" && CLINEFLOW_BASE_URL="file://$ROOT/template" bash "$UPDATER" --yes >/dev/null)
+assert_current "$legacy_journals"
+[ "$foundation_hash" = "$(shasum -a 256 "$legacy_journals/knowledge/journals/foundation.md" | awk '{print $1}')" ] || fail "legacy foundation journal changed"
+[ "$review_hash" = "$(shasum -a 256 "$legacy_journals/knowledge/journals/review.md" | awk '{print $1}')" ] || fail "legacy review journal changed"
+import_count=$(find "$legacy_journals/knowledge/updates/legacy-journal-import" -maxdepth 1 -name '*--t-00000000000000000000000000000000.yml' | wc -l | tr -d ' ')
+[ "$import_count" = 2 ] || fail "schema-4 migration did not import each legacy journal"
+grep -q '2026-08-04T10:15:00Z' "$legacy_journals/knowledge/clineflow_timeline.yml" || fail "legacy journal date is missing from projected timeline"
+grep -q 'Legacy journal recorded: Foundation baseline' "$legacy_journals/knowledge/clineflow_timeline.yml" || fail "legacy journal title is missing from projected timeline"
+grep -q 'This prose is deliberately not imported as a structured assertion.' "$legacy_journals/knowledge/updates/legacy-journal-import/snapshots"/* || fail "legacy journal snapshot was not retained"
+(cd "$legacy_journals" && CLINEFLOW_BASE_URL="file://$ROOT/template" ./.clineflow/bin/update --yes >/dev/null)
+import_count_after=$(find "$legacy_journals/knowledge/updates/legacy-journal-import" -maxdepth 1 -name '*--t-00000000000000000000000000000000.yml' | wc -l | tr -d ' ')
+[ "$import_count_after" = 2 ] || fail "schema-4 migration duplicated imported journals"
+pass "schema-4 migration imports dated legacy journal metadata without changing sources"
 
 # Visible and partial hidden layouts converge through the same entrypoint.
 for layout in visible hidden; do
