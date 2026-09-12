@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "902a3db7-b499-4054-b0a8-7a5086d8d9e5",
+  "at": "2026-09-11T23:16:02Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m0",
+  "stream": "a228c261-60b6-4bf1-ab38-aff99b123c49",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m0/a228c261-60b6-4bf1-ab38-aff99b123c49--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "dc227eec1f76ce092ce58ecf88ff32eb708d002117f8d6ab6084de568b841cc1",
+    "snapshot": "knowledge/updates/knowledge-visor-m0/snapshots/902a3db7-b499-4054-b0a8-7a5086d8d9e5.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m0",
+      "statement": "Report facts now include source-bound project identity, capture and coverage metadata, revision/latest-commit availability, and truthful snapshot condition without changing canonical OKF."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m0",
+      "statement": "Dashboard boundaries, frozen Ad Crush provenance, release contract, OKF, synchronization, and whitespace checks passed after M0 intake changes."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m0-next",
+      "statement": "Resume with M1 observations and Sparks schema/validator; preserve the M0 source and metadata contracts."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed M0 report-model handoff for the scientific brochure; next is M1 observations and Sparks validation."
+  },
+  "log": {
+    "summary": "Completed M0 factual intake and scientific report identity: additive ledgers, frozen fixture provenance, captured revision/commit states, and tests."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "8ff82aca-2d3e-4ad3-a727-0a9deba47835",
+  "at": "2026-09-12T03:22:29Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "afe9fda60dfd974d52bb131ed37f840fcaa7ba65511012375427ecc138b2155b",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/8ff82aca-2d3e-4ad3-a727-0a9deba47835.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-report-chronology",
+      "statement": "Each report compares only the preceding complete local dashboard report with the same project identity, or states that it establishes the baseline."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-report-chronology",
+      "statement": "Unit coverage proves generated-time selection over directory names and project filtering; dashboard two-run coverage proves baseline and predecessor commentary."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-report-chronology",
+      "statement": "Release 2026.09.11.14 adds deterministic report-history commentary without a schema migration."
+    }
+  ],
+  "timeline": {
+    "summary": "Dashboard reports now select the prior matching project report by manifest generation time, compare frozen JSON records, and expose compact report-history commentary."
+  },
+  "log": {
+    "summary": "Added same-project chronological dashboard comparisons with a baseline fallback and source-bound deltas."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

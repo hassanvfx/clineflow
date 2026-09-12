@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "75114ce5-849d-40d9-a256-5914de63819b",
+  "at": "2026-09-12T01:10:12Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "b51853951525ad6bb80d6591a954b5efbfad33125910fe8a8cc5c0d934c88d2e",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/75114ce5-849d-40d9-a256-5914de63819b.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-onboarding",
+      "statement": "Workspace derives source-linked commentary and copyable project-assistant questions from the frozen record; the dashboard stays read-only and offline."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-onboarding",
+      "statement": "Dashboard tests, browser review, and rendered-PDF inspection passed for the project-derived onboarding route and adjacent report artifact."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "The local frozen dashboard now has project-derived onboarding and a visually verified white-paper artifact; public hosting remains out of scope."
+    }
+  ],
+  "timeline": {
+    "summary": "The Knowledge Visor now derives an onboarding route and compact project commentary from each frozen record, with its dated white-paper artifact visible in Workspace."
+  },
+  "log": {
+    "summary": "Added source-bound project onboarding, Workspace commentary, and a verified local white-paper artifact."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

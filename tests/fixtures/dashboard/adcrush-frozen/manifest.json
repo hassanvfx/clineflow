@@ -1,0 +1,50 @@
+{
+  "schema": "clineflow-dashboard-fixture/v1",
+  "project": "sibling project ad-crush",
+  "commit": "7976504102fd18e14e7f96a22e7cd3dada96e317",
+  "projection_mode": "captured ignored working-tree projections",
+  "facts_source_hash": "db5f7f3da18ad2c0c78ea51116a3a4da17d51d10af33bd14a39f082d41f6b2db",
+  "scope": "five projected ledgers, active journals, and normalized timeline; immutable update archive is represented by the projections",
+  "sources": [
+    {
+      "path": "knowledge/clineflow_specification.yml",
+      "sha256": "0b2b9602afa8324d3153f82c175771d722dfec9090a1f7b88ff8540870501c35"
+    },
+    {
+      "path": "knowledge/clineflow_verification.yml",
+      "sha256": "9c4248831ae1043f7ec31201fccb92d730963718a319e0b1a3e5814b2ed1cb35"
+    },
+    {
+      "path": "knowledge/clineflow_goals.yml",
+      "sha256": "2fbba75d157c4afb1e5fed23ece97a92ae47e20fa8789b86fde39bc524520b9c"
+    },
+    {
+      "path": "knowledge/clineflow_last_session.yml",
+      "sha256": "2847aa83bd90551e0ea9dd7d140cf0a7230e1312ed44f0f812638ea0f019d0dc"
+    },
+    {
+      "path": "knowledge/clineflow_timeline.yml",
+      "sha256": "1853e7cda324668d31bf8e81464fc88f808b38c270c393c5cb5d02734fa63f65"
+    },
+    {
+      "path": "knowledge/journals/adcrush-campaigns/62cb68ca-0718-433d-8217-ca1ddbe43cba--t-0e3938282b92b9ed23e44b822569ea4a.md",
+      "sha256": "b5f7eb97d579caf46420d09fceeac4774595ab13cac6aee2df74944eff6cda79"
+    },
+    {
+      "path": "knowledge/journals/adcrush-implementation/fc088d00-d76c-457b-b7a3-cc288ed33f97--t-0e3938282b92b9ed23e44b822569ea4a.md",
+      "sha256": "3733d77587db3bfa0e4ffedadf236fb79d0a9e7172ef85989507be5012751094"
+    },
+    {
+      "path": "knowledge/journals/adcrush-market-position/5440ce2d-57ac-473e-bfa2-5fccc18eca90--t-0e3938282b92b9ed23e44b822569ea4a.md",
+      "sha256": "936d26607cca5f732fc0feed58835689c9429dfce0922bca0d73b9443fdfecd2"
+    },
+    {
+      "path": "knowledge/journals/adcrush-self-improvement/4a1e9708-555d-4a47-93a0-afcd43671a77--t-0e3938282b92b9ed23e44b822569ea4a.md",
+      "sha256": "7bfefd8ae2ad57b1cdc72605fe61d28ce7b5512d80ad8afe0605ccdc12aecf29"
+    },
+    {
+      "path": "knowledge/journals/reusable-storyboard-cli/2705701b-b2b6-404a-86aa-23e097596f37--t-0e3938282b92b9ed23e44b822569ea4a.md",
+      "sha256": "42f0d4d08915168d72046d32a39e984b323a5ef33227ea5e62ac2a28cfc68a9d"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "35dc089e-6854-4469-9b66-0c8b760ac8f0",
+  "at": "2026-09-12T05:19:59Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "3f5b8616f5f03e7fcc4171c54315649b6756a92907419f8cd1a8b9668d22ef75",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/35dc089e-6854-4469-9b66-0c8b760ac8f0.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Rebuilt and verified the executive white paper and complete evidence appendix."
+  },
+  "log": {
+    "summary": "Rebuilt the Knowledge Visor white paper as a twelve-page editorial brief with a separate evidence appendix and rendered PDF QA."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

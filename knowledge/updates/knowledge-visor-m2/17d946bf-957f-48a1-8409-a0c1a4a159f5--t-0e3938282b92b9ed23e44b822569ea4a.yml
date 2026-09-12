@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "17d946bf-957f-48a1-8409-a0c1a4a159f5",
+  "at": "2026-09-11T23:27:27Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m2",
+  "stream": "590bccf2-70e1-403f-b5e2-b9114451674f",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m2/590bccf2-70e1-403f-b5e2-b9114451674f--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "07285c9b6a023249132616c6385c28dbf8230ff75e74e5ecb24dfbb9657b85a8",
+    "snapshot": "knowledge/updates/knowledge-visor-m2/snapshots/17d946bf-957f-48a1-8409-a0c1a4a159f5.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m2-shell",
+      "statement": "The dashboard presents a consistent scientific brochure masthead with project identity, generation date, coverage, revision, latest commit state, condition, and four tabs."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m2-shell",
+      "statement": "Dashboard boundary tests, release contract 2026.09.11.1, OKF, synchronization, and whitespace checks passed after the brochure shell and Activity spine changes."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m2-next",
+      "statement": "Resume with M3 connected chapters, search/deep links, and browser preview review; timeline libraries remain a measured gate."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed M2 shared brochure shell and visual Activity spine; next is connected chapter behavior and measured preview review."
+  },
+  "log": {
+    "summary": "Completed M2 scientific brochure shell with fixed report masthead, four tabs, Sparks fallback, and visual Activity spine."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

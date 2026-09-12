@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "c62ee4a8-bfb6-4c9a-9135-515eef138720",
+  "at": "2026-09-12T03:46:06Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "2f0aac480716f5787107c5fd72e12af3d23b743c04d5106f1998f0258bba98e0",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/c62ee4a8-bfb6-4c9a-9135-515eef138720.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Rendered the frozen Ad Crush dashboard and verified the upper-right PDF action, tab labels, and compact icon hierarchy."
+  },
+  "log": {
+    "summary": "Promoted the PDF download to the masthead and added an offline Material-style icon hierarchy for report navigation and actions."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

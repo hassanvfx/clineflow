@@ -27,6 +27,7 @@ Usage: ./.clineflow/bin/dashboard [--yes] [command] [options]
 Commands:
   generate --insights FILE Generate and open a dashboard with optional agent observations.
   collect --output FILE    Collect normalized facts for agent analysis.
+  contract --facts FILE    Print the bounded, source-specific agent observation contract.
   observe --facts FILE --insights FILE  Bind optional agent observations to normalized facts.
   render --facts FILE      Render previously collected facts.
   settings --show          Show dashboard report-retention settings.

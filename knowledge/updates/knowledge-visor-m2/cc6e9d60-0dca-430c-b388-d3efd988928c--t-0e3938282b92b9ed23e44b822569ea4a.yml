@@ -1,0 +1,45 @@
+{
+  "schema": 3,
+  "id": "cc6e9d60-0dca-430c-b388-d3efd988928c",
+  "at": "2026-09-11T23:33:42Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m2",
+  "stream": "590bccf2-70e1-403f-b5e2-b9114451674f",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m2/590bccf2-70e1-403f-b5e2-b9114451674f--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "0a229ac667af28de5a48073b579ad85f2c6c05e2df6fe63dd9c3c49d77ae80a8",
+    "snapshot": "knowledge/updates/knowledge-visor-m2/snapshots/cc6e9d60-0dca-430c-b388-d3efd988928c.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m2-certification",
+      "statement": "Full tests/certify-release.sh lifecycle certification passed."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "Resume with M3 connected chapters, search/deep links, and browser preview review."
+    }
+  ],
+  "timeline": {
+    "summary": "M2 brochure shell remains complete after full lifecycle certification; continue with M3 connected chapters."
+  },
+  "log": {
+    "summary": "Confirmed M2 lifecycle certification and execution status; M3 remains the next staged slice."
+  },
+  "revises": [
+    "17d946bf-957f-48a1-8409-a0c1a4a159f5"
+  ],
+  "retracts": [],
+  "resolves": []
+}

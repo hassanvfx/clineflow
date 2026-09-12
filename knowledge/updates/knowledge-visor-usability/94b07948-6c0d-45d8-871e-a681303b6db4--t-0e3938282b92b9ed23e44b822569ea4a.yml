@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "94b07948-6c0d-45d8-871e-a681303b6db4",
+  "at": "2026-09-12T04:50:54Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "8e4e289bfac6a40fbb2319d0635e1393addd75ce788363a16cee6c66ae4411e8",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/94b07948-6c0d-45d8-871e-a681303b6db4.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Implemented and verified delta-driven engineering-blog publication for unchanged frozen dashboard renders."
+  },
+  "log": {
+    "summary": "Separated report rendering from engineering-blog publication: unchanged frozen source bundles now emit a no-new-publication state instead of re-presenting the prior post."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

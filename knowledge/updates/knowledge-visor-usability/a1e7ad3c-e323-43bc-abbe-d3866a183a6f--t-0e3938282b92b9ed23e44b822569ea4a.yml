@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "a1e7ad3c-e323-43bc-abbe-d3866a183a6f",
+  "at": "2026-09-12T04:56:13Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "066a9d3b0d24a4662552ef5d1d34c74ef1ca2bab28af4a8bc003ce1ca2b3e287",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/a1e7ad3c-e323-43bc-abbe-d3866a183a6f.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Added and verified a project-level engineering history index for dashboard blog archives."
+  },
+  "log": {
+    "summary": "Replaced the generic blog archive grid with a durable project-level Engineering Index and refreshed that view without publishing duplicate articles."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "97d55950-b641-49e7-9b79-601802b20eb4",
+  "at": "2026-09-12T01:30:24Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "d1b30a6a53027bc8722289e2f83af66b5328c00331c5e9a0b3a527649e5eb3fb",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/97d55950-b641-49e7-9b79-601802b20eb4.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-pitch-black-reader",
+      "statement": "Dark reader uses true-black canvas and near-black elevated surfaces while preserving legible text and restrained source/focus accents."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-pitch-black-reader",
+      "statement": "Dashboard tests pass and frozen Ad Crush browser review confirms the pitch-black Workspace theme remains readable."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "The dashboard dark reader is now pitch-black; future visual work should preserve its contrast and source-focus hierarchy."
+    }
+  ],
+  "timeline": {
+    "summary": "Knowledge Visor dark mode now uses black canvas and restrained high-contrast blue/violet accents."
+  },
+  "log": {
+    "summary": "Reworked the dark reader into a true-black scientific surface with near-black elevation and high-contrast source accents."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

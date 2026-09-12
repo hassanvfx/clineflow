@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "69d2a30a-1a5a-4f13-bffe-3fb32845e441",
+  "at": "2026-09-12T04:14:29Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "213a7b20e536bfad3e91dcd34c28d004e3b9cd5873785d026e1b99eee46b2d36",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/69d2a30a-1a5a-4f13-bffe-3fb32845e441.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "The Blog now pairs every human release-note link with the matching immutable JSON endpoint."
+  },
+  "log": {
+    "summary": "Exposed direct article and archive JSON links beside the Engineering Blog HTML readers for agent consumption."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

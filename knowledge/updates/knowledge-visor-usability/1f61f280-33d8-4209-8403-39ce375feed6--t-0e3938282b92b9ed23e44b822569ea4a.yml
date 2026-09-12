@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "1f61f280-33d8-4209-8403-39ce375feed6",
+  "at": "2026-09-12T03:07:12Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "20f0a482fadd05aace7e4d9a9219ffcbdefbaf473d5bb423b2e6bea73d2a7b12",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/1f61f280-33d8-4209-8403-39ce375feed6.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-usability",
+      "statement": "Workspace leads with current recorded change and searchable journals; Onboarding includes content; Evidence reads additive ledger records; repeated Sparks do not gain support without new evidence."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-usability",
+      "statement": "Dashboard and full lifecycle certification passed; browser proof covers desktop/mobile, black theme persistence, content search, journal activity filtering, clipboard success, cited source sections and keyboard reader navigation."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-usability",
+      "statement": "Release 2026.09.11.11 is locally verified and the frozen Ad Crush preview is ready for product review; no commit or public deployment was performed."
+    }
+  ],
+  "timeline": {
+    "summary": "Delivered the dashboard usefulness and reliability slice with a simpler brief, usable source readers, searchable evidence and honest learning provenance."
+  },
+  "log": {
+    "summary": "Rebuilt dashboard reading hierarchy, surfaced additive evidence, corrected Spark support, and verified complete reading journeys."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

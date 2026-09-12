@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "04cb5e08-e2d8-45f0-99b1-4abed55cd531",
+  "at": "2026-09-12T04:09:52Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "c6197cce899e7bb1d8a37ac48e066a3515539a4fbec7c6da6122f55a56efd88e",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/04cb5e08-e2d8-45f0-99b1-4abed55cd531.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Published the dashboard release archive and made white-paper provenance explicit: frozen facts JSON, source-bound observations, then deterministic HTML/PDF composition."
+  },
+  "log": {
+    "summary": "Added the source-bound Engineering Blog, permanent release permalinks and a deterministic, observation-bound white-paper composition contract."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

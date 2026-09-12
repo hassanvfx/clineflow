@@ -1,0 +1,53 @@
+{
+  "schema": 3,
+  "id": "76982546-5968-42f2-b6c1-41944143f73c",
+  "at": "2026-09-11T22:37:03Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-atlas",
+  "stream": "90ace635-d5f1-44ba-8cb1-4a337aae028f",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-atlas/90ace635-d5f1-44ba-8cb1-4a337aae028f--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "6c41ad461fc372a651442f6f2af720ebca63449dece265211ab12184b0a2f840",
+    "snapshot": "knowledge/updates/knowledge-visor-atlas/snapshots/76982546-5968-42f2-b6c1-41944143f73c.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-atlas-plan",
+      "statement": "Plan Workspace, Sparks, Activity, and Evidence as a read-only offline atlas with source-bound observations and separate dependency/publication gates."
+    },
+    {
+      "ledger": "goals",
+      "id": "knowledge-atlas-value",
+      "statement": "Help developers recover intent, explain recorded changes, reuse bounded learnings, and inspect evidence; virality is not a promised outcome."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-atlas-plan",
+      "statement": "Planning OKF, existing-record synchronization, and whitespace checks passed; usability, benchmark, and runtime acceptance remain proposed and unexecuted."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-atlas-next",
+      "statement": "Planning is complete in docs/plans/knowledge-atlas.md; next authorized implementation slice should reconcile intake and select a source-grounded reference story."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed the four-tab Atlas planning handoff with source-bound Sparks, a four-stop tour, and explicit proof and publication gates."
+  },
+  "log": {
+    "summary": "Grounded the Knowledge Atlas and Sparks product, milestone, usability, and permission-gated launch plan; implementation remains pending."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

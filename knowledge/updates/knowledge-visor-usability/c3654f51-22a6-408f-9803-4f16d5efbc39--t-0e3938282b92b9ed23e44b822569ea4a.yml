@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "c3654f51-22a6-408f-9803-4f16d5efbc39",
+  "at": "2026-09-12T04:34:12Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "24d937b766ec878f8b7f159ab6cf9fd0f3fcff9464956ee9bf79f79632cabd5d",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/c3654f51-22a6-408f-9803-4f16d5efbc39.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Regenerated the frozen Ad Crush PDF with a 100/100 first-pass quality baseline and manifest audit trail."
+  },
+  "log": {
+    "summary": "Added a globally capped five-pass deterministic white-paper quality harness with structural success checks and cross-report quality trend tracking."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

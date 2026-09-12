@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "664cfae5-73df-422a-8957-525367329edf",
+  "at": "2026-09-12T00:38:49Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "9a07c811f1c24275affec2d44764d7bc5b579116df0cbdbc379ba96505683d74",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/664cfae5-73df-422a-8957-525367329edf.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-spark-reconciliation",
+      "statement": "Every dashboard run derives source-bound Spark candidates from current journal or ledger records and reconciles them against stable identities from the immediately preceding report."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-spark-reconciliation",
+      "statement": "Tests prove first-run candidates are new, a matching next run reinforces and supports them, and observations with available source records cannot contain an empty Spark set."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "M4 owns browser-to-PDF fidelity review; the local dashboard now has source-bound every-run Spark synthesis and reconciliation."
+    }
+  ],
+  "timeline": {
+    "summary": "The dashboard now derives source-bound Sparks on every run and reports new, reinforced, revised, and retired lifecycle outcomes."
+  },
+  "log": {
+    "summary": "Added mandatory every-run Spark synthesis and stable reconciliation against the prior report."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

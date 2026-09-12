@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "0260e350-b930-4c21-b518-b3c98def1342",
+  "at": "2026-09-12T03:57:16Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "e83329892ed30ef43b619646748812921fb36b3ed79f060638b0bef07592ab88",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/0260e350-b930-4c21-b518-b3c98def1342.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Rendered the frozen Ad Crush dashboard in-browser to confirm the number-free icon navigation and spacing."
+  },
+  "log": {
+    "summary": "Removed ordinal numbers from the primary tab rail while retaining Material-style icons, labels, and accessible navigation."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

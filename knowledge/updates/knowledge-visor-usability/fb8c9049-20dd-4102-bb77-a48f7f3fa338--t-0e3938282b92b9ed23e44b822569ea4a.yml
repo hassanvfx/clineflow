@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "fb8c9049-20dd-4102-bb77-a48f7f3fa338",
+  "at": "2026-09-12T05:38:01Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "d895b8c9177f1ec2304854051e89e54da46d1d1ceb0610a8ba2ad731cd2191ab",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/fb8c9049-20dd-4102-bb77-a48f7f3fa338.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Removed the generated white-paper/PDF surface after it failed the product brief; reports now retain only source-bound dashboard views."
+  },
+  "log": {
+    "summary": "Removed the generated white-paper/PDF surface after it failed the product brief; reports now retain only source-bound dashboard views."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

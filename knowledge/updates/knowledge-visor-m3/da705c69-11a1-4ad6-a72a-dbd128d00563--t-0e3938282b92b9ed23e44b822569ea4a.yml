@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "da705c69-11a1-4ad6-a72a-dbd128d00563",
+  "at": "2026-09-12T01:33:55Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "8b704d728ab2cc135be422544bec67fba545c0dbf75474cc69a0550f449d6602",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/da705c69-11a1-4ad6-a72a-dbd128d00563.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-dedicated-onboarding",
+      "statement": "The dashboard has five top-level tabs; Onboarding owns source-route questions and the takeaway report while Workspace retains project context."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-dedicated-onboarding",
+      "statement": "Dashboard tests assert the five-tab navigation and dedicated onboarding panel; frozen Ad Crush browser review confirms the #onboarding deep link, source controls, copy actions, and PDF artifact."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "The frozen dashboard now has a dedicated Onboarding tab; further navigation work should preserve its source-route and Workspace-context separation."
+    }
+  ],
+  "timeline": {
+    "summary": "Knowledge Visor now separates Workspace context from an explicit Onboarding route with source questions and report download."
+  },
+  "log": {
+    "summary": "Moved source-bound onboarding and its dated report artifact into a dedicated second top-level tab."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

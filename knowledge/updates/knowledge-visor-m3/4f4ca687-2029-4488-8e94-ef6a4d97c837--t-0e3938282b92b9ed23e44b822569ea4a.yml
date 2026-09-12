@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "4f4ca687-2029-4488-8e94-ef6a4d97c837",
+  "at": "2026-09-12T00:13:27Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "7eb137f73d3a291f811127b5fa886d417d3ca7a775de05701ff41b6bc280fc70",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/4f4ca687-2029-4488-8e94-ef6a4d97c837.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-rich-reader",
+      "statement": "Journal sections in the read-only reader retain sanitized CommonMark structure, including lists, emphasis, inline code, links, and nested headings."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-rich-reader",
+      "statement": "Dashboard boundary tests and frozen-browser review confirm rendered lists and inline code with no flattened Markdown markers in the reader."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "M4 owns browser-to-PDF fidelity review; the local dashboard reader is complete for this source-format repair."
+    }
+  ],
+  "timeline": {
+    "summary": "Restored safe rich formatting for extracted journal sections while preserving compact disclosure and exact normalized source access."
+  },
+  "log": {
+    "summary": "Repaired rich CommonMark formatting in the structured Knowledge Visor reader."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

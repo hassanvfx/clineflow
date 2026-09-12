@@ -1,0 +1,38 @@
+{
+  "schema": 3,
+  "id": "d0e9849c-0031-4691-80ee-48e964ea20b3",
+  "at": "2026-09-11T22:21:17Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-v1",
+  "stream": "b2f5c96c-464b-4c58-9e87-c550665af581",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-v1/b2f5c96c-464b-4c58-9e87-c550665af581--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "1d013684d4432548cbc55caa406a677d25f00d44cc6af97c73d75670bdfdc543",
+    "snapshot": "knowledge/updates/knowledge-visor-v1/snapshots/d0e9849c-0031-4691-80ee-48e964ea20b3.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "verification",
+      "id": "adcrush-frozen-dashboard",
+      "statement": "Frozen Ad Crush fixture provenance, source binding, workstreams, timeline rendering, and dashboard boundary coverage passed."
+    }
+  ],
+  "timeline": {
+    "summary": "Added and verified the frozen Ad Crush dashboard sample."
+  },
+  "log": {
+    "summary": "Added the frozen Ad Crush operational knowledge fixture as the canonical Knowledge Visor sample."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

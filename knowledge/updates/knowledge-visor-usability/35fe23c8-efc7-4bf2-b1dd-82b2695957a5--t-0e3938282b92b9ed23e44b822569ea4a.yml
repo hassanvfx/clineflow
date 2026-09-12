@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "35fe23c8-efc7-4bf2-b1dd-82b2695957a5",
+  "at": "2026-09-12T05:04:13Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "578115cf198c9d950f7f9c778df88f7f557ac9b248c5582fa2ad5951e95faca2",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/35fe23c8-efc7-4bf2-b1dd-82b2695957a5.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Added and verified source-bound dates to evidence records."
+  },
+  "log": {
+    "summary": "Added source-bound provenance dates to Evidence records and the record reader."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

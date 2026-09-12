@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "865be06b-1513-4a70-99cd-2b5c901c8aba",
+  "at": "2026-09-11T22:43:51Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-atlas",
+  "stream": "90ace635-d5f1-44ba-8cb1-4a337aae028f",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-atlas/90ace635-d5f1-44ba-8cb1-4a337aae028f--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "05aca0bc00dc6cae661593c35c674487f59d7f1ba6692fe133b16414ec0d0cb7",
+    "snapshot": "knowledge/updates/knowledge-visor-atlas/snapshots/865be06b-1513-4a70-99cd-2b5c901c8aba.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "scientific-brochure",
+      "statement": "The brochure brief governs a shared project masthead, generation date/time, coverage, captured revision/latest commit, truthful snapshot states, and consistent four-tab presentation."
+    },
+    {
+      "ledger": "verification",
+      "id": "scientific-brochure-plan",
+      "statement": "Brochure planning OKF, existing-record synchronization and whitespace checks passed; metadata, browser, observations, offline and PDF proofs are specified for implementation."
+    },
+    {
+      "ledger": "last_session",
+      "id": "scientific-brochure-handoff",
+      "statement": "Read docs/plans/knowledge-visor-brief.md then docs/plans/knowledge-atlas.md; execute M0 metadata/intake first when implementation is requested, then the M1-M4 chain."
+    }
+  ],
+  "timeline": {
+    "summary": "Refined the Knowledge Visor plan into a consistent scientific brochure brief and bounded development stages; runtime execution remains next."
+  },
+  "log": {
+    "summary": "Added the scientific brochure brief and executable SOLID stage contracts; fixed identity and snapshot metadata now govern presentation."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "884b9f22-0097-4150-a23e-dd9020a38645",
+  "at": "2026-09-12T00:05:33Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "09309066f8bfce35562f806868a9b9c1d813d2b9f4b72b2d9adc1a56e49b7ba9",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/884b9f22-0097-4150-a23e-dd9020a38645.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-quality",
+      "statement": "The frozen dashboard presents compact source-first Workspace, Sparks, Activity, and Evidence chapters; summaries disclose exact records only on demand."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-quality",
+      "statement": "Dashboard boundaries, release validation, OKF validation, and browser review confirm compact empty states, collapsible chronology, structured journal reading, and modal keyboard exit."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "M4 owns browser-to-PDF fidelity review and public-release preparation remains separately gated."
+    }
+  ],
+  "timeline": {
+    "summary": "Rebuilt the canonical dashboard after visual review: compact progressive disclosure, readable Activity chronology, and structured journal readers."
+  },
+  "log": {
+    "summary": "Completed the M3 product-quality redesign of the Knowledge Visor."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

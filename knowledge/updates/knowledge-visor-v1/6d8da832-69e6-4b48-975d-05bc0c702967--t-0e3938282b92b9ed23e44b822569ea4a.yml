@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "6d8da832-69e6-4b48-975d-05bc0c702967",
+  "at": "2026-09-11T22:05:42Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-v1",
+  "stream": "b2f5c96c-464b-4c58-9e87-c550665af581",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-v1/b2f5c96c-464b-4c58-9e87-c550665af581--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "89081435b7c58938774ef0bf9582009a3a5dc5cb8f97aa44f3208ff7db2207f0",
+    "snapshot": "knowledge/updates/knowledge-visor-v1/snapshots/6d8da832-69e6-4b48-975d-05bc0c702967.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "changed",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "goals",
+      "id": "knowledge-visor-v1",
+      "statement": "Deliver a source-bound, read-only project knowledge dashboard."
+    },
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-v1",
+      "statement": "The optional visor provides Workspace, Activity, and Evidence tabs, a single read-only detail layer, and local white-paper artifacts without changing canonical OKF records."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-v1",
+      "statement": "Dashboard boundary tests, release validation, OKF validation, and knowledge synchronization passed for the V1 optional visor."
+    }
+  ],
+  "timeline": {
+    "summary": "Released the read-only Knowledge Visor V1 and its deterministic white-paper artifacts."
+  },
+  "log": {
+    "summary": "Released the source-bound Knowledge Visor V1 with Workspace, Activity, Evidence, and white-paper artifacts."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

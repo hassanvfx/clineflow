@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "0b6a52f1-1d13-4e8e-99d9-d8bd39a8c8e0",
+  "at": "2026-09-12T04:28:41Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "fd8eb7a2015648a1845dbb4904c79c16d0359320e7a9d5e0d34fa87e2cf4ce77",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/0b6a52f1-1d13-4e8e-99d9-d8bd39a8c8e0.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Frozen Ad Crush re-render uses one canonical first-person blog post for unchanged source facts."
+  },
+  "log": {
+    "summary": "Bounded dashboard agent observations to source-cited inputs, added facts-specific contract and one-diagnostic retry feedback, and reconciled the Ad Crush Engineering Notebook to one source-hash article."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

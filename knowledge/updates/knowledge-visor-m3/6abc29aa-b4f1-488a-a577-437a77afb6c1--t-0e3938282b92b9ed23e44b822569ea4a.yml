@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "6abc29aa-b4f1-488a-a577-437a77afb6c1",
+  "at": "2026-09-12T00:30:48Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "b5e32e45d9cff652abdd5799be387d37e32ab7d1c9b4e469c3bd44788cb881f9",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/6abc29aa-b4f1-488a-a577-437a77afb6c1.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-ledger-reader",
+      "statement": "Ledger readers expose compact version/update facts and named record cards, never raw storage index identifiers in their primary surface."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-ledger-reader",
+      "statement": "Dashboard tests and frozen-browser review confirm the Specification ledger displays six named records, a compact remaining-record disclosure, no primary UUIDs, and a Back-enabled record detail view."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "M4 owns browser-to-PDF fidelity review; M3 reader presentation is complete after rich journal and ledger catalogue repairs."
+    }
+  ],
+  "timeline": {
+    "summary": "Removed UUID storage keys from ledger presentation; named records now disclose through the existing reader surface."
+  },
+  "log": {
+    "summary": "Replaced the raw ledger dump with a compact named-record catalogue and detail reader."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "b46ee8b4-481a-4dfe-bcdc-4cb300852195",
+  "at": "2026-09-12T01:22:06Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "e5073252b3291b7f6c1e8984446de9c4079816ce25633e1adb9afe658933ff89",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/b46ee8b4-481a-4dfe-bcdc-4cb300852195.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-decision-lenses",
+      "statement": "Workspace exposes three local role lenses, each with Team, Time, and Return cards sourced from the frozen project record; return is explicitly non-financial."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-decision-lenses",
+      "statement": "Dashboard tests assert three source-bound role lenses with exactly Team, Time, and Return cards, and browser review confirms each lens switches correctly."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "The frozen dashboard now includes Product manager, Executive, and Technical lead decision lenses; future work can refine signals only with recorded source support."
+    }
+  ],
+  "timeline": {
+    "summary": "Workspace now presents three role lenses with compact team, recorded-time, and return signals linked to frozen sources."
+  },
+  "log": {
+    "summary": "Added source-bound Product manager, Executive, and Technical lead decision lenses with explicit non-financial return proxies."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

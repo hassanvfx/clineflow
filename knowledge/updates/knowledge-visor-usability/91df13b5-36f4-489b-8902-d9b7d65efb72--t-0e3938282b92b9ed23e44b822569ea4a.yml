@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "91df13b5-36f4-489b-8902-d9b7d65efb72",
+  "at": "2026-09-12T03:10:56Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "261b864b0c02ba9f7a48979f9e3f13d48dfccc5998af09021fb12fa4dd7b63f9",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/91df13b5-36f4-489b-8902-d9b7d65efb72.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-sparks-last",
+      "statement": "Sparks is presented after Workspace, Onboarding, Activity, and Evidence so derived learning follows source material."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-sparks-last",
+      "statement": "Dashboard suite and JavaScript syntax check pass with the reordered visible and keyboard tab sequence."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-sparks-last",
+      "statement": "Release 2026.09.11.12 contains this presentation-only change; no migration is required."
+    }
+  ],
+  "timeline": {
+    "summary": "Reordered the tab DOM and its keyboard traversal, retained #sparks deep links, updated the dashboard assertion and release metadata."
+  },
+  "log": {
+    "summary": "Moved Sparks to the final report tab so the source record precedes derived learning."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

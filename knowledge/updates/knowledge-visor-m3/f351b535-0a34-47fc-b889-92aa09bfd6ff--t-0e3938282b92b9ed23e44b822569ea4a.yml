@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "f351b535-0a34-47fc-b889-92aa09bfd6ff",
+  "at": "2026-09-12T01:27:00Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m3",
+  "stream": "dd8d33f0-f127-4833-ad8f-840a98a7c8e8",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m3/dd8d33f0-f127-4833-ad8f-840a98a7c8e8--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "fd9c358ac0184eb2880bb5b26b4a0ecf8c77195311b6e0eca18bced27daed594",
+    "snapshot": "knowledge/updates/knowledge-visor-m3/snapshots/f351b535-0a34-47fc-b889-92aa09bfd6ff.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-m3-ledger-record-key-points",
+      "statement": "Guided ledger records expose deterministic clause-level key points; full statements and raw source remain available only through explicit disclosure."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-m3-ledger-record-key-points",
+      "statement": "Dashboard tests require highlights on guided ledger records, and frozen Ad Crush browser review confirms the Design Spec modal no longer duplicates its long statement."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m3-next",
+      "statement": "The local frozen dashboard now presents ledger statements through compact key points; future refinement must retain exact source wording behind disclosure."
+    }
+  ],
+  "timeline": {
+    "summary": "Ledger record readers now show deterministic key points first, with full wording and raw source explicitly disclosed."
+  },
+  "log": {
+    "summary": "Repaired ledger-record reading so dense statements render as source-preserving key points rather than a duplicated modal dump."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

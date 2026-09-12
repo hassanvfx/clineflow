@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "82e712db-7067-4151-aadd-a57c033753b0",
+  "at": "2026-09-12T03:40:10Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "555bd22e44cf351cc68e2e5e9c9e391b38fc8380d951b8c73d552afeb0a74109",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/82e712db-7067-4151-aadd-a57c033753b0.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Verified the generated frozen Ad Crush dashboard in-browser and rendered the two-page A4 PDF for visual inspection."
+  },
+  "log": {
+    "summary": "Polished dated follow-up readers, reordered the report tabs, and rebuilt the Ad Crush executive report artifact from the sibling Investor Room visual system."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

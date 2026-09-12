@@ -1,0 +1,48 @@
+{
+  "schema": 3,
+  "id": "363eac2a-0193-4d2c-887a-3f6481c7d270",
+  "at": "2026-09-11T23:22:49Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-m1",
+  "stream": "be9c0cce-069e-4c13-b23d-01e7e17f9b11",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-m1/be9c0cce-069e-4c13-b23d-01e7e17f9b11--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "75d0145199f2830448d0a8647194a00e2d6b2e3c96082909876b44c696d25a57",
+    "snapshot": "knowledge/updates/knowledge-visor-m1/snapshots/363eac2a-0193-4d2c-887a-3f6481c7d270.md"
+  },
+  "reviews": {
+    "specification": "changed",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "changed",
+    "timeline": "changed"
+  },
+  "ledger_changes": [
+    {
+      "ledger": "specification",
+      "id": "knowledge-visor-sparks",
+      "statement": "Report observations may carry stable Spark IDs, learning, scope, evidence state, cited origins/support/challenges with locators, limitations, and synthesis time; candidates remain report-owned interpretations."
+    },
+    {
+      "ledger": "verification",
+      "id": "knowledge-visor-sparks",
+      "statement": "Positive and unresolved Spark citation cases, dashboard boundary tests, release validation, OKF, synchronization, and whitespace checks passed."
+    },
+    {
+      "ledger": "last_session",
+      "id": "knowledge-visor-m1-next",
+      "statement": "Resume with M2 shared brochure shell and one source-grounded journey; keep metadata and Spark semantics in the prepared presentation model."
+    }
+  ],
+  "timeline": {
+    "summary": "Completed M1 source-bound Sparks contract and validation handoff; next is the shared scientific brochure shell."
+  },
+  "log": {
+    "summary": "Completed M1 observations and Sparks harness with source locators, evidence states, fail-closed validation, and an honest empty fallback."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

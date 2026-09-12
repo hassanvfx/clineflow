@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "62da15d8-1b45-49e1-9811-43c5b89fcbad",
+  "at": "2026-09-12T04:39:45Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "52025264bd8d8ca3467574f1e2572a4cad1137773246dfb939bca6c8bb5d055b",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/62da15d8-1b45-49e1-9811-43c5b89fcbad.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "unchanged",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Clean-room Ad Crush report now serves one post and a 55-page quality-checked PDF with compact UTC footer timestamps."
+  },
+  "log": {
+    "summary": "Regenerated Ad Crush from an empty dashboard root, visually verified the served dashboard/PDF/blog, and repaired white-paper timestamps for clean print headers and footers."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}
