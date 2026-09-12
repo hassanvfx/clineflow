@@ -1,0 +1,32 @@
+{
+  "schema": 3,
+  "id": "1bd7854f-9cb7-408c-8799-66f270e8eff7",
+  "at": "2026-09-12T07:15:04Z",
+  "author": {
+    "id": "t-0e3938282b92b9ed23e44b822569ea4a"
+  },
+  "topic": "knowledge-visor-usability",
+  "stream": "aff31411-acb8-47ec-963d-a23e09e28604",
+  "journal": {
+    "path": "knowledge/journals/knowledge-visor-usability/aff31411-acb8-47ec-963d-a23e09e28604--t-0e3938282b92b9ed23e44b822569ea4a.md",
+    "sha256": "4091dd7b794881c17003ffea1082fd7423a1981273c0c48a95d25bc4e8dd2410",
+    "snapshot": "knowledge/updates/knowledge-visor-usability/snapshots/1bd7854f-9cb7-408c-8799-66f270e8eff7.md"
+  },
+  "reviews": {
+    "specification": "unchanged",
+    "verification": "changed",
+    "goals": "unchanged",
+    "last_session": "unchanged",
+    "timeline": "unchanged"
+  },
+  "ledger_changes": [],
+  "timeline": {
+    "summary": "Made dashboard collection resilient to malformed Markdown frontmatter so historical source metadata cannot abort the entire report."
+  },
+  "log": {
+    "summary": "Made dashboard collection resilient to malformed Markdown frontmatter so historical source metadata cannot abort the entire report."
+  },
+  "revises": [],
+  "retracts": [],
+  "resolves": []
+}

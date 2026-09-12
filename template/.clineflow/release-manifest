@@ -6,7 +6,7 @@ payload|managed|0644|.clineflow/PLANNING.md|.clineflow/PLANNING.md|fc973fd635581
 payload|managed|0644|.clineflow/VERSION|.clineflow/VERSION|ddd6e4e9ef4d7410d148f7f133eb087d67184bb7f8d1aad9d1fee8d4949bc1cd
 payload|managed|0644|.clineflow/WORKING_WITH_CLINE.md|.clineflow/WORKING_WITH_CLINE.md|c59e8356c75290bb18a179b4625c5551eb5bcc636043ad749ae3e3be48e54c9c
 payload|managed|0644|.clineflow/WORKING_WITH_CODEX.md|.clineflow/WORKING_WITH_CODEX.md|5f75697a5fa3b2e02d3204451b3877515168f035a6be231b720044adfd24a5d0
-payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|cb55ae3ca78f1e9fc49372a94301137a7712dc41b0c2af7e1c55380fa9e3f89c
+payload|managed|0644|.clineflow/dashboard-component-manifest|.clineflow/dashboard-component-manifest|f68a27544a1fe0d469c7cfd91a2ac706a82561e5721d368215c43b0c38eccc78
 payload|managed|0644|.clineflow/bin/bootstrap.ps1|.clineflow/bin/bootstrap.ps1|1692a254c9f910c54aba06e96a81855ab45ed4f3b80e2f5900a412449ebab165
 payload|managed|0755|.clineflow/bin/dashboard|.clineflow/bin/dashboard|25a80e74660849a7958ac720224a8130b203588f908506db752894a27707baff
 payload|managed|0755|.clineflow/bin/doctor|.clineflow/bin/doctor|c613393fa245a1abcbf5920766faa82ab5066434ae9386fe8ccb272628cfe6b6

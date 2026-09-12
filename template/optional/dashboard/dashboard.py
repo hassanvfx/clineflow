@@ -122,7 +122,12 @@ def parse_frontmatter(text: str) -> tuple[dict[str, Any], str]:
     end = text.find("\n---\n", 4)
     if end < 0:
         return {}, text
-    parsed = yaml.safe_load(text[4:end]) or {}
+    try:
+        parsed = yaml.safe_load(text[4:end]) or {}
+    except yaml.YAMLError:
+        # A read-only dashboard must not fail because one optional Markdown
+        # source has malformed frontmatter. Retain its full body as a source.
+        return {}, text
     return json_safe(parsed) if isinstance(parsed, dict) else {}, text[end + 5:]
 
 
